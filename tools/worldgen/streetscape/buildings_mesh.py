@@ -108,6 +108,88 @@ RURAL_SHED_TINT = (0.58, 0.86)            # luminance range of the plaster tint 
 RURAL_SHED_MIN_AREA_M2 = 18.0
 RURAL_SHED_NO_ROOF_FUNCS = {"stacja transformatorowa", "transformer_tower", "garbage_shed"}   # keep their flat box
 RURAL_SHED_WIN = (0.80, 0.50, 1.50)      # window width, height, sill above the reference ground, m (WORKING_VALUE)
+# ADR 0238 d. props-fix r2 (neon-outbuildings2-s24, critic build #10 pkt 9): barn doors (vertical boards + forged strap
+# hinges in a shallow recess), LOD0-only lightweight eaves gutters & downpipes (facade_atlas swatches, +0 draws),
+# darker & taller concrete plinth, under-eave runoff streaks, and roof_weather COLOR_0 for ribbed metal sheet roofs.
+RURAL_SHED_PLINTH_HS = (0.45, 0.50, 0.58, 0.65)     # taller rural plinth (0.45-0.65 m, WORKING_VALUE; was flat 0.30 m)
+RURAL_SHED_GARAGE_VARIANTS = (0, 1, 5)              # rural double-leaf doors only (no urban graffiti 2/4, no white up-and-over 3)
+RURAL_SHED_BARN_REVEAL_M = 0.0                      # flat atlas leaf (avoids zpl-split double reveals); frame + hardware in _rural_barn_kit
+RURAL_SHED_GUTTER_SWATCHES = ("galv", "steel_grey", "steel_dark")
+
+
+def _rural_barn_infill(variant):
+    """Interior vertical-board strip of facade_atlas balf(2) / balf(5) (without the steel balcony frame) for barn doors."""
+    cu, cv, cw, ch = FA.cell("balf", 2 if (variant % 2 == 0) else 5)
+    return ("atlas", [(round(cu + 0.08, 4), round(cv + 0.14, 4), round(cw - 0.16, 4), round(ch - 0.22, 4))],
+            0.0, 1.0, 0.0, 1.0)
+
+
+def _rural_barn_kit(acc, a, d, nout, o, key):
+    """LOD0-only vertical-board barn door framing & forged hardware (facade_atlas swatches, +0 draws, 16 tris):
+    projecting timber lintel & jamb posts (shadow recess feel), centre leaf gap, and 4 forged black strap hinges."""
+    u0, u1, z0, z1, _depth = o[:5]
+    w, h = u1 - u0, z1 - z0
+    if w < 1.6 or h < 1.5:
+        return
+    n3 = np.append(nout[:2], 0.0)
+    P = lambda u, z, pr: np.array([a[0] + d[0] * u, a[1] + d[1] * u, z]) + n3 * pr
+    pr = 0.014                              # hardware sits 1.4 cm proud of the flat leaf (zero z-fight)
+    um = 0.5 * (u0 + u1)
+    uv_dark = FA.swatch_uv("steel_dark")
+    uv_beam = FA.swatch_uv("pvc_brown" if FK.hfloat(key, "bbeam") < 0.65 else "wood")
+    # timber frame posts + lintel beam proud of the door plane (3 quads = 6 tris)
+    fw, lh, fp = 0.09, 0.13, 0.032
+    acc.quad("buildings", "facade_atlas", P(u0 - fw, z1, fp), P(u1 + fw, z1, fp),
+             P(u1 + fw, z1 + lh, fp), P(u0 - fw, z1 + lh, fp), uv=uv_beam)
+    acc.quad("buildings", "facade_atlas", P(u0 - fw, z0, fp), P(u0, z0, fp),
+             P(u0, z1, fp), P(u0 - fw, z1, fp), uv=uv_beam)
+    acc.quad("buildings", "facade_atlas", P(u1, z0, fp), P(u1 + fw, z0, fp),
+             P(u1 + fw, z1, fp), P(u1, z1, fp), uv=uv_beam)
+    # centre vertical shadow gap between the two leaves (2 tris)
+    acc.quad("buildings", "facade_atlas", P(um - 0.024, z0 + 0.02, pr), P(um + 0.024, z0 + 0.02, pr),
+             P(um + 0.024, z1 - 0.01, pr), P(um - 0.024, z1 - 0.01, pr), uv=uv_dark)
+    # four forged black strap hinges (2 on left leaf, 2 on right leaf = 8 tris)
+    hw = min(0.58, w * 0.21)
+    hh = 0.034
+    for zf in (0.24, 0.76):
+        zh = z0 + h * zf
+        acc.quad("buildings", "facade_atlas", P(u0 + 0.02, zh - hh, pr), P(u0 + 0.02 + hw, zh - hh, pr),
+                 P(u0 + 0.02 + hw, zh + hh, pr), P(u0 + 0.02, zh + hh, pr), uv=uv_dark)
+        acc.quad("buildings", "facade_atlas", P(u1 - 0.02 - hw, zh - hh, pr), P(u1 - 0.02, zh - hh, pr),
+                 P(u1 - 0.02, zh + hh, pr), P(u1 - 0.02 - hw, zh + hh, pr), uv=uv_dark)
+
+
+def _rural_gutter(acc, ea, eb, ne, ze, sw):
+    """LOD0-only simple L-profile eaves gutter for rural outbuildings (facade_atlas swatch, +0 draws, 4 tris per eave)."""
+    ea, eb, ne = np.asarray(ea, float), np.asarray(eb, float), np.asarray(ne, float)
+    le = float(np.hypot(*(eb - ea)))
+    if le < 1.2:
+        return
+    de = (eb - ea) / le
+    a0, b0 = ea - de * 0.04, eb + de * 0.04
+    uv = FA.swatch_uv(sw)
+    z_top, z_bot = ze - 0.03, ze - 0.14
+    in_p, out_p = -0.02, 0.10
+    A0, B0 = np.array([*(a0 + ne * out_p), z_bot]), np.array([*(b0 + ne * out_p), z_bot])
+    A1, B1 = np.array([*(a0 + ne * out_p), z_top]), np.array([*(b0 + ne * out_p), z_top])
+    Ai, Bi = np.array([*(a0 + ne * in_p), z_bot]), np.array([*(b0 + ne * in_p), z_bot])
+    acc.quad("buildings", "facade_atlas", A0, B0, B1, A1, uv=uv)            # front face (outward)
+    acc.quad("buildings", "facade_atlas", Ai, Bi, B0, A0, uv=uv)            # underside (downward)
+
+
+def _rural_downpipe(acc, a, d, nout, u, z0, z1, sw):
+    """LOD0-only 2-face V-profile downpipe for rural outbuildings (facade_atlas swatch, +0 draws, 4 tris per pipe)."""
+    if z1 - z0 < 0.8:
+        return
+    p = np.asarray(a, float) + np.asarray(d, float) * u
+    d2, n2 = np.asarray(d, float), np.asarray(nout, float)
+    uv = FA.swatch_uv(sw)
+    r = 0.055
+    pl = p - d2 * r + n2 * 0.04
+    pf = p + n2 * (0.04 + r * 1.4)
+    pr = p + d2 * r + n2 * 0.04
+    acc.quad("buildings", "facade_atlas", [pl[0], pl[1], z0], [pf[0], pf[1], z0], [pf[0], pf[1], z1], [pl[0], pl[1], z1], uv=uv)
+    acc.quad("buildings", "facade_atlas", [pf[0], pf[1], z0], [pr[0], pr[1], z0], [pr[0], pr[1], z1], [pf[0], pf[1], z1], uv=uv)
 
 
 def rural_shed_shades(key):
@@ -115,10 +197,11 @@ def rural_shed_shades(key):
     lo, hi = RURAL_SHED_TINT
     lum = lo + (hi - lo) * FK.hfloat(key, "rs_lum")
     warm = (FK.hfloat(key, "rs_warm") - 0.5) * 0.08
+    pl = 0.38 + 0.16 * FK.hfloat(key, "rs_pl")
 
     def c(l):
         return [round(max(0.4, l * (1 + warm)) * 0.5, 4), round(l * 0.5, 4), round(max(0.4, l * (1 - warm)) * 0.5, 4), 1.0]
-    return c(lum), c(lum * 0.94), c(lum * 1.04), [round(max(0.5, lum - 0.12) * 0.5, 4)] * 3 + [1.0]
+    return c(lum), c(lum * 0.94), c(lum * 1.04), [round(pl * 1.03 * 0.5, 4), round(pl * 0.5, 4), round(pl * 0.95 * 0.5, 4), 1.0]
 
 
 def rural_shed_pick(key, table, salt):
@@ -752,8 +835,9 @@ def wall_with_openings(acc, layer, mat, p0, d, nout, L, zb, zt, openings, u0=0.0
                          uv=[[lu0, lv0], [lu1, lv0], [lu1, lv1], [lu0, lv1]])
             continue
         rv = reveal or "reveal_" + ("hall" if mat.startswith("hall") else "plaster")
-        # reveals (facing into the opening)
-        acc.quad(layer, rv, A, B, B + back, A + back)          # sill (faces up)
+        # reveals (facing into the opening); skip sill on ground-level barn doors (-2 tris per barn door)
+        if kind != "barn_door":
+            acc.quad(layer, rv, A, B, B + back, A + back)          # sill (faces up)
         acc.quad(layer, rv, D + back, C + back, C, D)          # head (faces down)
         acc.quad(layer, rv, A + back, D + back, D, A)          # left jamb (faces +d)
         acc.quad(layer, rv, B, C, C + back, B + back)          # right jamb (faces -d)
@@ -1221,13 +1305,42 @@ def facade_openings(typ, L, zref, ztop, storeys, key, is_main, docks_here, varia
         return ops
     if typ == "shed":
         rural = variant.get("rural")
-        if is_main and L > 3.2 and hfloat(key, "gar") < (0.85 if rural else 0.6):
-            n = max(1, min(2 if rural else 4, int(L // 3.2)))
-            for i in range(n):
-                um = (i + 0.5) * L / n
-                ops.append((um - 1.25, um + 1.25, zref + 0.05, zref + 2.2, 0.1, "door", cells("garage", hv("g", i))))
-        elif is_main and L > 2:
-            ops.append((L / 2 - 0.5, L / 2 + 0.5, zref + 0.05, zref + 2.15, 0.06, "door", cells("door_steel", hv("sd"))))
+        if rural:
+            # ADR 0238 d. props-fix r2 (neon-outbuildings2-s24): barn doors (vertical boards + forged hinges in a
+            # shallow recess) on the front facade and long road-facing barn wall, or rural double-leaf garage doors
+            # without urban graffiti on smaller sheds.
+            barn_side = bool(variant.get("barn_side"))
+            has_long_barn = bool(variant.get("has_long_barn"))
+            dh = min(2.35, ztop - zref - 0.22)
+            # If the barn's main doors live on a long eave wall (`has_long_barn`), a short gable `is_main` gets a
+            # simple personnel door instead of a redundant wide gate.
+            want_gate = barn_side or (is_main and (not has_long_barn or L >= 7.5))
+            if want_gate and L >= 3.2 and dh >= 1.85 and (barn_side or hfloat(key, "gar") < 0.95):
+                use_barn = L >= 6.0 or hfloat(key, "barn_wood") < 0.65
+                if use_barn and L >= 4.0:
+                    dw = 3.20 if L >= 10.5 else (2.75 if L >= 6.0 else 2.40)
+                    um = L * (0.5 if L < 10.0 else (0.36 + 0.28 * hfloat(key, "bd_u")))
+                    um = min(max(um, dw / 2 + 0.6), L - dw / 2 - 0.6)
+                    ops.append((um - dw / 2, um + dw / 2, zref + 0.04, zref + 0.04 + dh,
+                                RURAL_SHED_BARN_REVEAL_M, "barn_door", _rural_barn_infill(hv("bd"))))
+                else:
+                    n = 1 if L < 7.5 else 2
+                    for i in range(n):
+                        um = (i + 0.5) * L / n
+                        gv = RURAL_SHED_GARAGE_VARIANTS[hv("g", i) % len(RURAL_SHED_GARAGE_VARIANTS)]
+                        ops.append((um - 1.25, um + 1.25, zref + 0.05, min(zref + 2.2, ztop - 0.22),
+                                    RURAL_SHED_BARN_REVEAL_M, "door", cells("garage", gv)))
+            elif is_main and L > 2.0 and ztop - zref >= 2.2:
+                ops.append((L / 2 - 0.5, L / 2 + 0.5, zref + 0.05, min(zref + 2.15, ztop - 0.22),
+                            0.0, "door", cells("door_steel", hv("sd"))))
+        else:
+            if is_main and L > 3.2 and hfloat(key, "gar") < 0.6:
+                n = max(1, min(4, int(L // 3.2)))
+                for i in range(n):
+                    um = (i + 0.5) * L / n
+                    ops.append((um - 1.25, um + 1.25, zref + 0.05, zref + 2.2, 0.1, "door", cells("garage", hv("g", i))))
+            elif is_main and L > 2:
+                ops.append((L / 2 - 0.5, L / 2 + 0.5, zref + 0.05, zref + 2.15, 0.06, "door", cells("door_steel", hv("sd"))))
         if rural and L >= 3.6:
             # ADR 0238 d. props-fix-s24: small barred windows (the `base` cell: 0.9 x 0.45 m window with a grille), one per 3.5-7.5 m of
             # wall, never beside a door, under the eave; walls shorter than 3.6 m stay blank
@@ -1965,6 +2078,18 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
         dist = [roads_poly.distance(shapely.Point(*(0.5 * (a + c_)))) if roads_poly is not None else 0 for a, c_ in edges]
         main = int(np.argmin(dist)) if dist else 0
         lens = [float(np.linalg.norm(c_ - a)) for a, c_ in edges]
+        # ADR 0238 d. props-fix r2 (neon-outbuildings2-s24): a Polish rural barn puts its wide double doors on the long
+        # eave wall (and drive-through barns >= 12 m / >= 120 m2 have them on both long walls), even when a gable end is
+        # marginally closer to a side road.
+        barn_edges = set()
+        if rural_shed and edges:
+            long_e = [i for i, ln in enumerate(lens) if ln >= 7.5]
+            if long_e:
+                long_e.sort(key=lambda i: (dist[i], -lens[i]))
+                if main not in long_e[:1]:
+                    barn_edges.add(long_e[0])
+                if len(long_e) >= 2 and (poly.area >= 120.0 or max(lens) >= 12.0):
+                    barn_edges.add(long_e[1])
         # ADR 0295 (P1-1): outer corners of the outline (turn of more than ~25 degrees) - a boarded house gets its
         # corner boards there; convex[i] = the corner at the START of edge i
         convex = []
@@ -2123,6 +2248,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             else:
                 ops = facade_openings(typ, L, zref, zt, storeys, f"{key}:{ei}", is_main, dk is not None,
                                       dict(variant, balcony=bal_group if ei in bal_edges else False, main=ei == main,
+                                           barn_side=ei in barn_edges, has_long_barn=bool(barn_edges),
                                            door_z=door_z), sh=sh, zbase=zbase)
             if typ == "hall" and not front and gates_b:              # ADR 0196: authored sectional gates
                 gate_openings(gates_b, a, d, L, zref, zt, ops)
@@ -2242,9 +2368,14 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                         signs.append(FK.sign_instance(code, a, d, nout, u, zt - 1.6, f"{key}:{ei}"))
                         signed = True
             else:
-                zpl = (st_zpl if st_zpl is not None else
-                       zref + (zbase - 0.1 if typ == "block" else PLINTH_H.get(typ, 0.35) + (
-                           0.15 * round(FK.hfloat(key, "plh")) if typ == "house" else 0.0)))
+                if rural_shed:
+                    pl_h = RURAL_SHED_PLINTH_HS[FA.hint(key, "rs_plh") % len(RURAL_SHED_PLINTH_HS)]
+                    zg85 = float(np.percentile(zg, 85))
+                    zpl = min(max(zref + pl_h, zg85 + 0.35), min(zref + 0.95, max(zref + 0.45, zeave - 1.9)))
+                else:
+                    zpl = (st_zpl if st_zpl is not None else
+                           zref + (zbase - 0.1 if typ == "block" else PLINTH_H.get(typ, 0.35) + (
+                               0.15 * round(FK.hfloat(key, "plh")) if typ == "house" else 0.0)))
                 usplits = []
                 if insulated and ei == main and L > 12 and not one_tone:   # accent field on the stairwell axis
                     door = [o for o in ops if o[5] == "door"]
@@ -2254,10 +2385,14 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                 lod1_ro = ((zt, RUNOFF_PERIOD_M * FK.hfloat(key, "runoff_u"), 0.6 + 0.7 * FK.hfloat(key, "runoff_l"))
                            if str(wall).startswith("hall_wall") else None)
                 # r10 r2: flat-roofed blocks and offices streak under the attic coping too (LOD0 only: the LOD1 window
-                # zone is the row atlas, it has no wall-top UV1)
+                # zone is the row atlas, it has no wall-top UV1). neon-outbuildings2-s24: rural outbuildings also get
+                # under-eave runoff streaks on LOD0 plaster walls (0 extra tris, 0 extra draws).
                 lod0_ro = lod1_ro
-                if lod0_ro is None and typ in ("block", "office") and not pitched:
-                    lod0_ro = (zt, RUNOFF_PERIOD_M * FK.hfloat(key, "runoff_u"), 0.5 + 0.6 * FK.hfloat(key, "runoff_l"))
+                if lod0_ro is None and ((typ in ("block", "office") and not pitched)
+                                        or (rural_shed and str(wall_e).startswith("plaster_"))):
+                    lod0_ro = (zt, RUNOFF_PERIOD_M * FK.hfloat(key, "runoff_u"),
+                               (0.45 + 0.45 * FK.hfloat(key, "runoff_l")) if rural_shed
+                               else (0.5 + 0.6 * FK.hfloat(key, "runoff_l")))
                 # accent colour on the gable ends only: an edge across the long axis, about as long as the block is
                 # deep (before r10 every edge < 16 m qualified, so stepped blocks came out accent-coloured all round)
                 gable_accent = (insulated and L < 16 and FK.hfloat(key, "gable") < 0.6 and L > 0.7 * rect_short and
@@ -2370,6 +2505,10 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                             zt_o = aw["zband"] if (aw and o is aw["op"]) else zt
                             st_stats["window_trim_tris"] += FK.window_trim(
                                 acc, a, d, nout, L, o, zt_o, mat="reveal_plaster", surround=st_surround)
+                if rural_shed:
+                    for o in ops:
+                        if o[5] == "barn_door":
+                            _rural_barn_kit(acc, a, d, nout, o, f"{key}:{ei}")
                 if typ in ("block", "office", "house") and not wooden and zpl > zbot + 0.6:
                     FK.plinth_drip(acc, a, d, nout, L, zpl, ops)
                     if typ in ("block", "office"):       # ADR 0107 (P2-k): joints of a tall plinth on a slope
@@ -2496,7 +2635,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                                          else "soffit_boards"),
                              step_mat=wall,       # ADR 0107: wall faces closing the steps of a MultiRoof
                              low_mat=roof_l1_map.get(rmat),
-                             weather=(roof_weather(b, key, rmat, wooden, rural_shed) if b.get("roof_weather") else None))
+                             weather=(roof_weather(b, key, rmat, wooden, rural_shed)
+                                      if (b.get("roof_weather") or rural_shed) else None))
             if b.get("roof_weather"):
                 rw_stats[roof_age_class(b, key, rmat, wooden, rural_shed)] += 1
             # ADR 0097 (review 0094 P2-c "wiatrownica biała vs szara"): with a tile roof the fascia / verge boards are
@@ -2504,16 +2644,33 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
             # fascia next to the grey soffit_boards under the short wing overhang)
             eaves.sort(key=lambda e_: -float(np.hypot(*(e_[1] - e_[0]))))
             acc_g = acc if typ == "house" else _L0Only(acc)
-            for k_, (ea, eb, ze) in enumerate([] if rural_shed else eaves):   # eaves gutters (none on a farm outbuilding)
-                le = float(np.hypot(*(eb - ea)))
-                de = (eb - ea) / le
-                ne = np.array([de[1], -de[0]])
-                FK.gutter(acc_g, ea, eb, ne, ze - 0.10, proud=-0.02)
-                if k_ < 2:
-                    ue = 0.35 + RF.OVERHANG if FK.hfloat(key, "dp", k_) < 0.5 else le - 0.35 - RF.OVERHANG
-                    wp = ea + de * ue - ne * RF.OVERHANG
-                    if poly.exterior.distance(shapely.Point(*wp)) < 0.2:
-                        FK.downpipe(acc_g, ea - ne * RF.OVERHANG, de, ne, ue, zbot + 0.4, ze - 0.3, hopper=False)
+            if rural_shed:
+                # ADR 0238 d. props-fix r2 (neon-outbuildings2-s24): lightweight LOD0-only gutters & downpipes in
+                # facade_atlas swatches (4 tris per eave, 4 tris per pipe, +0 draws, +0 LOD1 tris).
+                g_sw = (RURAL_SHED_GUTTER_SWATCHES[2] if (rmat.startswith("roof_metal") and FK.hfloat(key, "rsgsw") < 0.55)
+                        else RURAL_SHED_GUTTER_SWATCHES[FA.hint(key, "rsgsw") % 2])
+                max_pipes = 2 if poly.area >= 75.0 else 1
+                for k_, (ea, eb, ze) in enumerate(eaves):
+                    le = float(np.hypot(*(eb - ea)))
+                    de = (eb - ea) / le
+                    ne = np.array([de[1], -de[0]])
+                    _rural_gutter(acc, ea, eb, ne, ze, g_sw)
+                    if k_ < max_pipes:
+                        ue = 0.35 + RF.OVERHANG if FK.hfloat(key, "dp", k_) < 0.5 else le - 0.35 - RF.OVERHANG
+                        wp = ea + de * ue - ne * RF.OVERHANG
+                        if poly.exterior.distance(shapely.Point(*wp)) < 0.2:
+                            _rural_downpipe(acc, ea - ne * RF.OVERHANG, de, ne, ue, zbot + 0.35, ze - 0.14, g_sw)
+            else:
+                for k_, (ea, eb, ze) in enumerate(eaves):   # eaves gutters
+                    le = float(np.hypot(*(eb - ea)))
+                    de = (eb - ea) / le
+                    ne = np.array([de[1], -de[0]])
+                    FK.gutter(acc_g, ea, eb, ne, ze - 0.10, proud=-0.02)
+                    if k_ < 2:
+                        ue = 0.35 + RF.OVERHANG if FK.hfloat(key, "dp", k_) < 0.5 else le - 0.35 - RF.OVERHANG
+                        wp = ea + de * ue - ne * RF.OVERHANG
+                        if poly.exterior.distance(shapely.Point(*wp)) < 0.2:
+                            FK.downpipe(acc_g, ea - ne * RF.OVERHANG, de, ne, ue, zbot + 0.4, ze - 0.3, hopper=False)
             nch = 1 + int(storeys >= 2 and FK.hfloat(key, "chim2") < 0.5)
             if (wooden and FK.hfloat(key, "wchim") >= 0.8) or typ != "house":      # ADR 0238: no rule chimney on a
                 nch = 0                                                             # pitched block / office

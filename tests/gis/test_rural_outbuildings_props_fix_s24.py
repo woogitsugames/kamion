@@ -125,6 +125,85 @@ def test_every_rural_outbuilding_of_both_prototype_tiles_builds():
         assert buf.tris("buildings") > 0
 
 
+def test_outbuildings_r2_barn_doors_gutters_roof_weather_plinth_and_runoff():
+    """ADR 0238 d. props-fix r2 (neon-outbuildings2-s24, critic build #10 pkt 9):
+    (1) vertical-board barn doors + hardware (no urban graffiti variants 2/3/4),
+    (2) LOD0-only gutters & downpipes in facade_atlas (+0 draws, +0 LOD1 tris),
+    (3) roof COLOR_0 weather + shader down-slope metal sheet ribs,
+    (4) darker & taller plinth (0.45-0.65 m) + under-eave runoff UV1 on LOD0 plaster walls."""
+    from streetscape import buildings_mesh as BM
+    from streetscape import facade_atlas as FA
+
+    class _FullBuf:
+        def __init__(self):
+            self.parts = []
+
+        def add(self, layer, mat, V, UV, T, **kw):
+            self.parts.append(SimpleNamespace(
+                layer=layer, mat=mat, V=np.asarray(V, float), UV=np.asarray(UV, float),
+                T=np.asarray(T).reshape(-1, 3), UV1=kw.get("UV1"), COL=kw.get("COL"),
+            ))
+
+    sheds, _, _, _ = _sheds("dk65-07", {"bdot:2C9A9AB4-440C-0F0D-E053-CA2BA8C04DCD",
+                                        "bdot:2C9A9AB4-749B-0F0D-E053-CA2BA8C04DCD",
+                                        "bdot:2C9A9AB4-8870-0F0D-E053-CA2BA8C04DCD"})
+    assert len(sheds) == 3
+    buf = _FullBuf()
+    BM.build(buf, sheds, _HF, None, None, box(-5000, -5000, -4990, -4990), {}, sign_out=[])
+
+    # +0 new materials (all within allowed house/outbuilding palette, no downpipe material)
+    allowed = {"plaster_grey", "plaster_light", "plaster_cream", "plaster_beige", "plinth_dark", "facade_atlas",
+               "reveal_plaster", "soffit_boards", "hall_flashing", "roof_metal_graphite", "roof_tiles_brown",
+               "roof_tiles_red"}
+    mats_l0 = {p.mat for p in buf.parts if p.layer == "buildings"}
+    assert mats_l0 <= allowed, mats_l0 - allowed
+    assert "downpipe" not in mats_l0
+
+    # (1) Barn doors: vertical board cells (balf 2/5) + hardware swatches (steel_dark/pvc_brown/wood), no graffiti (garage 2/3/4)
+    fa_l0 = [p for p in buf.parts if p.layer == "buildings" and p.mat == "facade_atlas"]
+    assert fa_l0
+    uv_all = np.concatenate([p.UV for p in fa_l0])
+    b2, b5 = FA.cell("balf", 2), FA.cell("balf", 5)
+    in_barn = (
+        ((uv_all[:, 0] >= b2[0]) & (uv_all[:, 0] <= b2[0] + b2[2]) & (uv_all[:, 1] >= b2[1]) & (uv_all[:, 1] <= b2[1] + b2[3])) |
+        ((uv_all[:, 0] >= b5[0]) & (uv_all[:, 0] <= b5[0] + b5[2]) & (uv_all[:, 1] >= b5[1]) & (uv_all[:, 1] <= b5[1] + b5[3]))
+    )
+    assert in_barn.any(), "expected vertical-board barn door UVs from balf(2/5)"
+    # (2) Gutters & downpipes in facade_atlas swatches (galv / steel_grey / steel_dark) on LOD0 only
+    gutter_hits = 0
+    for sw in BM.RURAL_SHED_GUTTER_SWATCHES:
+        u0, v0, w, h = FA.CELLS[("sw_" + sw, 0)]
+        m = (uv_all[:, 0] >= u0) & (uv_all[:, 0] <= u0 + w) & (uv_all[:, 1] >= v0) & (uv_all[:, 1] <= v0 + h)
+        gutter_hits += int(m.sum())
+    assert gutter_hits >= 24, "expected gutter/downpipe/hardware swatch vertices on LOD0"
+    assert not any(p.mat == "facade_atlas" for p in buf.parts if p.layer == "buildings_low")
+
+    # (3) Roof COLOR_0 weathering written for rural_outbuildings + shader/importer sheet ribs
+    # (ridge cap vertices in the merged submesh carry a=0, roof slope covering vertices carry a >= 0.5)
+    roof_l0 = [p for p in buf.parts if p.layer == "buildings" and p.mat.startswith("roof_")]
+    assert roof_l0 and all(p.COL is not None and float((p.COL[:, 3] >= 0.5).mean()) > 0.4 for p in roof_l0)
+    pbr = (REPO / "game/Assets/_Project/Environment/Shaders/WorldPBR.shader").read_text(encoding="utf-8")
+    imp = (REPO / "game/Assets/_Project/World/Import/WorldPbrMaterials.cs").read_text(encoding="utf-8")
+    assert "_RoofWeather.w > 0.5" in pbr and "sheetRibs" in imp
+
+    # (4) Darker plinth shade (<= 0.30 linear COLOR_0 = <= 0.60 multiplier) + under-eave runoff UV1 on plaster walls
+    for b in sheds:
+        _, _, _, pl_col = BM.rural_shed_shades(b["id"])
+        assert 0.16 <= pl_col[1] <= 0.30, pl_col
+    plaster_l0 = [p for p in buf.parts if p.layer == "buildings" and p.mat.startswith("plaster_")]
+    assert plaster_l0 and all(p.UV1 is not None for p in plaster_l0), "under-eave runoff UV1 expected on LOD0 plaster"
+
+
+def test_dk65_07_outbuildings_stay_within_triangle_budget():
+    """Budget gate (neon-outbuildings2-s24): total dk65-07 LOD0 building triangles <= +5 % vs main baseline (104 892)."""
+    from streetscape import buildings_mesh as BM
+    fc, ovr, origin = _region("dk65-07")
+    blds = BM.load(fc, origin, ovr)
+    buf, _ = _build(blds)
+    base_lod0 = 104_892
+    assert buf.tris("buildings") <= int(base_lod0 * 1.05), (buf.tris("buildings"), int(base_lod0 * 1.05))
+
+
 # ---------------------------------------------------------------- rural bus shelter (same ADR, P1 7)
 def test_rural_shelter_is_opaque_one_slot_and_within_the_bkm_envelope():
     from streetscape import props as PP
