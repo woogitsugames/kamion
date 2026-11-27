@@ -20,3 +20,6 @@
 ## codex-audio-wipers-s24 — rozpoznanie
 Przeczytano reguły, ADR 0142 i 0341. Stan bazowy: zaparkowane pióra, brak osobnego zdarzenia serwisowego pisku.
 Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Lighting clear
+
+Synteza gotowa: 8 własnych WAV (48 kHz mono), w tym suche i mokre pióra, park i hamulce w dwóch perspektywach. Render bazowy Win64 importuje zasoby.
+Następny krok: pwsh scripts/build-lab.ps1 -SkipAudio -BuildTarget Win64 (jeśli bazowa scena wymaga odbudowy).
