@@ -78,3 +78,23 @@ image of two different crowns - the "melting blob" of critic build #10): `smooth
 azimuths and cross-fades over the middle 24°. Library trees fade from LOD1 cards into the impostor over the last 25 % of
 the LOD1 distance (cutoff dissolve, both drawn; ADR 0308 addendum crown-lod-s24), and High draws cards to 90 m.
 The 256 x 384 px views themselves are unchanged (a sharper atlas needs a rebake in `make_trees.py`, `IMP_RES`; open).
+
+## Addendum impostor-rebake-s24 (2026-11-27): atlas 4096 × 1024, bez rozciągania w imporcie
+**Pomiar przed** (`ImpostorAtlasAudit`, `artifacts/impostor-rebake-s24/before/atlas-audit.tsv`): pas 6 × 256 × 384 =
+1536 × 384 px (NPOT); importer (`npotScale ToNearest`, max 2048) **rozciągał** go do 2048 × 512 DXT5 (a `_n` 768 × 192 do
+1024 × 256 DXT1) — impostor był bilinearnym powiększeniem i tak miękkiego bake'u (rozmycie poza zasięgiem kart 90 m).
+**Decyzja** (`make_trees.py`): każdy widok bake'owany w **683 × 1024** (2,67× liniowo; `IMP_RES`), pas przeskalowany do
+potęgi dwójki **4096 × 1024** (6 × 682,67 kolumn — shader czyta widok k jako (k + u) / 6; `IMP_ATLAS_W`), `_n` 2048 × 512.
+Na GPU (PC, max 2048) albedo = 2048 × 512 DXT5 jak przedtem, ale jako **zmniejszenie 2:1** (nadpróbkowanie) zamiast
+powiększenia 1,33:1; `_n` z max 1024 (`InstanceImporter.ImpostorNormalMaxSize`, połowa albedo jak dotąd). Android bez zmian
+(max 2048 / 1024). `IMP_ASPECT` = 2/3 (ramka S i szerokość kwadratu jak przed — `trees_meta.json` bez zmian treści).
+Opening (`open_r` 1) **nie** skalowany (r 3 = kwadrat 7 × 7 ciął brzegi koron w bloki — odrzucone po quick-bake'u);
+`min_island` skalowany powierzchnią (16 → 114 px). `ImpostorTrim`: początek widoku `round(k · W / 6)` (stare `k · (W / 6)`
+myliło się o 3 px w widoku 5) i dylatacja jako udział widoku (`DilateFor`, 6 px @ 256 → 16 px @ 682), test EditMode.
+`_components_min` z pointer jumping (wynik identyczny, test ekwiwalencji; 7,5 → 3,3 min na sosnę). Pełny rebake 28 drzew:
+4825 s (Blender 4.2, Cycles GPU; ~95 % czasu = pakowanie numpy).
+**Pamięć GPU** (wyliczona z wymiarów/formatu + mipy): knyszyn-w 36,38 → 37,50 MB, dk65-07 33,38 → 34,50 MB (+1,12 MB:
+młodnik sosny `IMP_SCALE` 0,5 ma teraz 2048 × 512 zamiast 1024 × 256). Repo (LFS): PNG impostorów 79 MB, `trees_lod2.glb`
+10,8 → 62,5 MB (osadzone obrazy; import czyta PNG z `art-source`, nie z GLB).
+**Koszt renderu**: draw calle i trójkąty identyczne na 66 kamerach (`stats-before-after.tsv`), zmiana tylko tekstur.
+Dalsze 2× (albedo 4096 na High/Ultra) = +~100 MB na region; wymaga grupy limitu mipmap w QualitySettings (lider, otwarte).

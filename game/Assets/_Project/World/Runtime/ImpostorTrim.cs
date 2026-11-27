@@ -22,6 +22,15 @@ namespace Game.World
         public const int DilatePx = 6;          // 2.3 % of a 256 px view: covers the coverage-preserving alpha mips to mip 2
         public const byte AlphaFloor = 4;       // texels at or below are transparent at any cutoff in use (0.5)
 
+        /// <summary>First texel column of view k. impostor-rebake-s24: the 4096 px strip holds 6 views of 682.67 px (the
+        /// shader reads view k at u = (k + u') / views), so view k starts at round(k * width / views), not k * (width / views)
+        /// (3 px off for view 5). Same as k * w for the old 1536 px strip.</summary>
+        public static int ViewStart(int k, int width, int views) => (int)Math.Round(k * (double)width / views);
+
+        /// <summary>Dilation in texels for a view <paramref name="viewWidth"/> px wide: <see cref="DilatePx"/> was tuned at
+        /// 256 px (2.3 % of the view); the same share of the view at any bake resolution (impostor-rebake-s24).</summary>
+        public static int DilateFor(int viewWidth) => Math.Max(DilatePx, (int)Math.Round(DilatePx * viewWidth / 256.0));
+
         public struct Polygon
         {
             public Vector2[] Uv;                // per vertex (u in [0, 1] of one view, v in [0, 1]); pairs left, right per band edge
@@ -46,7 +55,7 @@ namespace Game.World
                 int row = y * width;
                 for (int k = 0; k < views; k++)
                 {
-                    int o = row + k * w;
+                    int o = row + ViewStart(k, width, views);
                     for (int x = 0; x < w; x++)
                         if (alpha[o + x] > AlphaFloor) { if (x < mn) mn = x; if (x > mx) mx = x; }
                 }
@@ -122,7 +131,7 @@ namespace Game.World
                 for (int k = 0; k < views; k++)
                     for (int x = 0; x < w; x++)
                     {
-                        if (alpha[y * width + k * w + x] <= AlphaFloor) continue;
+                        if (alpha[y * width + ViewStart(k, width, views) + x] <= AlphaFloor) continue;
                         float u = (x + 0.5f) / w, v = (y + 0.5f) / height;
                         if (!Inside(p, u, v)) return false;
                     }

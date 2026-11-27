@@ -1081,7 +1081,15 @@ def material(name):
 # tools/blender/world/pack_vegetation.py (uv, numpy + scipy) then dilates the colour under the alpha, removes isolated
 # specks from the silhouette and packs <name>.png (RGB albedo + A coverage) and <name>_n.png (RG normal, B occlusion).
 IMP_NF = 6                       # impostor views around the tree (60 degrees apart), blended in the shader
-IMP_RES = (256, 384)             # one view
+# impostor-rebake-s24 (ADR 0023 addendum): 256 x 384 per view gave a 1536 x 384 strip that the importer (npotScale
+# ToNearest) stretched to 2048 x 512 - a bilinear up-scale of an already low bake (soft impostors beyond the 90 m card
+# range of crown-lod-s24). Now every view is baked at 683 x 1024 (2.67x linear) and the strip is resampled to the
+# power of two 4096 x 1024 (6 x 682.67 columns, the shader indexes views as (k + u) / 6): no importer resample, and
+# the 2048 x 512 GPU copy (PC max size, unchanged memory) is a 2x supersampled down-scale instead of an up-scale.
+IMP_ASPECT = 2.0 / 3.0           # view width / height (quad width = S * IMP_ASPECT; impostor_aspect in trees_meta)
+IMP_RES = (683, 1024)            # one view, baked
+IMP_ATLAS_W = 4096               # packed strip width (power of two) at IMP_RES[1] rows
+IMP_REF_H = 384                  # view height the texel-sized clean-up radii (min_island) were tuned at
 RAW = REPO / "artifacts" / "vegetation-r2" / "raw-bakes"  # raw passes, never tracked
 _passmats = {}
 
@@ -1236,7 +1244,7 @@ def bake_impostor(ob, name, H, res=IMP_RES):
         o.hide_render = o is not ob and o.type == "MESH"
     ob.hide_render = False
     half_w = max(math.hypot(v[0], v[1]) for v in ob.bound_box)
-    S = max(H * 1.05, 2.0 * half_w * 1.04 * IMP_RES[1] / IMP_RES[0])
+    S = max(H * 1.05, 2.0 * half_w * 1.04 / IMP_ASPECT)
     cam.data.ortho_scale = S
     for k in range(IMP_NF):
         a = 2 * math.pi * k / IMP_NF
@@ -1258,7 +1266,7 @@ def impostor_object(name, H, png, S):
     tex.image = bpy.data.images.load(str(png))
     nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
     nt.links.new(tex.outputs["Alpha"], bsdf.inputs["Alpha"])
-    w = S * (IMP_RES[0] / IMP_RES[1]) / 2       # quad matches one bake view (S = ortho scale, its height)
+    w = S * IMP_ASPECT / 2       # quad matches one bake view (S = ortho scale, its height)
     verts, faces, uvs = [], [], []
     for k in range(1):
         base = len(verts)
@@ -1478,6 +1486,13 @@ def _components_min(mask, min_px):
         for dy, dx in N8:
             nb = np.minimum(nb, _shift(lab, dy, dx))
         nb = np.where(mask, nb, big)
+        # impostor-rebake-s24: pointer jumping (a label is a texel index of the same component, so its own label is at
+        # least as small): the 1024-row bake converged in ~path length sweeps (minutes per pine) - now in ~log of it.
+        # Same fixed point (component minimum index), so the result is unchanged.
+        flat = np.append(nb.ravel(), big)
+        for _ in range(8):
+            nb = np.where(mask, flat[np.minimum(nb, big)], big)
+            flat = np.append(nb.ravel(), big)
         if np.array_equal(nb, lab):
             break
         lab = nb
@@ -1494,17 +1509,26 @@ def _lin_to_srgb(c):
     return np.where(c <= 0.0031308, c * 12.92, 1.055 * c ** (1 / 2.4) - 0.055)
 
 
-def pack(stems, out_png, out_n, min_island=0, open_r=1, canopy=False):
+def pack(stems, out_png, out_n, min_island=0, open_r=1, canopy=False, width=0):
     """Packs raw passes (stems laid out left to right) into out_png: RGB albedo (sRGB) + A coverage and
     out_n: R, G normal x, y (camera / view space, 0.5 bias), B sky visibility, A 1 (linear).
-    canopy: opaque, albedo x visibility^0.7 in one RGB texture (the canopy stays an opaque URP Lit surface)."""
+    canopy: opaque, albedo x visibility^0.7 in one RGB texture (the canopy stays an opaque URP Lit surface).
+    width: resample the strip to this many columns (impostor atlas: a power of two, impostor-rebake-s24)."""
     cols, nrms, alphas = [], [], []
     for stem in stems:
         rgb, n, al = _pack_stem(stem, min_island, open_r)
         cols.append(rgb)
         nrms.append(n)
         alphas.append(al)
-    _pack_write(np.concatenate(cols, 1), np.concatenate(nrms, 1), np.concatenate(alphas, 1), out_png, out_n, canopy)
+    rgb, n, al = np.concatenate(cols, 1), np.concatenate(nrms, 1), np.concatenate(alphas, 1)
+    if width and rgb.shape[1] != width:
+        rgb, n, al = (_resize_cols(x, width) for x in (rgb, n, al))
+    _pack_write(rgb, n, al, out_png, out_n, canopy)
+
+
+def _resize_cols(a, cols):
+    """_resize_rows along the columns (the 6 x 683 impostor strip -> 4096: 0.05 % narrower, no visible change)."""
+    return np.swapaxes(_resize_rows(np.swapaxes(a, 0, 1), cols), 0, 1)
 
 
 def _resize_rows(a, rows):
@@ -1697,7 +1721,7 @@ def main():
             res = tuple(int(r * IMP_SCALE.get(sp, 1.0)) for r in IMP_RES)
             if prior and png.exists() and (VEG / f"impostor_{name}_n.png").exists() and sp not in rebake and sp != "willow":
                 half_w = max(math.hypot(v[0], v[1]) for v in o0.bound_box)
-                S = max(H * 1.05, 2.0 * half_w * 1.04 * IMP_RES[1] / IMP_RES[0])
+                S = max(H * 1.05, 2.0 * half_w * 1.04 / IMP_ASPECT)
             else:
                 S = bake_impostor(o0, name, H, res)
                 # ADR0088: opening erased 1–2px photographed twig connections,
@@ -1705,15 +1729,20 @@ def main():
                 # still reject isolated specks. Non-pine and forest HLOD retain
                 # their established opening / component rules (far shimmer guard).
                 open_r = willow_open if sp == "willow" else (0 if sp in ("pine", "spruce", "pineyoung") else 1)
+                # impostor-rebake-s24: the island size was tuned in texels of a 384-row view - kept the same in metres
+                # (area x kr^2). The opening radius is not scaled: r 1 still drops 1-2 texel specks (< 1 texel of the
+                # 2048 x 512 GPU copy), while the 7 x 7 square of r 3 cut every crown edge into visible blocks.
+                kr = res[1] / IMP_REF_H
                 pack([f"impostor_{name}_{k}" for k in range(IMP_NF)], png, VEG / f"impostor_{name}_n.png",
                      open_r=open_r,
-                     min_island=16 if sp in ("pine", "spruce", "pineyoung") else 0)
+                     min_island=int(round(16 * kr * kr)) if sp in ("pine", "spruce", "pineyoung") else 0,
+                     width=int(round(IMP_ATLAS_W * res[1] / IMP_RES[1])))
             o2 = impostor_object(name, H, png, S)
             o2.hide_render = True
             objs += [o0, o1, o2]
             src[name] = o0
             meta[name] = {"species": sp, "variant": v, "href_m": round(H, 2), "impostor_frame_m": round(S, 2),
-                          "impostor_views": IMP_NF, "impostor_aspect": round(IMP_RES[0] / IMP_RES[1], 4),
+                          "impostor_views": IMP_NF, "impostor_aspect": round(IMP_ASPECT, 4),
                           "tris_lod0": sum(len(p.vertices) - 2 for p in o0.data.polygons),
                           "tris_lod1": sum(len(p.vertices) - 2 for p in o1.data.polygons), "tris_lod2": 2}
             if sp == "willow":

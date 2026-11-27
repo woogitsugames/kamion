@@ -27,6 +27,26 @@ namespace Game.Tests
         }
 
         [Test]
+        public void FractionalViewWidth_ViewsStartWhereTheShaderReadsThem()
+        {
+            // impostor-rebake-s24: 4096 px strip = 6 views of 682.67 px; the shader reads view k at u = (k + u') / 6
+            Assert.That(ImpostorTrim.ViewStart(5, 4096, 6), Is.EqualTo(3413));
+            Assert.That(ImpostorTrim.ViewStart(5, 1536, 6), Is.EqualTo(1280));   // old strip unchanged
+            Assert.That(ImpostorTrim.DilateFor(256), Is.EqualTo(ImpostorTrim.DilatePx));
+            Assert.That(ImpostorTrim.DilateFor(682), Is.EqualTo(16));
+            const int views = 6, width = 4096, h = 64;
+            var a = new byte[width * h];
+            // a blob at the far right of view 5 only (view-local columns 600..681 of the shader's view)
+            for (int y = 20; y < 40; y++)
+                for (int x = 600; x < 682; x++)
+                    a[y * width + ImpostorTrim.ViewStart(5, width, views) + x] = 255;
+            var p = ImpostorTrim.Fit(a, width, h, views, 4, ImpostorTrim.DilateFor(width / views));
+            Assert.That(p.HasValue);
+            Assert.That(ImpostorTrim.Encloses(p.Value, a, width, h, views));
+            Assert.That(p.Value.Uv[1].x, Is.EqualTo(1f).Within(1e-4f));   // right edge reaches the end of the view
+        }
+
+        [Test]
         public void EmptyAtlas_ReturnsNull()
         {
             Assert.That(ImpostorTrim.Fit(new byte[12 * 4], 12, 4, 6).HasValue, Is.False);

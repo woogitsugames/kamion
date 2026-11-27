@@ -191,3 +191,7 @@ Zamyka uwagę krytyka `artifacts/critic-s24-day27/CRITIC.md` pkt 2 („jedno »l
 - Visual-QA (11 kamer `garden-trees`, `clear` i `overcast`): **draw calle `dDraws = 0`**, `shadowDraws` +0, `instDraws` +0 na wszystkich 11 kamerach; `tris` sceny `+0…+1 362` (`tykocka-dw671-out`: `490 762 → 491 081`, `+319` = `+0,06 %`).
 - Testy: `test_small_trees_0352.py` (5), `test_trees_0352.py`, `test_trees_0347.py`, `test_trees_0308.py`, `test_house_greenery_0163.py`, `test_horizon_0170.py`, `test_buildings_r9.py`, `test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py` — zielone.
 
+## Dopisek impostor-rebake-s24 (2026-11-27)
+Atlasy impostorów wszystkich gatunków (w tym dąb, topola, młodniki) przebake'owane w 683 × 1024 / widok, pas 4096 × 1024
+(ADR 0023, addendum impostor-rebake-s24); tint per drzewo (`_TreeVar`, `foliage_tint`) bez zmian. Karty widziane krawędzią
+wygaszane w shaderze (`VegCardEdge`, ADR 0308 dopisek impostor-rebake-s24) — ten sam hasz instancji, bez wpływu na tint.
