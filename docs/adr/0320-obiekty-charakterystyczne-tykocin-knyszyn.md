@@ -302,3 +302,38 @@ Rynek zmierzono przez `tykocin_rynek_0320.build()` w pamięci na tej samej płas
 Dowody r3 w `artifacts/codex-monument-head-s25/`. Cycles, LOD0, clear i overcast, trzy stałe kamery s24
 oraz dwa ujęcia ¾ z wysokości 1,70 m i z odległości poziomej 6 i 15 m od osi pomnika. Import, regenerację
 kafla `tykocin` i visual QA w Unity zaplanowano na falę 15.
+
+## Dopisek agy-monument-cloak-s25 — ramiona, delia i żupan (r4)
+
+Po ocenie r3 (`overcast-head.png`, `clear-figure_front.png`) przebudowano górę korpusu, barki, wyłóg delii, kołnierz
+żupana oraz oba rękawy w `tools/blender/world/landmarks/make_czarniecki.py`, zachowując bez zmian głowę r3 (`3 800` /
+`180` tris, `187 012` high poly), buławę (`504` / `120` tris), dolne fałdy oraz kolory wierzchołków i patynę:
+
+- **Barki i góra delii:** złagodzono przejście profilu korpusu `BODY_Z`/`BODY_A` (wykładnik superelipsy schodzący z `2,5` do
+  `2,0` w górnej części) i wyeliminowano gwałtowne ścięcie powyżej `z = 1,93` m; zmniejszono boczną wypukłość na lewym
+  ramieniu oraz dodano pięć głównych, płynnych fałd `DELIA_SHOULDER_FOLDS` spływających z obu barków ku dolnym fałdom.
+  Wygładzanie po voxel remesh (`smooth_shoulders`) zawężono do pasów szwów pachy/szyi (`iterations = 8`), a zasięg szumu
+  loków futra w `detail_figure` ograniczono przy barkach i wyłogu kołnierza do `0,056` m.
+- **Kołnierz żupana i ciągły wyłóg delii:** zastąpiono prostokątne przejście przy szyi dopasowanym, okrągło-owalnym
+  stojącym kołnierzem wokół osi szyi oraz połączono przednie listwy futrzane delii w jedną ciągłą ścieżkę na powierzchni
+  żupana wokół kołnierza i karku (bez kanciastych zakończeń pod brodą).
+- **Rękawy z załamaniami w łokciu:** zastąpiono walcowate rury profilowaną funkcją `sculpted_sleeve` z poprzecznymi
+  fałdami po wewnętrznej stronie zgięcia łokcia, wyraźniejszym ugięciem prawego i lewego łokcia oraz smuklejszym
+  przedramieniem i mankietem na lewej ręce.
+- **Budżet i kierowana decymacja:** ograniczono kolumny na tylnej ścianie (`7`) i płaskich stopniach (`9`, `refine = 0,24`
+  m) cokołu oraz zmniejszono budżet kartuszy z `1 300` do `1 250` tris, przenosząc zaoszczędzone trójkąty na `figure`
+  LOD0 (`10 500 → 12 200` tris) i kierując `DECIMATE` łagodną grupą wag (`CollapsePriority`, `factor = 0,75`) na korzyść
+  barków, kołnierza, rękawów i przodu postaci.
+
+| Pomiar | r3 | r4 |
+|---|---:|---:|
+| Rynek LOD0 | 35 834 | **35 872** |
+| Rynek LOD1 | 3 334 | **3 334** |
+| Pomnik LOD0 | 26 672 | **26 710** |
+| Pomnik LOD1 | 1 964 | **1 964** |
+| Figura LOD0 | 10 500 | **12 200** |
+| Pas barków LOD0 (`abs_x` 0,13–0,45 m, `z` 6,80–7,11 m) | 791 (med. 4,23 cm) | **1 087** (med. 3,09 cm) |
+
+Dowody r4 i porównania SBS: `artifacts/agy-monument-cloak-s25/`. Testy GIS (`test_truss_bridge_0320.py`,
+`test_props_grounding_0337.py`, `test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py`)
+przeszły **91/91 PASS** przez `wgpy.cmd`. Unity, przebudowa kafla i visual QA w grze pozostają na falę 15.
