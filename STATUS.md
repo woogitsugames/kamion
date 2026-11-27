@@ -28,3 +28,6 @@
 - Następna komenda po zakończeniu kolejki i bazowego przebiegu: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`
 - Włączono odmiany kostki i krawężników dla knyszyn, knyszyn-w i knyszyn-s. W tych kaflach fallback zachowuje kostkę zgodnie z uwagą właściciela.
 - Następny krok: zakończyć `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 before`; potem aktywować Tykocin i uruchomić `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`.
+- Bazowy generator wyeksportował 64 chunki High i Low, kopia metryk jest w `artifacts/codex-sidewalk-var-s24/before/`. Bazowy import czeka na slot Unity i czyta zachowany manifest.
+- Włączono warianty w danych Tykocina i wpis szarej kostki dla północnej pierzei, na podstawie dwóch zdjęć Commons.
+- Następna komenda po bazowym visual-QA: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`

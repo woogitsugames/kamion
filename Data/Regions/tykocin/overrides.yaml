@@ -6,6 +6,25 @@
 # DW671 keeps the BDOT10k width and gets no edge lines, as in dw671-tykocin-01 (ADR 0212, measured there).
 # Nothing was checked on the orthophoto of this tile: add overrides after the ingest.
 overrides:
+  # ADR 0237 s24: town pavement finish, plus 2 cm kerbs at marked crossings.
+  - id: tykocin-pavement-rules-s24
+    kind: pavement_rules
+    mixed_sidewalks: true
+    older_sidewalks: true
+    sidewalk_bdot: true
+    crossing_kerb_drops: true
+    reason: >-
+      Prefer surveyed surface tags and BDOT10k where present. On unmapped local streets the mix of blocks,
+      slabs and older asphalt is WORKING_VALUE. At marked crossings reuse the ADR 0237 kerb profile.
+  - id: tykocin-rynek-north-grey-blocks-s24
+    kind: sidewalk_surface
+    surface: paving_grey
+    target: {osm_way: [630270670]}
+    reason: >-
+      Warm grey concrete block paving along the north frontage next to the granite roadway. Wikimedia Commons
+      cs153250600 and cs202183436, Krzysztof Popławski, CC BY 4.0, reference only (ADR 0336).
+    confidence: medium
+    verify: look_tykocin_rynek_n and look_tykocin_plaza_photo_0325
   # ADR 0336 (neon-tykocin-facades-s24, critic build #5 pkt 9): Podlasie small-town facades for Tykocin -
   # consistent white / warm-brown muntined window joinery (no corporate anthracite black squares on town buildings),
   # projecting lintels / surrounds and bolder sills, slope-safe 38-60 cm plinths (dark plaster + fieldstone),
