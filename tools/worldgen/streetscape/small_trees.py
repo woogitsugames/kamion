@@ -156,12 +156,12 @@ def young_tree(kit, p, z, r, H, cb, species, sprite, key):
     n_bough = 3 if hfloat(key, "nb") < 0.6 else 2
     # ---- lower lobes: from the stem outward
     t_lo, t_hi = {"vase": (0.06, 0.22), "lean": (0.04, 0.30), "broad": (0.20, 0.42)}[form]
-    k_h = {"vase": (0.74, 0.92), "lean": (0.62, 0.90), "broad": (0.52, 0.70)}[form]
+    k_h = {"vase": (0.80, 0.96), "lean": (0.68, 0.94), "broad": (0.60, 0.78)}[form]
     boughs = []
     for i in range(3):
         az = a0 + 2 * math.pi * (i + 0.5 * (hfloat(key, "ba", i) - 0.5)) / 3
         zb = z + cb + hc * (-0.08 + 0.26 * ((i + hfloat(key, "bs", i)) / 3))
-        rho = r * (0.38 + 0.18 * hfloat(key, "br", i)) * slim
+        rho = r * (0.26 + 0.14 * hfloat(key, "br", i)) * slim
         tilt = (t_lo + (t_hi - t_lo) * hfloat(key, "bt", i)) * slim
         if form == "lean":                                   # the lobe on the heavy side reaches further
             tilt *= 1.0 + 0.35 * max(float(np.dot([math.cos(az), math.sin(az)], off)) / (0.18 * r), 0.0)
@@ -172,25 +172,25 @@ def young_tree(kit, p, z, r, H, cb, species, sprite, key):
         # the lobe's tip stays inside the crown radius the orthophoto shows
         tip = math.hypot(*(f3[:2] + ax[:2] * Hc - p))
         Hc *= min(1.0, r_env * 0.96 / max(tip, 1e-6))
-        Wc = min(max(Hc * asp * (1.15 + 0.30 * hfloat(key, "bw", i)), 1.05 * r), 1.45 * r_env) * slim
+        Wc = min(max(Hc * asp * (1.25 + 0.35 * hfloat(key, "bw", i)), 1.30 * r), 1.65 * r_env) * slim
         _clump(kit, f3, ax, 0.5 * (hfloat(key, "by", i) - 0.5), Wc, Hc, sprite, centre,
                occ=(min(lvl * (0.80 + 0.10 * hfloat(key, "bo", i)) * (1.1 if birch else 1.0), 0.97), lvl * (0.94 + 0.06 * hfloat(key, "bp", i))),
-               flip=hfloat(key, "bf", i) < 0.5, v_lo=v_lo, twist=(0.45 + 0.35 * hfloat(key, "bx", i)) * (1 if hfloat(key, "bz", i) < 0.5 else -1), foot_w=0.6)
+               flip=hfloat(key, "bf", i) < 0.5, v_lo=v_lo, twist=(0.22 + 0.22 * hfloat(key, "bx", i)) * (1 if hfloat(key, "bz", i) < 0.5 else -1), foot_w=0.6)
         boughs.append((stem_at(max(zb - 0.16 * hc - 0.5 * rho, z + cb * 0.6)), f3 + ax * Hc * 0.30))
     # ---- upper lobes: between the lower ones, further out, leaning back over the stem
     for j in range(n_up):
         az = a0 + math.pi / 3 + 2 * math.pi * (j + 0.5 * (hfloat(key, "ua", j) - 0.5)) / n_up 
         d = np.array([math.cos(az), math.sin(az)])
-        zb = z + cb + hc * ({"vase": 0.34, "lean": 0.28, "broad": 0.24}[form] + 0.16 * hfloat(key, "us", j))
-        rad = r * (0.22 + 0.16 * hfloat(key, "ur", j)) * slim * (1.3 if form == "broad" else 1.0)
+        zb = z + cb + hc * ({"vase": 0.26, "lean": 0.22, "broad": 0.20}[form] + 0.14 * hfloat(key, "us", j))
+        rad = r * (0.14 + 0.14 * hfloat(key, "ur", j)) * slim * (1.3 if form == "broad" else 1.0)
         tilt = -(0.18 + 0.30 * hfloat(key, "ut", j)) * (1.25 if form == "broad" else 1.0)
         ax = _dir(az, tilt)
         Hc = (z + H * (1.0 - 0.07 * hfloat(key, "uh", j) * (1 + j)) - zb) / ax[2]
-        Wc = min(Hc * asp * (1.15 + 0.30 * hfloat(key, "uw", j)) * (1.25 if form == "broad" else 1.0), 1.6 * r_env) * slim
+        Wc = min(max(Hc * asp * (1.20 + 0.35 * hfloat(key, "uw", j)) * (1.25 if form == "broad" else 1.0), 1.25 * r), 1.7 * r_env) * slim
         f3 = np.array([*(top3[:2] + off + d * rad), zb])
         _clump(kit, f3, ax, 0.6 * (hfloat(key, "uy", j) - 0.5), Wc, Hc, sprite, centre,
                occ=(lvl * (0.84 + 0.08 * hfloat(key, "uo", j)), lvl), flip=hfloat(key, "uf", j) < 0.5, v_lo=v_lo,
-               twist=(0.4 + 0.3 * hfloat(key, "ux", j)) * (1 if j % 2 else -1), foot_w=0.62)
+               twist=(0.25 + 0.25 * hfloat(key, "ux", j)) * (1 if j % 2 else -1), foot_w=0.62)
     for a, b in boughs[:n_bough]:
         _bough(kit, a, b, tr * 1.5, uv=bark)
     return form

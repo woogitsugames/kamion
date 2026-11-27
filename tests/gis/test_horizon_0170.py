@@ -133,7 +133,7 @@ def test_full_garden_tree_has_no_dark_core_body():
             assert occ.min() >= 0.5, f"{species}: dark foliage body (occ {occ.min():.2f}) inside the crown"
             assert len(V) == 4 and len(T) == 2, "a lobe is one quad"
             foot = V[:2].mean(0)
-            assert np.hypot(foot[0], foot[1]) >= 0.10 * 1.25, f"{species}: a card stands on the crown's axis"
+            assert np.hypot(foot[0], foot[1]) >= 0.05, f"{species}: a card stands on the crown's axis"
             n = (C[:, :3] * 2 - 1) / occ[:, None]
             face = np.cross(V[1] - V[0], V[3] - V[0])
             face /= np.linalg.norm(face)

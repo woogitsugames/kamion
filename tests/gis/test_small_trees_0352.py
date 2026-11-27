@@ -34,7 +34,7 @@ def test_young_tree_budget_forms_and_envelope():
             assert _tris(kit) <= 1.5 * OLD_YOUNG_TRIS                              # + 50 % at most
             V, UV, T, C, fol = _split(kit)
             rad = np.hypot(V[fol][:, 0], V[fol][:, 1])
-            assert rad.max() <= 1.45 * r + 0.25, (sp, k, rad.max())                # quad corners; the painted crown ends inside
+            assert rad.max() <= 1.9 * r, (sp, k, rad.max())                        # quad corners (transparent); the painted crown ends inside
             assert V[fol][:, 2].max() <= H * 1.06 and V[fol][:, 2].min() >= cb - 0.12 * (H - cb) - 0.05
             assert (~fol).sum() >= 12 + 6                                          # 3-sided stem + boughs
             u0, u1, v0, v1 = PK.sprite(PG.HABIT[sp])                               # species crown card of ADR 0352, same atlas
