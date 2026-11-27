@@ -31,3 +31,5 @@
 - Następny krok po dwóch udanych renderach PRZED: `git checkout -- game/Assets/_Project/Environment/Shaders/WorldPBR.shader game/Assets/_Project/Rendering/Shaders/WorldSurface.shader game/Assets/_Project/World/Import/RegionImporter.cs`, potem `pwsh artifacts/codex-roofs-s24/run-world-after.ps1`.
 - Krok 6. Win64 r3 oraz High PC clear i overcast zakończone. Osiem PNG i dwa stats.txt są w before. Włączono na dysku shadery r4 z WIP.
 - Następny krok: `pwsh artifacts/codex-roofs-s24/run-after.ps1`.
+- Krok 6a. Pierwszy pytest dał 15 PASS i 1 błąd nowej asercji. Test rozróżnia teraz znaczniki połaci od domyślnych zer współdzielonego submesha i sprawdza pokrycie obu LOD-ów.
+- Następny krok: `pwsh artifacts/codex-roofs-s24/run-after.ps1`.

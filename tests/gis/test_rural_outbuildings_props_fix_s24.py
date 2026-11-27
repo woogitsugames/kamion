@@ -206,13 +206,14 @@ def test_r4_roof_profiles_and_seed_match_at_both_lods():
     for b in (b for b in sheds if b.get("rural_outbuilding")):
         buf, _ = _build([b])
         covers = [p for p in buf.parts if p.mat.startswith("roof_") and p.COL is not None]
-        assert {p.layer for p in covers} == {"buildings", "buildings_low"}
-        codes = {round(a * 255) for p in covers for a in p.COL[:, 3]}
+        tagged = [(p, p.COL[p.COL[:, 3] > 0.0]) for p in covers]
+        assert {p.layer for p, colors in tagged if len(colors)} == {"buildings", "buildings_low"}
+        codes = {round(a * 255) for _, colors in tagged for a in colors[:, 3]}
         assert len(codes) == 1, b["id"]
         code = codes.pop()
         if covers[0].mat == "roof_membrane":
             assert code == 255 and MAT.M["roof_membrane"]["roof_felt"] and MAT.M["roof_membrane"]["vertex_color"]
-            assert all((p.COL[:, 2] == 64.0 / 255.0).all() for p in covers)
+            assert all((colors[:, 2] == 64.0 / 255.0).all() for _, colors in tagged)
             saw_felt = True
             continue
         profile, seed = divmod(code - 1, RF.RURAL_ROOF_SEEDS)
