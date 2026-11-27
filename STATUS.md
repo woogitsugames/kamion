@@ -20,3 +20,5 @@
 ## codex-monument-face-s24
 - [krok 1] Przeczytano reguły, ADR 0320 i krytykę. Punkt odniesienia plaza-barn-fix-s24: Rynek 35 678 tris LOD0, głowa 2 600 tris, stan clear w istniejących dowodach.
 - Następny krok: przygotować prywatny kafel i wykonać pomiar bazowy: `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase before`.
+- [krok 2] Skopiowano kafel Tykocin do prywatnego derived, przygotowano shim i pipeline skryptów, zachowano bazowy asset i wyrenderowano 4 kadry Blender. Obejrzane zbliżenie potwierdza zlanie brwi, policzków i brody. Bazowy build Unity w toku.
+- Następny krok: porównać wypiek modelu z bazą i sprawdzić budżet w `artifacts/codex-monument-face-s24/candidate/tykocin_czarniecki_meta.json`.
