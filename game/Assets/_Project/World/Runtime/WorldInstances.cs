@@ -116,7 +116,7 @@ namespace Game.World
         public const float TreeFadeBand = 0.25f;
         /// <summary>crown-lod-s24: alpha cutoff reduction of minified leaf cards / impostors (Kamion/Vegetation VegCutoffFill;
         /// WORKING_VALUE from the knyszyn-w spawn view; rq_leaffill A/B).</summary>
-        public const float LeafMipFill = 0.15f;
+        public const float LeafMipFill = 0.3f;
         float m_PoleCull;
 
         // Vegetation settings of the active tier (QualityProfile, ADR 0012 / device runs); the serialized fields below are

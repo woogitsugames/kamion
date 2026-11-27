@@ -179,15 +179,10 @@ Shader "Kamion/Vegetation"
         }
 
         // Alpha-to-coverage edge: alpha sharpened to ~1 pixel around the cutoff (as URP Lit's SharpenAlpha).
-        // crown-lod-s24 (critic build #10 TOP 3): the GPU dithers a fractional coverage alpha into a screen-space sample
-        // pattern (NVIDIA ordered dither) - a minified crown, all partial coverage, read as fixed stipple. Snapped to whole
-        // samples of the target (global _KamionVegMsaa, Game.Rendering.VegetationCoverage; 0 = off) there is nothing left
-        // to dither; 1 sample (mirrors without MSAA) = a plain 0.5 alpha test.
-        half _KamionVegMsaa;
+        // cutoff: per instance / per pixel since crown-lod-s24 (LOD fade, VegCutoffFill).
         half CoverageAlpha(half a, half cutoff)
         {
-            half c = saturate((a - cutoff) / max(fwidth(a), 0.0001) + 0.5);
-            return _KamionVegMsaa > 0.5 ? round(c * _KamionVegMsaa) / _KamionVegMsaa : c;
+            return saturate((a - cutoff) / max(fwidth(a), 0.0001) + 0.5);
         }
 
         // crown-lod-s24: LOD1 leaf cards -> impostor cross-fade. Inside the last _KamionTreeFade.y of the LOD1 distance
