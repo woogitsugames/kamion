@@ -41,3 +41,5 @@
 - Następne komendy: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after` (w kolejce) i `pwsh artifacts/codex-sidewalk-var-s24/test.ps1` (powtórka po korekcie).
 - Pierwszy przebieg after ujawnił zmianę uboczną 926 m² drogi rowerowej po aktywacji dawnych reguł 0237. Zatrzymano własny proces przed eksportem i zwolniono jego slot. Dodano flagę zachowania wyjściowego wykończenia DDR w Tykocinie oraz test.
 - Następny krok: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`
+- Pierwszy kompletny eksport potwierdził 3 rodzaje nawierzchni, 2057 → 2057 tris samej klasyfikacji, 192 589 → 192 609 tris drogi i 120 → 120 prymitywów (High/Low). Włączono czerwony odcinek demonstracyjny przy Bernardyńskiej (`WORKING_VALUE`, obrys z GLB), żeby zbadać czwarty wariant w Tykocinie.
+- Następny krok: po zakończeniu bieżącego importu przenieść pomiary pośrednie do `after-three-materials`, powtórzyć `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after` z bliskim kadrem Bernardyńskiej.
