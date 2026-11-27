@@ -98,9 +98,13 @@ Shader "Kamion/Truck Glass"
             // ADR 0341: dirt layers at this point of the pane (R dust, G arcs, B insects), scaled by _GrimeLayers.
             half3 WindscreenDirt(float3 positionOS)
             {
-                [branch] if (_KamionWindscreenOff > 0.5) return half3(0, 0, 0);   // uniform: skips the sample
-                float2 uv = (positionOS.xy - _GrimeRect.xy) * _GrimeRect.zw;
-                return SAMPLE_TEXTURE2D(_GrimeMask, sampler_GrimeMask, uv).rgb * (half3)_GrimeLayers.xyz;
+                half3 dirt = half3(0, 0, 0);                                       // single exit: no uninitialized-result warning
+                [branch] if (_KamionWindscreenOff <= 0.5)                           // uniform: skips the sample when off
+                {
+                    float2 uv = (positionOS.xy - _GrimeRect.xy) * _GrimeRect.zw;
+                    dirt = SAMPLE_TEXTURE2D(_GrimeMask, sampler_GrimeMask, uv).rgb * (half3)_GrimeLayers.xyz;
+                }
+                return dirt;
             }
 
             // ADR 0341: light the dirt adds (premultiplied) and the share of the transmitted scene it keeps.
