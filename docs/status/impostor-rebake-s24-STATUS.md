@@ -30,3 +30,6 @@
   na losowych maskach, pine_0 7,5 -> 3,3 min). Pełny rebake restart 16:38 (ETA ~17:55). EditMode Win64 w toku (editmode1).
 - NASTĘPNY KROK: po `logs/blender-full.status`: `pwsh artifacts/impostor-rebake-s24/post.ps1`, potem
   `pwsh artifacts/impostor-rebake-s24/vqa.ps1 -Label after -Audit`, `bash artifacts/impostor-rebake-s24/sbs.sh before after sbs`.
+- [krok 6] EditMode Win64 (editmode1, kod gałęzi, atlasy w trakcie rebake'u): 1632 / 1513 pass / 1 fail / 118 skip.
+  Jedyny fail: StartClearanceTests("dk65-07") — scena dk65-07 skopiowana z worktree win-build jest starsza niż dane
+  trasy w tej gałęzi (środowisko, nie zmiana). ImpostorTrimTests (w tym nowy) zielone.
