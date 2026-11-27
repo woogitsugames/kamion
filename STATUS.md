@@ -129,3 +129,7 @@
 ### codex-sadowa-seam-s25 — zakres audytu
 - Rozpoznawanie końców zmienia się tylko przy wewnętrznym węźle zachowanego cięcia. Zapisano decyzję w ADR 0224. Przegląd objął archiwalne High clear/overcast i ortofoto GUGiK.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-sadowa-seam-s25/local_collision.py` po porównaniu szwów.
+
+### codex-sadowa-seam-s25 — pomiar szwów
+- Sprawdzono 11 380 krawędzi z 54 grafów i 57 wspólnych granic. Pełny audyt 4 szwów zależnych od dk65-05 wskazał jedną zmianę: dk65-04 / dk65-05 przechodzi z 1 FAIL do 0, pozostałe 56 szwów bez zmiany wyniku.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-sadowa-seam-s25/local_collision.py`.
