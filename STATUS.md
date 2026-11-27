@@ -20,3 +20,5 @@
 ## codex-farring-diag-s24
 - [krok 1] Przeczytane reguły i ADR 0353/0354. OFF przywraca sektory ADR 0311/0308. Build #10 ma osobne przebiegi z aktywnym streamingiem oraz pomiary PC na postoju.
 - Następny krok: `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner codex-farring-diag-s24`; skopiować tylko wybrane sceny #10 do bieżącego worktree i uruchomić A/B High.
+- [krok 2] Skopiowano siedem zaimportowanych kafli z buildu #10 do lokalnego game/Assets/_Generated/World. Cztery zestawy budżetowe: 62/62, 154,04 s.
+- Następny krok: `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1` (High, clear/overcast, A/B, colorby:renderer).
