@@ -32,3 +32,6 @@
 
 - [krok 5] Dodano tabelę prefiksów i progów PC Low/Medium. Renderer referencyjny nie wywołuje jeszcze tabeli. Bazowe zdjęcia są w kolejce.
 - Następny krok po zdjęciach: `Copy-Item artifacts/codex-props-low-perf-s24/prep/WorldInstances.cs game/Assets/_Project/World/Runtime/`.
+
+- [krok 6] Zastąpiono 8 startów edytora na fazę jednym wywołaniem istniejącego `VisualQaRunner` dla 8 wariantów, po 6 kamer. Przebieg czeka zgodnie z kolejką slotów. Scena knyszyn-w jest już zaimportowana.
+- Następny krok w trwającym przebiegu: `pwsh -File artifacts/codex-props-low-perf-s24/batch-qa.ps1 -Phase before -ImportTykocin`.
