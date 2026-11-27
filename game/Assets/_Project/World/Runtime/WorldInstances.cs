@@ -34,12 +34,17 @@ namespace Game.World
 
         // Per (prototype, lod) batch state.
         Matrix4x4[][] m_Batch;
+        Vector4[][] m_WearBatch;
         int[] m_BatchCount;
         Bounds[] m_BatchBounds;
         int[] m_BatchOffset;    // prototype → first batch slot
         readonly Plane[] m_Planes = new Plane[6];
         Vector3 m_Origin = new Vector3(float.NaN, 0f, 0f);   // region root position the world copies were made for
         Matrix4x4[] m_World;    // instance matrices in Unity world space (asset stores region-root space)
+        Vector4[] m_WorldWear;
+        bool[] m_HasWear;
+        MaterialPropertyBlock m_WearMpb;
+        static readonly int k_KamionSignWear = Shader.PropertyToID("_KamionSignWear");
         Bounds[] m_CellBounds;  // cell bounds in world space
         Camera m_Camera;
 
@@ -78,6 +83,9 @@ namespace Game.World
             for (int i = 0; i < slots; i++) m_Batch[i] = new Matrix4x4[BatchSize];
             m_BatchCount = new int[slots];
             m_BatchBounds = new Bounds[slots];
+            m_WearBatch = new Vector4[slots][];
+            m_HasWear = new bool[set.prototypes.Length];
+            m_WearMpb ??= new MaterialPropertyBlock();
             m_Thin = new bool[set.prototypes.Length];
             m_ThinCaster = new bool[set.prototypes.Length];
             m_FixedCull = new bool[set.prototypes.Length];
@@ -86,6 +94,9 @@ namespace Game.World
             for (int p = 0; p < set.prototypes.Length; p++)
             {
                 var pr = set.prototypes[p];
+                bool hw = set.HasWear && (pr.name == "sign_post" || pr.name.StartsWith("plate_", StringComparison.Ordinal) || pr.name.StartsWith("board_", StringComparison.Ordinal));
+                m_HasWear[p] = hw;
+                if (hw) for (int l = 0; l < pr.lods.Length; l++) m_WearBatch[m_BatchOffset[p] + l] = new Vector4[BatchSize];
                 m_Thin[p] = pr.name.StartsWith("tree_");
                 // ADR 0240: thin street furniture (category or bounding box) casts nothing on tiers with thinCasterShadowsOff.
                 m_ThinCaster[p] = pr.lods.Length > 0 && pr.lods[0] != null && ThinShadowCasterPolicy.IsThin(pr.name, pr.lods[0].bounds.size);
@@ -343,6 +354,13 @@ namespace Game.World
                 // rotation/scale decoded once (compact TRS, ADR 0025); only the translation follows the origin
                 m_World = new Matrix4x4[n];
                 for (int i = 0; i < n; i++) m_World[i] = set.LocalMatrix(i);
+            }
+            if (set.HasWear && (m_WorldWear == null || m_WorldWear.Length != n))
+            {
+                m_WorldWear = new Vector4[n];
+                const float inv = 1f / 255f;
+                var w = set.instanceWear;
+                for (int i = 0; i < n; i++) { var c = w[i]; m_WorldWear[i] = new Vector4(c.r * inv, c.g * inv, c.b * inv, c.a * inv); }
             }
             for (int i = 0; i < n; i++)
             {
@@ -707,10 +725,12 @@ namespace Game.World
         {
             if (RenderOverrides.AbImpostorOff && m_Thin[proto] && lod > 0 && lod == set.prototypes[proto].lods.Length - 1) return;   // ADR 0106 A/B
             int slot = m_BatchOffset[proto] + lod;
+            bool hw = m_HasWear != null && m_HasWear[proto] && m_WorldWear != null && m_WearBatch[slot] != null;
             while (count > 0)
             {
                 int n = Mathf.Min(count, BatchSize - m_BatchCount[slot]);
                 Array.Copy(src, start, m_Batch[slot], m_BatchCount[slot], n);
+                if (hw) Array.Copy(m_WorldWear, start, m_WearBatch[slot], m_BatchCount[slot], n);
                 if (m_BatchCount[slot] == 0) m_BatchBounds[slot] = cellBounds;
                 else m_BatchBounds[slot].Encapsulate(cellBounds);
                 m_BatchCount[slot] += n;
@@ -735,6 +755,12 @@ namespace Game.World
             if (m_ThinCastersOff && m_ThinCaster[proto]) mask = 0;       // ADR 0240: Low cannot resolve thin casters
             var shadows = (mask & (1 << lod)) != 0 ? ShadowCastingMode.On : ShadowCastingMode.Off;
             int m0 = p.materialStart[lod];
+            bool useWear = m_HasWear != null && m_HasWear[proto] && m_WearBatch[slot] != null;
+            if (useWear)
+            {
+                m_WearMpb.Clear();
+                m_WearMpb.SetVectorArray(k_KamionSignWear, m_WearBatch[slot]);
+            }
             for (int s = 0; s < mesh.subMeshCount; s++)
             {
                 var mat = (m_Mats ?? set.materials)[m0 + s];
@@ -749,6 +775,7 @@ namespace Game.World
                     lightProbeUsage = LightProbeUsage.Off,
                     reflectionProbeUsage = ReflectionProbeUsage.Off,
                     motionVectorMode = MotionVectorGenerationMode.Camera,
+                    matProps = useWear ? m_WearMpb : null,
                 };
                 Graphics.RenderMeshInstanced(rp, mesh, s, m_Batch[slot], n);
                 Last.Draws++;

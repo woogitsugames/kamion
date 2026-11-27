@@ -149,7 +149,8 @@ def osm_signs(pl, net, src, origin, juncs, report, codes):
         p = c.line.offset_point(s, side_sgn * off)
         if pl.near("sign", p, 1.5):
             continue
-        for cd in FU.sign_assembly(pl, p, -travel, known, f"osm:node/{nd['osm_node']}", sidewalk=w > 0.5):
+        road_cls = c.section(float(np.clip(s, 0.5, c.length - 0.5)), net.sec_list).cls
+        for cd in FU.sign_assembly(pl, p, -travel, known, f"osm:node/{nd['osm_node']}", sidewalk=w > 0.5, road_cls=road_cls):
             codes.add(cd)
             rep["placed"][cd] = rep["placed"].get(cd, 0) + 1
         pl.pts.setdefault("sign", []).append((p[0], p[1]))
@@ -160,7 +161,7 @@ def osm_signs(pl, net, src, origin, juncs, report, codes):
             off2 = float(c.hw_at(s)) + (S.KERB_TOP_W + S.SIGN_LATERAL if kind2 != RURAL else ext2 + 0.5)
             p2 = c.line.offset_point(s, -side_sgn * off2)
             if not pl.near("sign", p2, 1.5):
-                for cd in FU.sign_assembly(pl, p2, travel, ["D-43"], f"osm:node/{nd['osm_node']}:D-43", sidewalk=w2 > 0.5):
+                for cd in FU.sign_assembly(pl, p2, travel, ["D-43"], f"osm:node/{nd['osm_node']}:D-43", sidewalk=w2 > 0.5, road_cls=road_cls):
                     codes.add(cd)
                     rep["placed"][cd] = rep["placed"].get(cd, 0) + 1
                 pl.pts.setdefault("sign", []).append((p2[0], p2[1]))
@@ -285,7 +286,8 @@ def roundabout_signs(pl, net, juncs, graph_attrs, report, codes, boards, src=Non
                 if d < a.L - 2 and not a.chain.bridge[a.chain.idx(float(a.s(d)))]:
                     p = a.gutter(d, -1, extra=0.6)
                     if not pl.near("sign", p, 1.5):
-                        for cd in FU.sign_assembly(pl, p, a.direction(d), ["C-9"], f"rule:roundabout_island:{j.id}"):
+                        for cd in FU.sign_assembly(pl, p, a.direction(d), ["C-9"], f"rule:roundabout_island:{j.id}",
+                                                   road_cls=cls):
                             codes.add(cd)
                         pl.pts.setdefault("sign", []).append((p[0], p[1]))
                         rep["c9_islands"] += 1
@@ -327,7 +329,13 @@ def roundabout_signs(pl, net, juncs, graph_attrs, report, codes, boards, src=Non
                 face = -a.direction(d)                     # readable by the ring traffic approaching the exit
                 src = f"rule:roundabout_exit:{j.id}"
                 z = pl.add("sign_post", p, FU.yaw_of(face), sz=S.SIGN_H_MIN + hm, src=src)
+                tilt_xy, post_wear, plate_wear = FU.sign_wear_params(p, src, road_cls=cls, sidewalk=w > 0.5, allow_u=False)
+                pl.items[-1]["tilt"] = tilt_xy
+                pl.items[-1]["wear"] = post_wear
                 pl.add(f"board_{key}", p, FU.yaw_of(face), z=z + S.SIGN_H_MIN + hm / 2, src=src)
+                pl.items[-1]["tilt"] = tilt_xy
+                pl.items[-1]["pivot_dy"] = round(S.SIGN_H_MIN + hm / 2, 3)
+                pl.items[-1]["wear"] = plate_wear
                 pl.pts.setdefault("sign", []).append((p[0], p[1]))
                 rep["exit_boards"] += 1
     rep.pop("_barriers", None)
@@ -418,7 +426,8 @@ def _a8(pl, net, j, entry, has_e1, zone, rep, codes):
     if pl.near("sign", p, 1.5):
         item["why"] += "; dropped: another sign within 1.5 m"
         return
-    for cd in FU.sign_assembly(pl, p, -tang * dn, ["A-8"], f"rule:roundabout_a8:{j.id}", sidewalk=w > 0.5):
+    for cd in FU.sign_assembly(pl, p, -tang * dn, ["A-8"], f"rule:roundabout_a8:{j.id}", sidewalk=w > 0.5,
+                               road_cls=sec.cls):
         codes.add(cd)
     pl.pts.setdefault("sign", []).append((p[0], p[1]))
     item.update(placed=True, d_m=round(d - trim, 1), v_kmh=v)

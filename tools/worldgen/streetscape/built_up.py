@@ -424,7 +424,7 @@ def boundaries(net, zone):
     return res
 
 
-def _place(pl, c, s, dn, code, src, codes, rep):
+def _place(pl, c, s, dn, code, src, codes, rep, net=None):
     """Sign `code` for the traffic travelling dn (+1 along s) at station s, on its right, facing it."""
     tang, _ = c.line.frame(s)
     side = "R" if dn > 0 else "L"
@@ -434,7 +434,8 @@ def _place(pl, c, s, dn, code, src, codes, rep):
     if pl.near("sign", p, 1.5):
         rep["skipped_near_sign"] = rep.get("skipped_near_sign", 0) + 1
         return None
-    for cd in FU.sign_assembly(pl, p, -tang * dn, code if isinstance(code, list) else [code], src, sidewalk=w > 0.5):
+    road_cls = c.section(float(np.clip(s, 0.5, c.length - 0.5)), net.sec_list).cls if net is not None else "Z"
+    for cd in FU.sign_assembly(pl, p, -tang * dn, code if isinstance(code, list) else [code], src, sidewalk=w > 0.5, road_cls=road_cls):
         codes.add(cd)
         rep["placed"][cd] = rep["placed"].get(cd, 0) + 1
     pl.pts.setdefault("sign", []).append((p[0], p[1]))
@@ -456,10 +457,10 @@ def rule_signs(pl, net, src, origin, juncs, report, codes):
         srcid = f"rule:built_up:{c.id}:{s:.0f}"
         placed = []
         if sgn == 0 or sgn == dn_in:
-            if _place(pl, c, s, dn_in, "D-42", srcid, codes, rep) is not None:
+            if _place(pl, c, s, dn_in, "D-42", srcid, codes, rep, net=net) is not None:
                 placed.append("D-42")
         if sgn == 0 or sgn == -dn_in:
-            if _place(pl, c, s, -dn_in, "D-43", srcid, codes, rep) is not None:
+            if _place(pl, c, s, -dn_in, "D-43", srcid, codes, rep, net=net) is not None:
                 placed.append("D-43")
         rep["boundaries"].append({"chain": str(c.id), "s": round(s, 1), "e": round(float(p0[0]), 1),
                                   "n": round(float(p0[1]), 1), "signs": placed, "basis": "ESTIMATED BDOT10k OT_PTZB_A"})
@@ -503,7 +504,7 @@ def advance_signs(pl, net, juncs, zone, rep, codes):
                 dist = int(round((d - trim) / 10.0)) * 10          # pkt 2.1.3: to the junction, to 10 m
                 plate = f"T-1S_{dist}" if code == "B-20" else f"T-1_{dist}"
                 dn = -1 if arm.end == "a" else 1                  # inbound travel along s
-                p = _place(pl, c, s, dn, ["A-7", plate], f"rule:advance:{j.id}", codes, rep)
+                p = _place(pl, c, s, dn, ["A-7", plate], f"rule:advance:{j.id}", codes, rep, net=net)
                 if p is not None:
                     rep["advance"].append({"junction": str(j.id), "code": code, "plate": plate, "d_m": round(d, 1),
                                            "v_kmh": v, "chain": str(c.id), "e": round(float(p[0]), 1),

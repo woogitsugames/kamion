@@ -98,7 +98,7 @@ def limit_signs(pl, net, graph_attrs, report, codes):
             p, s_used = None, None
             for k in range(RETRIES):
                 s = float(np.clip(s_edge - dn * (BEFORE_M + k * RETRY_STEP_M), lo, hi))
-                p = BU._place(pl, c, s, dn, plates, f"rule:limit:{eid}:{'fwd' if dn > 0 else 'bwd'}", codes, rep)
+                p = BU._place(pl, c, s, dn, plates, f"rule:limit:{eid}:{'fwd' if dn > 0 else 'bwd'}", codes, rep, net=net)
                 if p is not None:
                     s_used = s
                     break

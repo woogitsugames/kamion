@@ -716,7 +716,46 @@ def bridge_median_lamps(pl, net, report):
 
 
 # ------------------------------------------------------------------------------------------- signs
-def sign_assembly(pl, p, face, plates, src, z=None, sidewalk=False):
+SIGN_MAX_TILT_DEG = 1.5   # WORKING_VALUE: subtle real-world post lean (+-1.5 deg)
+
+
+def sign_wear_params(p, src, road_cls=None, sidewalk=False, allow_u=True):
+    """Deterministic per-sign wear, post finish, U-channel flag and +-1.5 deg tilt (0 extra draw calls).
+
+    Returns (tilt_deg_xy, post_wear, plate_wear):
+      tilt_deg_xy = [tx, ty] in degrees about world (E, N) with hypot <= SIGN_MAX_TILT_DEG
+      post_wear   = [paint_mix, u_channel, post_age, seed]   (0..1 each)
+      plate_wear  = [plate_age, dirt, flags, seed]           (0..1 each; flags packs edge-rust + sticker)
+    """
+    import struct
+    key = f"{round(float(p[0]), 2)}:{round(float(p[1]), 2)}:{src}"
+    u = [v / 65536.0 for v in struct.unpack(">8H", hashlib.sha1(key.encode("utf-8")).digest()[:16])]
+    tx = (u[0] * 2.0 - 1.0) * SIGN_MAX_TILT_DEG
+    ty = (u[1] * 2.0 - 1.0) * SIGN_MAX_TILT_DEG
+    mag = math.hypot(tx, ty)
+    if mag > SIGN_MAX_TILT_DEG - 1e-3:
+        k = (SIGN_MAX_TILT_DEG - 1e-3) / mag
+        tx *= k
+        ty *= k
+    painted_share = 0.50 if road_cls in ("L", "D") else 0.40 if road_cls == "Z" else 0.30 if road_cls in ("G", "GP", "S", "A") else 0.35
+    paint_mix = 1.0 if u[2] < painted_share else 0.0
+    u_channel = 1.0 if (allow_u and road_cls in ("L", "D")) else 0.0
+    local = road_cls in ("Z", "L", "D")
+    post_age = (0.35 + 0.65 * u[3]) if local else (0.20 + 0.80 * u[3])
+    plate_age = (0.35 + 0.65 * u[5]) if local else (0.15 + 0.85 * u[5])
+    dirt = (0.15 + 0.35 * u[6]) if sidewalk else (0.30 + 0.65 * u[6])
+    has_rust = 1 if (plate_age > 0.42 and ((u[3] + u[6]) % 1.0) < 0.70) else 0
+    has_sticker = 1 if u[7] < 0.32 else 0
+    flags = {0: 0.0, 1: 0.35, 2: 0.68, 3: 1.0}[has_rust + 2 * has_sticker]
+    plate_seed = (u[4] + 0.5 * u[7]) % 1.0
+    return (
+        [round(tx, 3), round(ty, 3)],
+        [round(paint_mix, 3), round(u_channel, 3), round(post_age, 3), round(u[4], 3)],
+        [round(plate_age, 3), round(dirt, 3), flags, round(plate_seed, 3)],
+    )
+
+
+def sign_assembly(pl, p, face, plates, src, z=None, sidewalk=False, road_cls=None):
     """Post + plates stacked from the lower edge ([ZNAKI-Z1] Tabela 1.11, Dz.U. 2019 poz. 2311 / 2022 poz. 2377:
     >= 2.00 m off-sidewalk, >= 2.20 m on/over a sidewalk).
 
@@ -727,6 +766,9 @@ def sign_assembly(pl, p, face, plates, src, z=None, sidewalk=False):
     yaw = yaw_of(face)
     zb = pl.add("sign_post", p, yaw, z=z, sz=1.0, src=src)
     post_item = pl.items[-1]
+    tilt_xy, post_wear, plate_wear = sign_wear_params(p, src, road_cls=road_cls, sidewalk=sidewalk)
+    post_item["tilt"] = tilt_xy
+    post_item["wear"] = post_wear
     zc = zb + (S.SIGN_H_SIDEWALK if sidewalk else S.SIGN_H_MIN)
     centres = []
     top_plate_top = zc
@@ -754,8 +796,17 @@ def sign_assembly(pl, p, face, plates, src, z=None, sidewalk=False):
     top_inset = 0.14 if top_shape in ("diamond", "triangle_up") else 0.04
     post_top = max(top_clamp_min, top_plate_top - top_inset)
     post_item["sz"] = round(max(post_top - zb, 0.5), 3)
-    for code, zcen, _shape in centres:
+    for idx, (code, zcen, _shape) in enumerate(centres):
         pl.add(f"plate_{code}", p, yaw, z=zcen, src=src)
+        it = pl.items[-1]
+        it["tilt"] = tilt_xy
+        it["pivot_dy"] = round(zcen - zb, 3)
+        if idx == 0:
+            it["wear"] = plate_wear
+        else:
+            pw = list(plate_wear)
+            pw[3] = round((pw[3] + 0.37 * idx) % 1.0, 3)
+            it["wear"] = pw
     return [c for c, _, _ in centres]
 
 
@@ -779,7 +830,7 @@ def junction_signs(pl, net, juncs, ctx_points, report, codes):
         z = None
         if c.bridge[c.idx(s)]:
             return
-        for cd in sign_assembly(pl, p, face, plates, src, z=z, sidewalk=w > 0.5):
+        for cd in sign_assembly(pl, p, face, plates, src, z=z, sidewalk=w > 0.5, road_cls=arm.cls(net.sec_list)):
             codes.add(cd)
             cnt[cd] = cnt.get(cd, 0) + 1
         pl.pts.setdefault("sign", []).append((p[0], p[1]))
@@ -835,7 +886,8 @@ def speed_signs(pl, net, report, codes):
             p = c.line.offset_point(s, sgn * off)
             t, _ = c.line.frame(s)
             code = f"B-33_{int(v)}"
-            sign_assembly(pl, p, -t * dn, [code], f"rule:maxspeed:{c.id}", sidewalk=w > 0.5)
+            sign_assembly(pl, p, -t * dn, [code], f"rule:maxspeed:{c.id}", sidewalk=w > 0.5,
+                          road_cls=c.section(s, net.sec_list).cls)
             codes.add(code)
             n += 1
     report["speed_signs"] = n
@@ -935,7 +987,8 @@ def crossing_signs(pl, net, ctx_points, report, codes):
             p = c.line.offset_point(ss, sgn * (hw + S.KERB_TOP_W + S.SIGN_LATERAL))
             if pl.near("sign", p, 1.0):
                 continue
-            sign_assembly(pl, p, -t * dn, ["D-6"], f"osm:node/{q['osm_node']}", sidewalk=w > 0.5)
+            sign_assembly(pl, p, -t * dn, ["D-6"], f"osm:node/{q['osm_node']}", sidewalk=w > 0.5,
+                          road_cls=c.section(float(np.clip(ss, 0.5, c.length - 0.5)), net.sec_list).cls)
             pl.pts.setdefault("sign", []).append((p[0], p[1]))
             codes.add("D-6")
             n += 1
@@ -981,9 +1034,15 @@ def direction_boards(pl, net, graph_attrs, report, boards):
         # carriageway edge (pkt 1.5.3 of Dz.U. 2019 poz. 2311 zał. 1)
         clear = max(1.2, wm / 2 + 0.5)
         p = c.line.offset_point(s, sgn * (hw + (S.KERB_TOP_W + clear if kind != RURAL else ext + clear - 0.2)))
-        z = pl.add("sign_post", p - t * dn * 0 + np.array([0, 0]), yaw_of(-t * dn), sz=S.SIGN_H_MIN + hm,
-                   src=f"rule:destination:{c.id}")
-        pl.add(f"board_{key}", p, yaw_of(-t * dn), z=z + S.SIGN_H_MIN + hm / 2, src=f"rule:destination:{c.id}")
+        bsrc = f"rule:destination:{c.id}"
+        z = pl.add("sign_post", p - t * dn * 0 + np.array([0, 0]), yaw_of(-t * dn), sz=S.SIGN_H_MIN + hm, src=bsrc)
+        tilt_xy, post_wear, plate_wear = sign_wear_params(p, bsrc, road_cls=sec.cls, sidewalk=w > 0.5, allow_u=False)
+        pl.items[-1]["tilt"] = tilt_xy
+        pl.items[-1]["wear"] = post_wear
+        pl.add(f"board_{key}", p, yaw_of(-t * dn), z=z + S.SIGN_H_MIN + hm / 2, src=bsrc)
+        pl.items[-1]["tilt"] = tilt_xy
+        pl.items[-1]["pivot_dy"] = round(S.SIGN_H_MIN + hm / 2, 3)
+        pl.items[-1]["wear"] = plate_wear
         n += 1
     report["direction_boards"] = n
 

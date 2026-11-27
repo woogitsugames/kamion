@@ -76,3 +76,19 @@ Przegląd klatek `artifacts/full-build-5-s24/runs/20261122-181152/shot_t3441.png
 - Przebudowano w tym zadaniu kafle `tykocin` i `bialystok-knyszynska` (zawierający obie klatki wiejskie `t0650` i `t0670`). `Data/raw/derived/` w tym worktree to kopia (`-CopyDerived`), więc po scaleniu gałęzi `neon-props-s24` skopiować `Data/raw/derived/{tykocin,bialystok-knyszynska}` do `main` (lub przebudować w kolejnej fali regenu); wspólna biblioteka `art-source/world/props/street_props.glb` odświeży się przy przebudowie kafla referencyjnego `bialystok-industrial-c`.
 - Pozostałe kafle (`dk65-01`, `knyszyn` z `_bench` itp.) dostaną nowe ławki i słupki automatycznie przy kolejnej fali regenu.
 - Zużycie/rdza/pasy odblaskowe na słupkach oraz osobny wariant kosza betonowego z kruszywem pozostają otwarte jako osobny temat tekstur PBR.
+
+## 6. Dopisek (`agy-signs-wear-s24`, 2026-11-27): zużycie i zróżnicowanie znaków oraz słupków
+
+W ramach zadania `agy-signs-wear-s24` domknięto realistyczne starzenie i różnicowanie znaków pionowych oraz słupków dla realiów polskich dróg lokalnych **bez dodawania nowych prototypów, tekstur ani draw calli**:
+
+- **Deterministyczny wybór per znak (`tools/worldgen/streetscape/furniture.py`, `signs_route.py`, `built_up.py`, `limit_signs.py`)**:
+  - Na podstawie deterministycznego ziarna miejsca/znaku (`src`, pozycja) dobierane są: przechył słupka (`±1,5°` wokół punktu podstawy `pivot_dy`, tak aby tarcze podążały za przechylonym słupkiem), wykończenie słupka (**ocynk zwietrzały** vs **malowany szaro-biały**), profil **U-kanałowy (ceownik 50×30 mm)** przy drogach gminnych (`road_cls` `L` / `D`), wiek/korozja oraz parametry zużycia tarcz (wyblaknięcie folii UV — czerwień → różowawa na starszych znakach i lekkie kredowanie żółci/błękitu, kurz/błoto od dołu z ograniczeniem krycia dla zachowania czytelności symboli, opcjonalna rdza krawędziowa i pojedyncza drobna wlepka bez obcych marek/tekstu).
+- **Brak nowych prototypów i draw calli (`props.py`, `WorldInstanceSet.cs`, `InstanceImporter.cs`, `WorldInstances.cs`)**:
+  - `sign_post` LOD0 podniesiono z 10 do 12 boków (72 tris) pod bezszwową deformację do przekroju U-kanałowego w vertex shaderze; słupki otrzymały shader `Kamion/Furniture Post` (`FurniturePost.shader`).
+  - `InstanceImporter` składa macierz przechyłu względem stopy słupka i zapisuje 4-bajtowy wektor `instanceWear` (`Color32[]`), a `WorldInstances` przekazuje go per instancja przez `MaterialPropertyBlock` (`_KamionSignWear`, zero alokacji GC w `WorldInstancesRenderGcTests` 1/1).
+  - `FurnitureSignForward.hlsl` (`ApplySignWear`) stosuje starzenie powierzchniowe i spadek retrorefleksji `retroAtten` w ramach istniejącego shadera `Kamion/Furniture Sign` (pomiń w 100% przy `_KamionSignWear == 0`, parytet z `FurnitureSignTests` 16/16).
+- **Weryfikacja na kaflu prototypowym `dk65-07` (`Data/raw/derived/dk65-07`)**:
+  - Wygenerowane instancje: `posts=24` (`u_channel=3`, `painted=11`, `tilted=24`), `plates=25`.
+  - Testy Python (11 plików: budżetowe `test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py` oraz oznakowania/groundingu): **167 passed, 1 skipped**.
+  - Dowody wizualne (`artifacts/agy-signs-wear-s24/`, High PC `1920×1080`, `clear` i `overcast`, `route-s0144`, `route-s0433`, `route-s0721`, `drive-kozince`, `rev-kozince`, arkusze SBS `≤960 px`) potwierdzają czytelność znaków, wyraźne przejście czerwieni w odcień różowawy i brud od dołu na starszych znakach, spójny przechył tarczy ze słupkiem oraz poprawne oświetlenie GI/SH słupków ocynkowanych i malowanych.
+  - Osobny wariant kosza betonowego z kruszywem pozostaje nadal otwarty poza tym zadaniem.
