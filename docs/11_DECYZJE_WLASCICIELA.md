@@ -199,3 +199,6 @@ Właściciel (klik): (1) **Rondo Knyszyn — zostaw szerokie** (priorytet łatwo
 
 ## D100 — nasycenie nieba zostaje ×2 (26.11.2026)
 Przejście cyjan→błękit obok słońca to naturalny gradient wzmocniony nasyceniem nieba ×2 (ADR 0108), nie błąd. Właściciel: „Zostaw ×2”. Porównanie: artifacts/render-artifacts-s24/sbs/crop-sky-before-after.jpg.
+
+## D101 — ruch AI dalej po ciężarówce (27.11.2026)
+Krytyk build #10 ponownie stawia „pusty świat” w TOP 2. Właściciel: zostajemy przy D54 — najpierw ciężarówka i świat; ruch, zaparkowane auta i piesi później.
