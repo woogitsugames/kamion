@@ -16,3 +16,7 @@
 - GOTOWE DO SCALENIA PRZEZ LIDERA.
 - NASTĘPNY KROK (lider): przejrzeć diff na `neon-avenue-s24` i dowody w `artifacts/neon-avenue-s24/sbs/`, scalić gałąź, a następnie w kolejnej fali regeneracji przebudować kafle z szpalerami (`knyszyn-w`, `dk65-01..11`, `dw671-tykocin-*`, `dk65-monki-*`):
   `git merge --no-ff neon-avenue-s24`
+
+## codex-farring-diag-s24
+- [krok 1] Przeczytane reguły i ADR 0353/0354. OFF przywraca sektory ADR 0311/0308. Build #10 ma osobne przebiegi z aktywnym streamingiem oraz pomiary PC na postoju.
+- Następny krok: `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner codex-farring-diag-s24`; skopiować tylko wybrane sceny #10 do bieżącego worktree i uruchomić A/B High.
