@@ -121,3 +121,5 @@
 - 2026-11-28 codex-wave15-prep-s25 — odczyt 54 źródeł i lokalnego PBF: 27 kafli dostaje 100 części linii OSM, wszystkie 54 zmieniają schemat. Szew ograniczony do dk65-04/05, test fidelity czyta raport C. Następny krok: `git show main:artifacts/regen-wave-14-s24/common.ps1`.
 
 - 2026-11-28 codex-wave15-prep-s25 — skrypty i kolejki 5/54 gotowe. Dry-run dk65-04, parser PowerShell i podstawiony blok Unity OK. Budżety 62/62 PASS. Następny krok: `git diff --check HEAD^`.
+
+- 2026-11-28 codex-wave15-prep-s25 — README i WYNIKI gotowe, z kolejnością integracji i zakresem 5/54. Unity i generatory odłożone do końca fali 14. Następny krok lidera: `git log --oneline main..codex-wave15-prep-s25`.
