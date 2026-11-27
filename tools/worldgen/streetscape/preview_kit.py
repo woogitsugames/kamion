@@ -32,9 +32,10 @@ def render(kit, eye, at, fov=62.0, size=(900, 560), low=True, sky=(0.42, 0.60, 0
     r /= np.linalg.norm(r)
     u = np.cross(r, f)
     fl = (W / 2) / math.tan(math.radians(fov) / 2)
-    for V, UV, T, C, L in zip(kit.V, kit.UV, kit.T, kit.C, kit.L):
+    for V, UV, UV1, T, C, L in zip(kit.V, kit.UV, getattr(kit, "UV1", [None] * len(kit.V)), kit.T, kit.C, kit.L):
         if (low and L is False) or (not low and L == "only"):
             continue
+        uv1 = UV1 if UV1 is not None else np.zeros((len(V), 2))
         d = V - eye
         cam = np.stack([d @ r, d @ u, d @ f], 1)
         for tri in T:
@@ -62,6 +63,7 @@ def render(kit, eye, at, fov=62.0, size=(900, 560), low=True, sky=(0.42, 0.60, 0
             b = np.stack([w0 / p[0, 2], w1 / p[1, 2], w2 / p[2, 2]], -1) * z[..., None]
             uv = b @ UV[tri]
             col = b @ C[tri]
+            u1 = b @ uv1[tri]
             tx = np.clip((uv[..., 0] * PK.N).astype(int), 0, PK.N - 1)
             ty = np.clip(((1 - uv[..., 1]) * PK.N).astype(int), 0, PK.N - 1)
             tex = ATLAS[ty, tx]
@@ -74,7 +76,11 @@ def render(kit, eye, at, fov=62.0, size=(900, 560), low=True, sky=(0.42, 0.60, 0
             # foliage as Kamion/World PlotKit: wrapped diffuse + transmission (hard surfaces: plain Lambert)
             lam = np.where(fol[..., None], np.clip(nol * 0.6 + 0.4, 0, 1) * 0.85 + 0.22 * np.clip(-nol, 0, 1), np.clip(nol, 0, 1))
             lit = 0.38 * np.array([0.8, 0.9, 1.0]) * (0.6 + 0.4 * n[..., 2:3]) + 0.85 * lam
-            alb = np.where(fol[..., None], tex[..., :3] * occ, tex[..., :3] * col[..., :3] * 2)
+            active = u1[..., 0] > 0.1
+            hu = np.where(active, (1.0 - u1[..., 1]) - 0.5, 0.0)
+            br = np.where(active, u1[..., 0], 1.0)
+            tint = np.stack([1.0 + hu, np.ones_like(hu), 1.0 - 1.5 * hu], -1) * br[..., None]
+            alb = np.where(fol[..., None], tex[..., :3] * occ * tint, tex[..., :3] * col[..., :3] * 2)
             shade = np.where(fol[..., None], alb * lit, alb * 0.8)
             ok = inside & (tex[..., 3] >= 0.5) & (z < zb[y0:y1 + 1, x0:x1 + 1])
             sub = img[y0:y1 + 1, x0:x1 + 1]

@@ -141,4 +141,4 @@ def test_full_garden_tree_has_no_dark_core_body():
             assert np.ptp(n, axis=0).max() > 0.3 and np.abs(n @ face).max() < 0.999 and n[:, 2].mean() > 0.0, species
             lobes += 1
         assert lobes == 6, f"{species}: three lower + three upper lobes"
-        assert 19 <= sum(len(t) for t in kit.T) <= 21                           # was 14: within + 50 %
+        assert 28 <= sum(len(t) for t in kit.T) <= 38                           # 3D crossed-strip boughs + optional leader + 6 lobes (<= 44 cap)

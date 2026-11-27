@@ -114,7 +114,7 @@ Shader "Kamion/World PlotKit"
                 half3 l2 = SHEvalLinearL2(n, unity_SHBr, unity_SHBg, unity_SHBb, unity_SHC);
                 return max((l0 + l2) * (1.0h + t) + l1 * (1.0h - t), half3(0.0h, 0.0h, 0.0h));
             }
-            struct A { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; half4 color : COLOR; UNITY_VERTEX_INPUT_INSTANCE_ID };
+            struct A { float4 positionOS : POSITION; float3 normalOS : NORMAL; float2 uv : TEXCOORD0; float2 uv1 : TEXCOORD1; half4 color : COLOR; UNITY_VERTEX_INPUT_INSTANCE_ID };
             struct V
             {
                 float4 positionCS : SV_POSITION;
@@ -146,7 +146,18 @@ Shader "Kamion/World PlotKit"
                 o.positionWS = TransformObjectToWorld(v.positionOS.xyz);
                 o.positionCS = TransformWorldToHClip(o.positionWS);
                 o.uv = TRANSFORM_TEX(v.uv, _BaseMap);
-                o.tintFog = half4(lerp(v.color.rgb * 2.0h, half3(occ, occ, occ), fol), KamionFogTau(o.positionWS, o.positionCS.w));
+                // ADR 0352 (agy-garden-var-s24): per-tree tint & clump variation from TEXCOORD1 (uv1.x > 0.1 = active;
+                // default unset meshes / [-1, -4] keep neutral (1, 1, 1)). Chunk-local positionOS = floating-origin safe.
+                half3 treeTint = half3(1.0h, 1.0h, 1.0h);
+                if (fol > 0.5h && v.uv1.x > 0.1h)
+                {
+                    half h = (half)v.uv1.y - 0.5h;
+                    half3 p = (half3)(v.positionOS.xyz * 1.5 + float3(v.uv1.x, v.uv1.y, v.uv1.x + v.uv1.y) * 17.0);
+                    half clump = sin(p.x + 1.7h * sin(p.z * 0.83h + p.y * 0.6h)) * sin(p.y * 1.31h + 1.3h * sin(p.x * 0.71h - p.z * 1.13h));
+                    treeTint = half3(1.0h + h, 1.0h, 1.0h - 1.5h * h) * ((half)v.uv1.x * (1.0h + 0.12h * clump));
+                }
+                half3 folTint = occ * treeTint;
+                o.tintFog = half4(lerp(v.color.rgb * 2.0h, folTint, fol), KamionFogTau(o.positionWS, o.positionCS.w));
                 return o;
             }
             half4 frag(V i, bool front : SV_IsFrontFace) : SV_Target

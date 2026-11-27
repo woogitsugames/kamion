@@ -1170,18 +1170,21 @@ class Kit:
     rgb * 2 = albedo tint (`tint`, the plot's ageing), foliage a = 1 with rgb = normal."""
 
     def __init__(self, tint=(1.0, 1.0, 1.0)):
-        self.V, self.UV, self.T, self.C = [], [], [], []
+        self.V, self.UV, self.UV1, self.T, self.C = [], [], [], [], []
         self.L = []                 # per part: True = both chunk variants, False = High only, "only" = Low / Medium only
         self.low = True             # state for the parts added now (ADR 0132: the Low kit must not cost more than 0124)
         self.tag = "other"          # state: accounting class of the parts added now
         self.by, self.by_low = {}, {}
         self.tint = [min(max(float(c) * 0.5, 0.0), 1.0) for c in tint] + [0.0]
+        self.uv1 = None             # optional (bright, 0.5 - hue) per-tree tint for TEXCOORD_1 (ADR 0352)
 
-    def tris(self, V, UV, T, col=None):
+    def tris(self, V, UV, T, col=None, uv1=None):
         V = np.asarray(V, float).reshape(-1, 3)
         T = np.asarray(T, np.int64).reshape(-1, 3)
         self.V.append(V)
         self.UV.append(np.asarray(UV, float).reshape(-1, 2))
+        u1 = self.uv1 if uv1 is None else uv1
+        self.UV1.append(None if u1 is None else np.broadcast_to(np.asarray(u1, float), (len(V), 2)).copy())
         self.T.append(T)
         self.C.append(np.tile(self.tint, (len(V), 1)) if col is None else np.asarray(col, float).reshape(-1, 4))
         self.L.append(self.low)
@@ -1190,8 +1193,8 @@ class Kit:
         if self.low is not False:
             self.by_low[self.tag] = self.by_low.get(self.tag, 0) + len(T)
 
-    def quad(self, P, UV, col=None):
-        self.tris(P, UV, [(0, 1, 2), (0, 2, 3)], col)
+    def quad(self, P, UV, col=None, uv1=None):
+        self.tris(P, UV, [(0, 1, 2), (0, 2, 3)], col, uv1=uv1)
 
     def box(self, c, t, hx, hy, z0, z1, uv, top=True, sides=(0, 1, 2, 3), shift=(0.0, 0.0)):
         """Box centred on xy c, x axis along unit t, half sizes hx / hy, z0..z1; all vertices pinned to the texel uv
@@ -1215,6 +1218,14 @@ class Kit:
         off = np.cumsum([0] + [len(self.V[i]) for i in idx[:-1]])
         return (np.concatenate([self.V[i] for i in idx]), np.concatenate([self.UV[i] for i in idx]),
                 np.concatenate([self.T[i] + o for i, o in zip(idx, off)]), np.concatenate([self.C[i] for i in idx]))
+
+    def out_uv1(self, low=False):
+        """Per-vertex TEXCOORD_1 array for the variant when any part carries tree tint, else None."""
+        idx = [i for i in range(len(self.V)) if (self.L[i] is not False if low else self.L[i] != "only")]
+        if not idx or not any(self.UV1[i] is not None for i in idx):
+            return None
+        return np.concatenate([self.UV1[i] if self.UV1[i] is not None else np.tile([-1.0, 5.0], (len(self.V[i]), 1))
+                               for i in idx])
 
 
 def _brick_uv(u0, w, h):
@@ -1584,6 +1595,7 @@ def thuja_lite(kit, p, z, h, r, key, dead=False, core=True, cards=1):
 def fruit_tree_lite(kit, p, z, h, key, r=None):
     """Low / Medium variant of fruit_tree() (ADR 0132): the trunk as two crossed strips and three crossed cards of the
     crown - 10 triangles; same size, lean, sprite and seed as fruit_tree()."""
+    from . import small_trees
     p = np.asarray(p, float)
     R = float(r) if r is not None else h * (0.36 + 0.10 * hfloat(key, "fr"))
     R = min(max(R, 1.0), 0.62 * h)
@@ -1595,13 +1607,18 @@ def fruit_tree_lite(kit, p, z, h, key, r=None):
     lean = (np.array([hfloat(key, "flx"), hfloat(key, "fly")]) - 0.5) * 0.5
     top = p + lean * fork / max(h, 1.0)
     zt = max(z + fork, zc0 + 0.25 * hc)
-    for k in range(2):
-        d = np.array([math.cos(a0 + k * 1.5708), math.sin(a0 + k * 1.5708)]) * tr
-        kit.quad([[*(p - d), z - 0.1], [*(p + d), z - 0.1], [*(top + d), zt], [*(top - d), zt]], [PK.SWATCH["trunk"]] * 4)
-    sp = "apple_a" if hfloat(key, "fa") < 0.5 else "apple_b"
-    cc = top + lean * 0.3
-    for i in range(3):
-        card(kit, cc, zc0 - 0.03 * hc, sp, 2.3 * R, hc * 1.03, a0 + 0.4 + i * math.pi / 3)
+    prev_uv1 = kit.uv1
+    kit.uv1 = small_trees._tree_uv1(key)
+    try:
+        for k in range(2):
+            d = np.array([math.cos(a0 + k * 1.5708), math.sin(a0 + k * 1.5708)]) * tr
+            kit.quad([[*(p - d), z - 0.1], [*(p + d), z - 0.1], [*(top + d), zt], [*(top - d), zt]], [PK.SWATCH["trunk"]] * 4)
+        sp = "apple_a" if hfloat(key, "fa") < 0.5 else "apple_b"
+        cc = top + lean * 0.3
+        for i in range(3):
+            card(kit, cc, zc0 - 0.03 * hc, sp, 2.3 * R, hc * 1.03, a0 + 0.4 + i * math.pi / 3)
+    finally:
+        kit.uv1 = prev_uv1
 
 
 def spruce(kit, p, z, h, key):
@@ -2251,11 +2268,14 @@ def build(buf, rp, zf, surf_top, report, items=None):
                         if cnt["small"] >= 8 or not in_plot:
                             continue
                         kit.tag = "small_tree"
+                        sc_ = 0.70 + 0.60 * hfloat(kk, "fsc")
+                        fh_ = min(max(min(max(1.7 + 1.5 * cr_, 3.2), 5.6) * sc_, 2.7), 6.2)
+                        fr_ = min(max(cr_ * sc_, 0.95), 2.3)
                         if near(p):
                             kit.low = False
-                            fruit_tree(kit, p, zf(p), min(max(1.7 + 1.5 * cr_, 3.2), 5.6), kk, r=cr_)
+                            fruit_tree(kit, p, zf(p), fh_, kk, r=fr_)
                             kit.low = "only"
-                        fruit_tree_lite(kit, p, zf(p), min(max(1.7 + 1.5 * cr_, 3.2), 5.6), kk, r=cr_)
+                        fruit_tree_lite(kit, p, zf(p), fh_, kk, r=fr_)
                         kit.low = True
                         cnt["small"] += 1
                         rep["fruit_trees"] += 1
@@ -2300,11 +2320,13 @@ def build(buf, rp, zf, surf_top, report, items=None):
                         p = spot("tree", k, back_g.buffer(-0.8), 4.2)
                         if p is not None:
                             kit.tag = "small_tree"
+                            fk_ = (key, "ft", k)
+                            fh_ = min(max((3.0 + 1.4 * hfloat(key, "tree_h", k)) * (0.70 + 0.60 * hfloat(fk_, "fsc")), 2.7), 6.2)
                             if near(p):
                                 kit.low = False
-                                fruit_tree(kit, p, zf(p), 3.0 + 1.4 * hfloat(key, "tree_h", k), (key, "ft", k))
+                                fruit_tree(kit, p, zf(p), fh_, fk_)
                                 kit.low = "only"
-                            fruit_tree_lite(kit, p, zf(p), 3.0 + 1.4 * hfloat(key, "tree_h", k), (key, "ft", k))
+                            fruit_tree_lite(kit, p, zf(p), fh_, fk_)
                             kit.low = True
                             rep["fruit_trees"] += 1
             # ---- shrubs growing through and over the fence (refs P08, P09, P12, C04; review 0124 P1-a: "krzewy
@@ -2361,11 +2383,13 @@ def build(buf, rp, zf, surf_top, report, items=None):
                 rep["bins"] += bins(kit, p, g["t"] * sx, zf(p), key)
         o = kit.out()
         if o is not None:
-            buf.add(KIT_LAYER, "plot_kit", o[0], o[1], o[2], src=src_id, COL=o[3])
+            uv1 = kit.out_uv1()
+            buf.add(KIT_LAYER, "plot_kit", o[0], o[1], o[2], src=src_id, COL=o[3], **({"UV1": uv1} if uv1 is not None else {}))
             rep["tris"] += len(o[2])
         o = kit.out(low=True)
         if o is not None:
-            buf.add(KIT_LAYER_LOW, "plot_kit", o[0], o[1], o[2], src=src_id, COL=o[3])
+            uv1 = kit.out_uv1(low=True)
+            buf.add(KIT_LAYER_LOW, "plot_kit", o[0], o[1], o[2], src=src_id, COL=o[3], **({"UV1": uv1} if uv1 is not None else {}))
             rep["tris_low"] += len(o[2])
         for k_, v_ in kit.by.items():
             rep["tris_by"][k_] = rep["tris_by"].get(k_, 0) + v_
