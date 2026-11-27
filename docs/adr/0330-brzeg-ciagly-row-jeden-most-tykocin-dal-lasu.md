@@ -174,3 +174,76 @@ Po rozjaśnieniu lasu w rundzie 1 recenzja `artifacts/critic-s24-wave10-pre/CRIT
 - **Do zrobienia po scaleniu (lider):** przebudowa `far_field` dla pozostałych kafli (poza prototypami `knyszyn-w`, `dk65-05` i `bialystok-industrial-c`, które można też skopiować z `Data/raw/derived/` tego worktree) i reimport, by nowy układ 11-slotowy atlasu `1024×4096` oraz geometria bez stożków trafiły na wszystkie kafle (uwaga: zmiana liczby slotów w `forest_edge_mixed_far_atlas.png` z 9 na 11 wymaga przebudowy `far_field.py` na pozostałych kaflach, aby UV starych GLB nie sięgały poza pasmo 0..9).
 - **Weryfikacja końcowa (agent Claude, 2026-11-25, po przerwaniu Neona limitem 429):** ostatnia polerka Neona (atlas + `far_field` z 13:25) nie była zaimportowana ani wyrenderowana — ponowiono import Win64 High i visual-qa PC High `1600×900` clear + overcast dla `knyszyn-w` i `dk65-05` (wszystkie domyślne kamery regionu). `drawsEst` przed → po: **Δ 0 na każdej z 70 + 76 kamer**; trójkąty klatki `+0 … +18,2 tys.` (max `dk65-05 cab-gate 1 142 360 → 1 160 573`, `k1-bay-1447-drive 1 193 768 → 1 211 981`; limit 2 mln). Pamięć tekstur PC (szacunek z formatu, nie pomiar playera): albedo atlasu `1024×4096` BC ≈ `5,3 MiB` z mipami (było `1024×2048` ≈ `2,7 MiB`), normalna ograniczona `maxTextureSize 2048` → `512×2048` ≈ `1,3 MiB` (było ≈ `2,7 MiB`), netto ≈ **+1,3 MiB** na jeden współdzielony atlas. Android (`maxTextureSize 1024`): albedo `256×1024` — połowa dotychczasowej rozdzielczości poziomej (`UNVERIFIED` wizualnie; telefon odroczony D73). Testy: `test_far_field*` + `test_budget_0221`, `test_typology_0238`, `test_world_v31`, `test_hero_bridge` — 160 zielonych.
 - **Ocena okiem (crop 1:1):** stożki zniknęły (`knyszyn-w edge-east/south`, `dk65-05 edge-west`), ściana przy 1:1 ma czytelne pnie i korony bez diagonalnych smug, sztuczny bliski wał z korytarza C zniknął z `edge-west/north`. Pozostaje: (a) impostory skraju są wyraźnie ciemniejsze i ostrzejsze od mocno zamglonej ściany za nimi — czytają się jak naklejone; (b) dolna część ściany jaśnieje ku podstawie (zamglenie mocniejsze u dołu niż u góry) — prawdziwy skraj lasu jest u podstawy ciemniejszy; (c) z kabiny różnica nadal minimalna. Do rundy 3: zbliżyć zamglenie impostorów do ściany w funkcji odległości i odwrócić gradient pionowy zamglenia ściany.
+
+
+## Dopisek 3 (2026-11-27, `far-forest-look-s24`): ukośne smugi kurtyn i „bliski” las w dali po ADR 0354 — przyczyny i poprawki u źródła
+
+**Zgłoszenie (po ADR 0354, daleki plan widoczny częściej):** (1) ukośne smugi tekstury na kurtynach
+(`artifacts/horizon-ring-s24/dw671-tykocin-03/zoom-edge-north-right-on.png`), (2) las w dali jasny, kontrastowy i ostry jak
+bliski plan (`cmp-edge-north.jpg`), (3) z ≥ 150 m daleki plan jak warstwy kart (`diag-03-r2/cmp-ring-high-ne.jpg`).
+
+**Pomiar zamiast zgadywania** — `Editor/VisualQA/FarFieldProbe.cs` (`-executeMethod Game.Editor.VisualQA.FarFieldProbe.Run
+-probeScene <scena> -probeCamera <id,...>`): odległość / kąt kurtyn z kamery QA, `TEXCOORD1.x`, Jakobian UV na płaszczyźnie
+ściany (pochylenie linii stałego v i stałego u) i rozmiar atlasu w zaimportowanym materiale.
+
+1. **Główna przyczyna obu obrazów (1) i (2): nieaktualny import w worktree `win-build`**, z którego pochodzą dowody ADR 0354
+   (import 25.11 19:37, derived main 26.11 22:18). W scenie dw671-tykocin-03: atlas `1024×2048` (stary, 9 slotów), geometria
+   sprzed r2 — pochylenie linii stałego v p95 31,6°, **max 66,6°** (stąd ukośne smugi: afiniczne v w dwóch trójkątach trapezu),
+   las `edge-north` 144–777 m od kamery (p1/p90), do **9,6°** nad horyzontem (wysoki las tuż za granicą = „bliski plan”, bez
+   mgły, bo naprawdę blisko). Ten sam kafel po `WorldEdgeBuilder.RebuildEdgeBatch` z aktualnego derived (bajt w bajt = kod HEAD,
+   sprawdzone regeneracją): atlas `1024×4096`, pochylenie v ≤ 17° (limit r2 `FAR_MAX_TOP_SLOPE`), las 385–788 m, ≤ 2,1°.
+   knyszyn-w `edge-west`: „ściana lasu” z dowodów ADR 0354 to też stary import; aktualnie cienka linia lasu ~1,6 km (sbs
+   `artifacts/far-forest-look-s24/sbs-stale-vs-after/`).
+2. **Błąd w źródle, który utrzymywał stary atlas:** `RegionImporter.LoadForEdge` (ścieżka przebudowy samej krawędzi,
+   `RebuildEdgeBatch`) brał istniejący `M_forest_edge_mixed_far_atlas.mat` bez ponownego importu tekstury — po regeneracji
+   `far_field.glb` (UV 11 slotów) materiał zostawał przy teksturze 1024×2048 (9 slotów): złe sloty, rozmazane kurtyny.
+   **Poprawka:** materiały `*_far_atlas` odświeżane jak `far_field_buildings` (`VegetationMaterial` aktualizuje asset w miejscu,
+   GUID zachowany — sceny `_Tile` dalej działają). Test: wstawiona stara tekstura → probe `1024x2048`; po przebudowie `1024x4096`.
+3. **Resztkowy załom v (do 14,6° po r2):** w kolumnach o różnej wysokości v jest afiniczne osobno w każdym trójkącie quada,
+   więc korony załamują się po przekątnej podziału. **Poprawka (0 draw, 0 wariantów, 0 interpolatorów):** `far_field.py`
+   zapisuje w `TEXCOORD_1.y` wysokość kolumny H (ta sama na dolnym i górnym wierzchołku); `Vegetation.shader` (`_HLOD_EDGE`,
+   wszystkie 4 przebiegi) interpoluje `(v·H, H)` w wolnych `zw` istniejącego `float4 uv` i dzieli w pikselu — v·H i H są
+   afiniczne w obu trójkątach, więc v rośnie liniowo w każdej kolumnie niezależnie od podziału. H = 0 (HLOD kafli bez
+   `TEXCOORD1`, stare far fieldy, krzyżowe impostory) = dotychczasowe v. Koszt: 1 dzielenie / piksel kurtyny, 1 wybór /
+   wierzchołek. Na aktualnych danych efekt wizualny mały (zoom fov 12°: 0–3,8 % pikseli `|d| > 8`), bo r2 już ograniczył skos.
+4. **Pasmo zamglenia per pas kurtyny:** slot atlasu (`""` / `_haze1` / `_haze2`) wybierany był wg centroidu całego drzewostanu,
+   więc tylna krawędź i żebra drzewostanu sięgającego od granicy do 3–4 km miały bliski slot (ostre pomarańczowe pnie).
+   Teraz `strip_curtain_mat` — mediana `d_true` danego pasa (front, podszyt, żebro); ten sam atlas i submesh. Zmienione UV0:
+   03 E/N/S/W 3,0 / 0,6 / 3,8 / 0 % wierzchołków kurtyn, knyszyn-w 8,3 / 22,1 / 1,2 / 14,6 %; pozycje, `TEXCOORD1.x`,
+   liczba wierzchołków i trójkątów bez zmian.
+
+**Perspektywa powietrzna (pytanie z (2)) — nie jest omijana.** `_FAR_RING_CLIP` dotyczy tylko klonów `M_far_field_buildings`
+i nie zmienia mgły (`KamionFogTauExtra` z `KamionFarExtraDist` jak wcześniej); kurtyny (`_HLOD_EDGE`) liczą
+`KamionFogTauExtra(d_render + TEXCOORD1.x)` w ForwardLit niezależnie od pierścienia. Weryfikacja A/B: diag
+`KAMION_QA_DIAG=preset.hazeGroundFactor=10` na knyszyn-w `edge-west` — dopasowanie liniowe `c = H(1−T) + T·c0` na pikselach
+kurtyn daje T 0,64–0,65 (lewy las) i 0,29–0,34 (prawy), H ≈ kolor horyzontu (0,55 lin) → kurtyny biorą mgłę sceny
+(`preset.visibilityKm` w diag nie działa: β liczone przy zmianie presetu, nie co klatkę). Przy Clear V = 20 km fizyczne
+wygaszenie lasu na 1,5–2,5 km to tylko 25–36 % (Koschmieder), a kolor docelowy (`HorizonColorExposed`, po
+`skyDisplayDesaturation`) jest prawie neutralny (B−R ≈ 0–8 sRGB) — stąd las 1–2 km szarozielony, a nie niebieskawy. Mocniejszy
+niebieski welon = zmiana kalibracji presetu (widzialność / nasycenie nieba) = decyzja artystyczna właściciela, nie poprawka.
+
+**(3) z wysoka (≥ 150 m), zbadane, bez zmiany:** pierścień 1–4,2 km jest skompresowany do ≤ ~660 m za granicą, wysokości
+skalowane `s_h` (wykładnik 0,62 > skali poziomej) dla oka na wysokości kierowcy w środku kafla; kurtyny są pionowymi kartami
+z płaskim kopcem ≤ 2,2 m między nimi, a pasma `_haze1/_haze2` mają wypieczony chłodny welon. Z 180 m widać więc kompresję
+(karty, niebieskawe „wstęgi” kurtyn tła) i koniec terenu na far clip (pas koloru mgły). Z kabiny (oko 2,5 m) horyzont
+spada 0,05°, kurtyny są ≥ 400 m, a z kamery przy granicy kafla kurtyny są pionowo ~1,5–1,8× wyższe kątowo niż prawdziwy las na 1–2 km (wzór:
+`s_h·d_true/d_render`). Ewentualna naprawa (dach koron na wysokości kurtyny + reprojekcja względem kamery w wierzchołku)
+— osobne zadanie, tylko jeśli kamery lotnicze staną się widokiem gracza.
+
+**Liczby i dowody** (`artifacts/far-forest-look-s24/`, High 1920×1080, Win64, `-Neighbours auto`, prywatne derived 03 + knyszyn-w):
+- `before/` (aktualne derived, stary shader) | `after/` (nowy glb + shader), clear + overcast: 03 × 8 kamer (edge-N/E/S/W,
+  truck-34, cab-view-a-fov62, route-s1096/s2035), knyszyn-w × 9 (edge-*, dk65-fields-nw, tykocka-dw671-out, cab-view-a-fov62,
+  goniadzka-above, truck-34), diag 03 (ring-high-ne/seam-n/high-e/sw), zoom fov 12° (`zoom-cams-03.json`). `sbs/cmp-*.jpg`,
+  `sbs/diff.txt`, `sbs/crop-*.jpg`; stary import: `before-stale-winbuild/`, `sbs-stale-vs-after/`.
+- `stats.txt` (szacunek przed SRP Batcherem): **drawsEst i trisK identyczne before → after na wszystkich 42 kamerach**
+  (np. 03 edge-north 22 / 102 k, knyszyn-w truck-34 552 / 1616 k). GPU: 0 nowych przebiegów, wariantów, tekstur i
+  interpolatorów; +1 dzielenie na piksel kurtyny. Pomiar klatki w buildzie `UNMEASURED` (edytor nie jest dowodem).
+- Testy: EditMode Win64 1448 pass / 0 fail / 152 skip (`editmode-*.xml`); pytest `-k "far_field or farfield or forest"`
+  147 pass, 1 fail **istniejący wcześniej** (`test_generated_far_field_qa_and_manifests`: sha `far_field.glb`
+  bialystok-industrial-c w derived main ≠ manifest w repo; generator dla C nieuruchamiany).
+
+**Do zrobienia po scaleniu (lider):** (a) regeneracja `far_field` wszystkich kafli (`uv run --project tools/worldgen python
+tools/worldgen/streetscape/far_field.py --region <id>` albo pełny `build_world.py`) — bez niej shader działa jak dotąd (H = 0);
+(b) w checkoucie budującym player (`win-build`): `RebuildEdgeBatch` (lub pełny import) każdego kafla — obecny import jest
+sprzed r2; dzięki poprawce 2 wystarczy przebudowa krawędzi, bez ręcznego kasowania materiału; (c) ponowny render dowodów
+ADR 0354 na świeżym imporcie.

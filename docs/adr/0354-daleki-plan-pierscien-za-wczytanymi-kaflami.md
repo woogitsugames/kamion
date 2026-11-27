@@ -116,3 +116,15 @@ ujawnił pusty horyzont).
   pomiar na A16 odroczony (D73).
 - Gdyby kiedyś kafle nie były kwadratami 2048 m w osiach, prostokąt właściciela w trybie Unloading spada do ± 1024 m
   (jak `KamionFarExtraDist`); dziś wszystkie kafle grafu spełniają założenie.
+
+
+## Dopisek (2026-11-27, `far-forest-look-s24`): dowody tego ADR były na nieaktualnym imporcie kafli
+- Sceny w worktree `win-build` (import 25.11) mają `far_field` sprzed ADR 0330 r2 i atlas kurtyn 1024×2048 (9 slotów):
+  „ściana lasu” knyszyn-w `edge-west` i wysoki las 03 `edge-north` (144 m od kamery, 9,6° nad horyzontem) to stare dane, nie
+  skutek pierścienia. Na aktualnym derived (przebudowa krawędzi) las 03 `edge-north` jest 385–788 m / ≤ 2,1°, knyszyn-w
+  `edge-west` — linia lasu ~1,6 km. Reguła pierścienia, przycinanie na piksel i koszty z tego ADR bez zmian.
+- `_FAR_RING_CLIP` i ścieżka pierścienia nie omijają mgły ani perspektywy powietrznej (kurtyny `_HLOD_EDGE`:
+  `KamionFogTauExtra` z `TEXCOORD1.x`; klony budynków: `KamionFarExtraDist`) — A/B mgły w ADR 0330 dopisek 3.
+- Przyczyny smug i poprawki (odświeżanie materiału atlasu przy przebudowie krawędzi, v rzutowe, pasmo per pas): ADR 0330
+  dopisek 3. Dowody: `artifacts/far-forest-look-s24/`. Weryfikacja w buildzie #10 z tego ADR wymaga najpierw przebudowy
+  krawędzi wszystkich kafli w `win-build`.
