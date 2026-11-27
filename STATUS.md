@@ -26,3 +26,5 @@
 - Następny krok po bazowym buildzie: `Copy-Item artifacts/codex-monument-face-s24/candidate/tykocin_czarniecki* art-source/world/landmarks/tykocin_czarniecki/` i `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase after`.
 - [krok 4] Eksport bazowego kafla zakończony. Raport pełnego worldgen potwierdził 35 678 tris Rynku LOD0. Zatwierdzony wypiek Blender 4.2.16 zapisano jako NPZ i metadane w katalogu assetu. Skopiowano pliki instancji regionu C potrzebne do testów budżetowych.
 - Następny krok po renderach bazowych: `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase after`.
+- [krok 5] Zielone testy GIS (73/73, 116,38 s): `test_truss_bridge_0320.py`, `test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py`. Log `artifacts/codex-monument-face-s24/logs/tests.log`.
+- Następny krok: po bazowym imporcie i 8 PNG uruchomić `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase after`.
