@@ -21,3 +21,6 @@
 
 - Kolejka fali 14 obejmuje 54 regiony z fali 13. Zapisano czasy udanych przebiegów fali 13 i uzupełniono brakujące pomiary z fali 12.
 - Następny krok po dodaniu skryptów: `pwsh -NoProfile -File artifacts/regen-wave-14-s24/chain.ps1 -Tile knyszyn-s -WhatIf`
+
+- Dodano skrypty przygotowania, łańcuchów, powtórki, commitów i finału z Win64 High, progami GIS oraz porównaniem visual-QA. Artefakty wykonania mają oddzielne katalogi per kafel.
+- Następny krok: `pwsh -NoProfile -File artifacts/regen-wave-14-s24/chain.ps1 -Tile dk65-monki-03 -WhatIf`
