@@ -86,6 +86,13 @@ namespace Game.Gameplay
         float m_StatusUntil;
         ReversingCamera m_TractorCam, m_TrailerCam, m_ActiveRevCam;
         RenderTextureMirror m_MirrorL, m_MirrorR, m_WideL, m_WideR;
+
+        /// <summary>Viewport position of a main mirror's cab mount in the view camera (z &lt;= 0 = not drawable). No allocation.</summary>
+        Vector3 MirrorMountViewport(RenderTextureMirror m)
+        {
+            if (m == null || mainCamera == null || !MirrorInsetsOn) return default;
+            return mainCamera.WorldToViewportPoint(m.CabMountWorld());
+        }
         bool m_AutopilotStart;
         float m_RouteS = -1f, m_RouteEndS = -1f;
         bool m_RouteDoneLogged;
@@ -207,6 +214,9 @@ namespace Game.Gameplay
                 // ADR 0340 addendum: the wide-angle (class IV) glass of the monitor mirror heads
                 LeftWideMirrorTexture = () => MirrorInsetsOn && m_WideL != null ? m_WideL.Texture : null,
                 RightWideMirrorTexture = () => MirrorInsetsOn && m_WideR != null ? m_WideR.Texture : null,
+                // ADR 0340 addendum 2: the cab point each mirror head hangs on, in the view (bracket of the HUD head)
+                LeftMirrorMountViewport = () => MirrorMountViewport(m_MirrorL),
+                RightMirrorMountViewport = () => MirrorMountViewport(m_MirrorR),
                 MirrorInsets = () => Controls.mirrorInsets,
                 ToggleMirrorInsets = ToggleMirrorInsets,
             }, overlay: true);

@@ -181,6 +181,8 @@ namespace Game.Rendering
             Game.Core.MirrorOverrides.DueSchedule = B(arg("rq_mirror_rate"));
             Game.Core.MirrorOverrides.Msaa = I(arg("rq_mirror_msaa"));        // ADR 0342
             Game.Core.MirrorOverrides.Shadows = B(arg("rq_mirror_shadows"));  // ADR 0342
+            Game.Core.MirrorOverrides.MainMinHeight = I(arg("rq_mirror_main"));  // ADR 0340 addendum 2
+            Game.Core.MirrorOverrides.Post = B(arg("rq_mirror_post"));
             Game.Core.MirrorOverrides.Legacy = B(arg("rq_mirror_legacy")) == true;
             Game.Core.MirrorOverrides.Suspended = B(arg("rq_mirror_off")) == true;
             string up = arg("rq_upscale");
@@ -190,7 +192,7 @@ namespace Game.Rendering
                          $"scalemin={ScaleMin} upscale={Upscale} fsrsharp={FsrSharpness} pacing={Pacing} lamppools={LampPools} lampspec={LampPoolSpec} glare={GlareAb} nightwin={NightWindowsAb} lampfloor={LampFloorAb} " +
                          $"envcap_iv={EnvCaptureInterval} envcap_lod={EnvCaptureLod} shadowcasc={ShadowCascades} shadowres={ShadowResolution} ab={Ab} ab_period={AbPeriod} " +
                          $"mirror_cap={Game.Core.MirrorOverrides.Cap} mirror_lod={Game.Core.MirrorOverrides.LodScale} mirror_far={Game.Core.MirrorOverrides.FarClip} " +
-                         $"mirror_res={Game.Core.MirrorOverrides.Resolution} mirror_rate={Game.Core.MirrorOverrides.DueSchedule} mirror_msaa={Game.Core.MirrorOverrides.Msaa} mirror_shadows={Game.Core.MirrorOverrides.Shadows} mirror_legacy={Game.Core.MirrorOverrides.Legacy} " +
+                         $"mirror_res={Game.Core.MirrorOverrides.Resolution} mirror_rate={Game.Core.MirrorOverrides.DueSchedule} mirror_msaa={Game.Core.MirrorOverrides.Msaa} mirror_shadows={Game.Core.MirrorOverrides.Shadows} mirror_main={Game.Core.MirrorOverrides.MainMinHeight} mirror_post={Game.Core.MirrorOverrides.Post} mirror_legacy={Game.Core.MirrorOverrides.Legacy} " +
                          $"mirror_off={Game.Core.MirrorOverrides.Suspended} worldgi={WorldGi} worldsun={WorldSun} " +
                          $"clouds={Clouds} haze={GroundHaze} ssao={Ssao} look={WorldAtmosphere.LookVariant} ev={LightingPreset.ExposureBiasOverride} wet={WorldAtmosphere.WetOverride} " +
                          $"lod={LodBias} far={FarClip} mask={CullMask} props={Props} hud={Hud} glassfast={GlassFast} forestfast={ForestFast} vehcull={VehicleCull} grime={Grime} thinshadow={ThinShadows} cabsoft={CabSoft} cabspill={CabSpill}" : null;

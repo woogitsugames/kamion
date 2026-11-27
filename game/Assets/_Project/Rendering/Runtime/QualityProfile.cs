@@ -130,6 +130,11 @@ namespace Game.Rendering
             public bool mirrorShadows;
             [Tooltip("ADR 0342: class II mirror texture rows per screen pixel row of its window (0 = off; the tier height stays the floor).")]
             public float mirrorWindowTexelsPerPixel;
+            [Tooltip("ADR 0340 addendum 2: smallest class II (main) mirror texture in px, width and height (0 = off). PC High / Ultra 512 x 1024.")]
+            public int mirrorMainMinWidth;
+            public int mirrorMainMinHeight;
+            [Tooltip("ADR 0340 addendum 2: mirror pictures shown as HUD windows get the main view's grading (HDR + look volume).")]
+            public bool mirrorPost;
             [Header("Budget assumptions (UNMEASURED until the phone is measured)")]
             public int budgetDrawCalls;
             public int budgetTrianglesK;

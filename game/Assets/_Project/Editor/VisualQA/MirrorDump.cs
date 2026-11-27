@@ -38,22 +38,31 @@ namespace Game.Editor.VisualQA
             s_BenchDone = true;
             var mirrors = System.Array.FindAll(UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None), m => m.main);
             if (mirrors.Length == 0) { Debug.Log("MIRROR_BENCH no main mirrors"); return; }
-            var cfg = new (string name, int msaa, bool shadows, float res)[]
+            // mainMin: class II floor height (ADR 0340 addendum 2; -1 = the explicit res multiplier, floor off), post: main-view grading
+            var cfg = new (string name, int msaa, bool shadows, float res, int mainMin, bool post)[]
             {
-                ("msaa1 (pre-0342)", 1, false, 1f), ("msaa2", 2, false, 1f), ("msaa4", 4, false, 1f), ("msaa4+shadows", 4, true, 1f),
-                ("msaa8", 8, false, 1f), ("msaa4 res1.5 (Ultra-like)", 4, false, 1.5f), ("msaa4+shadows res1.5", 4, true, 1.5f),
+                ("msaa1 (pre-0342)", 1, false, 1f, -1, false), ("msaa4 (0342 High)", 4, false, 1f, -1, false), ("msaa4+shadows", 4, true, 1f, -1, false),
+                ("msaa4 res1.5 (0342 Ultra-like)", 4, false, 1.5f, -1, false),
+                ("msaa4 post", 4, false, 1f, -1, true), ("msaa4 main1024", 4, false, 0f, 1024, false),
+                ("msaa4 main1024 post (0340-2 High)", 4, false, 0f, 1024, true), ("msaa4 main768 post", 4, false, 0f, 768, true),
             };
+            var size = new Vector2Int[cfg.Length];
             const int rounds = 5, n = 30;
             var ms = new float[cfg.Length][];
             for (int c = 0; c < cfg.Length; c++) ms[c] = new float[rounds];
             var sw = new System.Diagnostics.Stopwatch();
             var one = new Texture2D(1, 1, TextureFormat.RGB24, false);
             var prevMsaa = MirrorOverrides.Msaa; var prevSh = MirrorOverrides.Shadows; var prevRes = MirrorOverrides.Resolution;
+            var prevMain = MirrorOverrides.MainMinHeight; var prevPost = MirrorOverrides.Post; bool prevForce = RenderTextureMirror.ForceRender;
+            RenderTextureMirror.ForceRender = true;   // the HUD windows show the pair (grading applies to window pictures only)
             for (int r = 0; r < rounds; r++)
                 for (int c = 0; c < cfg.Length; c++)
                 {
-                    MirrorOverrides.Msaa = cfg[c].msaa; MirrorOverrides.Shadows = cfg[c].shadows; MirrorOverrides.Resolution = cfg[c].res;
+                    MirrorOverrides.Msaa = cfg[c].msaa; MirrorOverrides.Shadows = cfg[c].shadows;
+                    MirrorOverrides.Resolution = cfg[c].mainMin < 0 ? cfg[c].res : (float?)null;
+                    MirrorOverrides.MainMinHeight = cfg[c].mainMin < 0 ? 0 : cfg[c].mainMin; MirrorOverrides.Post = cfg[c].post;
                     foreach (var m in mirrors) m.RenderNow();   // (re)creates the target, warm-up
+                    size[c] = new Vector2Int(mirrors[0].Texture.width, mirrors[0].Texture.height);
                     Sync(mirrors[0], one);
                     sw.Restart();
                     for (int i = 0; i < n; i++) foreach (var m in mirrors) m.RenderNow();
@@ -62,13 +71,14 @@ namespace Game.Editor.VisualQA
                     ms[c][r] = (float)sw.Elapsed.TotalMilliseconds / n;
                 }
             MirrorOverrides.Msaa = prevMsaa; MirrorOverrides.Shadows = prevSh; MirrorOverrides.Resolution = prevRes;
+            MirrorOverrides.MainMinHeight = prevMain; MirrorOverrides.Post = prevPost; RenderTextureMirror.ForceRender = prevForce;
+            foreach (var m in mirrors) m.RenderNow();   // back to the run's configuration
             UnityEngine.Object.DestroyImmediate(one);
             for (int c = 0; c < cfg.Length; c++)
             {
                 var a = (float[])ms[c].Clone(); System.Array.Sort(a);
                 Debug.Log(string.Format(CultureInfo.InvariantCulture, "MIRROR_BENCH cfg=\"{0}\" tex={1}x{2} median_ms_per_pair={3:F2} min={4:F2} max={5:F2}",
-                    cfg[c].name, mirrors[0].Texture != null ? mirrors[0].Texture.width : 0, mirrors[0].Texture != null ? mirrors[0].Texture.height : 0,
-                    a[rounds / 2], a[0], a[rounds - 1]));
+                    cfg[c].name, size[c].x, size[c].y, a[rounds / 2], a[0], a[rounds - 1]));
             }
         }
 
@@ -92,6 +102,11 @@ namespace Game.Editor.VisualQA
                 MirrorOverrides.Msaa = msaa;
             string sh = Environment.GetEnvironmentVariable("KAMION_MIRROR_SHADOWS");
             if (!string.IsNullOrEmpty(sh)) MirrorOverrides.Shadows = sh == "1";
+            // ADR 0340 addendum 2 A/B: KAMION_MIRROR_MAIN=<min height px, 0 = off>, KAMION_MIRROR_POST=<0|1>
+            if (int.TryParse(Environment.GetEnvironmentVariable("KAMION_MIRROR_MAIN"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int mainMin) && mainMin >= 0)
+                MirrorOverrides.MainMinHeight = mainMin;
+            string po = Environment.GetEnvironmentVariable("KAMION_MIRROR_POST");
+            if (!string.IsNullOrEmpty(po)) MirrorOverrides.Post = po == "1";
             if (string.IsNullOrEmpty(s_Dir)) return;
             Directory.CreateDirectory(s_Dir);
             RenderPipelineManager.beginCameraRendering -= OnBegin;

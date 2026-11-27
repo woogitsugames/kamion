@@ -62,6 +62,10 @@ namespace Game.UI.Driving
         /// <summary>ADR 0340 addendum: class IV (wide-angle) mirror textures for the lower glass of the monitor mirror heads
         /// (null = the head shows the main glass only).</summary>
         public Func<Texture> LeftWideMirrorTexture, RightWideMirrorTexture;
+        /// <summary>ADR 0340 addendum 2: where the cab point each monitor mirror head hangs on (the A-pillar mount of the
+        /// modelled mirror arms) is in the view - viewport x, y (0..1 of the frame, may lie outside it), z &gt; 0 in front of
+        /// the camera. null = no bracket is drawn (the head alone).</summary>
+        public Func<Vector3> LeftMirrorMountViewport, RightMirrorMountViewport;
         public Action ToggleMirrorInsets;
         public Func<bool> MirrorInsets;
     }
@@ -100,6 +104,7 @@ namespace Game.UI.Driving
         Font m_Font;
         RectTransform m_SafeArea;
         UiViewport m_View;
+        Canvas m_Canvas;
         HudLayoutInput m_In;
         HudLayoutResult m_L;
         bool m_LayoutValid, m_DevOpen, m_LabOpen;
@@ -211,6 +216,7 @@ namespace Game.UI.Driving
         void Build(Camera cam)
         {
             var canvas = gameObject.AddComponent<Canvas>();
+            m_Canvas = canvas;
             canvas.renderMode = cam != null ? RenderMode.ScreenSpaceCamera : RenderMode.ScreenSpaceOverlay;
             canvas.worldCamera = cam;
             canvas.planeDistance = cam != null ? Mathf.Max(cam.nearClipPlane * 2f, 0.12f) : 1f;
@@ -517,15 +523,21 @@ namespace Game.UI.Driving
 
         /// <summary>
         /// One mirror window (D70) and, on a monitor, the mirror head around it (ADR 0340 + addendum, critic build #10 p.8).
-        /// Children of the window in draw order: arms, head (moulded housing, behind the glasses), glass (class II render
+        /// Children of the window in draw order: bracket (strut, tube, mounting foot - ADR 0340 addendum 2), head (moulded
+        /// housing, behind the glasses), glass (class II render
         /// texture), film, lip ring, wide-angle pane (class IV glass, film, lip ring). The touch layout shows glass, film
         /// and ring only (ADR 0079 windows unchanged).
         /// </summary>
         sealed class MirrorHead
         {
             public bool Right;
-            public RectTransform ArmTop, ArmBottom, Head, Glass, Film, Wide, WideGlassRt, WideFilmRt;
-            public Image Ring, WideRing;
+            public RectTransform Window, Strut, Tube, Foot, Head, Glass, Film, Wide, WideGlassRt, WideFilmRt;
+            public Image Ring, WideRing, StrutImage, TubeImage, FootImage;
+            /// <summary>Head outline below the window when the wide glass is shown [units]; bracket state of the last frame.</summary>
+            public float Below;
+            public bool Desktop, MountShown;
+            public Vector2 MountAt;
+            public float MountAlpha = -1f;
             public RawImage FilmImage;
             public MirrorGlassImage WideGlass;
             public bool WideShown;
@@ -554,12 +566,13 @@ namespace Game.UI.Driving
             var backing = rt.gameObject.AddComponent<Image>();   // kept for callers that tint the frame; not drawn (the ring is rounded)
             backing.raycastTarget = false; backing.enabled = false;
             bool right = name.EndsWith("R", StringComparison.Ordinal);
-            var h = new MirrorHead { Right = right };
+            var h = new MirrorHead { Right = right, Window = rt };
             if (right) m_HeadR = h; else m_HeadL = h;
 
-            // arms towards the cab (the screen centre), behind the head
-            h.ArmTop = MirrorArm("ArmTop", rt, right);
-            h.ArmBottom = MirrorArm("ArmBottom", rt, right);
+            // bracket to the cab mount, behind the head (laid out per frame from the projected mount: UpdateMirrorMount)
+            h.Strut = MirrorBracketPart("BracketStrut", rt, MirrorWindowArt.Tube(), true, out h.StrutImage);
+            h.Tube = MirrorBracketPart("BracketTube", rt, MirrorWindowArt.Tube(), true, out h.TubeImage);
+            h.Foot = MirrorBracketPart("BracketFoot", rt, MirrorWindowArt.Foot(), false, out h.FootImage);
             h.Head = Fill("Head", rt);
             var head = h.Head.gameObject.AddComponent<Image>();
             head.sprite = MirrorWindowArt.Head(); head.type = Image.Type.Sliced; head.fillCenter = true; head.raycastTarget = false;
@@ -598,14 +611,16 @@ namespace Game.UI.Driving
             return ri;
         }
 
-        static RectTransform MirrorArm(string name, Transform parent, bool right)
+        static RectTransform MirrorBracketPart(string name, Transform parent, Sprite sprite, bool tube, out Image img)
         {
             var a = Rect(name, parent);
-            a.sizeDelta = new Vector2(MirrorWindowArt.ArmLength, MirrorWindowArt.ArmHeight);
-            a.pivot = new Vector2(0f, 0.5f);
-            if (right) a.localScale = new Vector3(-1f, 1f, 1f);
-            var img = a.gameObject.AddComponent<Image>();
-            img.sprite = MirrorWindowArt.Arm(); img.raycastTarget = false;
+            a.anchorMin = a.anchorMax = Vector2.zero;
+            a.pivot = tube ? new Vector2(0f, 0.5f) : new Vector2(0.5f, 0.5f);
+            img = a.gameObject.AddComponent<Image>();
+            img.sprite = sprite; img.raycastTarget = false;
+            if (tube) img.type = Image.Type.Sliced;
+            else a.sizeDelta = MirrorWindowLayout.MountFoot + 2f * MirrorWindowArt.HeadShadow * Vector2.one;
+            a.gameObject.SetActive(false);
             return a;
         }
 
@@ -624,8 +639,8 @@ namespace Game.UI.Driving
             h.FilmImage.texture = desktop ? MirrorWindowArt.FilmHead() : MirrorWindowArt.Film();
             h.Glass.GetComponent<MirrorGlassImage>().color = desktop ? MirrorWindowLayout.GlassTint : Color.white;
             h.Head.gameObject.SetActive(desktop);
-            h.ArmTop.gameObject.SetActive(desktop);
-            h.ArmBottom.gameObject.SetActive(desktop);
+            h.Desktop = desktop;
+            if (!desktop) HideMirrorMount(h);
             if (!desktop) { h.Wide.gameObject.SetActive(false); h.WideShown = false; }
         }
 
@@ -641,17 +656,63 @@ namespace Game.UI.Driving
                 h.Wide.sizeDelta = new Vector2(0f, wide.height);
             }
             h.WideShown = showWide;
-            // arms: upper on the main glass, lower at the wide glass (or low on the main glass); towards the screen centre
-            float total = window.height + below;
-            float x = h.Right ? -MirrorWindowArt.HeadOut + 3f : window.width + MirrorWindowArt.HeadOut - 3f;
-            SetArm(h.ArmTop, h.Right, x, window.height - 0.21f * total);
-            SetArm(h.ArmBottom, h.Right, x, window.height - 0.80f * total);
+            h.Below = below;
+            h.MountAlpha = -1f;   // the head changed: lay the bracket out again
         }
 
-        static void SetArm(RectTransform a, bool right, float x, float y)
+        static void HideMirrorMount(MirrorHead h)
         {
-            a.anchorMin = a.anchorMax = Vector2.zero;
-            a.anchoredPosition = new Vector2(x, y);
+            h.MountAt = new Vector2(float.NaN, float.NaN);   // never "unchanged" while hidden
+            if (!h.MountShown && h.MountAlpha == 0f) return;
+            h.MountShown = false; h.MountAlpha = 0f;
+            h.Strut.gameObject.SetActive(false); h.Tube.gameObject.SetActive(false); h.Foot.gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// ADR 0340 addendum 2 (critic day27 set 3: "the arms end in the air"): the bracket between a monitor mirror head
+        /// and the cab. The cab mount (<see cref="DrivingHudContext.LeftMirrorMountViewport"/>) is projected into the
+        /// window's own units; a tube runs from the head's side to it and a strut from lower on the head to the same
+        /// mounting foot (<see cref="MirrorWindowLayout.SolveMount"/>), so the head hangs on the A-pillar wherever the
+        /// pillar is in the frame (field of view, window position and size are player settings). A mount beyond the
+        /// frame edge = the tube leaves the frame. Laid out only when the mount moved by more than a quarter unit.
+        /// </summary>
+        void UpdateMirrorMount(MirrorHead h, Func<Vector3> src)
+        {
+            if (h == null) return;
+            if (!h.Desktop || src == null || !h.Window.gameObject.activeInHierarchy) { HideMirrorMount(h); return; }
+            Vector3 vp = src();
+            if (!(vp.z > 0f)) { HideMirrorMount(h); return; }
+            var cam = m_Canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : m_Canvas.worldCamera;
+            Vector2 sp = cam != null ? (Vector2)cam.ViewportToScreenPoint(vp) : new Vector2(vp.x * Screen.width, vp.y * Screen.height);
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(h.Window, sp, cam, out Vector2 local)) { HideMirrorMount(h); return; }
+            Rect wr = h.Window.rect;
+            Vector2 at = local - wr.min;
+            if (h.MountAlpha >= 0f && (at - h.MountAt).sqrMagnitude < 0.0625f) return;
+            h.MountAt = at;
+            float o = MirrorWindowArt.HeadOut;
+            var head = new Rect(-o, -o - h.Below, wr.width + 2f * o, wr.height + h.Below + 2f * o);
+            MirrorWindowLayout.SolveMount(head, at, out var m);
+            if (!m.Show) { HideMirrorMount(h); return; }
+            h.MountShown = true; h.MountAlpha = m.Alpha;
+            var tint = new Color(1f, 1f, 1f, m.Alpha);
+            PlaceBracketTube(h.Tube, h.TubeImage, m.TubeFrom, m.Foot, MirrorWindowLayout.MountTube, tint, true);
+            PlaceBracketTube(h.Strut, h.StrutImage, m.StrutFrom, m.Foot, MirrorWindowLayout.MountStrut, tint, m.Strut);
+            if (!h.Foot.gameObject.activeSelf) h.Foot.gameObject.SetActive(true);
+            h.Foot.anchoredPosition = m.Foot;
+            h.Foot.localScale = new Vector3(m.Side, 1f, 1f);
+            h.FootImage.color = tint;
+        }
+
+        static void PlaceBracketTube(RectTransform rt, Image img, Vector2 from, Vector2 to, float thickness, Color tint, bool on)
+        {
+            if (rt.gameObject.activeSelf != on) rt.gameObject.SetActive(on);
+            if (!on) return;
+            float len = MirrorWindowLayout.AimRight(from, to, out float sx, out float deg);
+            rt.anchoredPosition = from;
+            rt.sizeDelta = new Vector2(len, thickness);
+            rt.localScale = new Vector3(sx, 1f, 1f);
+            rt.localRotation = Quaternion.Euler(0f, 0f, deg);
+            img.color = tint;
         }
 
         /// <summary>Wide-angle pane on / off and its picture (cropped to the pane, mirrored like the main glass).</summary>
@@ -1015,6 +1076,8 @@ namespace Game.UI.Driving
             SetInset(m_MirrorRGo, m_MirrorR, m_Ctx.RightMirrorTexture, m_L.ShowMirrorRight);
             SetWide(m_HeadL, m_Ctx.LeftWideMirrorTexture);
             SetWide(m_HeadR, m_Ctx.RightWideMirrorTexture);
+            UpdateMirrorMount(m_HeadL, m_Ctx.LeftMirrorMountViewport);
+            UpdateMirrorMount(m_HeadR, m_Ctx.RightMirrorMountViewport);
             if (m_MirrorInsetLabel != null)
             {
                 string ml = m_Ctx.MirrorInsets != null && m_Ctx.MirrorInsets() ? "Lusterka w kabinie: okienka" : "Lusterka w kabinie: rozglądanie";

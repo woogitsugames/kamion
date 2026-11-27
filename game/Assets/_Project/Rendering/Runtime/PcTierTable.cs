@@ -96,6 +96,11 @@ namespace Game.Rendering
         public bool mirrorShadows;
         /// <summary>ADR 0342: class II texture rows per window pixel row (0 = off; the tier height is the floor).</summary>
         public float mirrorWindowTexelsPerPixel;
+        /// <summary>ADR 0340 addendum 2: smallest class II (main) mirror texture [px] (0 = off) and the main-view grading of
+        /// the mirror pictures shown as HUD windows (off on every tier: measured +3 % mean, no visible gain, +0.3..0.7 ms
+        /// per pair in the editor; rq_mirror_post=1 for an A/B in the player).</summary>
+        public int mirrorMainMinWidth, mirrorMainMinHeight;
+        public bool mirrorPost;
         // Budget (WORKING_VALUE, D74)
         public int targetFps;
         public string status;
@@ -239,7 +244,7 @@ namespace Game.Rendering
                 cameraFarClip = 3000f, additionalLightsPerObject = 8, ssao = false,
                 treeCardLodScale = 1.5f, treeLodFade = true, treeThinStartM = 150f, treeCullM = 1000f, treeShadowLodMask = 3, forestHlodM = 150f, forestHlodCullM = 0f,
                 vehicleCullM = 400f, simpleFoliage = true, forestFast = false, glassFast = false,
-                envCaptureSize = 256, envCaptureInterval = 1, streetLights = 6, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f, mirrorMsaa = 4, mirrorShadows = false, mirrorWindowTexelsPerPixel = 1f,
+                envCaptureSize = 256, envCaptureInterval = 1, streetLights = 6, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f, mirrorMsaa = 4, mirrorShadows = false, mirrorWindowTexelsPerPixel = 1f, mirrorMainMinWidth = 512, mirrorMainMinHeight = 1024, mirrorPost = false,
                 targetFps = 60, status = "WORKING_VALUE (D74 recommended: GTX 1660 / i5-9600 / 12 GB, 1080p 60 fps) - UNMEASURED",
             },
             new PcTierSettings
@@ -253,7 +258,7 @@ namespace Game.Rendering
                 cameraFarClip = 4000f, additionalLightsPerObject = 8, ssao = false,
                 treeCardLodScale = 2.0f, treeLodFade = true, treeThinStartM = 200f, treeCullM = 1500f, treeShadowLodMask = 3, forestHlodM = 200f, forestHlodCullM = 0f,
                 vehicleCullM = 600f, simpleFoliage = true, forestFast = false, glassFast = false,
-                envCaptureSize = 256, envCaptureInterval = 1, streetLights = 8, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f, mirrorMsaa = 4, mirrorShadows = false, mirrorWindowTexelsPerPixel = 1.5f,
+                envCaptureSize = 256, envCaptureInterval = 1, streetLights = 8, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f, mirrorMsaa = 4, mirrorShadows = false, mirrorWindowTexelsPerPixel = 1.5f, mirrorMainMinWidth = 512, mirrorMainMinHeight = 1024, mirrorPost = false,
                 targetFps = 60, status = "WORKING_VALUE (above D74 recommended; opt-in, never auto-selected) - UNMEASURED",
             },
         };
@@ -296,6 +301,8 @@ namespace Game.Rendering
                 if (t.mirrorResolutionScale < 1f) e.Add($"{n}: mirrors below the tier resolution (mirrors always usable, docs/06)");
                 if (t.mirrorMsaa != 1 && t.mirrorMsaa != 2 && t.mirrorMsaa != 4 && t.mirrorMsaa != 8) e.Add($"{n}: mirrorMsaa {t.mirrorMsaa}");
                 if (t.mirrorWindowTexelsPerPixel < 0f || t.mirrorWindowTexelsPerPixel > 2f) e.Add($"{n}: mirrorWindowTexelsPerPixel {t.mirrorWindowTexelsPerPixel}");
+                if (t.mirrorMainMinWidth < 0 || t.mirrorMainMinWidth > 1024 || t.mirrorMainMinHeight < 0 || t.mirrorMainMinHeight > 1280)
+                    e.Add($"{n}: mirrorMainMin {t.mirrorMainMinWidth} x {t.mirrorMainMinHeight}");
                 if (!Pow2(t.envCaptureSize)) e.Add($"{n}: envCaptureSize {t.envCaptureSize}");
                 if (t.envCaptureInterval < 1) e.Add($"{n}: envCaptureInterval");
                 if (t.lampPools < 0 || t.lampPools > 8) e.Add($"{n}: lampPools");
@@ -331,6 +338,8 @@ namespace Game.Rendering
                 Ge(a.mirrorResolutionScale, b.mirrorResolutionScale, "mirrorResolutionScale");
                 Ge(a.mirrorMsaa, b.mirrorMsaa, "mirrorMsaa");
                 Ge(a.mirrorWindowTexelsPerPixel, b.mirrorWindowTexelsPerPixel, "mirrorWindowTexelsPerPixel");
+                Ge(a.mirrorMainMinWidth, b.mirrorMainMinWidth, "mirrorMainMinWidth");
+                Ge(a.mirrorMainMinHeight, b.mirrorMainMinHeight, "mirrorMainMinHeight");
                 Ge(-a.textureMipmapLimit, -b.textureMipmapLimit, "texture resolution (mipmap limit increases)");
                 Ge(-a.maximumLodLevel, -b.maximumLodLevel, "maximum LOD (maximumLodLevel increases)");
                 Ge(-a.envCaptureInterval, -b.envCaptureInterval, "capture refresh (interval increases)");

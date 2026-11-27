@@ -133,3 +133,41 @@ PASS; eksport z bake'iem 835 s). Kamery kontrolne (edytor, PC High, 1920 × 1080
 dalszy zysk wymaga decyzji o celowaniu lusterka (ADR 0283) albo większej RT; (2) przełącznik szkła IV w ustawieniach (dziś zawsze,
 gdy się mieści) i jego rozmiar — decyzja właściciela; (3) ramiona kończą się tuleją „w powietrzu” (okienko nie jest przypięte do
 słupka A w 3D) — kierunek artystyczny do oceny; (4) pomiar playera Windows.
+
+## Dopisek 2 (2026-11-27, `mirror-mounts-s24`) — wspornik głowicy do słupka A, RT kl. II ≥ 512 × 1024, ciemniejsze szkło
+
+Źródło: krytyk `artifacts/critic-s24-day27/CRITIC.md` zestaw 3 („ramiona wiszą w powietrzu; obraz rozmyty; odbicie za jasne/mgliste”).
+Status: Proposed, ocenia `visual-critic` i właściciel. Wymiary i siły `WORKING_VALUE`; zamyka „Otwarte (3)” dopisku 1.
+
+**Diagnoza (kadry `before/`):** głowica HUD stoi nad lewą krawędzią słupka A (prawdziwe ramiona 3D wychodzą spod niej), prawa — w szybie,
+słupek prawy jest poza kadrem. Stary kikut (68 j., tuleja) miał stałą długość i nie wiedział, gdzie jest kabina. RT kl. II miała 171 × 384 px
+(szkło TRAKT ma proporcję 0,445, nie 0,55). Kamera lusterka renderuje bez gradacji widoku głównego, a film dawał welon 0,06.
+
+1. **Wspornik zakotwiczony w kabinie.** `RenderTextureMirror.CabMountWorld()` = punkt na wewnętrznej ścianie słupka A przy przedniej krawędzi
+   drzwi (offset od środka szkła kl. II: 0,372 m do osi, +0,123 m w górę, +0,138 m w przód; z `body.py mirrors()`), rzutowany co klatkę do
+   okienka (`DrivingHudContext.Left/RightMirrorMountViewport`, bez alokacji). `MirrorWindowLayout.SolveMount` (czysta funkcja): rura pozioma
+   (34 j.) z boku głowicy do punktu + zastrzał (21 j.) z niższego miejsca głowicy do tej samej stopy; stopa 44 × 112 j. z piastą i dwiema
+   śrubami, cień kontaktowy (`MirrorWindowArt.Tube()` 9-slice, `Foot()`; proceduralne, bez marek). Punkt za głowicą lub < 10 j. obok = nic
+   (głowica zasłania mocowanie, np. FOV 55°); punkt poza kadrem = rura wychodzi z kadru (prawa głowica przy domyślnym FOV); dalej niż 2,2
+   szerokości głowicy (rozglądanie) = wspornik wygasa zamiast rozciągać się przez widok. Przeliczenie tylko przy ruchu punktu > 0,25 j.
+2. **RT lusterka głównego:** pola tieru `mirrorMainMinWidth/Height` (PC High i Ultra 512 × 1024; Low/Medium/telefon 0 = bez zmian) →
+   `VehicleCameraBudget.MainMirrorHeight`: tekstura co najmniej tak szeroka I tak wysoka — dla szkła 0,445 to **512 × 1151** (było 171 × 384).
+   Lusterka IV–VI bez zmian. Tekstura większa od okienka dostaje mipmapy + trilinear. Bez zmian w `ProjectSettings`. A/B: `rq_mirror_main=<px|0>`.
+3. **Jasność:** `MirrorWindowLayout.GlassTint` 0,92 → 0,80 (−13 %), `FilmVeil` 0,06 → 0,03 (czerń +0,018 zamiast +0,035). Mgły w kamerze
+   lusterka nie ruszano (lusterko widzi tę samą atmosferę). Sprawdzona i **odrzucona jako domyślna** gradacja widoku głównego w kamerze lusterka
+   (`mirrorPost`, HDR + post): średnia obrazu 0,645 → 0,665 (bez widocznej zmiany), koszt +0,5–0,7 ms/parę w edytorze, a szkło 3D byłoby
+   gradowane dwukrotnie. Przełącznik zostaje do A/B w playerze (`rq_mirror_post=1`), w tierach wyłączony.
+
+**Zmierzone (edytor, DrivingLab, PC High 1920 × 1080, proxy — NIE player):** `MIRROR_BENCH` mediana ms/parę, 2 przebiegi: MSAA 4 171 × 384
+3,75 / 3,77; MSAA 4 512 × 1151 **3,57 / 3,68** (w szumie — koszt w edytorze jest po stronie CPU); + post 4,27 / 4,43. Piksele na lusterko
+0,066 → 0,589 Mpx (× 9, MSAA 4; ok. 28 % pikseli widoku 1080p przy odświeżaniu pary co 2. klatkę) — koszt GPU w playerze `UNVERIFIED`.
+`cab-view-b-fov70-hud`: `drawsEst` 147 → 147, `trisExact` 175 023 → 175 023 (geometria kabiny nietknięta, ≤ 120 000 LOD0 bez zmian). UI: 3 obrazy na
+głowicę (zastrzał, rura, stopa) zamiast 2. Okienko (wycinek szkła, sRGB): średnia 0,804 → 0,766. Testy: EditMode 1639 / 1516 zielonych / 0 / 123
+pominięte (`editmode-20261127-152203.xml`), PlayMode HUD + lusterka (5 klas) 54 / 0 (`playmode-20261127-154849.xml`); nowe `MirrorMount0340Tests` (8).
+**Dowody:** `artifacts/mirror-mounts-s24/` — `before/`, `after/`, `cmp_cab-view-b-fov70-hud.jpg`, `before_b_L.png` | `after_b_L.png` (1:1),
+`cmp_mirror_L_native_iter1.jpg` (RT natywna 171 × 384 ×3 | 512 × 1151), `after_fov_variants.jpg` (FOV 55 / 75 / 70 p10).
+**Otwarte:** (1) pomiar playera: `pwsh scripts/pc-metrics.ps1 -Exe <build> -Scene knyszyn-w -Tier High -Fps 60 -Width 1920 -Height 1080 -DurationSeconds 90 -Class zalecany`
+z `rq_mirror_main=0` vs domyślne (przy przekroczeniu budżetu: 384 × 864 = `mirrorMainMinWidth 384, mirrorMainMinHeight 768`); (2) prawa głowica
+przy domyślnym FOV ma mocowanie poza kadrem — w kadrach QA (margines bezpieczny 4 %) głowica dotyka krawędzi i wspornika nie widać; w playerze
+(margines ~20 px) widać krótki odcinek rury do krawędzi — do oceny krytyka; (3) wspornik sięga wnętrza słupka (czyta się jak monitor na słupku),
+offsety dobrane dla TRAKT; (4) szkło 3D (`_BaseColor` 0,92) nie przyciemnione.

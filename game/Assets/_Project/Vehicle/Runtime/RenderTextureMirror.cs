@@ -37,6 +37,34 @@ namespace Game.Vehicle.Runtime
             if (windowPx <= 0f || texelsPerPixel <= 0f) return tierHeight;
             return Mathf.Clamp(Mathf.Max(tierHeight, Mathf.RoundToInt(windowPx * texelsPerPixel)), tierHeight, Mathf.Max(tierHeight, MaxMirrorHeight));
         }
+        /// <summary>Largest class II texture height the tier floor may ask for (a 0.4-wide glass at 512 px width).</summary>
+        public const int MaxMainMirrorHeight = 1280;
+        /// <summary>
+        /// ADR 0340 addendum 2: height of a class II (main) mirror texture of glass aspect <paramref name="aspect"/> (width /
+        /// height): <see cref="MirrorHeight"/>, raised to the tier floor (PC High / Ultra: at least 512 x 1024 px - the
+        /// critic read the 171 x 384 picture as blurred). rq_mirror_res (an explicit multiplier) and rq_mirror_legacy switch
+        /// the floor off; rq_mirror_main overrides it.
+        /// </summary>
+        public static int MainMirrorHeight(float aspect)
+        {
+            int h = MirrorHeight;
+            if (Legacy || MirrorOverrides.Resolution.HasValue) return h;
+            if (MirrorOverrides.MainMinHeight.HasValue)
+                return MainHeightFor(h, aspect, MirrorOverrides.MainMinHeight.Value / 2, MirrorOverrides.MainMinHeight.Value);
+            return MainHeightFor(h, aspect, MirrorOverrides.TierMainMinWidth, MirrorOverrides.TierMainMinHeight);
+        }
+        /// <summary>Texture height that is at least <paramref name="height"/>, <paramref name="minHeight"/> and tall enough for
+        /// <paramref name="minWidth"/> at the glass aspect; the floor itself never asks for more than
+        /// <see cref="MaxMainMirrorHeight"/>. 0 / 0 = <paramref name="height"/>. Pure.</summary>
+        public static int MainHeightFor(int height, float aspect, int minWidth, int minHeight)
+        {
+            if (minWidth <= 0 && minHeight <= 0) return height;
+            int need = Mathf.Max(minHeight, aspect > 0.05f ? Mathf.CeilToInt(minWidth / aspect) : 0);
+            return Mathf.Max(height, Mathf.Min(need, MaxMainMirrorHeight));
+        }
+        /// <summary>ADR 0340 addendum 2: the main-view grading (HDR + post-processing volume) in the mirror cameras whose
+        /// picture a HUD window shows.</summary>
+        public static bool MirrorPost => !Legacy && (MirrorOverrides.Post ?? MirrorOverrides.TierPost);
         /// <summary>ADR 0342: MSAA samples of the mirror textures (1 = none).</summary>
         public static int MirrorMsaa => Legacy ? 1 : NormalizeMsaa(MirrorOverrides.Msaa ?? MirrorOverrides.TierMsaa);
         public static int NormalizeMsaa(int v) => v >= 8 ? 8 : v >= 4 ? 4 : v >= 2 ? 2 : 1;
@@ -173,6 +201,42 @@ namespace Game.Vehicle.Runtime
             return Mathf.Min(Mathf.Max(0f, maxDeg), gain * (inside - startDeg));
         }
 
+        /// <summary>
+        /// ADR 0340 addendum 2: where the modelled arms of the TRAKT mirror head meet the cab, relative to the centre of
+        /// the class II glass in vehicle axes [m]: towards the centre line, up, forward. From
+        /// tools/blender/truck/exterior/body.py mirrors(): glass centre (1.478, 1.018, 2.597), A-pillar inner face at the
+        /// door's front edge (1.106, 1.156, 2.72) (Blender x right, y forward, z up). The HUD mirror head hangs its
+        /// bracket on this point. Other tractors (graybox): the same offsets, an approximation.
+        /// </summary>
+        public static readonly Vector3 CabMountOffset = new Vector3(0.372f, 0.123f, 0.138f);
+
+        Transform m_VehicleRoot;
+
+        /// <summary>World position of the cab point the mirror head hangs on (<see cref="CabMountOffset"/>). No allocation.</summary>
+        public Vector3 CabMountWorld()
+        {
+            if (m_VehicleRoot == null)
+            {
+                var rig = GetComponentInParent<TruckVisualRig>();
+                m_VehicleRoot = rig != null ? rig.transform : transform.root;
+            }
+            Vector3 g = glass != null ? glass.bounds.center : transform.position;
+            float side = m_VehicleRoot.InverseTransformPoint(g).x < 0f ? 1f : -1f;   // towards the centre line
+            return g + m_VehicleRoot.TransformVector(new Vector3(side * CabMountOffset.x, CabMountOffset.y, CabMountOffset.z));
+        }
+
+        /// <summary>Viewport position (x, y in 0..1 of the frame, z = distance in front of the camera, &lt;= 0 behind it) of a
+        /// world point for a perspective camera rendering at <paramref name="aspect"/> (width / height) - independent of
+        /// the camera's current target (visual QA renders the HUD after the view). Pure.</summary>
+        public static Vector3 ViewportOf(Camera cam, Vector3 world, float aspect)
+        {
+            Vector3 c = cam.worldToCameraMatrix.MultiplyPoint3x4(world);
+            float depth = -c.z;
+            if (depth <= 1e-4f) return new Vector3(0.5f, 0.5f, 0f);
+            float ty = Mathf.Tan(0.5f * cam.fieldOfView * Mathf.Deg2Rad), tx = ty * Mathf.Max(0.01f, aspect);
+            return new Vector3(0.5f + 0.5f * c.x / (depth * tx), 0.5f + 0.5f * c.y / (depth * ty), depth);
+        }
+
         Quaternion m_BaseLocalRotation;
         bool m_HasBaseRotation;
         float m_AppliedYaw = float.NaN, m_AppliedPitch = float.NaN;
@@ -237,6 +301,7 @@ namespace Game.Vehicle.Runtime
         RenderTexture m_Rt;
         Material m_Mat;
         int m_Height, m_Msaa;
+        bool m_Mips;
 
         public RenderTexture Texture => m_Rt;
         public ExtraViewKind Kind => ExtraViewKind.Mirror;
@@ -329,7 +394,11 @@ namespace Game.Vehicle.Runtime
         void EnsureTarget()
         {
             ApplyAdjustment();
-            int h = Mathf.Max(16, Mathf.RoundToInt(VehicleCameraBudget.MirrorHeight * resolutionScale));
+            int tierH = VehicleCameraBudget.MirrorHeight;
+            int baseH = main ? VehicleCameraBudget.MainMirrorHeight(aspect) : tierH;
+            int h = Mathf.Max(16, Mathf.RoundToInt(baseH * resolutionScale));
+            // ADR 0340 addendum 2: a texture raised above the tier / window height is minified on screen - mip chain + trilinear.
+            bool mips = main && baseH > tierH;
             var cam = Cam;
             // Also applies to existing generated prefabs, before their next TruckAssetBuilder rebuild.
             int cls = Class;
@@ -346,11 +415,21 @@ namespace Game.Vehicle.Runtime
             cam.allowMSAA = msaa > 1;
             var urpData = cam.GetComponent<UniversalAdditionalCameraData>();
             if (urpData != null) urpData.renderShadows = VehicleCameraBudget.MirrorShadows;
-            if (m_Rt != null && m_Height == h && m_Msaa == msaa) return;
+            // ADR 0340 addendum 2: a picture shown in a HUD window is drawn after the main view's grading, so it is graded here
+            // (HDR + the look volume) - ungraded it was paler and flatter than the scene around it ("too bright / misty").
+            // The 3D glass alone (no window) keeps the ungraded picture: the main view grades it once.
+            bool post = VehicleCameraBudget.MirrorPost && (main ? ForceRender : ForceWide && cls == 4);
+            if (cam.allowHDR != post) cam.allowHDR = post;
+            if (urpData != null && urpData.renderPostProcessing != post) urpData.renderPostProcessing = post;
+            if (m_Rt != null && m_Height == h && m_Msaa == msaa && m_Mips == mips) return;
             Release();
-            m_Height = h; m_Msaa = msaa;
+            m_Height = h; m_Msaa = msaa; m_Mips = mips;
             int w = Mathf.Max(16, Mathf.RoundToInt(h * aspect));
-            m_Rt = new RenderTexture(w, h, 16, RenderTextureFormat.ARGB32) { name = "Mirror_" + name, antiAliasing = msaa, useMipMap = false };
+            m_Rt = new RenderTexture(w, h, 16, RenderTextureFormat.ARGB32)
+            {
+                name = "Mirror_" + name, antiAliasing = msaa, useMipMap = mips, autoGenerateMips = mips,
+                filterMode = mips ? FilterMode.Trilinear : FilterMode.Bilinear,
+            };
             m_Rt.Create();
             cam.targetTexture = m_Rt;
             if (fovAspect > 0f) cam.aspect = fovAspect; else cam.ResetAspect();
