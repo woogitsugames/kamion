@@ -24,3 +24,5 @@
 - Następny krok: porównać wypiek modelu z bazą i sprawdzić budżet w `artifacts/codex-monument-face-s24/candidate/tykocin_czarniecki_meta.json`.
 - [krok 3] Model i wypiek po dwóch rundach Blender. Rynek LOD0 35 678 → 35 832, głowa 2 600 → 3 798, cokół i platforma −1 128. Gotowy NPZ zachowano w `artifacts/codex-monument-face-s24/candidate/` do końca bazowej generacji kafla.
 - Następny krok po bazowym buildzie: `Copy-Item artifacts/codex-monument-face-s24/candidate/tykocin_czarniecki* art-source/world/landmarks/tykocin_czarniecki/` i `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase after`.
+- [krok 4] Eksport bazowego kafla zakończony. Raport pełnego worldgen potwierdził 35 678 tris Rynku LOD0. Zatwierdzony wypiek Blender 4.2.16 zapisano jako NPZ i metadane w katalogu assetu. Skopiowano pliki instancji regionu C potrzebne do testów budżetowych.
+- Następny krok po renderach bazowych: `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase after`.
