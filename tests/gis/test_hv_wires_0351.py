@@ -2,6 +2,7 @@
 
 No Unity, raw data or world build needed (synthetic lines + the committed streetscape sources of one tile)."""
 import json
+from itertools import permutations
 
 import numpy as np
 import pytest
@@ -146,6 +147,33 @@ def test_far_hv_density_lod_prevents_foreshortened_overlap():
         # Near seam both parallel lines remain anchored to their seam supports
         seam_spans = [ab for ab in rs if ab[0].get("seam") or ab[1].get("seam")]
         assert len(seam_spans) == 2
+
+
+@pytest.mark.parametrize("tier", ["Low", "High"])
+def test_far_hv_lod_discards_a_tower_when_its_only_neighbour_is_out_of_range(tier):
+    half = 1024.0
+    near = {"id": "near", "e": half + 100, "n": 0}
+    far = {"id": "far", "e": half + FF.HIGH_HV_MAX_D_M + 1, "n": 0}
+    mast = {"id": "mast", "e": half + 100, "n": 100}
+    plan = {"pylons": [near, far], "spans": [(near, far)], "masts": [mast]}
+    selected = FF._select_far_hv(plan, half, tier)
+    assert selected == ([], [])
+    assert FF.far_hv_lod_stats(*selected) == {"pylons": 0, "spans": 0, "unwired_power_pylons": 0}
+    assert plan["masts"] == [mast]
+
+
+@pytest.mark.parametrize("tier", ["Low", "High"])
+def test_far_hv_lod_resolves_competing_branches_independently_of_input_order(tier):
+    seam = {"id": "seam", "e": 1100, "n": 0, "seam": True}
+    south = {"id": "south", "e": 1200, "n": -10}
+    north = {"id": "north", "e": 1200, "n": 10}
+    twin = {**south, "id": "south-twin"}
+    pylons = [south, north, twin]
+    for spans in permutations([(seam, p) for p in pylons]):
+        for reverse in (False, True):
+            oriented = [(b, a) if reverse else (a, b) for a, b in spans]
+            plan = {"pylons": pylons, "spans": oriented}
+            assert FF._select_far_hv(plan, 1024, tier) == ([south], [(seam, south)])
 
 
 def test_far_pylon_silhouette_open_and_lightweight():

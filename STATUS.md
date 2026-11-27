@@ -51,3 +51,27 @@
 
 - Krok 4. Sprawdzono istniejącą poprawkę GIS z `c92a9912e`: 9/9 zmienionych przypadków wykonanych w pamięci na kodzie migawki. Uzupełniono raport i opublikowano kopię w katalogu dowodów.
 - Następny krok dla lidera: `git show c92a9912e`, potem ponowny przebieg wskazanych testów po integracji.
+
+### codex-gen-fix-s25 — pomiary bazowe
+- Przeczytano reguły, recenzję i ADR 0023/0334/0351/0352. Gałąź zawiera scalenie GIS s24. Wrapper działa. Odczytano 54 cache: 23/41 samotnych wież, 4/6 różnic po odwróceniu listy przęseł (Low/High). Maski 1/3/5 m: 13/1/1 kart z końcem w masce.
+- Następny krok po poprawce WN: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_hv_wires_0351.py`.
+
+### codex-gen-fix-s25 — LOD i determinizm WN
+- Eksport przepuszcza wyłącznie podpory WN z przęseł LOD. QA zapisuje liczniki Low/High. Kanoniczny klucz rozstrzyga remisy. Testy WN 14 PASS, na 54 cache sieroty i różnice po permutacji: 0/0.
+- Następny krok po poprawce masek: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_fields_r3_0334.py tests/gis/test_fields_r4_0334.py`.
+
+### codex-gen-fix-s25 — podstawy kart kukurydzy
+- Sprawdzanie komórek maski po transformacji obejmuje też krótkie karty i strays. Dla pasów 1/3/5 m zniknęło odpowiednio 13/1/1 kart; na podstawie trójkątów 0 przecięć. Testy pól: 21 PASS.
+- Następny krok po zmianie kolejności gatunków: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_treerows_0222.py tests/gis/test_trees_0352.py`.
+
+### codex-gen-fix-s25 — kanoniczne mieszanki szpalerów
+- Klucze `species` i `young_species` sortowane przed losowaniem. Oba warianty nowego testu odtwarzają błąd na bazie i przechodzą po zmianie. Zestaw szpalerów: 26 PASS.
+- Następny krok po oględzinach i aktualizacji bramek atlasów: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_world_v34.py tests/gis/test_vegetation_r2.py`.
+
+### codex-gen-fix-s25 — bramki impostorów
+- ADR 0023: atlas 4096 × 1024, wyjątek pineyoung 2048 × 512, granice widoków z zaokrągleniem. Na 18 widokach sosny przy 2048 × 512: odłączone maks. 1,89%, największy element 1,03%. Obejrzano PNG i archiwalne High clear/overcast. Testy atlasów i roślinności: 31 PASS.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py tests/gis/test_far_field.py tests/gis/test_hv_wires_0351.py tests/gis/test_embankment_pylons_s24.py tests/gis/test_fields_r3_0334.py tests/gis/test_fields_r4_0334.py tests/gis/test_treerows_0222.py tests/gis/test_trees_0352.py tests/gis/test_world_v34.py tests/gis/test_vegetation_r2.py`.
+
+### codex-gen-fix-s25 — zweryfikowane i przekazane
+- 224/224 celowanych GIS, w tym 62/62 budżetowych. Low −476 i High −1968 tri WN łącznie. Zero nowych sektorów z WN. Raport i dowody w `artifacts/codex-gen-fix-s25/`.
+- Następny krok lidera: `git diff --stat e8b5d5e8f..codex-gen-fix-s25`, następnie kolejka fali 14 wg `artifacts/regen-wave-14-s24/README.md`.

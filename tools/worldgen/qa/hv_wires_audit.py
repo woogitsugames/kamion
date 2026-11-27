@@ -8,10 +8,10 @@ streetscape.furniture (points() for OSM power=tower / power=pole and BDOT10k OT_
 power_supports() for every BDOT10k OT_SULN_L line, no carriageway mask) and counts mapped supports that no span
 (>= 5 m) of any line ends on: they stand in the tile with no conductor.
 
-Far field (Data/Regions/<id>/generated/far_field_qa.json, git): before ADR 0351 every far-field pylon was unwired
-(feature_counts.pylons); after it the QA reports `power_plan` (pylons on HV spans, wired spans, unwired power pylons).
+Far field (Data/Regions/<id>/generated/far_field_qa.json, git): `tiers.<tier>.power_lod` reports HV pylons and
+spans after selection, separately for Low and High. Older QA reports lack this measurement.
 `--far-recompute` re-extracts the ring GIS (Data/raw: BDOT10k, LoD1, OSM PBF) into this checkout's Data/raw/derived
-cache and evaluates the ADR 0351 plan for every tile without building meshes (slow: one OSM pass per tile).
+cache and evaluates the ADR 0351 plan and selection without building meshes (slow on a cache miss).
 """
 from __future__ import annotations
 
@@ -98,17 +98,17 @@ def far_field(region_id: str, recompute: bool) -> dict | None:
     if not p.exists():
         return None
     qa = json.loads(p.read_text(encoding="utf-8"))
-    fc = qa["feature_counts"]
-    plan = qa.get("power_plan")
-    out = {"pylons_drawn": fc.get("pylons", 0),
-           "unwired": plan["unwired_power_pylons"] if plan else fc.get("pylons", 0),
-           "plan": plan}
+    out = {"plan": qa.get("power_plan"),
+           "tiers": {tier: qa.get("tiers", {}).get(tier, {}).get("power_lod") for tier in ("Low", "High")}}
     if recompute:
         from streetscape import far_field as FF
-        import yaml
-        r = yaml.safe_load((pipeline.REGIONS / region_id / "region.yaml").read_text(encoding="utf-8"))
-        gis = FF.extract_ring_gis(region_id, float(r["origin"]["x"]), float(r["origin"]["y"]))
-        out["recomputed"] = FF.power_plan(gis, region_id=region_id)["stats"]
+        r = pipeline.load_region(region_id)
+        half = float(r["bbox"]["width_m"]) / 2.0
+        gis = FF.extract_ring_gis(region_id, float(r["origin"]["x"]), float(r["origin"]["y"]), half=half)
+        plan = FF.power_plan(gis, half, region_id)
+        out["plan"] = plan["stats"]
+        out["tiers"] = {tier: FF.far_hv_lod_stats(*FF._select_far_hv(plan, half, tier))
+                        for tier in ("Low", "High")}
     return out
 
 
@@ -120,7 +120,8 @@ def main():
     a = ap.parse_args()
     regions = a.regions or sorted(d.name for d in pipeline.REGIONS.iterdir() if (d / "region.yaml").exists())
     rep, tot = {}, {"tile_pylons": 0, "tile_pylons_unwired": 0, "tile_poles": 0, "tile_poles_unwired": 0,
-                    "far_pylons_drawn": 0, "far_unwired": 0}
+                    "far": {tier: {"tiles_measured": 0, "pylons": 0, "unwired_power_pylons": 0}
+                            for tier in ("Low", "High")}}
     for rid in regions:
         t, f = in_tile(rid), far_field(rid, a.far_recompute)
         rep[rid] = {"tile": t, "far": f}
@@ -129,13 +130,19 @@ def main():
             tot["tile_pylons_unwired"] += t["pylon"]["unwired"]
             tot["tile_poles"] += t["power_pole"]["mapped"]
             tot["tile_poles_unwired"] += t["power_pole"]["unwired"]
-        if f:
-            tot["far_pylons_drawn"] += f["pylons_drawn"]
-            tot["far_unwired"] += f["unwired"]
+        far_summary = []
+        for tier, totals in tot["far"].items():
+            stats = f["tiers"][tier] if f else None
+            if stats is None:
+                far_summary.append(f"{tier} -")
+                continue
+            totals["tiles_measured"] += 1
+            totals["pylons"] += stats["pylons"]
+            totals["unwired_power_pylons"] += stats["unwired_power_pylons"]
+            far_summary.append(f"{tier} {stats['unwired_power_pylons']}/{stats['pylons']}")
         print(f"{rid:24s} tile pylons {t['pylon']['unwired'] if t else '-':>3}/{t['pylon']['mapped'] if t else '-':<3} "
               f"poles {t['power_pole']['unwired'] if t else '-':>3}/{t['power_pole']['mapped'] if t else '-':<4} "
-              f"| far unwired {f['unwired'] if f else '-':>4}/{f['pylons_drawn'] if f else '-':<4}"
-              + (f" | recomputed {f['recomputed']}" if f and 'recomputed' in f else ""))
+              "| far WN unwired " + ", ".join(far_summary))
     print("TOTAL", tot)
     if a.json:
         Path(a.json).parent.mkdir(parents=True, exist_ok=True)

@@ -114,6 +114,24 @@ def test_deterministic_and_cut_local():
     assert np.array_equal(far(A), far(C)) and len(C) >= len(A)
 
 
+@pytest.mark.parametrize("mix", ["species", "young_species"])
+def test_species_weights_are_independent_of_mapping_order(mix):
+    graph = {"edges": [_edge("w", "A", "B", [[0.0, 40.0], [600.0, 40.0]], hw="primary")]}
+    roads = TR.roads_from_graph(graph, (0.0, 0.0))
+    lines = [("review", LineString([(0.0, 60.0), (600.0, 60.0)]), "authored")]
+    weights = TR.DEFAULTS[mix]
+    params = {"missing_share": 0.8, "replant_share": 1.0}
+    a = TR.plan(lines, roads, {**params, mix: weights})
+    b = TR.plan(lines, roads, {**params, mix: dict(reversed(list(weights.items())))})
+    np.testing.assert_array_equal(_all(a), _all(b))
+    row_a, = a["rows"]
+    row_b, = b["rows"]
+    assert a["report"] == b["report"]
+    assert 0 < a["report"]["replants"] < a["report"]["trees"]
+    assert row_a["young_h"] == row_b["young_h"]
+    assert row_a["species"] == row_b["species"]
+
+
 def test_too_close_row_pushed_to_set_back():
     graph, roads, _, _ = _scene()
     lines = [("bdot:X", LineString([(-500.0, 4.5), (-200.0, 4.5)]), "bdot")]      # 1.0 m from the edge

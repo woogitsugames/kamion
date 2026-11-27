@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 from roads.meshing import MeshBuf
 from streetscape import far_field as FF
@@ -90,6 +91,40 @@ def test_maize_margin_is_ragged_not_a_wall_of_cards():
         Q = C[:, k]
         Lq = VG.field_layout(Q[:, 0] + o[0], Q[:, 1] + o[1])
         assert (FC._edge_dist(g, Q, Lq, o) > FC.MAIZE_EDGE_M - 1e-6).all()
+
+
+@pytest.mark.parametrize("width_m", (1, 3, 5))
+def test_exported_maize_edge_card_bases_clear_the_obstacle_strip(width_m):
+    buf, hf, col, dist = R3._crop_world()
+    zc = np.zeros(hf.z.shape)
+    blocked = np.zeros(hf.z.shape, dtype=bool)
+    blocked[:, 250:250 + width_m] = True
+    FC.build(buf, col, hf, zc, R3._maize_origin(), dist, blocked)
+    part = next(p for p in buf.parts if p.src == "field_crops:maize_edge")
+    triangles = part.V[np.asarray(part.T)]
+    # On this flat terrain a triangle with two sunk vertices contains the
+    # base edge. This includes crossed cards and strays in the exported mesh.
+    feet = triangles[..., 2] < 0.0
+    base_triangles = feet.sum(axis=1) == 2
+    bases = triangles[base_triangles][feet[base_triangles], :2].reshape(-1, 2, 2)
+    assert len(bases) * 2 == len(triangles) and len(bases) > 500
+    west = hf.x0 + 249.5
+    east = west + width_m
+    x = bases[..., 0]
+    assert ((x.max(axis=1) < west) | (x.min(axis=1) > east)).all()
+
+
+def test_maize_base_checks_a_clipped_cell_corner_between_clear_endpoints():
+    _, hf, col, dist = R3._crop_world()
+    blocked = np.zeros(hf.z.shape, dtype=bool)
+    blocked[250, 250] = True
+    ground = FC._Ground(col, hf, np.zeros(hf.z.shape), dist, blocked)
+    # The base visits the blocked cell just after x = -0.5, before y = 0.5.
+    a = np.array([[-0.9, 0.0]])
+    b = np.array([[0.1, 1.2]])
+    i, j, _ = ground.ij(np.concatenate([a, b, (a + b) / 2]))
+    assert not blocked[j, i].any()
+    assert not ground.unblocked_base(a, b)[0]
 
 
 def test_maize_cards_stay_in_the_triangle_budget():
