@@ -85,7 +85,7 @@ namespace Game.Gameplay
         string m_Status = "";
         float m_StatusUntil;
         ReversingCamera m_TractorCam, m_TrailerCam, m_ActiveRevCam;
-        RenderTextureMirror m_MirrorL, m_MirrorR;
+        RenderTextureMirror m_MirrorL, m_MirrorR, m_WideL, m_WideR;
         bool m_AutopilotStart;
         float m_RouteS = -1f, m_RouteEndS = -1f;
         bool m_RouteDoneLogged;
@@ -157,7 +157,12 @@ namespace Game.Gameplay
             m_TractorCam = vehicle.GetComponentInChildren<ReversingCamera>(true);
             m_TrailerCam = trailer != null ? trailer.GetComponentInChildren<ReversingCamera>(true) : null;
             foreach (var mir in vehicle.GetComponentsInChildren<RenderTextureMirror>(true))
-                if (!mir.main) continue;
+                if (!mir.main)
+                {
+                    // class IV (wide-angle) pair for the mirror heads; side from the glass position (driver = left)
+                    if (mir.Class != 4 || mir.glass == null) continue;
+                    if (vehicle.transform.InverseTransformPoint(mir.glass.bounds.center).x < 0f) m_WideL = mir; else m_WideR = mir;
+                }
                 else if (mir.phase == 0) m_MirrorL = mir; else m_MirrorR = mir;
             // D70 / ADR 0243: the mirror windows are a control setting (schema 5, saved with the controls), not a lab pref.
             // One toggle for the HUD developer page and the PC key L (ADR 0264); the old "lab.mirrorInsets" pref is retired.
@@ -199,6 +204,9 @@ namespace Game.Gameplay
                 // (usable at any head angle); look-around still shows the real glass. Toggle in the lab menu.
                 LeftMirrorTexture = () => MirrorInsetsOn && m_MirrorL != null ? m_MirrorL.Texture : null,
                 RightMirrorTexture = () => MirrorInsetsOn && m_MirrorR != null ? m_MirrorR.Texture : null,
+                // ADR 0340 addendum: the wide-angle (class IV) glass of the monitor mirror heads
+                LeftWideMirrorTexture = () => MirrorInsetsOn && m_WideL != null ? m_WideL.Texture : null,
+                RightWideMirrorTexture = () => MirrorInsetsOn && m_WideR != null ? m_WideR.Texture : null,
                 MirrorInsets = () => Controls.mirrorInsets,
                 ToggleMirrorInsets = ToggleMirrorInsets,
             }, overlay: true);
@@ -843,6 +851,7 @@ namespace Game.Gameplay
             // Extra cameras: mirrors only in the cab view; reversing view while in R (or forced on).
             RenderTextureMirror.GlobalEnabled = m_Rig.mode == CameraMode.Cab;
             RenderTextureMirror.ForceRender = MirrorInsetsOn;
+            RenderTextureMirror.ForceWide = MirrorInsetsOn && m_Hud != null && m_Hud.WideMirrorWindows;
             // ADR 0312: inside class II mirror pans with the trailer (FifthWheel.Articulation < 0 = left turn).
             RenderTextureMirror.TrailerArticulationLeftDeg = vehicle.Initialized && vehicle.Coupled && vehicle.Combination != null
                 ? -(float)(vehicle.Combination.FifthWheel.Articulation * MathUtil.Rad2Deg) : 0f;

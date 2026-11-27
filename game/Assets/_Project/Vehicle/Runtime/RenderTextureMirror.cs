@@ -130,6 +130,10 @@ namespace Game.Vehicle.Runtime
         public static bool GlobalEnabled = true;
         /// <summary>Render even when the glass is not on screen (the HUD shows the textures as mirror insets).</summary>
         public static bool ForceRender;
+        /// <summary>ADR 0340 addendum: the class IV (wide-angle) mirrors are shown in the HUD mirror heads too, so they render
+        /// although their modelled glass is off screen. Same per-frame cap and schedule as before (MirrorsPerFrame; class
+        /// IV keeps its longer interval) - on the due-based tiers they take the spare slots the main pair used to fill.</summary>
+        public static bool ForceWide;
         /// <summary>
         /// ADR 0283 (D84 "lusterka złe"): player adjustment of both main (class II) mirrors - the reflected view turned
         /// outward / downward by these angles [deg] (set from the HUD preferences). Like turning the glass by half the
@@ -368,7 +372,7 @@ namespace Game.Vehicle.Runtime
         {
             SampleMotion();
             // Candidate this frame: mirrors on, glass on screen (or the main pair shown as HUD insets), or no image yet.
-            m_Candidate = GlobalEnabled && !MirrorOverrides.Suspended && glass != null && (main && ForceRender || glass.isVisible || m_Rt == null);
+            m_Candidate = GlobalEnabled && !MirrorOverrides.Suspended && glass != null && (main && ForceRender || !main && ForceWide && Class == 4 || glass.isVisible || m_Rt == null);
             if (m_Candidate) EnsureTarget();
             else Cam.enabled = false;
         }

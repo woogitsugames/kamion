@@ -57,6 +57,8 @@ namespace Game.UI.Driving
         public HudVisibility DesktopVisibility => m_Vis;
 
         const float StripW = 720f, RowH = 112f, TileW = 184f, TilePitch = 192f;
+        /// <summary>Visual QA only (editor control cameras have no live vehicle): shows the parking-brake tile.</summary>
+        public static bool QaParkingBrakeTile;
 
         void BuildDesktop()
         {
@@ -113,7 +115,10 @@ namespace Game.UI.Driving
                 Place(t, Vector2.zero, new Vector2(76f + i * TilePitch, 0f), new Vector2(TileW, DesktopHudLayout.TelltaleSize.y));
                 m_DTileBg[i] = t.gameObject.AddComponent<Image>();
                 m_DTileBg[i].color = P.TellRed; m_DTileBg[i].raycastTarget = false;
-                m_DTileText[i] = DLabel(t, "Text", "", strong, 20, TextAnchor.MiddleCenter, P.Ink, new Vector2(6f, 0f), new Vector2(TileW - 12f, DesktopHudLayout.TelltaleSize.y));
+                // ADR 0344 addendum (critic build #10 "plakietka POSTOJOWY plaska jak naklejka UI"): the tile is a lit legend
+                // lamp - a backlit lens recessed in a dark bezel (TelltaleLens), the tile colour multiplies it.
+                m_DTileBg[i].sprite = TelltaleLens(); m_DTileBg[i].type = Image.Type.Sliced;
+                m_DTileText[i] = DLabel(t, "Text", "", strong, 20, TextAnchor.MiddleCenter, P.Ink, new Vector2(10f, 0f), new Vector2(TileW - 20f, DesktopHudLayout.TelltaleSize.y));
                 m_DTileText[i].horizontalOverflow = HorizontalWrapMode.Wrap;
                 m_DTileText[i].resizeTextForBestFit = true; m_DTileText[i].resizeTextMinSize = 16; m_DTileText[i].resizeTextMaxSize = 20;
                 m_DTile[i] = t;
@@ -197,6 +202,8 @@ namespace Game.UI.Driving
             Texture texA = texL != null ? texL : texR;
             d.MirrorAspect = texA != null && texA.height > 0 ? texA.width / (float)texA.height : 0f;
             d.MirrorSize = prefs.MirrorSize; d.MirrorDrop = prefs.MirrorDrop; d.MirrorInset = prefs.MirrorInset;
+            d.MirrorWide = m_Ctx.LeftWideMirrorTexture != null && m_Ctx.RightWideMirrorTexture != null
+                && m_Ctx.LeftWideMirrorTexture() != null && m_Ctx.RightWideMirrorTexture() != null;
             d.ReverseView = m_Ctx.ReverseCameraTexture != null && m_Ctx.ReverseCameraTexture() != null;
             d.DevToggle = m_Vis.DevToggle;
             d.DevPanelOpen = m_DevOpen;
@@ -222,6 +229,8 @@ namespace Game.UI.Driving
             ApplyBlockStyle(m_D.ShowStrip, m_D.Compact);
             SetRect((RectTransform)m_MirrorLGo.transform, m_D.MirrorLeft);
             SetRect((RectTransform)m_MirrorRGo.transform, m_D.MirrorRight);
+            LayoutMirrorHead(m_HeadL, m_D.MirrorLeft, m_D.MirrorWideLeft, m_D.ShowMirrorWide);
+            LayoutMirrorHead(m_HeadR, m_D.MirrorRight, m_D.MirrorWideRight, m_D.ShowMirrorWide);
             SetRect(m_ReverseRt, m_D.ReverseView);
             SetRect(m_DevToggleRt, m_D.DevToggle);
             SetRect(m_DevPanelRt, m_D.DevPanel);
@@ -283,8 +292,8 @@ namespace Game.UI.Driving
             if (m_DStrip != null) m_DStrip.gameObject.SetActive(desktop && m_D.ShowStrip);
             if (m_DTell != null) m_DTell.gameObject.SetActive(desktop);
             if (!desktop && !m_DevToggleRt.gameObject.activeSelf) m_DevToggleRt.gameObject.SetActive(true);
-            MirrorHousingStyle(m_MirrorLGo, desktop);
-            MirrorHousingStyle(m_MirrorRGo, desktop);
+            MirrorHousingStyle(m_HeadL, desktop);
+            MirrorHousingStyle(m_HeadR, desktop);
             m_DValid = false;
             m_LayoutValid = false;
         }
@@ -343,7 +352,7 @@ namespace Game.UI.Driving
 
             // warnings
             HudWarningInput w;
-            w.ParkingBrake = park && live;
+            w.ParkingBrake = park && live || QaParkingBrakeTile;
             w.ParkDriveAway = m_ParkWarnTracker.Alpha > 0.01f;
             w.AirLow = low;
             w.TrailerEmergency = trailerEmergency;
@@ -408,7 +417,67 @@ namespace Game.UI.Driving
 
         // ------------------------------------------------------------------ icon
 
-        static Sprite s_ArrowSprite;
+        static Sprite s_ArrowSprite, s_LensSprite;
+
+        /// <summary>Margin of the lens sprite outside the bezel (contact shadow) and the bezel width [canvas units].</summary>
+        public const float LensShadow = 2.5f, LensBezel = 2.5f;
+
+        /// <summary>
+        /// Warning tile as a physical legend lamp (ADR 0344 addendum), nine-sliced, white so the tile colour tints it:
+        /// a near-black bezel with rounded corners (top edge catches light), the lens recessed inside it (the bezel's
+        /// shadow along the top inner edge, a thin light catch along the bottom), the backlight brighter in the middle
+        /// than at the rim (a diffuser in front of a lamp is never even), and a soft shadow on the panel around it.
+        /// 64 x 64 px, built once; no brand marks.
+        /// </summary>
+        public static Sprite TelltaleLens()
+        {
+            if (s_LensSprite != null) return s_LensSprite;
+            const int n = 64;
+            const float ppu = 2f;
+            float m = LensShadow * ppu, ro = 7f * ppu, bz = LensBezel * ppu;
+            var tex = new Texture2D(n, n, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear, name = "TelltaleLens" };
+            tex.hideFlags = HideFlags.HideAndDontSave;
+            var px = new Color32[n * n];
+            for (int y = 0; y < n; y++)
+            for (int x = 0; x < n; x++)
+            {
+                float fx = x + 0.5f, fy = y + 0.5f;
+                float d = LensRoundRect(fx, fy, n, m, ro);                 // < 0 inside the bezel outline
+                float up = (fy / n - 0.5f) * 2f;                           // -1 bottom .. +1 top
+                float inside = Mathf.Clamp01(0.5f - d);
+                float lens = Mathf.Clamp01(-d - bz + 0.5f);                // 1 on the lens
+                float depth = Mathf.Max(0f, -d - bz);                      // px into the lens from the bezel
+                // lens: backlit diffuser - hot middle, dimmer rim, recess shadow under the top bezel, light catch at the bottom
+                float rimT = Mathf.Clamp01(depth / 13f);
+                float l = 0.66f + 0.34f * rimT * rimT * (3f - 2f * rimT);
+                l *= 1f - 0.38f * Mathf.Max(0f, up) * Mathf.Clamp01(1f - depth / 4f);
+                l += 0.10f * Mathf.Max(0f, -up) * Mathf.Clamp01(1f - depth / 2.5f);
+                // bezel: dark moulding, lit on its upper outer edge
+                float bzl = 0.055f + 0.16f * Mathf.Max(0f, up) * Mathf.Clamp01(1f - (-d) / bz);
+                float c = Mathf.Lerp(bzl, l, lens);
+                // shadow on the panel below / around the bezel
+                float ds = LensRoundRect(fx, fy + 1.5f, n, m, ro);
+                float sh = Mathf.Clamp01(1f - ds / m) * 0.38f;
+                float a = inside + (1f - inside) * sh;
+                float k = a > 1e-4f ? inside / a : 0f;
+                byte v = (byte)(Mathf.Clamp01(c * k) * 255f);
+                px[y * n + x] = new Color32(v, v, v, (byte)(Mathf.Clamp01(a) * 255f));
+            }
+            tex.SetPixels32(px);
+            tex.Apply(false, true);
+            float b = Mathf.Ceil(m + ro + 13f);
+            s_LensSprite = Sprite.Create(tex, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f), 100f * ppu, 0, SpriteMeshType.FullRect, new Vector4(b, b, b, b));
+            s_LensSprite.hideFlags = HideFlags.HideAndDontSave;
+            return s_LensSprite;
+        }
+
+        static float LensRoundRect(float x, float y, float n, float inset, float radius)
+        {
+            float h = n * 0.5f - inset;
+            float qx = Mathf.Abs(x - n * 0.5f) - (h - radius), qy = Mathf.Abs(y - n * 0.5f) - (h - radius);
+            float ox = Mathf.Max(qx, 0f), oy = Mathf.Max(qy, 0f);
+            return Mathf.Sqrt(ox * ox + oy * oy) + Mathf.Min(Mathf.Max(qx, qy), 0f) - radius;
+        }
 
         /// <summary>Own turn-signal arrow (pointing left; the right one is mirrored): filled head + shaft, 96 x 80 px, built once.</summary>
         static Sprite ArrowSprite()
