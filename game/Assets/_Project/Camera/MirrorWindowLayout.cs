@@ -150,6 +150,8 @@ namespace Game.Cameras
         /// <summary>The cab mount must be at least this far beside the head for a bracket to show (closer / behind the head =
         /// the head itself covers the mount); the diagonal strut needs <see cref="MountStrutMinGap"/> [units].</summary>
         public const float MountMinGap = 10f, MountStrutMinGap = 26f;
+        /// <summary>Visible space between the housing and the screen edge for a tube and strut [units]. WORKING_VALUE.</summary>
+        public const float MountEdgeGap = 72f;
         /// <summary>The strut leaves the head this fraction of the head height below the tube (above it when there is no room).</summary>
         public const float MountStrutDrop = 0.24f;
         /// <summary>Longest bracket as a multiple of the head width: beyond it (the player looks far away from the mirror's
@@ -163,8 +165,8 @@ namespace Game.Cameras
             public bool Show, Strut;
             /// <summary>+1 = the bracket leaves the head's right side, -1 its left side.</summary>
             public int Side;
-            public Vector2 TubeFrom, StrutFrom, Foot;
-            public float Alpha;
+            public Vector2 TubeFrom, StrutFrom, TubeTo, StrutTo, Foot;
+            public float Alpha, FootAlpha;
         }
 
         /// <summary>
@@ -174,25 +176,55 @@ namespace Game.Cameras
         /// <paramref name="anchor"/> = the projected mount, both in window units. The tube stays horizontal while the
         /// mount is level with the head's side (its root slides along the side). Pure, no allocation.
         /// </summary>
-        public static void SolveMount(Rect head, Vector2 anchor, out MirrorMount m)
+        public static void SolveMount(Rect head, Vector2 anchor, out MirrorMount m, Rect? frame = null, int outboard = 0)
         {
             m = default;
-            if (head.width <= 0f || head.height <= 0f || float.IsNaN(anchor.x) || float.IsNaN(anchor.y)) return;
+            if (head.width <= 0f || head.height <= 0f || !float.IsFinite(anchor.x) || !float.IsFinite(anchor.y)) return;
+            Rect screen = frame.GetValueOrDefault();
+            float rim = outboard > 0 ? screen.xMax : screen.xMin;
+            bool leavesFrame = frame.HasValue && outboard != 0 && outboard * (anchor.x - rim) >= 0f;
+            Vector2 joint = anchor;
+            if (leavesFrame)
+            {
+                // Keep the convergence near the rim even when perspective sends the pillar very far off screen.
+                joint.x = rim + outboard * Mathf.Min(Mathf.Abs(anchor.x - rim), MountEdgeGap);
+                joint.y = Mathf.Clamp(anchor.y, screen.yMin, screen.yMax);
+            }
             float x0;
-            if (anchor.x >= head.xMax + MountMinGap) { m.Side = 1; x0 = head.xMax - MountRootInset; }
-            else if (anchor.x <= head.xMin - MountMinGap) { m.Side = -1; x0 = head.xMin + MountRootInset; }
+            float beside = leavesFrame ? rim : anchor.x;
+            if (beside >= head.xMax + MountMinGap) { m.Side = 1; x0 = head.xMax - MountRootInset; }
+            else if (beside <= head.xMin - MountMinGap) { m.Side = -1; x0 = head.xMin + MountRootInset; }
             else return;
+            if (leavesFrame && m.Side != outboard) return;
             float pad = Mathf.Min(MountEdgePad, 0.45f * head.height);
             float lo = head.yMin + pad, hi = head.yMax - pad;
-            float yT = Mathf.Clamp(anchor.y, lo, hi);
+            float yT = Mathf.Clamp(joint.y, lo, hi);
             float drop = MountStrutDrop * head.height;
             float yS = yT - drop >= lo ? yT - drop : Mathf.Min(hi, yT + drop);
             m.TubeFrom = new Vector2(x0, yT);
             m.StrutFrom = new Vector2(x0, yS);
-            m.Foot = anchor;
-            float gap = Mathf.Abs(anchor.x - (m.Side > 0 ? head.xMax : head.xMin));
+            m.TubeTo = m.StrutTo = m.Foot = joint;
+            float gap = Mathf.Abs(beside - (m.Side > 0 ? head.xMax : head.xMin));
             m.Strut = gap >= MountStrutMinGap && Mathf.Abs(yS - yT) > 0.5f * MountStrut;
-            float reach = MountReach * head.width, len = (anchor - m.TubeFrom).magnitude;
+            float reach = MountReach * head.width, len = (joint - m.TubeFrom).magnitude;
+            if (leavesFrame)
+            {
+                // Extend each centreline past the rim along its own ray. The viewport cuts through the lit shaft,
+                // including while the projected foot crosses the rim and the two centrelines converge there.
+                float toRim = (rim - x0) / (joint.x - x0);
+                float endX = rim + outboard * MountTube;
+                float beyondRim = Mathf.Max(1f, (endX - x0) / (joint.x - x0));
+                m.TubeTo = Vector2.LerpUnclamped(m.TubeFrom, joint, beyondRim);
+                m.StrutTo = Vector2.LerpUnclamped(m.StrutFrom, joint, beyondRim);
+                len *= toRim;
+            }
+            else if (frame.HasValue)
+            {
+                float dx = Mathf.Min(anchor.x - screen.xMin, screen.xMax - anchor.x);
+                float dy = Mathf.Min(anchor.y - screen.yMin, screen.yMax - anchor.y);
+                m.FootAlpha = Mathf.Clamp01(2f * Mathf.Min(dx / MountFoot.x, dy / MountFoot.y));
+            }
+            else m.FootAlpha = 1f;
             float t = Mathf.Clamp01((len - 0.75f * reach) / Mathf.Max(1e-3f, 0.25f * reach));
             m.Alpha = 1f - t * t * (3f - 2f * t);
             m.Show = m.Alpha > 0.02f;

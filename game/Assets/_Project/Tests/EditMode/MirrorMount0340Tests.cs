@@ -1,4 +1,5 @@
 using Game.Cameras;
+using Game.Controls;
 using Game.Core;
 using Game.Rendering;
 using Game.Vehicle.Runtime;
@@ -93,6 +94,84 @@ namespace Game.Tests
                 Assert.AreEqual(to.magnitude, len, 1e-3f);
             }
             Assert.AreEqual(0f, MirrorWindowLayout.AimRight(Vector2.one, Vector2.one, out _, out _));
+        }
+
+        [TestCase(55f)]
+        [TestCase(70f)]
+        [TestCase(75f)]
+        public void RightMount_OutsideTheCabView_BothShaftsEnterFromTheScreenEdge(float fov)
+        {
+            var go = new GameObject("cab view");
+            try
+            {
+                var cam = go.AddComponent<Camera>();
+                cam.fieldOfView = fov;
+                var screen = new Rect(0f, 0f, 1920f, 1080f);
+                var head = new Rect(1620f, 340f, 228f, 690f);
+                // A pillar forward and to the right of a left-hand-drive eye point.
+                Vector3 vp = RenderTextureMirror.ViewportOf(cam, new Vector3(1.65f, 0.22f, 0.70f), screen.width / screen.height);
+                Assert.Greater(vp.x, 1f);
+                var anchor = new Vector2(vp.x * screen.width, vp.y * screen.height);
+                MirrorWindowLayout.SolveMount(head, anchor, out var right, screen, 1);
+                Assert.IsTrue(right.Show && right.Strut);
+                Assert.AreEqual(1, right.Side);
+                Assert.AreEqual(0f, right.FootAlpha);
+                Assert.AreEqual(1f, right.Alpha);
+                Assert.Less(right.TubeFrom.x, head.xMax);
+                Assert.Less(right.StrutFrom.y, right.TubeFrom.y);
+                Assert.GreaterOrEqual(right.TubeTo.x, screen.xMax + MirrorWindowLayout.MountTube);
+                Assert.GreaterOrEqual(right.StrutTo.x, screen.xMax + MirrorWindowLayout.MountTube);
+                Assert.Greater(RimHeight(right.TubeFrom, right.TubeTo, screen.xMax) -
+                    RimHeight(right.StrutFrom, right.StrutTo, screen.xMax), MirrorWindowLayout.MountStrut);
+
+                var reflectedHead = new Rect(screen.width - head.xMax, head.yMin, head.width, head.height);
+                MirrorWindowLayout.SolveMount(reflectedHead, new Vector2(screen.width - anchor.x, anchor.y), out var left, screen, -1);
+                Assert.IsTrue(left.Show && left.Strut);
+                Assert.AreEqual(-1, left.Side);
+                Assert.AreEqual(screen.width - right.TubeFrom.x, left.TubeFrom.x, 1e-3f);
+                Assert.AreEqual(screen.width - right.TubeTo.x, left.TubeTo.x, 1e-3f);
+                Assert.AreEqual(RimHeight(right.StrutFrom, right.StrutTo, screen.xMax), RimHeight(left.StrutFrom, left.StrutTo, screen.xMin), 1e-3f);
+            }
+            finally { Object.DestroyImmediate(go); }
+        }
+
+        static float RimHeight(Vector2 from, Vector2 to, float rim) =>
+            Mathf.LerpUnclamped(from.y, to.y, (rim - from.x) / (to.x - from.x));
+
+        [Test]
+        public void RightMount_CrossesTheRimAtTheSameHeightAsTheFoot()
+        {
+            var frame = new Rect(-1600f, -600f, 1900f, 1440f);
+            var anchor = new Vector2(frame.xMax - 0.01f, 250f);
+            MirrorWindowLayout.SolveMount(k_Head, anchor, out var inside, frame, 1);
+            MirrorWindowLayout.SolveMount(k_Head, new Vector2(frame.xMax + 0.01f, anchor.y), out var outside, frame, 1);
+            Assert.IsTrue(inside.Show && inside.Strut && outside.Show && outside.Strut);
+            Assert.That(inside.FootAlpha, Is.InRange(0.0001f, 0.001f));
+            Assert.AreEqual(0f, outside.FootAlpha);
+            Assert.AreEqual(inside.Alpha, outside.Alpha, 1e-3f);
+            Assert.AreEqual(inside.Foot.y, RimHeight(outside.TubeFrom, outside.TubeTo, frame.xMax), 0.1f);
+            Assert.AreEqual(inside.Foot.y, RimHeight(outside.StrutFrom, outside.StrutTo, frame.xMax), 0.1f);
+        }
+
+        [Test]
+        public void CabLayout_ReservesRoomAtPhysicalEdgesWithAsymmetricSafeArea()
+        {
+            float reserve = 14f + MirrorWindowLayout.MountEdgeGap;
+            const float leftGutter = 102.4f;
+            var input = new DesktopHudInput
+            {
+                Width = 2560f - leftGutter, ScreenWidth = 2560f, Height = 1440f,
+                MirrorLeft = true, MirrorRight = true, MirrorWide = true,
+                MirrorAspect = 0.445f,
+                MirrorOuterLimits = new Vector2(reserve - leftGutter, reserve),
+            };
+            DesktopHudLayout.Solve(input, out var layout);
+            Assert.IsTrue(layout.ShowMirrorLeft && layout.ShowMirrorRight && layout.ShowMirrorWide);
+            Assert.GreaterOrEqual(layout.MirrorLeft.xMin + leftGutter, reserve - 1e-3f);
+            Assert.GreaterOrEqual(input.Width - layout.MirrorRight.xMax, reserve - 1e-3f);
+            Assert.AreEqual(layout.MirrorLeft.size, layout.MirrorRight.size);
+            Assert.Less(layout.MirrorLeft.xMax, layout.ClearView.xMin);
+            Assert.Greater(layout.MirrorRight.xMin, layout.ClearView.xMax);
         }
 
         [Test]

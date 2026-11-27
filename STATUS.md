@@ -16,3 +16,25 @@
 - GOTOWE DO SCALENIA PRZEZ LIDERA.
 - NASTĘPNY KROK (lider): przejrzeć diff na `neon-avenue-s24` i dowody w `artifacts/neon-avenue-s24/sbs/`, scalić gałąź, a następnie w kolejnej fali regeneracji przebudować kafle z szpalerami (`knyszyn-w`, `dk65-01..11`, `dw671-tykocin-*`, `dk65-monki-*`):
   `git merge --no-ff neon-avenue-s24`
+
+## codex-mirror-right-s24
+- Krok 1. Przeczytano zasady, ADR 0340 i zidentyfikowano trzy gotowe kamery HUD DrivingLab. Gałąź startuje z czystego drzewa.
+- Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Width 1920 -Height 1080 -Lighting clear -Cameras 'cab-view-0-fov55-hud,cab-view-b-fov70-hud,cab-view-c-fov75-hud' -OutputDir artifacts/codex-mirror-right-s24/before/clear
+- Krok 2. Zapisano bazowe DrivingLab Win64 PC High, 1920 × 1080: 6 PNG (FOV 55/70/75 × clear/overcast) w `artifacts/codex-mirror-right-s24/before/`. Cofnięto zapis QualitySettings z Unity.
+- Następny krok: git diff -- game/Assets/_Project/Camera/MirrorWindowLayout.cs game/Assets/_Project/UI/Driving/DrivingHud.cs
+- Krok 3. Dodano rezerwę przy fizycznej krawędzi i symetryczne przedłużenie istniejących dwóch członów. Dodano przypadki 55/70/75°, przejścia przez krawędź i asymetrii safe area.
+- Następny krok: pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64
+- Krok 4. Pierwsze kadry odrzucone po obejrzeniu PNG: brakujący prefab TRAKT (GUID 4cd4c98f4f348194ea87e419fbf570d6). Eksport FBX jest w worktree. Test PlayMode GC objął ruch rzutu prawego słupka.
+- Następny krok: Invoke-UnityBatch -BuildTarget Win64 -LogFile artifacts/logs/truck-codex-mirror-right-s24.log -Arguments @('-executeMethod','Game.Editor.Setup.TruckAssetBuilder.BuildBatch')
+- Krok 5. EditMode Win64 przed dobudowaniem prefabu: 1496 zielonych, 0 niepowodzeń, 150 pominiętych. Generator utworzył prefab TRAKT w Assets/_Generated tego worktree.
+- Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Width 1920 -Height 1080 -Lighting clear -Cameras 'cab-view-0-fov55-hud,cab-view-b-fov70-hud,cab-view-c-fov75-hud' -OutputDir artifacts/codex-mirror-right-s24/before/clear
+- Krok 6. Odtworzono 12 pełnych kadrów TRAKT na tej samej scenie (przed/po × FOV 55/70/75 × clear/overcast). Statystyki geometrii 3D identyczne. Zestawienia PNG w katalogu dowodów.
+- Następny krok: pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64 -Filter Game.Tests.PcHudGc0244Tests
+- Krok 7. Obejrzano zestawienia clear/overcast (960 × 870) i zbliżenia. Visual-critic PASS 6/6. Dowody skopiowane do katalogu nadrzędnego, decyzja i liczby sceny 3D zapisane w dopisku 3 ADR 0340.
+- Następny krok: pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64
+- Krok 8. Cztery bramki budżetowe GIS na wskazanym interpreterze: 62/62 w 90,64 s. Log `gis-tests.txt` w lokalnym i nadrzędnym katalogu dowodów.
+- Następny krok: pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64 -Filter Game.Tests.PcHudGc0244Tests
+- Krok 9. PlayMode Win64 2/2. Test odświeżania HUD potwierdził aktywną rurę i zastrzał, wygaszoną stopę oraz 0 próbek GC.Alloc przy 500 odświeżeniach z ruchem prawego mocowania na 1920 × 1080 i 2560 × 1080.
+- Następny krok to `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` z wygenerowanym ciągnikiem.
+- Krok 10. Końcowy EditMode Win64 z prefabem TRAKT: 1524 zielone, 0 niepowodzeń, 122 pominięte. MirrorMount0340Tests 13/13. Zapisano XML, log i wyniki w dopisku 3. Slot zwolniony.
+- Następny krok dla lidera to `git diff c8ca07835..codex-mirror-right-s24` i przegląd zestawień `artifacts/codex-mirror-right-s24/comparison-*.png`.

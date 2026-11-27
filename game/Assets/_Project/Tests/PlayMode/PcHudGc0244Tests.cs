@@ -1,4 +1,5 @@
 using System.Collections;
+using Game.Cameras;
 using Game.UI.Driving;
 using NUnit.Framework;
 using UnityEngine;
@@ -29,11 +30,14 @@ namespace Game.Tests
         {
             m_Mirror = new RenderTexture(110, 200, 16);   // class II glass aspect 0.55 (RenderTextureMirror default)
             float cruise = 0f; int lever = 0, signal = 0;
+            float pillarY = 0.8f;
             var ctx = new DrivingHudContext
             {
                 IsGyroMode = () => false,
+                CameraModeOverride = () => CameraMode.Cab,
                 LeftMirrorTexture = () => m_Mirror,
                 RightMirrorTexture = () => m_Mirror,
+                RightMirrorMountViewport = () => new Vector3(1.3f, pillarY, 1f),
                 BrakeCruiseKmh = () => cruise,
                 RetarderLever = () => lever,
                 TurnSignalLever = () => signal,
@@ -49,6 +53,10 @@ namespace Game.Tests
                 yield return null;
                 Assert.IsFalse(m_Hud.TouchControlsShown, px + ": monitor HUD (touch controls hidden)");
                 Assert.IsTrue(m_Hud.Layout.ShowMirrorLeft && m_Hud.Layout.ShowMirrorRight, px + ": mirror windows shown");
+                var head = m_Hud.transform.Find("SafeArea/MirrorInsetR");
+                Assert.IsTrue(head.Find("BracketTube").gameObject.activeInHierarchy);
+                Assert.IsTrue(head.Find("BracketStrut").gameObject.activeInHierarchy);
+                Assert.IsFalse(head.Find("BracketFoot").gameObject.activeSelf);
 
                 for (int i = 0; i < 20; i++) m_Hud.RefreshNow();   // warm-up (prebuilt strings, first SetActive)
                 int allocs = GcAllocCounter.Count(() =>
@@ -58,6 +66,7 @@ namespace Game.Tests
                         cruise = i % 3 == 0 ? 0f : 30f + (i % 61);
                         lever = i % 6;
                         signal = (i / 25) % 4 - 1;   // -1, 0, 1, 2
+                        pillarY = 0.77f + 0.001f * (i % 60);
                         m_Hud.RefreshNow();
                     }
                 });
