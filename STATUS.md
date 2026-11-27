@@ -1,3 +1,8 @@
+# STATUS codex-csharp-review-fixes-s25
+
+- Krok 1. Przeczytano recenzję day27 i ADR 0013, 0023, 0308, 0352, 0354. Potwierdzono rozbieżność progu i brak zwalniania klonów w `OnDestroy`. W `win-build/game` brak wygenerowanych `.csproj`.
+- Następny krok: `git diff -- game/Assets/_Project/Rendering/Shaders/Vegetation.shader game/Assets/_Project/Tests/EditMode/VegetationCrownLodTests.cs`
+
 # STATUS neon-avenue-s24 (szpalery drzew przy drodze — koniec „klonów bliźniaków”, dopisek ADR 0352)
 
 - Worktree `neon-avenue-s24`, gałąź `neon-avenue-s24`. Nie scalane ani nie pushowane.
