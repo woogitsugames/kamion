@@ -9,3 +9,9 @@
   (-Gate3). build_all.py (PBR sets) w toku.
 - NASTEPNY KROK: `. artifacts/axis-driveway-s24/uvshim.ps1; & scripts/import-region.ps1 -Region knyszyn-w -BuildTarget Win64`
   potem visual-qa przed + `KAMION_QA_DIAG=colorby:material`.
+- [krok 1] Import Win64 + VQA "przed" (`artifacts/axis-driveway-s24/before`, 8 kamer, obraz krytyka odtworzony 1:1) i diag
+  `colorby:material` (`diag-before-material`): (a) pionowy odcinek i falisty pas = `M_decal_seal` (szew osi DOKLADNIE w osi,
+  przedluza kreske P-1; dwa polowkowe pekniecia poprzeczne konczace sie na nim); (b) zjazd = `M_yard_paving` (verge overlay
+  `plots._verge_overlay` + apron) zawinięty w rowie, "patyki" = `M_verge_tufts` (verge_flora, karty trawy/ziol rowu) stojace
+  NA zjezdzie. Poprawka (a) w decals.py (commit c82222636), testy 0323 14/14.
+- NASTEPNY KROK: build_world knyszyn-w z KAMION_DBG_DRIVE_AT (diagnoza rowu pod zjazdem), potem poprawka (b).

@@ -909,7 +909,16 @@ def apply_drops(net, drops):
         h[urban] = np.minimum(h[urban], h_drop + (h[urban] - h_drop) * k[urban])
         rural = sel & (kind == NW.RURAL) & (not dr.get("kerb_only"))
         he = np.where((h > 0.05) & (h < 1.5), h, S.DITCH_DEPTH)
+        h0 = h.copy()
         h[rural] = np.minimum(he[rural], DITCH_FILL_M + (he[rural] - DITCH_FILL_M) * k[rural])
+        dbg_at = os.environ.get("KAMION_DBG_DRIVE_AT")
+        if dbg_at:
+            e_, n_, r_ = (float(v) for v in dbg_at.split(",")[:3])
+            pq = c.line.offset_point(np.array([dr["s"]]), np.array([0.0]))[0]
+            if float(np.hypot(pq[0] - e_, pq[1] - n_)) < r_ + 15.0:
+                print("DBG_DROP", c.id, dr["side"], round(float(dr["s"]), 2), "half", round(float(dr["half"]), 2),
+                      "kind", np.unique(kind[sel]).tolist(), "h0", np.round(h0[sel], 3).tolist(), "h", np.round(h[sel], 3).tolist(),
+                      "s", np.round(s[sel], 2).tolist(), flush=True)
         d["h"] = h
         done += int(bool(urban.any() or rural.any()))
     return done
@@ -2416,6 +2425,12 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
         strip = LineString([m + n * 0.02, m + n * (L + 1.0)]).buffer(g["w"] / 2, cap_style="flat")
         zone = strip.intersection(roads_poly.buffer(0.35)).difference(carriage.buffer(band))
     polys = [q for q in _polys(zone, 0.15, simplify=0.01) if q.distance(Point(*m)) < L]
+    dbg_at = os.environ.get("KAMION_DBG_DRIVE_AT")      # axis-driveway-s24: "e,n,r" - report the crossings near a point
+    dbg = bool(dbg_at) and float(np.hypot(*(m - np.array([float(v) for v in dbg_at.split(",")[:2]])))) < float(dbg_at.split(",")[2])
+    if dbg:
+        print("DBG_DRIVE_AT", src_id, "m", np.round(m, 2).tolist(), "n", np.round(n, 3).tolist(), "w", round(float(g["w"]), 2),
+              "acc", {k: (round(v, 2) if isinstance(v, float) else v) for k, v in acc.items() if k != "q"},
+              "polys", [(round(q.area, 2), np.round(q.bounds, 2).tolist()) for q in polys], flush=True)
     if cross_drive and os.environ.get("KAMION_DBG_DRIVE"):
         for q in polys:
             r_ = q.minimum_rotated_rectangle.exterior.coords
@@ -2466,6 +2481,12 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
                 ring = max(zf(P[i] + d_ * 0.8) for d_ in (n, -n, tt, -tt, 0 * n))
                 Z[i] = max(za + (zb - za) * f, ring + pad)
         V = np.column_stack([P, Z])
+        if dbg:
+            zt = np.array([zf(p_) for p_ in P])
+            print("DBG_DRIVE_AT", src_id, "verts", len(P), "on_road", int(on_road.sum()), "Z", round(float(Z.min()), 3),
+                  round(float(Z.max()), 3), "terrain", round(float(zt.min()), 3), round(float(zt.max()), 3),
+                  "top_on_road", (round(float(np.nanmin(top[on_road])), 3), round(float(np.nanmax(top[on_road])), 3)) if on_road.any() else None,
+                  flush=True)
         mat = DRIVE_CROSS_MAT if cross_drive else DRIVE_MAT
         tag = ":drive_cross" if cross_drive else ":verge"
         buf.add(GROUND_LAYER, mat, V, P.copy(), T, src=src_id + tag, UV1=np.tile([25.0, 25.0], (len(V), 1)))
