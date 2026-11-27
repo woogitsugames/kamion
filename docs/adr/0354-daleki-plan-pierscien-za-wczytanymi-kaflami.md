@@ -143,10 +143,17 @@ ujawnił pusty horyzont).
   podniesione `biezenstwa-above` **3 / 0 px**, a wjazd na Andersa `route-onramp-andersa` **0 / 0 px**.
 - GTX 1070, limit 60 FPS, 8 s próbek po rozgrzewce na wariant, bez utraty fokusu. ON dodaje **17–47 draw calls
   p95** i około **204–634 tys. trójkątów p95** w licznikach całej klatki. Poza wjazdem na Andersa zmiany p95 GPU **−3,17 do +2,39 ms**
-  mają oba znaki. Zmiany szczytu VRAM procesu **−2,6 do +0,7 MiB**, prywatnej pamięci **−30,0 do +10,5 MiB**.
+  mają oba znaki. Zmiany szczytu VRAM procesu **−2,6 do +1,6 MiB**, prywatnej pamięci **−30,0 do +10,5 MiB**.
   To krótkie pomiary na współdzielonej maszynie. Dodatkowe draw calle są powtarzalne, izolowany koszt w ms pozostaje
   `UNVERIFIED`. Na wjeździe na Andersa p95 całej klatki w ON wynosiło 20,47–20,81 ms, w OFF 36,37–39,91 ms,
   przy braku różnic w obrazie. Pozostałe kadry w ON osiągały 16,67–16,69 ms.
+- Edytor na kopii zaimportowanych scen #10, High PC, 12 przebiegów i 33 pary. Na `edge-north` dw671-tykocin-03
+  (01, 02, 04 w kontekście) licznik stożka kamery rośnie **0 → 3 renderery pierścienia**, **0 → 6 podsiatek**,
+  **0 → 24 331 trójkątów** przed klipem. W obrazie różni się **1,341% / 1,275%** pikseli (clear / overcast).
+  Kadr osiowy `route-s2035` zmienia 1 / 0 px, a diagnostyczne ujęcie z wysoka `ring-high-e` 33 / 0 px.
+  Na dk65-07 z załadowanymi 06 i 08 wschodnie `hv0351-far-e` ma **1 → 7 rendererów**,
+  **25 767 → 205 259 trójkątów** przed klipem i **0 zmienionych pikseli**. `colorby:renderer` wraz z legendą
+  wskazuje siatki. Podmienia ich shadery, dlatego efekt klipu oceniamy na zwykłych ujęciach.
 - Zalecenie: zachować ON. Jeżeli potrzebna jest większa czytelność horyzontu, poprawić sylwetkę z danych CHM
   selektywnie na odsłoniętych kierunkach, z zachowaniem perspektywy powietrznej ADR 0330. Pary PNG 960 px,
   logi, liczniki i komendy odtworzenia w `artifacts/codex-farring-diag-s24/`.

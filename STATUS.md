@@ -32,3 +32,5 @@
 - Następny krok: dokończyć oczekujący `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1` i porównać per-renderer TSV z klatkami colorby.
 - [krok 7] Dodatkowe 2 pary z wjazdu na Andersa, skierowane wzdłuż horyzontu: 0 pikseli Δ≥12/255 w obu pogodach. Obejrzano PNG. Razem 20 przebiegów playera.
 - Następny krok: odebrać wyniki oczekującego `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1`.
+- [krok 8] Visual QA 12/12, 66 PNG i 33 pary edytora, przejrzane clear/overcast/colorby. Dw671 03 północ: 0 → 3 renderery; DK65 07 wschód: 1 → 7 i 0 px różnicy. Pary, TSV, logi i WYNIKI.md w katalogu artefaktów. Oba sloty zwolnione.
+- Następny krok (lider): `git log --oneline 98bbb8724..codex-farring-diag-s24`; przejrzeć WYNIKI.md i utrzymać ON. Do bramki kosztu ustawić stałą kamerę i jawne `-stream 1`.
