@@ -477,12 +477,15 @@ namespace Game.World.Import
             if (def.Get("splash_band") is List<object> sband && sband.Count >= 3)
                 mat.SetVector("_SplashBand", new Vector4((float)Num(sband[0]), (float)Num(sband[1]), (float)Num(sband[2]), 1f));
             // weathering-s24: roof covering weathering from COLOR_0 ("roof_weather": [tile width m, course m, half-offset
-            // 0/1, odd-tile strength, moss, dirt runs, lichen]); a mesh without COLOR_0 bakes a = 0 -> no-op
+            // 0/1, odd-tile strength, moss, dirt runs, lichen]); a mesh without COLOR_0 bakes a = 0 -> no-op.
+            // neon-outbuildings2-s24 (ADR 0238 d. props-fix r2): w = 1 on metal / corrugated sheet roofs enables
+            // down-slope trapezoidal/corrugated rib normals, sheet laps and subtle rust/fade variations inside _ROOF_WEATHER.
             if (def.Get("roof_weather") is List<object> rweather && rweather.Count >= 7)
             {
                 mat.EnableKeyword("_ROOF_WEATHER");
                 mat.SetVector("_RoofTile", new Vector4((float)Num(rweather[0]), (float)Num(rweather[1]), (float)Num(rweather[2]), (float)Num(rweather[3])));
-                mat.SetVector("_RoofWeather", new Vector4((float)Num(rweather[4]), (float)Num(rweather[5]), (float)Num(rweather[6]), 0f));
+                float sheetRibs = (id.StartsWith("roof_metal_", StringComparison.Ordinal) || id.StartsWith("roof_sheet_", StringComparison.Ordinal)) ? 1f : 0f;
+                mat.SetVector("_RoofWeather", new Vector4((float)Num(rweather[4]), (float)Num(rweather[5]), (float)Num(rweather[6]), sheetRibs));
             }
             if (Runoff(def)) mat.SetFloat("_MacroStrength", 0.12f);   // panel-to-panel tone drift of a 600 m facade (0071)
             // ADR 0091: manifest "macro": [size m, strength] overrides the macro tone drift (brick: firing lots)

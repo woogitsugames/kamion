@@ -1,16 +1,10 @@
-# STATUS far-forest-look-s24 (daleki plan lasu: smugi kurtyn, perspektywa powietrzna, widok z wysoka; dopiski ADR 0330/0354)
+# STATUS neon-outbuildings2-s24 (budynki gospodarcze r2: brama, rynny, blacha z żebrami, cokół i zacieki; dopisek ADR 0238 d. props-fix)
 
-- Worktree `agent-a3176de6fa331c9d3`, galaz `worktree-agent-a3176de6fa331c9d3`. Nie scalac (lider).
-- Srodowisko: Library + sceny kafli skopiowane z win-build; `Data/raw/*` = junction do main, `Data/raw/derived/*` junction
-  poza prywatnymi kopiami `dw671-tykocin-03`, `knyszyn-w` (w nich nowy far_field.glb). Junctiony odpinac `cmd /c rmdir`.
-- [krok 0-1] Probe (`Editor/VisualQA/FarFieldProbe.cs`): import win-build (zrodlo obrazow horizon-ring-s24) NIEAKTUALNY —
-  atlas 1024x2048, geometria sprzed r2 (shear v do 66 deg), las 03 edge-north 144 m / 9,6 deg. Aktualne derived: 385+ m, 2,1 deg.
-- [krok 2] Poprawki: (a) Vegetation.shader `_HLOD_EDGE` v rzutowe (v*H, H w zw uv; H = TEXCOORD1.y); (b) far_field.py:
-  TEXCOORD_1.y = wysokosc kolumny + pasmo zamglenia per pas; (c) RegionImporter.LoadForEdge odswieza material `*_far_atlas`
-  (wczesniej stary atlas zostawal po przebudowie krawedzi).
-- [krok 3] Render before|after (03 + knyszyn-w, High clear/overcast, -Neighbours auto, diag, zoom) — drawsEst/trisK identyczne
-  na 42 kamerach; A/B mgly (hazeGroundFactor=10) potwierdza mgle na kurtynach. EditMode 1448/0/152. pytest far_field 147/1
-  (fail istniejacy: sha glb C w main). Dopiski ADR 0330 (dopisek 3) i 0354. KONIEC zadania agenta.
-- NASTEPNY KROK (lider): review + scalenie; potem `far_field.py --region <id>` dla wszystkich kafli i RebuildEdgeBatch
-  (`Unity -batchmode -executeMethod Game.World.Import.WorldEdgeBuilder.RebuildEdgeBatch -region <id> -buildTarget Win64`)
-  w win-build; ponowny render dowodow ADR 0354.
+- Worktree `neon-outbuildings2-s24`, gałąź `neon-outbuildings2-s24`. Nie scalać ani nie pushować (lider).
+- Środowisko: `Data/raw/derived` odpięty junction → lokalny katalog z prywatnymi kopiami `dk65-07` i `knyszyn-w` (+ junctiony pozostałych kafli do main); `art-source/world/materials/*` junctiony do `win-build`; `game/Library` + `game/Assets/_Generated/{Truck,World/{dk65-07,knyszyn-w,+sąsiedzi}}` skopiowane z `win-build`.
+- [krok 1] Rendery PRZED (`before`, High clear + overcast, 1920x1080 PC Win64): `dk65-07` (`drive-kozince`, `route-s0144`, `route-s0433`: drawsEst 459/504/457) i `knyszyn-w` (`dk65-goniadzka`: drawsEst 328).
+- [krok 2] Implementacja (+0 materiałów, DC +0):
+  - `buildings_mesh.py`: (1) wrota stodoły z pionowych desek (`facade_atlas` wycinek `balf(2/5)`) + 16 tr. obramowania/zawiasów pasowych w `facade_atlas`, albo wiejskie dwuskrzydłowe `garage(0/1/5)` bez graffiti, również na długiej ścianie okapowej od drogi (`barn_edges`); (2) lekkie rynny L (4 tr./okap) i rury spustowe V (4 tr./rura) LOD0-only w `facade_atlas`; (3) `roof_weather` COLOR_0 dla dachów `rural_outbuildings`; (4) wyższy (0,45–0,65 m, slope-safe) i ciemniejszy cokół (`pl 0,38..0,54`) oraz zacieki pod okapem (`lod0_ro` → `_RUNOFF`).
+  - `WorldPbrMaterials.cs` + `WorldPBR.shader`: `_RoofWeather.w = 1` dla `roof_metal_*` / `roof_sheet_*` → żebra blachy trapezowej/falistej w kierunku spadku (`tn.x` + antyaliasing `fwidth`), cieniowanie korytek, zakładki arkuszy co 1,05 m i lekkie przebarwienia/nalot rdzy.
+  - Pomiar harness (Python): `dk65-07` LOD0 104 892 → 107 674 (**+2 782 = +2,65 %** ≤ +5 %), LOD1 +0 na `rural_shed`; `knyszyn-w` LOD0 +2 658 (+1,90 %).
+- NASTĘPNY KROK: sprawdzić wynik pełnego pytesta, poprawić ewentualny failure w nowym teście, zacommitować WIP, zbudować `dk65-07` (i `knyszyn-w`) przez `build_world.py --region dk65-07 --context`, zaimportować do Unity Win64 i wyrenderować `after`.

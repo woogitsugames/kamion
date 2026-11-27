@@ -84,7 +84,7 @@ Shader "Kamion/World PBR"
         _SplashHeight ("Splash zone height (m)", Float) = 0.6
         _SplashBand ("Ground-contact band (_SPLASH, weathering-s24): x height m, y strength, z spatter, w 1 = on", Vector) = (0.3, 0, 0, 0)
         _RoofTile ("Roof tile grid (_ROOF_WEATHER): x tile width m, y course m, z half-offset courses 0/1, w odd-tile strength", Vector) = (0.2, 0.35, 0, 0)
-        _RoofWeather ("Roof weathering (_ROOF_WEATHER): x moss, y dirt runs, z lichen, w unused", Vector) = (1, 1, 1, 0)
+        _RoofWeather ("Roof weathering (_ROOF_WEATHER): x moss, y dirt runs, z lichen, w sheet ribs 0/1", Vector) = (1, 1, 1, 0)
         _RunoffMap ("Parapet run-off (R soot, G rust; _RUNOFF)", 2D) = "black" {}
         _RunoffStrength ("Parapet run-off strength", Range(0, 1)) = 0.5
         _GroundTint ("Terrain grass ground-mask strength", Range(0, 1)) = 1
@@ -1321,6 +1321,45 @@ Shader "Kamion/World PBR"
                         half tfade = 1.0 - smoothstep(_RoofTile.x * 0.25, _RoofTile.x * 0.8, footprint);
                         half3 tmean = (1.0 - share * 0.06).xxx;           // mean of tf over many tiles (no tone pop with distance)
                         albedo *= lerp(half3(1.0, 1.0, 1.0), lerp(tmean, tf, tfade), _RoofTile.w);
+                    }
+                    // neon-outbuildings2-s24 (ADR 0238 d. props-fix r2): down-slope ribs (trapezoidal T-18 / corrugated
+                    // sheet), sheet lap joints (~1.05 m), and subtle weathering / rust / fade variation on metal/sheet roofs
+                    // (0 extra draws, 0 extra textures, anti-shimmer filtered via fwidth(ru.x)). WORKING_VALUE.
+                    if (_RoofWeather.w > 0.5)
+                    {
+                        half isCorr = step(0.65h, frac(seed * 0.371h));     // 65 % trapezoidal T-18, 35 % corrugated
+                        float pitch = lerp(0.20, 0.14, isCorr);
+                        float fwx = max(fwidth(ru.x), 1e-4);
+                        half ribFade = (half)saturate(pitch * 0.55 / fwx);
+                        float ph = frac((ru.x + seed * 0.13) / pitch);
+                        // Trapezoidal profile: trough [0..0.46], rise [0.46..0.58], crest [0.58..0.88], fall [0.88..1.0]
+                        half hTrap = (half)(smoothstep(0.45, 0.58, ph) * (1.0 - smoothstep(0.87, 0.99, ph)));
+                        half sTrap = (half)(smoothstep(0.44, 0.51, ph) * (1.0 - smoothstep(0.54, 0.60, ph))
+                                          - smoothstep(0.86, 0.92, ph) * (1.0 - smoothstep(0.95, 1.0, ph)));
+                        // Corrugated profile: sine wave along eave (ribs run down-slope)
+                        half hCorr = (half)(0.5 - 0.5 * cos(ph * 6.2831853));
+                        half sCorr = (half)(sin(ph * 6.2831853) * 0.72);
+                        half ribH = lerp(hTrap, hCorr, isCorr);
+                        half ribSlope = lerp(sTrap * 0.85h, sCorr, isCorr);
+                        // Replace flat metal-tile course normal with strong down-slope rib normal (anti-aliased at distance)
+                        tn = normalize(lerp(half3(0.0h, 0.0h, 1.0h), tn, 0.25h) + half3(-ribSlope * ribFade, 0.0h, 0.0h));
+                        // Trough AO + crest catchlight along the slope
+                        albedo *= lerp(1.0h, lerp(0.82h, 1.16h, ribH), ribFade);
+                        ao *= lerp(1.0h, lerp(0.84h, 1.0h, ribH), ribFade);
+                        smooth = lerp(smooth * 0.78h, smooth * 1.12h, ribH * ribFade);
+                        // Per-sheet lap seams (~1.05 m wide sheets) + per-sheet tone drift + per-building oxidised grey tint
+                        float sheetId = floor((ru.x + seed * 0.19) / 1.05);
+                        half shHash = Hash12(float2(sheetId, floor(seed * 3.1) + 7.0));
+                        half lapDist = abs(frac((ru.x + seed * 0.19) / 1.05) - 0.5) * 1.05;
+                        half lapLine = (1.0h - (half)smoothstep(0.008, 0.025 + fwx, 0.525 - lapDist)) * (half)saturate(0.04 / fwx);
+                        half bTone = lerp(0.88h, 1.48h, frac(seed * 0.173h) * saturate(age * 1.15h));
+                        albedo *= bTone * (1.0h + (shHash - 0.5h) * (0.14h + 0.12h * age)) * (1.0h - 0.24h * lapLine);
+                        // Subtle rust / oxidised streaks in rib troughs & along sheet laps on aged outbuildings
+                        half rNoise = ValueNoise12(float2((ru.x + seed) * 2.4, vE * 0.28 + seed * 0.7));
+                        half rMask = smoothstep(0.56h, 0.84h, rNoise + 0.18h * (1.0h - ribH) + 0.15h * lapLine)
+                                   * saturate((age - 0.30h) * 1.4h) * (0.55h + 0.45h * (1.0h - smoothstep(0.6, 4.5, vE)));
+                        albedo = lerp(albedo, half3(0.11h, 0.055h, 0.032h) * (0.85h + 0.3h * rNoise), rMask * 0.48h);
+                        smooth *= 1.0h - 0.45h * rMask;
                     }
                     // moss: eave zone (wider on older roofs) and along the ridge, a few tufts anywhere; in the laps
                     half zone = max(1.0 - smoothstep(0.25, 1.4 + 0.8 * age, vE), 0.75 * (1.0 - smoothstep(0.1, 0.55, vR)));
