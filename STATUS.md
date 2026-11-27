@@ -133,3 +133,7 @@
 ### codex-sadowa-seam-s25 — pomiar szwów
 - Sprawdzono 11 380 krawędzi z 54 grafów i 57 wspólnych granic. Pełny audyt 4 szwów zależnych od dk65-05 wskazał jedną zmianę: dk65-04 / dk65-05 przechodzi z 1 FAIL do 0, pozostałe 56 szwów bez zmiany wyniku.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-sadowa-seam-s25/local_collision.py`.
+
+### codex-sadowa-seam-s25 — kolizja w pamięci
+- ΔZ na osi po lokalnym złożeniu siatki spadła z 0,00670 m do 0,00012 m. Pokrycie z obu stron pozostało 37/51, maksimum ΔZ na tych próbkach spadło z 0,03654 m do 0,03598 m. Krótki odcinek po dk65-05 ma trymy 0/0 i 0,93% spadku.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -ra -p no:cacheprovider tests/gis/test_seams_0224.py tests/gis/test_unit_crs_geom.py tests/gis/test_unit_junctions.py tests/gis/test_seam_shear_knw.py tests/gis/test_seam_sides_s24.py tests/gis/test_seam_taper_0275.py tests/gis/test_seams_fix_s23.py tests/gis/test_seam_axis_w10.py tests/gis/test_effective_graph_readers.py tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py`.
