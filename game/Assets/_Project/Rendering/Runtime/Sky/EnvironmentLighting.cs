@@ -55,6 +55,37 @@ namespace Game.Rendering
         Texture2D m_ChromaTex;
         static readonly int k_Exposure = Shader.PropertyToID("_KamionExposure");
 
+        // Fade out the old photo and fade in the new one through the analytic sky, using one sample per pixel.
+        const float CloudTileFadeSeconds = 2f; // per half of the transition, WORKING_VALUE (ADR 0332)
+        int? m_CloudTilePhase, m_PreviousCloudTilePhase;
+        float? m_CloudTileChangedAt;
+        float m_PreviousCloudCoverage;
+
+        public void SetCloudTile(double east, double north, bool fade = false)
+        {
+            int phase = PhotographicClouds.TilePhase(east, north);
+            if (phase == m_CloudTilePhase) return;
+            m_PreviousCloudTilePhase = CloudTilePhase(out float previousCoverage);
+            m_PreviousCloudCoverage = previousCoverage;
+            m_CloudTilePhase = phase;
+            m_CloudTileChangedAt = fade && m_PreviousCloudTilePhase.HasValue ? Time.time : (float?)null;
+        }
+
+        internal int? CloudTilePhase(out float coverage)
+        {
+            coverage = 1f;
+            if (!m_CloudTileChangedAt.HasValue) return m_CloudTilePhase;
+            float t = (Time.time - m_CloudTileChangedAt.Value) / CloudTileFadeSeconds;
+            if (t < 1f)
+            {
+                coverage = Mathf.SmoothStep(m_PreviousCloudCoverage, 0f, t);
+                return m_PreviousCloudTilePhase;
+            }
+            if (t < 2f) coverage = Mathf.SmoothStep(0f, 1f, t - 1f);
+            else m_CloudTileChangedAt = null;
+            return m_CloudTilePhase;
+        }
+
         void OnEnable()
         {
             Instance = this;
