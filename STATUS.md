@@ -75,3 +75,4 @@
 ### codex-gen-fix-s25 — zweryfikowane i przekazane
 - 224/224 celowanych GIS, w tym 62/62 budżetowych. Low −476 i High −1968 tri WN łącznie. Zero nowych sektorów z WN. Raport i dowody w `artifacts/codex-gen-fix-s25/`.
 - Następny krok lidera: `git diff --stat e8b5d5e8f..codex-gen-fix-s25`, następnie kolejka fali 14 wg `artifacts/regen-wave-14-s24/README.md`.
+- 2026-11-27T23:42:09 regen-wave-14-s24 — profil koron. Następny krok: `pwsh -NoProfile -File artifacts/regen-wave-14-s24/chain.ps1 -Chain A`
