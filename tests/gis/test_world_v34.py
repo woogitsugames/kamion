@@ -85,11 +85,15 @@ def test_impostors_multi_view_and_lit(meta):
             assert name.startswith("tree_floor_"), name
             continue
         n = t["impostor_views"]
-        assert n >= 4, name
+        assert n == 6, name
         require_lfs(VEG / f"impostor_{name}.png", VEG / f"impostor_{name}_n.png")
         alb = np.asarray(Image.open(VEG / f"impostor_{name}.png").convert("RGBA")).astype(float) / 255
         nrm = np.asarray(Image.open(VEG / f"impostor_{name}_n.png").convert("RGBA")).astype(float) / 255
-        assert alb.shape[1] == round(alb.shape[0] * t["impostor_aspect"]) * n, name
+        # ADR 0023 rebake: 683 px bakes packed into a 4096 px atlas; the
+        # shader addresses view k via (k + u) / n.
+        expected_shape = (512, 2048) if name.startswith("tree_pineyoung_") else (1024, 4096)
+        assert alb.shape[:2] == expected_shape, name
+        assert abs(alb.shape[1] / n - alb.shape[0] * t["impostor_aspect"]) <= 0.5, name
         assert nrm.shape[0] * 2 == alb.shape[0] and nrm.shape[1] * 2 == alb.shape[1], name   # half-res map
         cov = alb[..., 3] > 0.5
         lum = alb[..., :3] @ LUM
@@ -98,9 +102,9 @@ def test_impostors_multi_view_and_lit(meta):
         vis = nrm[..., 2][cov[::2, ::2][: nrm.shape[0], : nrm.shape[1]]]
         assert 0.05 < np.median(vis) < 0.95, name
         # every view has coverage (the tree is in the frame)
-        w = alb.shape[1] // n
-        for k in range(n):
-            assert cov[:, k * w:(k + 1) * w].mean() > 0.02, (name, k)
+        edges = [round(k * alb.shape[1] / n) for k in range(n + 1)]
+        for k, (left, right) in enumerate(zip(edges, edges[1:])):
+            assert cov[:, left:right].mean() > 0.02, (name, k)
 
 
 def test_hlod_edge_textures(meta):

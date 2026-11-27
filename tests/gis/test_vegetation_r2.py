@@ -71,18 +71,26 @@ def test_cc0_needles_red_alpha_and_atlas_padding_are_not_opaque_cards(tmp_path):
 def test_shipping_pine_impostors_retain_branch_connections():
     from PIL import Image
     from scipy import ndimage
-    # Asset-level regression for the P1 visible in DK8: the old 3x3 opening
-    # disconnected186 crown components over these atlases; connected CC049.
-    # Includes all six views of all three variants; independent of optional raw.
+    # ADR 0023: evaluate alpha at the 2048 x 512 PC import size. Box
+    # downsampling models coverage at that size, before GPU compression.
+    # On the 18 rebaked views, at most 1.89% of covered pixels are detached
+    # and the largest island is 1.03%. Limit both per view to catch severed
+    # branches even when there are only a few disconnected components.
     root = Path(__file__).resolve().parents[2]
-    require_lfs(*(root / f'art-source/world/vegetation/impostor_tree_pine_{v}.png' for v in range(3)))
-    components = 0
-    for variant in range(3):
-        path=root/f'art-source/world/vegetation/impostor_tree_pine_{variant}.png'
+    paths = [root / f"art-source/world/vegetation/impostor_tree_pine_{v}.png" for v in range(3)]
+    require_lfs(*paths)
+    size = (2048, 512)
+    edges = [round(k * size[0] / 6) for k in range(7)]
+    for path in paths:
         with Image.open(path) as image:
-            alpha=np.array(image.convert('RGBA'))[...,3]
-        components += ndimage.label(alpha>127,np.ones((3,3)))[1]
-    assert components <= 60, f'{components} disconnected pine crown pieces; check twig alpha opening'
+            alpha = np.asarray(image.getchannel("A").resize(size, Image.Resampling.BOX))
+        for view, (left, right) in enumerate(zip(edges, edges[1:])):
+            labels, _ = ndimage.label(alpha[:, left:right] > 127, np.ones((3, 3)))
+            areas = np.sort(np.bincount(labels.ravel())[1:])
+            assert areas.size, (path.name, view)
+            shares = areas[:-1] / areas.sum()
+            assert shares.sum() <= 0.02, (path.name, view, shares.sum())
+            assert shares.max(initial=0) <= 0.0125, (path.name, view, shares.max())
 
 
 def test_metric_patches_are_world_anchored_without_chunk_seams():
