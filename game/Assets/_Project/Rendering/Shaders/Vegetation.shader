@@ -218,7 +218,7 @@ Shader "Kamion/Vegetation"
         // Jacobian tells how edge-on the card is: sqrt(lambda_min / lambda_max) of J^T J ~ |cos| of the view angle (1 face
         // on, -> 0 edge-on; the cards are square with square cells, so no other anisotropy). Below _KamionCardEdge.x the
         // card's cutoff rises to above 1 (gone), above .y it is untouched, smooth between. Global (WorldInstances; z = 1 on,
-        // 0 = off). Cards only; uv alone, so the depth and colour passes agree. Removes ~5 % of the projected card area.
+        // 0 = off). Cards only; uv alone, so the depth and colour passes agree. Removes an estimated 2-9 % of the projected card area.
         float4 _KamionCardEdge;
         half VegCardEdge(float2 uv, half cutoff)
         {

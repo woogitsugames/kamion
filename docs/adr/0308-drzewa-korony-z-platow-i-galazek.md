@@ -209,9 +209,9 @@ liści (kwadrat, kwadratowa komórka UV) widziane prawie krawędzią: cała teks
 ekranu, `sqrt(λmin/λmax)` ≈ |cos| kąta patrzenia; poniżej 0,12 cutoff karty > 1 (znika), powyżej 0,3 bez zmian, smoothstep
 pomiędzy (`WorldInstances.CardEdgeFade`, global `_KamionCardEdge`, `WORKING_VALUE`; A/B `rq_cardedge=0`). Liczone z samego
 UV, więc przebieg głębi (`VegetationDepth`, `DepthOnly`) i koloru odrzucają te same fragmenty; cienie bez zmian. Usuwa
-~5 % rzutowanego pola kart (|cos| jednostajny na sferze → ∫₀^0,3 udział ≈ 0,05). Bez nowych draw calli (66 kamer: draw
+szacunkowo 2–9 % rzutowanego pola kart (|cos| jednostajny na sferze, pole rzutu ∝ cos: 0,12² … 0,3² — szacunek, nie pomiar). Bez nowych draw calli (66 kamer: draw
 calle i trójkąty identyczne), koszt ~15 ALU na fragment liścia (pochodne już liczone przez `VegCutoffFill`).
 **Wynik** (`artifacts/impostor-rebake-s24/`): kolce znikają w pogodnie i pochmurno (`sbs-zoom/route-s0426-crown-*.jpg`,
-`view/z1.png` 200 %), gęstość koron bez widocznej zmiany; zmienione piksele (fuzz 6 %) ≤ 0,08 % kadru na wszystkich kamerach.
+`view/z1.png` 200 %), gęstość koron bez widocznej zmiany; zmienione piksele (fuzz 6 %) ≤ 0,09 % kadru na wszystkich kamerach.
 Atlas impostorów przebake'owany 4096 × 1024 — ADR 0023, addendum impostor-rebake-s24.
 Otwarte: ocena w playerze (A2C/MSAA 4) i przez `visual-critic`; próg 0,12/0,3 z jednej kamery.
