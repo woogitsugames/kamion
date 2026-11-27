@@ -45,3 +45,5 @@
 - Następny krok: `pwsh scripts/visual-qa.ps1 -Scene World_knyszyn-w_High -Tier High -Pc -BuildTarget Win64 -Width 1920 -Height 1080 -Lighting clear -Cameras cab-driver,dk65-goniadzka,hv0351-far-ne -OutputDir artifacts/codex-main-verify-s24/visual/after/clear`.
 - Visual QA Win64 High PC clear: `VISUALQA_RESULT: OK rendered=3`. Ujęcia `cab-driver`, `dk65-goniadzka`, `hv0351-far-ne`.
 - Następny krok: `pwsh scripts/visual-qa.ps1 -Scene World_knyszyn-w_High -Tier High -Pc -BuildTarget Win64 -Width 1920 -Height 1080 -Lighting overcast -Cameras cab-driver,dk65-goniadzka,hv0351-far-ne -OutputDir artifacts/codex-main-verify-s24/visual/after/overcast`.
+- Visual QA Overcast: `VISUALQA_RESULT: OK rendered=3`. Zestawiono 6 nowych PNG z 6 archiwalnymi kadrami odniesienia. Przywrócono uboczny zapis `QualitySettings.asset`.
+- Następny krok: pod slotem heavy `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` po odtworzeniu TRAKT i tekstur.
