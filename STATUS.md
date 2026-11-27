@@ -75,3 +75,8 @@
 ### codex-gen-fix-s25 — zweryfikowane i przekazane
 - 224/224 celowanych GIS, w tym 62/62 budżetowych. Low −476 i High −1968 tri WN łącznie. Zero nowych sektorów z WN. Raport i dowody w `artifacts/codex-gen-fix-s25/`.
 - Następny krok lidera: `git diff --stat e8b5d5e8f..codex-gen-fix-s25`, następnie kolejka fali 14 wg `artifacts/regen-wave-14-s24/README.md`.
+
+### agy-poles-wires-s25 — słupy linii w kaflach bez przewodów (24 z 50)
+- Zdiagnozowano 24/50 niepodpiętych słupów z fali 13: 19 bez linii w OSM/BDOT (18 z gniazdem bocianim `natural=birds_nest`, 1 samotny w `bialystok-dojlidy`) oraz 5 z linią `power=minor_line` w OSM (`bialystok-mickiewicza`: `11727965265`, `11727965266`, `11727968269`, `11727968270`, `11727968273`).
+- Naprawiono ekstrakcję (`sources.py`, `build_world.py --context`) i generator (`furniture.plan_power_lines`), poprawiono audyt (`hv_wires_audit.py` rozróżnia `unwired` od `without_line`), dodano 5 testów w `test_hv_wires_0351.py`. Pomiar w pamięci na fali 13: `5/50 → 0/50` niepodpiętych z linią w OSM (`19/50` bez linii; `0/308` wież kratowych); `bialystok-mickiewicza`: `+348` wire tris, `+2` słupy regułowe (`+180` LOD0 / `+156` LOD1), `+0 DC` przewodów. Testy: `100 passed`. Raport: `artifacts/agy-poles-wires-s25/WYNIKI.md`.
+- Następny krok dla lidera (fala 15): `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd tools/worldgen/streetscape/sources.py --refresh-power --regions bialystok-mickiewicza` (albo przez `build_world.py --context` w fali 15) i sprawdzenie `hv_wires_audit.py`.

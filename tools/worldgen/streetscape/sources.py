@@ -30,7 +30,7 @@ import numpy as np
 import shapely
 from shapely import wkb
 
-SCHEMA = "truck-sim-pl/streetscape-sources/1"
+SCHEMA = "truck-sim-pl/streetscape-sources/2"
 REPO = Path(__file__).resolve().parents[3]
 
 OSM_NODE_KEYS = {
@@ -49,6 +49,7 @@ OSM_WAY_KEYS = {
     "barrier": None,
     "natural": {"tree_row"},
     "man_made": {"embankment"},
+    "power": {"line", "minor_line"},
 }
 OSM_AREA_KEYS = {
     "amenity": {"parking", "fuel", "loading_dock"},
@@ -64,6 +65,7 @@ KEEP_TAGS = ("amenity", "area:highway", "landuse", "natural", "leisure", "highwa
              "crossing", "power", "man_made", "operator", "access", "area", "access", "support", "lamp_mount",
              "light:count", "maxspeed", "ref", "shelter", "bench", "bin", "public_transport", "covered", "leaf_type",
              "genus", "species", "leaf_cycle", "denotation", "layer", "location", "advertising", "wall", "bus",
+             "cables", "voltage", "circuits", "line",
              # ADR 0279 P1 (D25): value of B-18 (node maxweight, e.g. Knyszyn osm:node/3047681870 maxweight=10 in the
              # OSM API 2026-11-16) and the direction key signs_route.osm_signs already reads
              "maxweight", "traffic_sign:direction")
@@ -116,6 +118,20 @@ def _match(t, spec) -> bool:
     return False
 
 
+def _clip_osm_way(way_id: int, tags: dict, pts: list[tuple[float, float]], lo, hi, proj, tile) -> list[dict]:
+    if len(pts) < 2:
+        return []
+    ll = shapely.LineString(pts)
+    if not ll.intersects(shapely.box(lo[0], lo[1], hi[0], hi[1])):
+        return []
+    out = []
+    g = proj(ll).intersection(tile)
+    for k, part in enumerate(_parts(g)):
+        if part.geom_type == "LineString" and part.length >= 0.5:
+            out.append({"osm_way": way_id, "part": k, "tags": tags, "geometry": _round_geom(part.simplify(0.1))})
+    return out
+
+
 def extract_osm(bbox, pbf: Path) -> dict:
     import osmium
     from pyproj import Transformer
@@ -152,15 +168,7 @@ def extract_osm(bbox, pbf: Path) -> dict:
                 pts = [(n.location.lon, n.location.lat) for n in obj.nodes]
             except osmium.InvalidLocationError:
                 continue
-            if len(pts) < 2:
-                continue
-            ll = shapely.LineString(pts)
-            if not ll.intersects(shapely.box(lo[0], lo[1], hi[0], hi[1])):
-                continue
-            g = proj(ll).intersection(tile)
-            for k, part in enumerate(_parts(g)):
-                if part.geom_type == "LineString" and part.length >= 0.5:
-                    ways.append({"osm_way": obj.id, "part": k, "tags": _tags(t), "geometry": _round_geom(part.simplify(0.1))})
+            ways.extend(_clip_osm_way(obj.id, _tags(t), pts, lo, hi, proj, tile))
         elif obj.is_area():
             if not _match(t, OSM_AREA_KEYS):
                 continue
@@ -254,3 +262,82 @@ def load(region_id: str) -> dict:
 
 def to_shape(g: dict):
     return shapely.geometry.shape(g)
+
+
+def extract_osm_power_ways_by_bboxes(bboxes: dict[str, tuple[float, float, float, float]], pbf: Path | None = None) -> dict[str, list[dict]]:
+    """Extract OSM power=line|minor_line ways clipped to each bbox in a single PBF pass."""
+    import sys
+    import osmium
+    from pyproj import Transformer
+    if pbf is None:
+        sys.path.insert(0, str(REPO / "tools" / "worldgen"))
+        from fetch_osm import download
+        pbf = download()
+    tr = Transformer.from_crs("EPSG:4326", "EPSG:2180", always_xy=True)
+    boxes = {rid: shapely.box(*b) for rid, b in bboxes.items()}
+    out = {rid: [] for rid in bboxes}
+
+    class _PowerHandler(osmium.SimpleHandler):
+        def way(self, w):
+            pw = w.tags.get("power")
+            if pw not in ("line", "minor_line"):
+                return
+            try:
+                pts = [(nd.lon, nd.lat) for nd in w.nodes if nd.location.valid()]
+            except Exception:
+                return
+            if len(pts) < 2:
+                return
+            lons, lats = zip(*pts)
+            xs, ys = tr.transform(lons, lats)
+            ls = shapely.LineString(np.column_stack([xs, ys]))
+            tags = _tags(w.tags)
+            for rid, tile in boxes.items():
+                if not tile.intersects(ls):
+                    continue
+                for k, part in enumerate(_parts(ls.intersection(tile))):
+                    if part.geom_type == "LineString" and part.length >= 0.5:
+                        out[rid].append({"osm_way": w.id, "part": k, "tags": tags,
+                                         "geometry": _round_geom(part.simplify(0.1))})
+
+    _PowerHandler().apply_file(str(pbf), locations=True)
+    key = lambda d: (d["osm_way"], d["part"])
+    return {rid: sorted(ws, key=key) for rid, ws in out.items()}
+
+
+def refresh_power_ways(region: dict, data: dict) -> dict:
+    """Merge freshly extracted OSM power=line|minor_line ways into an existing streetscape_sources dict."""
+    b = region["bbox"]
+    bbox = (b["xmin"], b["ymin"], b["xmax"], b["ymax"])
+    rid = region["id"]
+    pw = extract_osm_power_ways_by_bboxes({rid: bbox})[rid]
+    ways = [w for w in data["osm"]["ways"] if w["tags"].get("power") not in ("line", "minor_line")] + pw
+    ways.sort(key=lambda d: (d.get("osm_type", ""), d.get("osm_way", 0), d.get("part", 0)))
+    return {**data, "schema": SCHEMA, "osm": {**data["osm"], "ways": ways}}
+
+
+def main():
+    import argparse
+    import sys
+    sys.path.insert(0, str(REPO / "tools" / "worldgen"))
+    from roads import pipeline
+    ap = argparse.ArgumentParser(description="Extract or refresh streetscape_sources.json")
+    ap.add_argument("--refresh-power", action="store_true", help="Refresh OSM power ways in existing files")
+    ap.add_argument("--regions", nargs="*")
+    a = ap.parse_args()
+    rids = a.regions or sorted(d.name for d in pipeline.REGIONS.iterdir() if (d / "region.yaml").exists())
+    if a.refresh_power:
+        regs = {rid: pipeline.load_region(rid) for rid in rids
+                if (pipeline.REGIONS / rid / "generated" / "streetscape_sources.json").exists()}
+        bboxes = {rid: (r["bbox"]["xmin"], r["bbox"]["ymin"], r["bbox"]["xmax"], r["bbox"]["ymax"])
+                  for rid, r in regs.items()}
+        pw_map = extract_osm_power_ways_by_bboxes(bboxes)
+        for rid, r in regs.items():
+            data = load(rid)
+            ways = [w for w in data["osm"]["ways"] if w["tags"].get("power") not in ("line", "minor_line")] + pw_map[rid]
+            ways.sort(key=lambda d: (d.get("osm_type", ""), d.get("osm_way", 0), d.get("part", 0)))
+            write(rid, {**data, "schema": SCHEMA, "osm": {**data["osm"], "ways": ways}})
+
+
+if __name__ == "__main__":
+    main()

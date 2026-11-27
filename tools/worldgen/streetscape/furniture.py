@@ -3463,21 +3463,131 @@ def _max_turn_deg(xz):
     return float(np.degrees(np.arccos(np.clip((d[1:] * d[:-1]).sum(1), -1.0, 1.0))).max())
 
 
+def is_osm_power_line(tags) -> bool:
+    """True for overhead OSM power=line|minor_line ways (excludes substation busbars/bays and underground lines)."""
+    return (tags.get("power") in ("line", "minor_line")
+            and tags.get("line") not in ("busbar", "bay")
+            and tags.get("location") not in ("underground", "underwater"))
+
+
+def _osm_way_is_hv(tags: dict, line: LineString, pl: Placer) -> bool:
+    volts = []
+    for v in str(tags.get("voltage", "")).replace(",", ";").split(";"):
+        try:
+            volts.append(float(v.strip()))
+        except ValueError:
+            pass
+    if tags.get("power") == "minor_line":
+        return bool(volts and max(volts) >= 60000.0)
+    if volts:
+        return max(volts) >= 60000.0
+    return sum(1 for p in pl.pts.get("pylon", [])
+               if line.distance(Point(float(p[0]), float(p[1]))) <= SUPPORT_SNAP_M["pylon"]) >= 2
+
+
+def plan_power_lines(src, origin, pl, roads_poly=None, report=None):
+    """Plan supports and spans for BDOT10k OT_SULN_L lines plus OSM power=line|minor_line segments carrying mapped
+    supports not already wired by BDOT10k. Shared by power_lines() and qa/hv_wires_audit.py."""
+    sup_rep = {} if report is None else report
+    origin = np.asarray(origin, float)
+    wired = set()
+    planned = []
+    bdot_lines = []
+
+    def _record_wired(S):
+        for a, b in zip(S, S[1:]):
+            if float(np.hypot(*(b - a))) < 5.0:
+                continue
+            for q in (a, b):
+                wired.add((round(float(q[0]), 2), round(float(q[1]), 2)))
+
+    for f in src.get("bdot10k", {}).get("OT_SULN_L", []):
+        hv = "wysokiego" in (f.get("props", {}).get("rodzaj") or "")
+        P = np.asarray(f["geometry"]["coordinates"], float) - origin
+        if len(P) < 2:
+            continue
+        bdot_lines.append(LineString(P))
+        S = power_supports(pl, P, hv, f["id"], roads_poly, sup_rep)
+        if len(S) < 2:
+            continue
+        _record_wired(S)
+        planned.append((S, hv, f"bdot:{f['id']}"))
+
+    for w in src.get("osm", {}).get("ways", []):
+        tags = w.get("tags") or {}
+        if not is_osm_power_line(tags):
+            continue
+        P = np.asarray(w["geometry"]["coordinates"], float) - origin
+        if len(P) < 2:
+            continue
+        line = LineString(P)
+        if line.length < 1e-6:
+            continue
+        hv = _osm_way_is_hv(tags, line, pl)
+        proto = "pylon" if hv else "power_pole"
+        snap_r = SUPPORT_SNAP_M[proto]
+        near_mapped = [np.asarray(p, float) for p in pl.pts.get(proto, [])
+                       if line.distance(Point(float(p[0]), float(p[1]))) <= snap_r]
+        if not near_mapped:
+            continue
+        keep = []
+        for i in range(len(P) - 1):
+            seg = LineString([P[i], P[i + 1]])
+            has_unwired = any(
+                (round(float(p[0]), 2), round(float(p[1]), 2)) not in wired
+                and seg.distance(Point(float(p[0]), float(p[1]))) <= snap_r
+                for p in near_mapped
+            )
+            covered = bool(bdot_lines) and all(
+                min(Point(float(pt[0]), float(pt[1])).distance(bl) for bl in bdot_lines) <= snap_r
+                for pt in (P[i], (P[i] + P[i + 1]) * 0.5, P[i + 1])
+            )
+            keep.append(has_unwired or not covered)
+        i = 0
+        part_idx = 0
+        while i < len(keep):
+            if not keep[i]:
+                i += 1
+                continue
+            j = i
+            while j < len(keep) and keep[j]:
+                j += 1
+            sub_P = P[i:j + 1]
+            i = j
+            sub_ls = LineString(sub_P)
+            has_sub_unwired = any(
+                (round(float(p[0]), 2), round(float(p[1]), 2)) not in wired
+                and sub_ls.distance(Point(float(p[0]), float(p[1]))) <= snap_r
+                for p in near_mapped
+            )
+            if sub_ls.length < 5.0 and not has_sub_unwired:
+                continue
+            key = f"osm_w{w['osm_way']}_{w.get('part', 0)}_{part_idx}"
+            part_idx += 1
+            S = power_supports(pl, sub_P, hv, key, roads_poly, sup_rep)
+            if len(S) < 2:
+                continue
+            _record_wired(S)
+            planned.append((S, hv, f"osm:way/{w['osm_way']}"))
+    return planned
+
+
 def power_lines(lin, src, origin, report, pl=None, roads_poly=None):
     n = 0
     sup_rep = {}
     if roads_poly is not None:
         from shapely.prepared import prep
         roads_poly = prep(roads_poly.buffer(1.0))
-    for f in src["bdot10k"]["OT_SULN_L"]:
-        hv = "wysokiego" in (f["props"].get("rodzaj") or "")
-        P = np.asarray(f["geometry"]["coordinates"], float) - origin
-        if len(P) < 2:
-            continue
-        if pl is not None:
-            P = power_supports(pl, P, hv, f["id"], roads_poly, sup_rep)
-            if len(P) < 2:
-                continue
+    if pl is not None:
+        lines = plan_power_lines(src, origin, pl, roads_poly=roads_poly, report=sup_rep)
+    else:
+        lines = []
+        for f in src["bdot10k"]["OT_SULN_L"]:
+            hv = "wysokiego" in (f["props"].get("rodzaj") or "")
+            P = np.asarray(f["geometry"]["coordinates"], float) - origin
+            if len(P) >= 2:
+                lines.append((P, hv, f"bdot:{f['id']}"))
+    for P, hv, line_src in lines:
         # attachment points (lateral offset, height above ground). HV (ADR 0127): the six phase conductors hang
         # under the arm tips of streetscape.props.pylon (three levels, both sides) + the earth wire on the peak;
         # the old three wires at 23 m, +-5 m met no arm of the tower. MV: three conductors on the pole cross-arm.
@@ -3516,7 +3626,7 @@ def power_lines(lin, src, origin, report, pl=None, roads_poly=None):
                 uv = np.column_stack([np.repeat([-1.0, 1.0], m), np.full(2 * m, WIRE_HALF_W)])
                 col = np.concatenate([tan, tan]) * 0.5 + 0.5
                 col = np.column_stack([col, np.ones(2 * m)])
-                lin.buf.add("wires", "wire", V, uv, T, src=f"bdot:{f['id']}", COL=col)
+                lin.buf.add("wires", "wire", V, uv, T, src=line_src, COL=col)
         n += 1
     report["power_lines"] = n
     report["power_supports_added"] = sup_rep.get("supports_added", 0)
