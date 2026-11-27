@@ -71,3 +71,10 @@ Evidence: `docs/reports/visual/world-c/v34/README.md` (before / after frames, ed
 - Blender control renders show impostor view 0 turned to the camera and multiply the HLOD albedo by its visibility.
 - Placement distances of E-1 / E-2a and the sign colours of boards are WORKING_VALUE until checked against
   [ZNAKI-Z1] Załącznik 4 tables.
+
+## Addendum crown-lod-s24 (2026-11-27)
+The two impostor views around the camera azimuth are no longer blended linearly over the whole 60° sector (a 50 % double
+image of two different crowns - the "melting blob" of critic build #10): `smoothstep(0.3, 0.7)` keeps one view for most
+azimuths and cross-fades over the middle 24°. Library trees fade from LOD1 cards into the impostor over the last 25 % of
+the LOD1 distance (cutoff dissolve, both drawn; ADR 0308 addendum crown-lod-s24), and High draws cards to 90 m.
+The 256 x 384 px views themselves are unchanged (a sharper atlas needs a rebake in `make_trees.py`, `IMP_RES`; open).
