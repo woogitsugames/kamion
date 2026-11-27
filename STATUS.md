@@ -4,6 +4,8 @@
 - Następny krok: `git diff -- game/Assets/_Project/Rendering/Shaders/Vegetation.shader game/Assets/_Project/Tests/EditMode/VegetationCrownLodTests.cs`
 - Krok 2. Przebiegi kamery używają jednego progu i wyjściowej alfy. ShadowCaster wywołuje ten sam helper z dotychczasowym twardym progiem. Dodano test źródła HLSL.
 - Następny krok: `git diff -- game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs game/Assets/_Project/Tests/EditMode/WorldStreamerHook0273Tests.cs`
+- Krok 3. `Clear` i `OnDestroy` korzystają z `ReleaseFarClones`. Test tworzy klony w syntetycznych kaflach t0 i t1, po czym niszczy obiekt streamera i sprawdza liczbę żywych klonów.
+- Następny krok: `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd -B -m pytest -p no:cacheprovider -q tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py`
 
 # STATUS neon-avenue-s24 (szpalery drzew przy drodze — koniec „klonów bliźniaków”, dopisek ADR 0352)
 

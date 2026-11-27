@@ -80,6 +80,67 @@ namespace Game.Tests
         // ------------------------------------------------------------------ the hook
 
         [Test]
+        public void DestroyStreamer_ReleasesFarRingClonesOfStartAndNeighbour()
+        {
+            var shader = Shader.Find("Kamion/World Surface");
+            Assert.That(shader, Is.Not.Null);
+            var original = new Material(shader);
+            bool farRingWasEnabled = FarRing.Enabled;
+            var clones = new Material[2];
+            try
+            {
+                FarRing.Enabled = true;
+                original.EnableKeyword("_FAR_FACADE");
+                var graph = Row3();
+                var start = StartRoot(graph);
+                var neighbour = Make("Region_t1").AddComponent<WorldRegionRoot>();
+                neighbour.regionId = graph.Tiles[1].id;
+                neighbour.anchorX = graph.Tiles[1].anchorX;
+                neighbour.anchorY = graph.Tiles[1].anchorY;
+                neighbour.anchorZ = graph.Tiles[1].anchorZ;
+                var boundary = neighbour.gameObject.AddComponent<WorldBoundary>();
+                boundary.minEN = new Vector2(-924f, -924f);
+                boundary.maxEN = new Vector2(924f, 924f);
+
+                MeshRenderer AddFarSector(WorldRegionRoot root)
+                {
+                    var edge = Make("WorldEdge").transform;
+                    edge.SetParent(root.transform, false);
+                    var far = Make("WorldFarField").transform;
+                    far.SetParent(edge, false);
+                    var sector = Make("FarField_far_north").AddComponent<MeshRenderer>();
+                    sector.transform.SetParent(far, false);
+                    sector.sharedMaterial = original;
+                    return sector;
+                }
+
+                var startSector = AddFarSector(start);
+                var neighbourSector = AddFarSector(neighbour);
+                var streamer = HandBuilt(graph, start, _ => false, out _);
+                clones[0] = startSector.sharedMaterial;
+                streamer.AdoptVisualQaTile(neighbour);
+                clones[1] = neighbourSector.sharedMaterial;
+
+                Assert.That(Array.FindAll(clones, m => m != null && m != original).Length, Is.EqualTo(2));
+                Assert.That(clones[0], Is.Not.SameAs(clones[1]));
+                foreach (var clone in clones)
+                    Assert.That(clone.IsKeywordEnabled(FarRing.ClipKeyword), Is.True);
+
+                UnityEngine.Object.DestroyImmediate(streamer.gameObject);
+
+                Assert.That(Array.FindAll(clones, m => m != null).Length, Is.Zero);
+                Assert.That(original != null, Is.True);
+            }
+            finally
+            {
+                FarRing.Enabled = farRingWasEnabled;
+                foreach (var clone in clones)
+                    if (clone != null && clone != original) UnityEngine.Object.DestroyImmediate(clone);
+                UnityEngine.Object.DestroyImmediate(original);
+            }
+        }
+
+        [Test]
         public void StaticQa_RealNeighbourOpensBothClosuresAndRemovesStubAprons()
         {
             var graph = Row3();
