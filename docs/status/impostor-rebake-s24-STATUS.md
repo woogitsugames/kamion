@@ -17,3 +17,6 @@
   WorldInstances.CardEdgeFade, A/B rq_cardedge=0). Zero nowych draw calli.
 - NASTĘPNY KROK: VQA `edge1` (trwa) + quick bake maple_0 (czas), potem pełny bake:
   `blender -b --factory-startup -P tools/blender/world/make_trees.py -- --reuse-bakes --rebake pine,birch,alder,maple,linden,shrub,spruce,pineyoung,birchyoung,poplar,oak`
+- [krok 3] VQA `edge1` (knyszyn-w clear, 4 kamery): kolce w koronie klonu route-s0426 znikają (`view/z1.png` przed|po,
+  200 %); zmienione piksele (fuzz 6 %) 0,02-0,05 % kadru, gęstość korony bez widocznej zmiany.
+- NASTĘPNY KROK: czas quick bake maple_0 (trwa), potem pełny rebake (komenda wyżej).
