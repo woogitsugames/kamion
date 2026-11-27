@@ -96,6 +96,7 @@ namespace Game.World
                 // 14 FPS on the S24+ High before thinning and this cap).
                 if (m_Thin[p] && m_Ends[p].Length > 0) m_Ends[p][m_Ends[p].Length - 1] = Mathf.Min(m_Ends[p][m_Ends[p].Length - 1], m_TreeCull);
             }
+            CachePropRules();
             m_Origin = new Vector3(float.NaN, 0f, 0f);
             m_PoleCull = 0f;
             for (int p = 0; p < set.prototypes.Length; p++)
@@ -137,6 +138,19 @@ namespace Game.World
         bool m_LodFade;
         float[] m_FadeEnd;
         bool m_TierRead;
+        bool m_UsePropRules;
+        PcTier m_PropTier;
+        WorldPropTierPolicy.Rule[] m_PropRules;
+
+        void CachePropRules()
+        {
+            if (!m_UsePropRules) { m_PropRules = null; return; }
+            var protos = set.prototypes;
+            if (m_PropRules == null || m_PropRules.Length != protos.Length)
+                m_PropRules = new WorldPropTierPolicy.Rule[protos.Length];
+            for (int p = 0; p < protos.Length; p++)
+                m_PropRules[p] = WorldPropTierPolicy.For(m_PropTier, protos[p].name);
+        }
 
         void ReadTier()
         {
@@ -155,6 +169,7 @@ namespace Game.World
             m_HighOnly = DrawsHighOnly(QualityProfileApplier.HasCurrent, t.name);
             // ADR 0136 r2: per-tier vehicle cull (Low 150 m); 0 / no tier = the common VehicleCullM.
             m_TierVehicleCullM = QualityProfileApplier.HasCurrent && t.vehicleCullM > 0f ? t.vehicleCullM : VehicleCullM;
+            m_UsePropRules = WorldPropTierPolicy.TryGetTier(PcGraphicsTiers.Enabled && QualityProfileApplier.HasCurrent, t.name, out m_PropTier);
             // Impostor view cross-fade (Kamion/Vegetation _IMPOSTOR): 2 views on Medium and up, the nearest view on Low
             // (half the texture fetches; ADR 0023 cost table). Tier = LOD bias (Low 0.5).
             Shader.SetGlobalFloat(k_ImpostorBlend, TierLodBias >= 0.75f ? 1f : 0f);
@@ -171,6 +186,7 @@ namespace Game.World
             if (m_Mats == null || simple != m_SimpleFoliage || heroLeafHigh != m_HeroLeafHigh) BuildMaterials(simple);
             if (a2cChanged || !Mathf.Approximately(cull, m_TreeCull)) SetLeafAlphaToCoverage(a2c);
             if (!Mathf.Approximately(cull, m_TreeCull)) { m_TreeCull = cull; m_Batch = null; }   // re-cap impostor distances
+            if (m_Batch != null) CachePropRules();
         }
 
         /// <summary>Alpha-to-coverage on the alpha-clipped vegetation materials (URP Lit / Kamion/Vegetation _AlphaToMask render state).</summary>
@@ -421,6 +437,7 @@ namespace Game.World
             bool props = RenderOverrides.Props != false && !RenderOverrides.AbPropsOff;
             SyncAbMasks();
             bool skipVehicles = RenderOverrides.AbVehicleNoExtraView && cam.TryGetComponent(out IExtraViewCamera _);   // ADR 0136 r2 A/B (diagnostics)
+            bool overrideVehicleCull = RenderOverrides.VehicleCull.HasValue || RenderOverrides.AbVehicleCullM > 0f;
             GeometryUtility.CalculateFrustumPlanes(cam, m_Planes);
             Vector3 cp = cam.transform.position;
             // ADR 0068: extra views (mirrors) use their own LOD scale on the tier bias (Game.Core.ExtraViewLod), whatever
@@ -495,12 +512,16 @@ namespace Game.World
                     if (!trees && m_Thin[run.prototype]) continue;
                     if (!props && !m_Thin[run.prototype]) continue;
                     if (m_AbHide != null && m_AbHide[run.prototype]) continue;   // ADR 0136 r2 A/B (diagnostics)
-                    if (skipVehicles && m_FixedCull[run.prototype]) continue;
+                    bool vehicle = m_FixedCull[run.prototype];
+                    if (skipVehicles && vehicle) continue;
                     float ls = thinnableProto(run.prototype) ? Mathf.Min(scale, m_TreeCard) * RenderOverrides.AbTreeCardScale : scale;
-                    float cs = m_FixedCull[run.prototype] ? distanceScale * VehicleCullFactor : scale;   // vehicles: same cull on every tier
+                    float cs = vehicle ? distanceScale * VehicleCullFactor : scale;   // vehicle cull is independent of camera LOD bias
                     float l0 = m_Lod0Min[run.prototype] * distanceScale;   // vehicles: LOD0 floor on every tier
-                    if (m_FixedCull[run.prototype] && RenderOverrides.AbVehicleLodScale != 1f) { ls *= RenderOverrides.AbVehicleLodScale; l0 *= RenderOverrides.AbVehicleLodScale; }
-                    int ln = LodAt(ends, dNear, ls, cs, l0), lf = LodAt(ends, dFar, ls, cs, l0);
+                    var rule = m_PropRules?[run.prototype] ?? default;
+                    float cap = vehicle && overrideVehicleCull ? float.PositiveInfinity : rule.CullLimit(distanceScale);
+                    ls *= rule.LodScale;
+                    if (vehicle && RenderOverrides.AbVehicleLodScale != 1f) { ls *= RenderOverrides.AbVehicleLodScale; l0 *= RenderOverrides.AbVehicleLodScale; }
+                    int ln = LodAt(ends, dNear, ls, cs, l0, cap), lf = LodAt(ends, dFar, ls, cs, l0, cap);
                     bool thinnable = m_Thin[run.prototype];
                     int stride = thinnable ? ThinStride(dNear, scale) : 1;
                     // crown-lod-s24: inside the LOD1 -> impostor band both LODs are drawn (per instance).
@@ -521,7 +542,7 @@ namespace Game.World
                         float dx = m.m03 - cp.x, dy = m.m13 - cp.y, dz = m.m23 - cp.z;
                         float d = Mathf.Sqrt(dx * dx + dy * dy + dz * dz);
                         if (thinnable && (i & (ThinStride(d, scale) - 1)) != 0) continue;
-                        int l = LodAt(ends, d, ls, cs, l0);
+                        int l = LodAt(ends, d, ls, cs, l0, cap);
                         if (l >= 0) Append(run.prototype, l, mats, i, 1, b);
                         if (band && l == lastLod - 1 && d > fs) Append(run.prototype, lastLod, mats, i, 1, b);
                     }
@@ -631,8 +652,10 @@ namespace Game.World
 
         /// <summary>LOD index for distance d: switch distances × <paramref name="lodScale"/>, the cull distance (last end) × <paramref name="cullScale"/>;
         /// LOD0 (when it is not the only LOD) reaches at least <paramref name="lod0Min"/> metres.</summary>
-        public static int LodAt(float[] ends, float d, float lodScale, float cullScale, float lod0Min = 0f)
+        public static int LodAt(float[] ends, float d, float lodScale, float cullScale, float lod0Min = 0f,
+            float cullCap = float.PositiveInfinity)
         {
+            if (d >= cullCap) return -1;
             int last = ends.Length - 1;
             for (int l = 0; l < ends.Length; l++)
             {
@@ -707,6 +730,7 @@ namespace Game.World
             // Tree casters per tier (QualityProfile.treeShadowLodMask): LOD1 tree cards in the shadow pass doubled the
             // forest cost on the A16 (Low/Medium cast from LOD0 only).
             int mask = m_Thin[proto] ? (RenderOverrides.AbTreeShadowOff ? 0 : p.shadowLodMask & m_TreeShadowMask) : p.shadowLodMask;
+            if (m_PropRules?[proto].SuppressShadows == true) mask = 0;
             if (m_AbNoShadow != null && m_AbNoShadow[proto]) mask = 0;   // ADR 0136 r2 A/B (diagnostics)
             if (m_ThinCastersOff && m_ThinCaster[proto]) mask = 0;       // ADR 0240: Low cannot resolve thin casters
             var shadows = (mask & (1 << lod)) != 0 ? ShadowCastingMode.On : ShadowCastingMode.Off;
