@@ -18,5 +18,9 @@
   - `FurnitureSignForward.hlsl` (`ApplySignWear`: wyblaknięcie UV czerwieni→róż, kurz od dołu, rdza krawędziowa, pojedyncze wlepki, spadek retrorefleksji) oraz `FurniturePost.shader` (`Kamion/Furniture Post`: U-kanałowy profil 50×30 mm na 12-boku, ocynk zwietrzały vs malowany szaro-biały, korozja u podstawy).
   - Poprawka `built_up.py` / `limit_signs.py` (`net` opcjonalny w `_place`).
   - Testy: Unity `EditMode FurnitureSignTests` 16/16 passed, `PlayMode WorldInstancesRenderGcTests` 1/1 passed (zero GC); Python `test_signs_p1_0279` + `test_direction_signs_0236` + `test_signs_wear_s24` (46 passed, 1 skipped), `test_props_grounding_0337` + `test_furniture_signs_0120` + `test_furniture_r1` (37 passed), `test_hero_bridge` + `test_typology_0238` (34 passed).
-- NASTĘPNY KROK: dokończyć przebudowę `dk65-07`, potem import Unity i `visual-qa` PO (`clear` + `overcast`):
-  `pwsh scripts/import-region.ps1 -Region dk65-07 -Tiers High -BuildTarget Win64`
+- [krok 4] Poprawka GI/SH w `FurniturePost.shader` (`InitializeBakedGIData`, `EVALUATE_SH_*`), pełny import `dk65-07` High + `visual-qa` PO (`clear` i `overcast`, `1920×1080`) + arkusze SBS `≤960 px` w `artifacts/agy-signs-wear-s24/sbs/`.
+  - `posts=24` (`painted=11`, `u_channel=3`, `tilted=24`), `plates=25`.
+  - Testy Python (11 plików budżetowych i oznakowania): `167 passed, 1 skipped` w 96,47 s.
+  - Dopisek dodany w `docs/adr/0337-props-grounded-benches-sign-posts.md`, raport w `artifacts/agy-signs-wear-s24/WYNIKI.md`, dowody skopiowane do `C:\Users\matma\Documents\Claude\kamion\artifacts\agy-signs-wear-s24\`.
+- NASTĘPNY KROK (dla lidera): przejrzeć dowody w `artifacts/agy-signs-wear-s24/`, scalić `agy-signs-wear-s24` i przebudować kafle przy kolejnej fali regenu:
+  `git log -n 4 --oneline agy-signs-wear-s24`

@@ -66,9 +66,9 @@ Shader "Kamion/Furniture Post"
             float cx = cos(ang);
             float sx = sin(ang);
             bool isCollar = (positionOS.y < 0.024 && r > 0.040);
-            float halfW = isCollar ? 0.036 : 0.025;
-            float frontZ = isCollar ? 0.022 : 0.015;
-            float backZ = -0.015;
+            float halfW = isCollar ? 0.036 : 0.028;
+            float frontZ = isCollar ? 0.022 : 0.016;
+            float backZ = -0.016;
 
             float3 pOut = positionOS.xyz;
             float3 nOut = normalOS;
@@ -109,13 +109,11 @@ Shader "Kamion/Furniture Post"
             #pragma fragment FurniturePostFragment
 
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
-            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
-            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ EVALUATE_SH_MIXED EVALUATE_SH_VERTEX
             #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
-            #pragma multi_compile _ _LIGHT_LAYERS
             #pragma multi_compile_fog
             #pragma multi_compile_instancing
-            #pragma instancing_options assumeuniformscaling
 
             #include "Packages/com.unity.render-pipelines.universal/Shaders/LitForwardPass.hlsl"
 
@@ -162,8 +160,8 @@ Shader "Kamion/Furniture Post"
                 if (wear.x > 0.5h)
                 {
                     // Painted grey-white municipal/county post
-                    half3 paintBase = half3(0.41h, 0.425h, 0.405h) * (0.93h + 0.14h * seed);
-                    surfaceData.albedo = lerp(paintBase, paintBase * 0.84h, n * 0.35h * wear.z);
+                    half3 paintBase = half3(0.45h, 0.465h, 0.445h) * (0.93h + 0.14h * seed);
+                    surfaceData.albedo = lerp(paintBase, paintBase * 0.85h, n * 0.32h * wear.z);
                     surfaceData.metallic = 0.04h;
                     surfaceData.smoothness = lerp(0.28h, 0.16h, wear.z);
                     // Subtle collar/base corrosion on older posts
@@ -173,10 +171,10 @@ Shader "Kamion/Furniture Post"
                 else if (dot(wear, half4(1, 1, 1, 1)) > 0.001h)
                 {
                     // Weathered hot-dip galvanized zinc post
-                    half zincTone = 0.86h + 0.22h * seed - 0.12h * wear.z;
+                    half zincTone = lerp(0.96h, 0.84h, wear.z) * (0.92h + 0.16h * seed);
                     surfaceData.albedo *= zincTone * (0.94h + 0.12h * n);
-                    surfaceData.metallic = lerp(0.55h, 0.32h, wear.z);
-                    surfaceData.smoothness = lerp(0.40h, 0.20h, wear.z);
+                    surfaceData.metallic = lerp(0.62h, 0.38h, wear.z);
+                    surfaceData.smoothness = lerp(0.40h, 0.22h, wear.z);
                 }
 
                 // Bottom road splash / dirt
@@ -186,12 +184,13 @@ Shader "Kamion/Furniture Post"
                 // Open U-channel inner recess darkening (synthetic cavity AO)
                 if (recess > 0.1h)
                 {
-                    surfaceData.albedo *= 0.55h;
-                    surfaceData.occlusion *= 0.65h;
+                    surfaceData.albedo *= 0.62h;
+                    surfaceData.occlusion *= 0.72h;
                 }
 
                 InputData inputData;
                 InitializeInputData(input, surfaceData.normalTS, inputData);
+                InitializeBakedGIData(input, inputData);
                 half4 color = UniversalFragmentPBR(inputData, surfaceData);
                 color.rgb = MixFog(color.rgb, inputData.fogCoord);
                 color.a = OutputAlpha(color.a, IsSurfaceTypeTransparent(_Surface));
