@@ -171,3 +171,21 @@ z `rq_mirror_main=0` vs domyślne (przy przekroczeniu budżetu: 384 × 864 = `mi
 przy domyślnym FOV ma mocowanie poza kadrem — w kadrach QA (margines bezpieczny 4 %) głowica dotyka krawędzi i wspornika nie widać; w playerze
 (margines ~20 px) widać krótki odcinek rury do krawędzi — do oceny krytyka; (3) wspornik sięga wnętrza słupka (czyta się jak monitor na słupku),
 offsety dobrane dla TRAKT; (4) szkło 3D (`_BaseColor` 0,92) nie przyciemnione.
+
+## Dopisek 3 (2026-11-27, `codex-mirror-right-s24`) — wspornik prawej głowicy od krawędzi kadru
+
+Prawe okienko w `DrivingLab` przy symulowanym asymetrycznym safe area dochodziło do krawędzi, a rzut prawego słupka wypadał poza nią. Układ monitora w widoku kabiny rezerwuje teraz 72 j. między obrysem głowicy a fizyczną krawędzią ekranu (`WORKING_VALUE`). Liczy lewy i prawy margines względem rzeczywistego położenia obszaru treści. Przy symetrycznym obszarze oba okna mają symetryczny układ. Rozmiar obu okien nadal wynika ze wspólnego limitu miejsca obok wolnego pola widzenia.
+
+`SolveMount` wyznacza oba odcinki w jednostkach okienka z rzutu słupka A. Po stronie widocznego słupka rura i zastrzał schodzą się w stopie. Przy bocznej krawędzi stopa wygasa, a odcinki biegną po swoich osiach przez krawędź ku punktowi zbiegu. Głębokość punktu zbiegu poza ekranem jest ograniczona do 72 j. (`WORKING_VALUE`). Dzięki temu przy dalekim rzucie słupka wspornik pozostaje krótki, a oba człony czytelne. Ta sama geometria działa w odbiciu po lewej stronie. Próg odświeżenia przy ruchu rzutu to nadal 0,25 j.
+
+UI używa istniejących obrazów rury i zastrzału. Przy bocznym wyjściu z kadru aktywne są dwa z trzech elementów mocowania, a pozycja rzutu korzysta ze współrzędnych ekranu zapisanych podczas układania HUD. Przybyło 0 komponentów, tekstur, materiałów i kamer. Czas GPU i liczba batchy uGUI w playerze pozostają `UNVERIFIED`.
+
+Visual QA DrivingLab, Win64 PC High, 1920 × 1080, clear i overcast. Przed zmianą w 6/6 kadrów obrys prawej głowicy dochodził do brzegu, a oba człony były niewidoczne. Po zmianie w 6/6 widać pełną głowicę oraz rurę i zastrzał dochodzące do brzegu. Przy 70° i 75° lewa stopa pozostaje na słupku A. Przy 55° pokrywa ją obrys lewej głowicy tak jak w kadrze bazowym. Niezależny `visual-critic` zgłosił PASS. Przy 75° górna rura nakłada się częściowo na ciemny element kabiny, ale pozostaje czytelna.
+
+| FOV | `drawsEst` przed → po | `trisExact` przed → po |
+| --- | ---: | ---: |
+| 55° | 131 → 131 | 172 815 → 172 815 |
+| 70° | 147 → 147 | 175 023 → 175 023 |
+| 75° | 152 → 152 | 175 513 → 175 513 |
+
+Statystyki obu wariantów pogody pochodzą z `stats.txt` i opisują scenę 3D. Dowody w `artifacts/codex-mirror-right-s24/` obejmują `before/`, `after/`, zestawienia `comparison-{clear,overcast}.png` (960 × 870) i zbliżenia `right-detail-{clear,overcast}.png`.
