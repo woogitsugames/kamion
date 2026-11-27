@@ -1482,7 +1482,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.0,
+   "axis_smoothing_dev_max_m": 0.03,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -1492,7 +1492,7 @@
    "lanes": [
     2
    ],
-   "length_m": 11.9,
+   "length_m": 12.0,
    "max_grade": 0.0031,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.002,
@@ -1647,7 +1647,7 @@
    ]
   },
   {
-   "axis_smoothing_dev_max_m": 0.0,
+   "axis_smoothing_dev_max_m": 0.01,
    "bridge_m": 0.0,
    "grade_limit": 0.12,
    "highway": [
@@ -1658,7 +1658,7 @@
     2
    ],
    "length_m": 14.2,
-   "max_grade": 0.0206,
+   "max_grade": 0.0205,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.029,
    "sidewalk_frac": 0.0,
@@ -2654,15 +2654,15 @@
   "decals": {
    "gullies": 532,
    "oil": 58,
-   "patches": 212,
+   "patches": 216,
    "seal_cracks": {
-    "longitudinal": 147,
-    "transverse": 295,
-    "tris": 9416
+    "longitudinal": 146,
+    "transverse": 294,
+    "tris": 8606
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 242652,
+  "footprint_nodes": 242630,
   "fork_abreast": [
    {
     "alongside_run_m": 22.0,
@@ -4073,7 +4073,44 @@
    "in_chain_ramps": 0,
    "seam_sides": 0
   },
-  "seam_tapers": [],
+  "seam_tapers": [
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w364773483:3688193108-3688193065",
+    "end": "a",
+    "in_tile_m": 11.94,
+    "length_m": 23.88,
+    "neighbour": "s8-04",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w364773486:3688193065-3688193081",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "s8-04",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w536205570:5194994832-3688193113",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "s8-04",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 9630,
    "parts": 210,
@@ -4093,7 +4130,7 @@
   },
   "verge_strips": {
    "chunks": 30,
-   "tris": 27145
+   "tris": 27091
   },
   "walled_ramps": []
  }

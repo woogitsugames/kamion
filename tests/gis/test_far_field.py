@@ -154,7 +154,7 @@ def test_generated_far_field_qa_and_manifests():
     assert fc["forest_polygons"] >= 100
     assert fc["buildings"] >= 4000
     assert fc["chimneys"] >= 8
-    assert fc["pylons"] >= 150
+    assert fc["pylons"] >= 250   # ADR 0351: only HV towers + masts count (C measured 329; was 406 with a tower every 210 m on every line)
     assert fc["power_lines"] >= 20
     # Extraction provenance must describe the actual generated feature inventory.
     assert qa["building_height_sources"] == src_man["building_height_sources"]

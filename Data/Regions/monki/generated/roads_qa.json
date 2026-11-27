@@ -1099,7 +1099,7 @@
     2
    ],
    "length_m": 21.1,
-   "max_grade": 0.0298,
+   "max_grade": 0.0297,
    "overrides": [],
    "profile_rms_vs_nmt_m": 0.004,
    "sidewalk_frac": 0.0,
@@ -3550,11 +3550,11 @@
    "seal_cracks": {
     "longitudinal": 294,
     "transverse": 626,
-    "tris": 15754
+    "tris": 13892
    }
   },
   "emergency_signal_junctions": [],
-  "footprint_nodes": 496726,
+  "footprint_nodes": 496716,
   "fork_abreast": [],
   "fork_shifts": [],
   "fork_tapers": [
@@ -3757,7 +3757,32 @@
    "in_chain_ramps": 0,
    "seam_sides": 0
   },
-  "seam_tapers": [],
+  "seam_tapers": [
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w286988943:2906547734-1134831176",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "monki-e",
+    "step_m": 0.25,
+    "width_other": 5.5,
+    "width_own": 5.5,
+    "width_seam": 5.5
+   },
+   {
+    "axis_offset_m": 0.25,
+    "chain": "c:w98071055:14124331695-12222002805",
+    "end": "a",
+    "in_tile_m": 12.5,
+    "length_m": 25.0,
+    "neighbour": "monki-e",
+    "step_m": 0.25,
+    "width_other": 6.5,
+    "width_own": 6.5,
+    "width_seam": 6.5
+   }
+  ],
   "sides_on_carriageway_culled": {
    "kerb_tris": 151,
    "parts": 22,
@@ -3777,7 +3802,7 @@
   },
   "verge_strips": {
    "chunks": 50,
-   "tris": 43123
+   "tris": 43127
   },
   "walled_ramps": []
  }

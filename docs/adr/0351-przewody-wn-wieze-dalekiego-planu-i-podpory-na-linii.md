@@ -72,3 +72,15 @@ farfield-low-s24 (≤ 2 submesze na sektor). Zgłoszenie: `artifacts/critic-s24-
   maszty) — do przeliczenia przy przebudowie.
 - Wstęgi przewodów nie mają zanikania `_KamionWireFade` ani pikselowej podłogi shadera Wire; przy obu wczytanych kaflach
   sektor jest ukryty i przewody kafla przejmują rolę.
+
+## Dopisek fala 12 (regen-wave-12-s24): próg pylonów i budżet Low C
+- `fc["pylons"]` liczy po zmianie tylko wieże WN i maszty. bialystok-industrial-c: 406 (wieża co 210 m na każdej linii) -> 329.
+  Próg w `tests/gis/test_far_field.py` podniesiony ze 150 do 250 (dolna granica poczytalności, zmierzone 329). Pozostałe kafle
+  mają od 0 (tykocin, wieś bez WN) do 384 (dk8-wasilkow-01).
+- Pierwsza przebudowa C dała Low 32 351 tri (> 30 000, test budżetu; przed 0351: 29 139). Przyczyna: ramiona wieży (3 poziomy x 3
+  wstęgi) i przęsła Low. Poprawka generatora (limit nie podniesiony), tylko poziom Low: ramiona tylko na poziomie niosącym parę
+  przewodów (bez zmiany High), 2 panele kratownicy zamiast 3, przęsła Low `ceil(L/90)` w zakresie 3..4 segmentów (było `L/40`, 3..8).
+  C Low = 29 295 tri (zapas 2,3 %). High bez zmian.
+- Wszystkie 54 kafle przebudowane `far_field.py` po tej zmianie. Low > 30 000 poza C (test 30k dotyczy tylko C) mają
+  bojary 38 502 (było 35 752 przed 0351), mickiewicza 33 843 (32 299), krywlany 31 755 (33 257), maczka 30 530 (29 996),
+  wygoda — patrz raport fali 12. WORKING_VALUE, bez pomiaru na urządzeniu.
