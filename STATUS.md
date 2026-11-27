@@ -56,3 +56,5 @@
 - Następny krok to `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` w slocie heavy, potem visual QA po zmianie testów w clear i overcast.
 - Krok 8. EditMode Win64: 1688 testów, 1538 PASS, 0 FAIL, 150 skip. Cztery wskazane shadery zaimportowane bez diagnostyki kompilacji. Wygenerowano kadry High po zmianie asercji w clear i overcast, przywrócono uboczne zmiany Unity.
 - Następny krok to `& $py -m pytest -q tests/gis --junitxml artifacts/codex-gis-fix-s24/gis-full.xml` w slocie heavy i przegląd pozostałych błędów.
+- Krok 9. W pełnym GIS na ok. 40% widać nowy FAIL K1. Samo `dk65_k1_elements.py --check` potwierdziło dk65-01…05. Treść wszystkich bloków jest zgodna z tabelą, ale fala 13 dopisała po nich 11 niepustych linii weathering-s24 w każdym YAML. Dowód w logs/dk65-k1-diff.log.
+- Następny krok to `Get-Content artifacts/codex-gis-fix-s24/logs/gis-full.log -Tail 20` po zakończeniu procesu, a dla lidera `& $py tools/worldgen/qa/dk65_k1_elements.py` przed budową dk65-01…05 w fali 14.
