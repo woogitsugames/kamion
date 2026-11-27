@@ -95,3 +95,21 @@ def test_crossing_sides_reach_the_ground():
         assert PLT._crossing_edging(b, poly, V, np.zeros((0, 3), int), np.array([0.0, -1.0]), _carriage(), "t", mat=mat, zf=zf) > 0
         p = b.parts[0]
         assert p.mat == emat and p.V[:, 2].min() <= 99.2 + 1e-6 and p.UV.shape == (len(p.V), 2)
+
+
+def test_no_edging_on_the_seam_with_the_apron():
+    class B:
+        def __init__(self):
+            self.parts = []
+
+        def add(self, layer, mat, V, UV, T, src=None, **kw):
+            self.parts.append(SimpleNamespace(V=np.asarray(V)))
+    poly = Polygon([(98.25, 3.52), (101.75, 3.52), (101.75, 8.0), (98.25, 8.0)])
+    V = np.array([[x, y, 100.0] for x, y in poly.exterior.coords[:-1]])
+    apron = Polygon([(101.8, 5.0), (106.0, 5.0), (106.0, 12.0), (101.8, 12.0)])   # beside the east side, from 5 m on
+    b = B()
+    PLT._crossing_edging(b, poly, V, np.zeros((0, 3), int), np.array([0.0, -1.0]), _carriage(), "t", apron=apron)
+    P = b.parts[0].V
+    east = P[np.abs(P[:, 0] - 101.75) < 0.1]
+    assert len(east) and east[:, 1].max() < 5.0 - 0.2      # the east edging stops where the apron begins
+    assert (np.abs(P[:, 0] - 98.25) < 0.1).sum() > 0        # the free west side keeps it

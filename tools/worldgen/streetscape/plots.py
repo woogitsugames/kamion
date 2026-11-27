@@ -2465,12 +2465,12 @@ def _crossing_edging(buf, poly, V, T, a, carriage, src, mat=DRIVE_MAT, zf=None, 
         L = float(np.hypot(*dv))
         if L < 0.5 or abs(float(dv @ a)) / L < CROSS_EDGE_PARALLEL:
             continue
-        mid_out = 0.5 * (p0 + p1) + np.array([dv[1], -dv[0]]) / L * 0.25
-        if apron is not None and not apron.is_empty and apron.intersects(shapely.Point(*mid_out)):
-            continue
-        nsub = max(1, int(math.ceil(L / 0.75)))
+        nsub = max(1, int(math.ceil(L / 0.5)))
         P = p0 + dv * (np.arange(nsub + 1) / nsub)[:, None]
         keep = shapely.distance(shapely.points(P), carriage) > CROSS_EDGE_ROAD_CLEAR_M
+        if apron is not None and not apron.is_empty:      # r3: not where the apron lies beside the side (seam)
+            o_ = np.array([dv[1], -dv[0]]) / L
+            keep &= shapely.distance(shapely.points(P + o_ * 0.3), apron) > 0.25
         if keep.sum() < 2:
             continue
         P = P[keep]
