@@ -1599,7 +1599,9 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
     groups = _garden_groups(buf, half)
     rep = {"source": "crowns: GUGiK orthophoto 2024 (plot_canopy.json); habit / height: G7 # 6-7, 11-14",
            "trees": 0, "street_strip": 0, "species": {}, "tris_high": 0, "tris_low": 0, "skipped": {}, "list": [],
-           "library_instances": []}
+           "library_instances": [],
+           # garden-trees-s24: full (High) variants of the small trees - count and triangles (budget: 14 / 46 before)
+           "small_full": {"young": [0, 0], "orchard": [0, 0]}}
     claimed = claim_street_crowns(rp, rep)
     todo = [t for t in claimed if t.get("kind") == "broadleaf"]
     extra_conifers = [t for t in claimed if t.get("kind") == "conifer"]
@@ -1657,6 +1659,11 @@ def garden_trees(buf, rp, zf, report, half=1024.0, region_trees=None):
             garden_tree(kit, p, z, r, H, cb, sp, key, lite=True, cards=3 if t["near"] else 2, sprite=sprite, core=bool(t["near"]))
         if not _emit(buf, kit, groups, half, f"plot:{t['plot']}:g7-trees", rep):
             continue
+        full_tris = sum(len(T_) for T_, L_ in zip(kit.T, kit.L) if L_ is False)
+        if full_tris:
+            sf = rep["small_full"]["orchard" if sp == "fruit" else "young"]
+            sf[0] += 1
+            sf[1] += full_tris
         if inst is not None:
             rep["library_instances"].append(inst)
         rep["trees"] += 1

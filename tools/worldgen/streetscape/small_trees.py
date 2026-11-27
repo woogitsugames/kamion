@@ -160,7 +160,7 @@ def young_tree(kit, p, z, r, H, cb, species, sprite, key):
     boughs = []
     for i in range(3):
         az = a0 + 2 * math.pi * (i + 0.5 * (hfloat(key, "ba", i) - 0.5)) / 3
-        zb = z + cb + hc * (-0.08 + 0.26 * ((i + hfloat(key, "bs", i)) / 3))
+        zb = z + cb + hc * (-0.06 + 0.15 * ((i + hfloat(key, "bs", i)) / 3))
         rho = r * (0.26 + 0.14 * hfloat(key, "br", i)) * slim
         tilt = (t_lo + (t_hi - t_lo) * hfloat(key, "bt", i)) * slim
         if form == "lean":                                   # the lobe on the heavy side reaches further
@@ -181,7 +181,7 @@ def young_tree(kit, p, z, r, H, cb, species, sprite, key):
     for j in range(n_up):
         az = a0 + math.pi / 3 + 2 * math.pi * (j + 0.5 * (hfloat(key, "ua", j) - 0.5)) / n_up 
         d = np.array([math.cos(az), math.sin(az)])
-        zb = z + cb + hc * ({"vase": 0.26, "lean": 0.22, "broad": 0.20}[form] + 0.14 * hfloat(key, "us", j))
+        zb = z + cb + hc * ({"vase": 0.20, "lean": 0.18, "broad": 0.16}[form] + 0.14 * hfloat(key, "us", j))
         rad = r * (0.14 + 0.14 * hfloat(key, "ur", j)) * slim * (1.3 if form == "broad" else 1.0)
         tilt = -(0.18 + 0.30 * hfloat(key, "ut", j)) * (1.25 if form == "broad" else 1.0)
         ax = _dir(az, tilt)

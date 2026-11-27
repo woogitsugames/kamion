@@ -87,3 +87,54 @@ niż model: skrajnia ADR 0347 liczona jest na nieskalowanej siatce. Rekordy z `g
   słonecznym w ich koronach zostaje ciemny klin — to karta skrzyżowana stojąca bokiem do słońca (normalna promieniowa),
   nie wachlarz `occ_mid` ani wewnętrzne karty (oba usunięte w pełnym wariancie; pochmurno klin znika). Potrzebna inna
   bryła małego drzewa (np. młode prototypy biblioteki albo karty koron z normalną „w górę”) — poza budżetem tej rundy.
+
+## Dopisek 2026-11-27 (garden-trees-s24): małe drzewa ogrodowe i owocowe — płaty i kępy na konarach
+Zamyka punkt „Nie rozwiązane” (krytyk build #10: „lizaki”, ciemny klin w słońcu, ciemny `_core` drzew owocowych).
+
+### Diagnoza
+- Trzy karty całej korony skrzyżowane na osi = kula na patyku z każdej strony; każda karta cieniuje się WŁASNĄ normalną
+  promieniową, więc sektor między kartami odwróconymi od słońca stoi w koronie jako ciemny klin o prostych krawędziach
+  (a karta rzuca cień na sąsiednią wzdłuż linii przecięcia). Pochmurno klin znika — zgodnie z renderami ADR 0352.
+- Karty koron atlasu kończyły się u dołu prostym cięciem na 30–34 % szerokości — płaski spód „lizaka”.
+- `PLT.fruit_tree`: ciemny 4-ścienny `_core` (okluzja 0,22–0,26) pod dwoma symetrycznymi piętrami kart.
+
+### Decyzja (`tools/worldgen/streetscape/small_trees.py`)
+- **`young_tree`** — pełny (High) wariant drzewa liściastego zestawu działek o promieniu korony < 1,6 m
+  (`garden_trees` → `garden_tree(young=True)`; poza `garden_trees`: H < 6,5 m): pień 3-ścienny wchodzący w koronę,
+  3 dolne płaty korony odsunięte od pnia i pochylone NA ZEWNĄTRZ, 3 górne między nimi pochylone DO ŚRODKA, 2–3 konary
+  (po 1 trójkącie) od pnia do dolnych płatów. Płat = pomniejszona karta korony gatunku z ADR 0352 (lipa / klon / brzoza;
+  namalowany w niej konar jest gałęzią płata) — ten sam atlas i materiał. **20–21 trójkątów (było 14).**
+- **`orchard_tree`** (`PLT.fruit_tree`) — jabłoń / śliwa / grusza: krótki gruby pień, rozwidlenie na 0,22–0,35 H,
+  3–4 konary (skrzyżowane zwężające się pasy), na każdym gałązka z wachlarzem pędów (`apple_*`), gęsta kępa na końcu
+  i mniejsza w poprzek po stronie wewnętrznej (`shrub_a`), dwie karty wierzchołka. **Bez `_core`. 40 / 50 trójkątów
+  (było 46).**
+- **Brak klina:** normalna wierzchołka = kierunek od środka korony do wierzchołka (spłaszczony, z dodatkiem „w górę”),
+  nigdy płaszczyzna karty — cała korona cieniuje się jak jedna bryła; okluzja (długość normalnej) 0,7–0,9 u stopy płata,
+  ≈ 1 na czubku; żadnej ciemnej geometrii. Żadna karta nie stoi na osi korony i żadne dwie nie mają wspólnej linii.
+- **Karta skręcona:** krawędź czubka obrócona wokół osi płata o 0,2–0,5 rad względem krawędzi stopy — dwa trójkąty
+  czworokąta leżą w różnych płaszczyznach (0 dodatkowych trójkątów), więc płata nie widać w całości „na ostrzu”.
+- **Warianty z ziarna:** 3 formy drzewa młodego (`vase`, `lean`, `broad`) i 3 owocowego (`open` — jabłoń o otwartym
+  środku, `flat` — stara śliwa, `upright` — grusza); kąty, wysokości, szerokości i odsunięcia płatów per drzewo.
+- **Atlas** (`plot_kit._crown_hw`, `_UNDER` 0,07): spód kart `crown_ovoid` / `crown_round` zaokrąglony, pień wchodzi w
+  jednym punkcie. Układ i rozmiar atlasu bez zmian (te same UV); dotyczy też wariantów lite i dużych drzew zestawu.
+- Warianty lite (Low / Medium, drzewa dalej niż 12 m od frontu działki) bez zmian — budżety A16.
+- Wszystkie proporcje `WORKING_VALUE` (brak inwentaryzacji drzew ogrodowych; referencje: zdjęcia właściciela, docs/05).
+
+### Wynik (`knyszyn-w`, High PC 1920 × 1080; `artifacts/garden-trees-s24/`)
+- 164 małe drzewa liściaste w pełnym wariancie: 3384 trójkąty, śr. 20,6 / drzewo (było 14: **+47 %**); 121 owocowych:
+  5600, śr. 46,3 (było 46: **+0,6 %**). Kafel High: **+1122 trójkąty** (z licznika `garden_trees.small_full` w
+  `streetscape_qa.json`); Low / Medium: `tris_low` 15 428 bez zmiany.
+- Draw calle: drzewa zostają w tych samych grupach chunków zestawu działek, ten sam materiał i atlas — **+0 z konstrukcji**;
+  draw calle instancji 76–160 / kamerę bez zmiany na 10 z 11 kamer. `drawsEst` obiektów kafla −8…+1 i trójkąty sceny
+  +0…+5184 / kamerę NIE są czystym A/B drzew: „przed” = derived zbudowany na gałęzi tree-species (27.11 rano), „po” = main
+  9ec10a5a2 + ta zmiana (inne scalone gałęzie).
+- Pary przed | po: `compare/knyszyn-w/*-{clear,overcast}.jpg` (5 kamer kontrolnych + 6 ogrodowych `garden_cams.json`).
+
+### Otwarte
+- Płat to jeden czworokąt: z ukosa i z góry (kamera `garden_small_2`) pojedyncze płaty nadal czytają się jak płaskie
+  „wiosła”; kępa z 2 skrzyżowanych kart = +12 trójkątów na drzewo (ponad budżet +50 %).
+- Liście w płatach są pomniejszone ok. 0,4× (cała karta korony w roli gałęzi); osobne sprite'y kęp gatunków wymagają
+  miejsca w atlasie (wiersze `sprites` / `tall` są pełne).
+- Młoda brzoza (wąska karta 0,44) bywa pierzasta i zbyt rzadka. Drzewa lite na High (dalej od ulicy) i > 6,5 m poza
+  `garden_trees` (`garden_trial`) zostają przy kartach skrzyżowanych.
+- Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagentów).

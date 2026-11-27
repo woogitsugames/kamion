@@ -27,3 +27,16 @@ potem render „przed” (visual-qa na skopiowanym imporcie), `build_world.py --
 
 NASTĘPNY KROK: `pwsh artifacts/garden-trees-s24/build.ps1; pwsh artifacts/garden-trees-s24/vqa.ps1 -Label after-r1` (w toku),
 potem pary przed|po i poprawki bryły.
+
+## Krok 3 (27.11) — rendery po (r1 → r3), ADR
+- r1: lizaki i klin znikły, ale płaty rzadkie („wiosła”); r2: płaty większe i zachodzące; r3: mniejszy rozrzut wysokości
+  stóp płatów. Każda runda: build 6–8 min + import Win64 3–27 min + 2 rendery.
+- Wynik końcowy: `artifacts/garden-trees-s24/after/`, pary `compare/knyszyn-w/` (+ `compare-r2/`, `after-r2/`), liczby
+  `compare/knyszyn-w/stats-*.txt`, `streetscape_qa.after.json`.
+- Trójkąty: młode 20,6 / drzewo (było 14, +47 %), owocowe 46,3 (było 46); kafel High +1122; Low bez zmian. DC +0.
+- ADR 0352 — dopisek „garden-trees-s24”. Manifesty `Data/Regions/knyszyn-w/generated` z prywatnej przebudowy COFNIĘTE.
+- Testy: `test_small_trees_0352.py` 4/4, `test_house_greenery_0163` / `test_horizon_0170` / `test_buildings_r9` zielone
+  (pełny zestaw 85 testów roślinność / plot_kit / budynki — 83 passed przed zmianą asercji, 2 nieaktualne poprawione).
+
+NASTĘPNY KROK (lider): `visual-critic` na `artifacts/garden-trees-s24/compare/knyszyn-w/`; po scaleniu przebudowa kafli z
+działkami (`build_world.py --region <id>` + `import-region.ps1 -Region <id> -BuildTarget Win64`).
