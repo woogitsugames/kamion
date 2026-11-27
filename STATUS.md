@@ -29,3 +29,5 @@
 
 - Krok 5. Zapisano implementację obu shaderów i importu w commicie WIP. Do zakończenia renderów PRZED pliki Unity na dysku celowo pozostają w wersji r3. Win64 import r3 zwrócił IMPORT_RESULT: OK. Ponowny visual-qa na nazwie sceny World_dk65-07_High czeka na slot heavy.
 - Następny krok po dwóch udanych renderach PRZED: `git checkout -- game/Assets/_Project/Environment/Shaders/WorldPBR.shader game/Assets/_Project/Rendering/Shaders/WorldSurface.shader game/Assets/_Project/World/Import/RegionImporter.cs`, potem `pwsh artifacts/codex-roofs-s24/run-world-after.ps1`.
+- Krok 6. Win64 r3 oraz High PC clear i overcast zakończone. Osiem PNG i dwa stats.txt są w before. Włączono na dysku shadery r4 z WIP.
+- Następny krok: `pwsh artifacts/codex-roofs-s24/run-after.ps1`.
