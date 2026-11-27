@@ -16,3 +16,7 @@
 - GOTOWE DO SCALENIA PRZEZ LIDERA.
 - NASTĘPNY KROK (lider): przejrzeć diff na `neon-avenue-s24` i dowody w `artifacts/neon-avenue-s24/sbs/`, scalić gałąź, a następnie w kolejnej fali regeneracji przebudować kafle z szpalerami (`knyszyn-w`, `dk65-01..11`, `dw671-tykocin-*`, `dk65-monki-*`):
   `git merge --no-ff neon-avenue-s24`
+
+## codex-sidewalk-var-s24
+- Przeczytano zasady i ADR 0237. Kafel Tykocin skopiowano do prywatnego derived; junction do main odłożono pod inną nazwą.
+- Następny krok: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 before`
