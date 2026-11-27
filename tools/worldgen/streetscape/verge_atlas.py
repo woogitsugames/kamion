@@ -9,8 +9,10 @@ mugwort (grey-green bush), chicory (wiry stems, blue flowers), broad-leaf rosett
 Layout (2048 x 1024, v from the image bottom):
   v 0.00 .. 0.25   SHORT row, 8 cells of 0.5 m: plants of the shoulder edge (to ~0.4 m)
   v 0.25 .. 0.50   TALL row, 8 cells of 0.5 m: plants of slopes, ditch bottoms and baulks (to ~1.1 m)
-  v 0.50 .. 1.00   MAIZE row, 4 cells of 1.6 m x 2.4 m: a run of fodder maize plants seen from the side (tassels,
-                   cobs, drying lower leaves), two depth layers so a card is a dense wall
+  v 0.50 .. 1.00   MAIZE row, 4 cells of 1.6 m x 2.4 m: cells 0..2 a run of fodder maize plants seen from the side
+                   (tassels, cobs, drying lower leaves), two depth layers so a card is a dense wall (wraps over the 3
+                   cells); cell 3 (r4, critic s24 wave 11 "pionowe ściany bloków") the EDGE of a stand: MAIZE_EDGE_PLANTS
+                   single plants of uneven height with drooping leaves, apart - one plant per third of the cell
 Every cell is painted on its own canvas (no bleed into the neighbour, transparent margins), so a card that maps one
 cell shows one whole plant. Colours sRGB around the calibrated terrain grass (linear 0.08 / 0.105 / 0.038).
 All shapes WORKING_VALUE (no botanical survey; Wikimedia Commons CC BY-SA photos of Polish verges viewed only).
@@ -31,6 +33,9 @@ MAIZE_H_M = 2.4                   # metres the maize row height stands for (plan
 V_SHORT = (0.0, 0.25)
 V_TALL = (0.25, 0.5)
 V_MAIZE = (0.5, 1.0)
+N_MAIZE_WALL = 3                  # r4: cells 0..2 = the wall (cards of the stand pick from these)
+MAIZE_EDGE_CELL = 3               # r4: the edge cell - single plants (edge cards, strays in front of the line)
+MAIZE_EDGE_PLANTS = 3             # plants of the edge cell, one per third (a stray card maps one third)
 # growth forms per cell (the generator picks cells by form, see verge_flora.FORMS_*)
 SHORT_FORMS = ("tuft", "tuft_dry", "rosette", "clover", "flat_dead", "wisp", "hawkbit", "yarrow_low")
 TALL_FORMS = ("tussock", "tussock_dry", "stalks", "dock", "tansy", "yarrow", "mugwort", "chicory")
@@ -321,19 +326,22 @@ def _paint_short(form, cell):
                          cell.col(np.array([196, 194, 180]) * rng.uniform(0.86, 1.04), 1.0))
 
 
-def _paint_maize(im, rng):
-    """A run of maize plants over the whole row canvas (wraps at the ends): a darker back layer, then the front."""
+def _paint_maize(im, rng, cells=N_MAIZE_WALL, edge=False):
+    """A run of maize plants over the canvas of `cells` cells (wraps at the ends): a darker back layer, then the front.
+    edge (r4): MAIZE_EDGE_PLANTS single plants of uneven height, apart, with shorter drooping leaves and more dry ones -
+    the margin of a stand (no wrap, every plant inside its third of the canvas)."""
     W, H = im.size
-    px_m = W / (N_MAIZE * MAIZE_CELL_M)                       # horizontal px per metre
+    px_m = W / (cells * MAIZE_CELL_M)                         # horizontal px per metre
     py_m = H / MAIZE_H_M
     d = ImageDraw.Draw(im)
+    wraps = (0,) if edge else (-W, 0, W)
 
     def poly(pts, c):
-        for xo in (-W, 0, W):
+        for xo in wraps:
             d.polygon([(x + xo, H - 2 - y) for x, y in pts], fill=c)
 
     def line(pts, w0, w1, c):
-        for xo in (-W, 0, W):
+        for xo in wraps:
             q = [(x + xo, H - 2 - y) for x, y in pts]
             for i in range(len(q) - 1):
                 w = w0 + (w1 - w0) * i / max(len(q) - 2, 1)
@@ -344,8 +352,8 @@ def _paint_maize(im, rng):
 
     def leaf(base, sg, length, width, c, rib):
         n = 12
-        mid, a = [np.array(base, float)], math.radians(rng.uniform(48, 68))
-        dr = rng.uniform(1.6, 2.5)
+        mid, a = [np.array(base, float)], math.radians(rng.uniform(64, 84) if edge else rng.uniform(48, 68))
+        dr = rng.uniform(2.7, 3.5) if edge else rng.uniform(1.6, 2.5)      # r4: edge leaves rise steeply and hang
         for i in range(n):
             ai = a - dr * ((i + 1) / n) ** 1.7
             mid.append(mid[-1] + np.array([sg * math.cos(ai) * px_m, math.sin(ai) * py_m]) * length / n)
@@ -381,6 +389,10 @@ def _paint_maize(im, rng):
             elif t < 0.40 and rng.random() < 0.3:
                 c = np.array([112, 122, 60])
             L = rng.uniform(0.55, 0.85) * (0.75 + 0.5 * math.sin(math.pi * min(max(t, 0.0), 1.0)))
+            if edge:                                         # keep the leaves inside the plant's third of the cell
+                L *= 0.80
+                if t < 0.45 and rng.random() < 0.35:         # broken / dry lower leaves hanging down the stalk
+                    c = np.array([128, 118, 72]) * rng.uniform(0.85, 1.1)
             leaf((x + lean * t * h * px_m, t * h * py_m), sg, L, rng.uniform(0.075, 0.10),
                  col(c, k * rng.uniform(0.9, 1.1)), col(np.array([128, 150, 84]), k))
         if rng.random() < 0.85:                              # the cob: husk and brown silk
@@ -402,8 +414,14 @@ def _paint_maize(im, rng):
                    for t in np.linspace(0, 1, 5)]
             line(pts, 2.0 * S, 1.1 * S, col(np.array([176, 160, 104]) * rng.uniform(0.88, 1.08), k))
 
-    row_m = N_MAIZE * MAIZE_CELL_M
+    row_m = cells * MAIZE_CELL_M
+    if edge:
+        for q in range(MAIZE_EDGE_PLANTS):
+            x = (q + 0.5 + rng.uniform(-0.08, 0.08)) * row_m / MAIZE_EDGE_PLANTS
+            plant(float(x) * px_m, rng.uniform(1.55, 2.30), rng.uniform(0.86, 1.05))
+        return
     for k, n_pl, sp in ((0.62, 30, 0.0), (1.0, 27, 0.5)):
+        n_pl = int(round(n_pl * cells / N_MAIZE))
         xs = (np.arange(n_pl) + sp + rng.uniform(-0.28, 0.28, n_pl)) * row_m / n_pl
         for x in xs[np.argsort(rng.random(n_pl))]:
             plant(float(x) * px_m, rng.uniform(2.0, 2.33) * (0.96 if k < 1 else 1.0), k)
@@ -426,9 +444,13 @@ def texture(seed=334):
                 cim = Image.new("RGBA", (cw, rh), (0, 0, 0, 0))
                 cim.paste(crop, (mg, rh - crop.size[1]))
             atlas.paste(cim, (k * cw, H // 2 + r * rh))          # tall row above the short row (image y down)
-    mz = Image.new("RGBA", (W, H // 2), (0, 0, 0, 0))
+    cwm = W // N_MAIZE
+    mz = Image.new("RGBA", (cwm * N_MAIZE_WALL, H // 2), (0, 0, 0, 0))
     _paint_maize(mz, np.random.default_rng(seed + 900))
     atlas.paste(mz, (0, 0))
+    me = Image.new("RGBA", (cwm, H // 2), (0, 0, 0, 0))              # r4: the edge cell, own canvas (no bleed)
+    _paint_maize(me, np.random.default_rng(seed + 901), cells=1, edge=True)
+    atlas.paste(me, (MAIZE_EDGE_CELL * cwm, 0))
     im = atlas.resize((TEX_W, TEX_H), Image.LANCZOS)
     a = np.asarray(im).astype(np.float32)
     m = a[..., 3] > 8

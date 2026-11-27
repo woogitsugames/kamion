@@ -371,3 +371,143 @@ Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagent
 - Budżet klatki High: knyszyn-w 1 102 754, dk65-07 1 013 995 (przed r3: 1 097 660 / 1 014 973). Low: karty są tylko w
   warstwie `banks`, wariant Low kafla bierze `banks_low`, której te moduły nie zapisują — 340 237 / 233 577
   (przed: 340 114 / 252 951), zasięgu na Low nie trzeba zmniejszać. Pamięć świata High: 140,2 / 150,2 MB.
+
+## Dopisek r4 (2026-11-27, agent fields4-s24) — brzeg łanu kukurydzy, koleiny, pola w dali, łamana krawędź lasu
+
+Status: Proposed. Źródło: krytyk `artifacts/critic-s24-wave11/CRITIC.md` §pola i pkt 10 (pola „częściowo”: (a) pionowe
+płaskie ściany bloków kukurydzy w cięciu, dw671-tykocin-03 edge-north x~715 / 1420 / 1660; (b) koleiny w zagonie jak
+namalowane paski; (c) pola w dali płaska plama z prostą granicą zielone / żółte, bez miedz i rzędów, prosta krawędź lasu
+w tle). Zmiana globalna: shader terenu (od razu na każdym kaflu), generator kart (po przebudowie kafla), far_field (po
+przebudowie). Prototyp: `dw671-tykocin-03`, `knyszyn-w` w prywatnej kopii derived.
+
+### Przyczyny (odczytane z kodu, `artifacts/fields4-s24/probe_cards.py`, rendery `vqa/before`)
+1. **Ściany = boki skrajnych rzędów kart.** Karta rzędu ma 3,2 m, stoi co 2,25 m (co trzeci rząd 0,75 m); rząd kończy się
+   tam, gdzie warunek przestaje być spełniony, więc koniec bloku to jedna linia, a karty poprzeczne (34 %) przy cięciu
+   patrzą na zewnątrz jak lico ściany.
+2. **Korytarz z malowanymi rzędami na każdym szwie.** `MAIZE_SEAM_CLEAR_M` 1,6 m działał po obu stronach KAŻDEGO szwu,
+   także bez miedzy (dwa pasy jednego gospodarza, ten sam użytek) — 3,2 m pasa bez kart, na ziemi tylko rzędy shadera
+   („koleiny jak paski”). Przy miedzy odstęp 1,6 m był szerszy niż sama miedza (połowa 0,5–1,3 m).
+3. **Proste cięcia na granicy chunka.** Reguła draw calli r3b zdejmowała karty chunka bez własnego prymitywu po
+   centroidzie trójkąta — granica chunka (linia od linijki) przecinała łan (`knyszyn-w f3_maize_chase`).
+4. **Koleiny technologiczne:** dwa pasy o stałej szerokości 0,45 m, kolor gleby 0,75, bez normalnej — „namalowane”.
+5. **Daleki plan:** szumy smug przejazdów (7,3 / 2,6 m) bez filtra w poprzek rzędów migotały szumem, a gdy rzędy,
+   pokosy i miedze znikały pod pikselem, pole 300 m dalej było jednym kolorem; warp układu ±5 m / 230 m to w tej
+   odległości kilka pikseli (prosta granica bloku); miedza i granica bloku znikały energetycznie.
+6. **Las w tle:** fala koron ±30 % zaokrąglona przez limit nachylenia 0,26, koniec biegu kurtyny ucięty pionowo na 52 %
+   wysokości (tam, gdzie obrys skręca od kafla), nic ponad okapem.
+
+### Decyzja
+**Karty kukurydzy (`field_crops.py`):**
+- Szew bez miedzy nie jest końcem łanu (łan biegnie dalej do następnego pasa). Odstęp od miedzy = połowa szerokości miedzy
+  z shadera (hash 947 per krawędź pasa, puchnięcie szumem 5 m; lustro `baulk_clear`) + 0,25 m.
+- Odległość do najbliższego „końca łanu” (`_edge_dist`): miedza, granica bloku, odstęp od drogi, koniec zasięgu kart
+  (220 m), koniec gruntu ornego (`_Ground.dar`, transformata odległości), chunk bez prymitywu (r4c). W strefie
+  `MAIZE_EDGE_M` = 4 m karta 3,2 m dzieli się na dwie karty 1,6 m: przerzedzone ku krawędzi (60 → 100 %), niższe
+  (0,70 → 1,0 × wysokość łanu, ±8 %), przesunięte z linii rzędu ±0,22 m, obrócone ±19°, pochylone na zewnątrz
+  (gradient odległości); skrajne (< 1,4 m) w 75 % z komórki brzegu atlasu; 22 % z krótką kartą w poprzek (kępa, nie
+  lico). Bez kart poprzecznych w strefie brzegu. Rośliny przed linią (`MAIZE_STRAY_*`): 0–2 na kartę < 1,7 m od krawędzi,
+  0,3–1,4 m na zewnątrz, pojedyncze lub skrzyżowane (35 %), 1,45–2,3 m, obrót dowolny.
+- Atlas `verge_tufts` (`verge_atlas.py`): komórki 0–2 rzędu kukurydzy = ściana (zawija po 3 komórkach), komórka 3 =
+  brzeg łanu: 3 rośliny osobno, różnej wysokości (1,55–2,3 m), liście strome i zwisające, więcej suchych dolnych.
+- r4c: reguła chunków liczona najpierw (przebieg 1), chunk bez prymitywu = koniec gruntu dla łanu (przebieg 2) — łan
+  kończy się tam brzegiem, nie cięciem; zbiór chunków z przebiegu 1 obowiązuje. `CHUNK_MIN_TRIS` 4 000 → 5 600 (karty
+  brzegu +40 % — te same chunki dostają prymityw co w r3b).
+- r4d: ruń miedzy z kukurydzą po którejkolwiek stronie także 90–220 m od drogi (55 % gęstości) — miedza między dwoma
+  łanami nie jest gołym malowanym pasem.
+
+**Shader (`KamionFieldMosaic.hlsl`; 0 fetchy, 0 słów kluczowych; +2 wywołania szumu wartości w zbożu, +1 w dalekim planie):**
+- Koleina technologiczna: oś wędruje ±7 cm, połowa szerokości 0,10–0,22 m, łodygi obu stron pochylone nad nią placami
+  (co kilka metrów), przerzedzony łan 0,2–0,5 m obok (gleba między łodygami), chwasty w koleinie, ciemniejsze wilgotne
+  dno / jaśniejszy rant, profil pochyla normalną (znika poniżej ~1 px).
+- Kukurydza / okopowe: między rzędami cień i opadłe liście płatami zamiast równego paska gleby.
+- Daleki plan `farK` (od ~6 m / px, pełny ~26 m / px — z oka kabiny ~150 / 250 m): ton pasa ±0,42 × dev (było ±0,12),
+  przejazdy siewnika / opryskiwacza 6–12 m wzdłuż pasa z własnym tonem (±13 %, filtr w poprzek rzędów), smugi
+  przejazdów filtrowane w poprzek rzędów (bez szumu w dali), miedza zostaje linią do ~1/3 piksela (do 65 % siły),
+  granica bloku filtrowana w poprzek niej i zostaje linią (do 75 %), kolor miedzy ciemniejszy o 45 % (cień runi).
+- Warp układu: trzecia oktawa `KF_WARP_X_M` 610 m / `KF_WARP_AX` 28 m (lustro `vegetation.FIELD_WARP_FAR`, sole 1061 /
+  1063) — granica bloku 300–1000 m dalej wygina się o widoczny kąt; z kabiny łuk na pół kilometra.
+
+**Daleki plan lasu (`far_field.py`, tylko High):** kwatery wieku (×0,62–1,12 na komórkach ~115 m wypaczonej siatki, tylko
+wysokości z szumu, CHM bez zmian), drzewa nad okapem (×1,12–1,35 wysokości kurtyny, co 38–70 m, 2–6 m za licem; krzyżowe
+impostory w tym samym atlasie — 0 draw calli), koniec biegu otwartego: zejście do 0,30 na 26 m (profil „ramienia”
+korony) i 3 drzewa schodzące 3–17 m za koniec.
+
+### Pomiary (edytor, visual-qa High 1920×1080 `-Pc`, Win64; nie build playera)
+Przed = derived z main (kopia 26.11 21:34) + shader main; po = ta gałąź po przebudowie (r4d) i z shaderem r4.
+Uwaga: derived `knyszyn-w` z main różnił się od QA zapisanego w HEAD w 25 z 64 chunków (fala 12 / inny commit budowy),
+więc różnice draw calli na kamerach trasy knyszyn-w zawierają zmiany spoza r4; liczby kart / chunków niżej są z QA
+(HEAD 088c588a8 vs po), porównywalne 1:1.
+
+| | przed (HEAD QA) | po | źródło |
+|---|---|---|---|
+| dw671-tykocin-03: trójkąty kart pól | 113 940 | 158 528 (+39 %) | `world_manifest.json` field_crops |
+| dw671-tykocin-03: kukurydza rzędy / poprzeczne / brzeg / przed linią | 53 200 / 16 394 / — / — | 24 126 / 7 216 / 29 476 / 3 806 | jw. |
+| dw671-tykocin-03: ruń miedz (rośliny) | 13 525 | 19 832 | jw. |
+| knyszyn-w: trójkąty kart pól | 53 040 | 62 408 (+18 %) | jw. |
+| knyszyn-w: kukurydza rzędy / poprzeczne / brzeg / przed linią | 24 612 / 7 699 / — / — | 9 429 / 2 904 / 9 255 / 1 275 | jw. |
+| chunki z prymitywem `banks` (dw671-03 / knyszyn-w) | 17 / 17 | 17 / 16 (dw671: 2 chunki zamienione) | `banks_cmp.py`, `mat_cmp.py` |
+| najgorsza kamera budżetu klatki High (tris) | dw671-03 1 346 250, knyszyn-w 1 104 998 | 1 357 758, 1 107 558 | `streetscape_qa.json` |
+| far_field High, atlas lasu (tris) | dw671-03 21 814, knyszyn-w 35 932 | 27 798 (+27 %), 42 468 (+18 %) | `far_field_qa.json` |
+| draw calle (siatki + instancje), kamery trasy / kabiny | — | dw671-03: +0…+1 (16 kamer); knyszyn-w: −2…+1 na 9 z 12, +7…+9 na 3 (`dk65-koscielna`, `route-s0142`, `route-s0426`: liczba obiektów bez zmian, z QA HEAD: jedyna zmiana prymitywów kafla = −1 chunk `banks` → różnica pochodzi z derived main zbudowanego innym commitem, nie z r4) | `stats_before_after3.txt` |
+| draw calle, kamery polowe | — | −4…+2 (26 kamer; `dw671-03 f4_maize_end` +2) | jw. |
+
+`far_field` dw671-03 High łącznie 86 700 → 37 580: to nie r4 — HEAD zawiera już ADR 0351 (wieże WN tylko na liniach
+WN), a zapisane QA było sprzed niej.
+
+Dowody: `artifacts/fields4-s24/` — `vqa/{before,after,after2,after3}/`, zestawienia `sbs/` (przed | po), `stats_before_*.txt`,
+diagnostyka `probe_dw03_edgeN*.png`, atlas `atlas_r4_preview.jpg`, `atlas_r4_edge.jpg`.
+
+Ocena wzrokowa (własna; brak zdjęć właściciela dla pól): (a) z zewnątrz łanu (`f4_maize_end`, 60 m) zamiast
+jednolitej ściany z pionowym końcem są kępy różnej wysokości, luki i pojedyncze rośliny przed linią — ale łan czyta się
+teraz jak szereg paneli z regularnymi przerwami; z wnętrza łanu (`edge-north`) korytarz przy szwie z miedzą i płaskie lica
+kart wzdłuż niego ZOSTAŁY (kamera stoi w łanie; karty co 2,25 m oglądane wzdłuż rzędów są płaszczyznami); z góry
+(`f4_edgeN_air`) łan nadal jest rzadkim labiryntem kart na malowanych rzędach. (b) koleiny technologiczne i drogi polnej
+są łamane, węższe, bez stałej szerokości (`f2_side_route_s0994_cereal_ripe`, `f4_maize_side`), z daleka nadal ciemne
+linie, ale przerywane. (c) daleki plan: więcej pasów o różnym tonie i wygięte granice (`tykocka-dw671-out`, `edge-west`
+knyszyn-w), smugi aliasingu zniknęły; las w tle ma schodki wysokości, wystające sosny / świerki / brzozy i zejście na
+końcach zamiast pionowego cięcia (`edge-north`, `edge-west`). Pole w dali w `dw671-03 edge-west` (łąka) nadal płaskie.
+Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagentów).
+
+### Skutki dla innych kafli
+- Shader i warp 610 m: od razu wszędzie; warp zmienia układ pasów (a z nim użytek pod kartami / roślinami / belami) —
+  kafle nieprzebudowane mają karty kukurydzy niezgodne z kolorem shadera do czasu przebudowy (jak przy r3). Przebudowa:
+  te same 42 kafle wiejskie co w r3 (lista `tile_list_r2.json`) + far_field (las) wszystkich kafli z dalekim planem.
+- Kamery `edge-*` są wspólne dla wszystkich regionów (pozycje z regionu C); kamera `edge-north` dw671-03 stoi w łanie.
+
+### Otwarte (r4)
+- Gęstość łanu: karty co trzeci rząd (2,25 m) — z kabiny wzdłuż rzędów płaskie lica, z góry labirynt. Następny krok:
+  karty co drugi rząd (1,5 m; +~50 % trójkątów kukurydzy, w budżecie klatki: najgorsza kamera 1,36 mln / 2,0 mln) albo
+  kępy roślin (krzyżowe karty 0,8 m) zamiast pasów 1,6–3,2 m; korytarz przy miedzy węższy (miedza shadera 1–2,6 m na
+  krawędź pasa jest szersza niż typowa podlaska miedza 0,3–1 m — do decyzji lidera, zmiana wspólna z r2).
+- Panele z przerwami na brzegu: przerzedzenie 60 % daje regularne luki — rozważyć skupiska (szum 3–6 m) zamiast losu.
+- Łąka w dali (`dw671-03 edge-west`) — farK działa na pasy orne; łąki nie mają przejazdów, więc zostają gładkie.
+- Kamery `f3_*` z fields3 po warpie 610 m patrzą w inne miejsca układu (część w drzewa) — do odświeżenia `find_spots`.
+- Pomiar playera (czas GPU terenu z dodatkowymi szumami, pamięć atlasu) — `UNVERIFIED`.
+
+### r4b (2026-11-27, uwaga lidera po r4: gęstość łanu, węższa miedza, kamery f3_*)
+- **Gęstość: rzędy kart co 1,5 m zamiast kęp.** Kępy (krzyżowe karty ~1,2 m co 1,5 × 1,2 m) to ~22 tys. trójkątów / ha
+  wobec ~5,7 tys. dla rzędów co 1,5 m — poza budżetem; gęstsze rzędy zamykają oba objawy: korytarz 2,25 m z malowanymi
+  rzędami między kartami (labirynt z góry) i lico sąsiednich kart na jednej płaszczyźnie. `MAIZE_CARD_ROWS` 3 → 2
+  (karta co drugi rząd 0,75 m), każda karta rzędu obrócona o ±0,1 rad wokół środka (środek zostaje na rzędzie shadera),
+  karty poprzeczne 34 → 20 % (gęstsze rzędy same zamykają korytarze), `CHUNK_MIN_TRIS` 5 600 → 8 400 (×1,5 — ten sam
+  zbiór chunków z kartami).
+- **Miedza 0,4–1,2 m na krawędź pasa** (`KF_BAULK_MIN_M` 0,4, `KF_BAULK_SPAN_M` 0,8; lustro `vegetation.FIELD_BAULK_W`).
+  WORKING_VALUE: typowa podlaska miedza między dwoma gospodarstwami to wąski pas runi (rząd wielkości 0,3–1 m, oceniane na
+  zdjęciach CC, nie pomiar); r1–r4 1,0–2,6 m na krawędź = 2–5 m runi między dwoma łanami, z kabiny czytane jak droga.
+- Kamery `f3_*` odświeżone w układzie r4 (warp 610 m; `artifacts/fields4-s24/find_spots4.py`, `seat: file`), nowe
+  `f3_maize_inside` (oko 2,5 m w łanie, wzdłuż rzędów) i `f3_maize_air` (16 m nad łanem) na obu kaflach.
+
+| | r4 | r4b | źródło |
+|---|---|---|---|
+| dw671-03: trójkąty kart pól / rzędy / brzeg / przed linią | 158 528 / 24 126 / 29 476 / 3 806 | 221 774 / 37 959 / 44 815 / 5 695 | `world_manifest.json` |
+| knyszyn-w: jw. | 62 408 / 9 429 / 9 255 / 1 275 | 83 978 / 14 613 / 14 173 / 1 869 | jw. |
+| chunki z `banks` (dw671-03 / knyszyn-w) | 17 / 16 | 17 / 16 | jw. |
+| najgorsza kamera klatki High | 1 357 758 / 1 107 558 | 1 368 198 / 1 113 473 (limit lidera 1,9 mln) | `streetscape_qa.json` |
+| draw calle r4 → r4b, 42 kamery trasy + 48 polowych (te same derived bazowe) | — | +0 na wszystkich | `stats_before4b_after4b.txt` |
+| trójkąty na kamerę r4 → r4b | — | maks. +13,2 tys. (trasa), +12,1 tys. (pole) | jw. |
+
+Ocena wzrokowa (`grid_4b_dw.jpg`, `sbs_before4b/`): z wnętrza łanu (`f3_maize_inside`) lico ściany zniknęło, zostaje wąska
+ścieżka; `edge-north` — korytarz przy miedzy węższy (miedza ~1 m z runią), lica słabsze; z góry (`f3_maize_air`) łan gęstszy,
+zygzaki kart nadal czytelne, ale bez szerokich pasów gołej ziemi; z boku (`f3_maize_cross`) brzeg bez paneli z przerwami,
+pojedyncze rośliny przed linią. Otwarte: zygzak kart z góry przy stromym widoku (wzór „jodełki”), tekstura łanu z bliska.
+Testy: `test_fields_r4_0334` + r3 + 0334 zielone (budżet / ha 6 200, rzędy ≤ 1,5 m).

@@ -99,3 +99,14 @@ overrides:
     confidence: medium
     verify: owner drive / owner photo
   # <<< ADR 0220
+  # weathering-s24 (ADR 0238 / 0348 addendum, wave 13): roof covering COLOR_0 (dirt runs, moss, odd tiles) and block-fence
+  # variants. Opt-in per region, so the Bialystok tiles stay bit-identical (ADR 0238).
+  - id: dk65-02-weathering-s24
+    kind: facade_rules
+    roof_weathering: true
+    block_fence_variants: true
+    reason: >-
+      Critic s24 wave 11 (artifacts/critic-s24-wave11/CRITIC.md): spotless roofs with no moss, runs or odd tiles; grey block
+      fences with one texture. WORKING_VALUE strengths and shares (refs Data/raw/refs/posesje; no pixels used, no Google).
+    confidence: medium
+    verify: visual-qa High clear + overcast on the rural control cameras of the tile

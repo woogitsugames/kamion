@@ -36,7 +36,8 @@ def test_warp_constants_match_the_shader():
     assert f"KFBand(rc + 0.375, {FC.MAIZE_ROW_M}, 0.30, fpr)" in HLSL   # the card rows stand on the shader's rows
 
 
-def test_layout_warp_bows_the_edges_by_metres_and_inverts():
+def test_layout_warp_bows_the_edges_by_metres_and_inverts(monkeypatch):
+    monkeypatch.setattr(VG, "FIELD_WARP_FAR", ())                  # the r3 octaves (r4 far octave: test_fields_r4_0334)
     rng = np.random.default_rng(5)
     P = rng.uniform(0, 6000, (20000, 2)) + np.array([758000.0, 609000.0])
     dx, dy = VG.field_warp(P[:, 0], P[:, 1])
@@ -143,7 +144,9 @@ def test_maize_cards_stand_on_the_rows_of_maize_strips_at_summer_height():
     mid = V[:, :2, :2].mean(1)
     L = VG.field_layout(mid[:, 0] + o[0], mid[:, 1] + o[1])
     assert (VG.field_use(L, True) == VG.FIELD_USES.index("maize")).all()
-    assert (np.minimum(L["across"], L["w"] - L["across"]) > FC.MAIZE_SEAM_CLEAR_M - 0.3).all()   # off the baulks
+    lo, hi = FC._baulk_sides(L)                                    # r4: off the seams that carry a baulk only
+    c_lo, c_hi = FC.baulk_clear(L, mid, o)                         # r4b: the shader's baulk half-width + a gap
+    assert (np.where(lo, L["across"] - c_lo, np.inf) > -0.3).all() and (np.where(hi, L["w"] - L["across"] - c_hi, np.inf) > -0.3).all()
     # every card lies on a crop row of the shader: row coordinate = whole multiples of the card-row pitch
     rx, ry = mid[:, 0] + o[0] - L["sx"], mid[:, 1] + o[1] - L["sy"]
     rowc = rx * np.cos(L["th"]) + ry * np.sin(L["th"]) + L["wob"]

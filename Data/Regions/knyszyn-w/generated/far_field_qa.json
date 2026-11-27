@@ -76,10 +76,10 @@
     "lines_hv_osm": 0,
     "lines_not_hv": 113,
     "masts": 4,
-    "mv_lines_near": 33,
-    "mv_poles": 168,
+    "mv_lines_near": 37,
+    "mv_poles": 246,
     "mv_seam_supports": 17,
-    "mv_spans": 167,
+    "mv_spans": 245,
     "osm_hv_duplicates_of_bdot": 1,
     "osm_untagged_dropped": 0,
     "pylons": 44,
@@ -161,47 +161,47 @@
   },
   "tiers": {
     "High": {
-      "bytes": 3181072,
+      "bytes": 5494392,
       "file": "Data/raw/derived/knyszyn-w/world/far_field.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 3021,
-            "forest_edge_mixed_far_atlas": 5902
+            "far_field_buildings": 10853,
+            "forest_edge_mixed_far_atlas": 6562
           },
           "submeshes": 2,
-          "triangles": 8923,
-          "vertices": 13241
+          "triangles": 17415,
+          "vertices": 30225
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 4799,
-            "forest_edge_mixed_far_atlas": 12420
+            "far_field_buildings": 12623,
+            "forest_edge_mixed_far_atlas": 14800
           },
           "submeshes": 2,
-          "triangles": 17219,
-          "vertices": 25907
+          "triangles": 27423,
+          "vertices": 46315
         },
         "far_south": {
           "by_material": {
-            "far_field_buildings": 2164,
-            "forest_edge_mixed_far_atlas": 4314
+            "far_field_buildings": 3430,
+            "forest_edge_mixed_far_atlas": 5462
           },
           "submeshes": 2,
-          "triangles": 6478,
-          "vertices": 10198
+          "triangles": 8892,
+          "vertices": 15026
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 837,
-            "forest_edge_mixed_far_atlas": 13296
+            "far_field_buildings": 1083,
+            "forest_edge_mixed_far_atlas": 15644
           },
           "submeshes": 2,
-          "triangles": 14133,
-          "vertices": 18527
+          "triangles": 16727,
+          "vertices": 23715
         }
       },
-      "sha256": "541935f98f1c240b3a9341526f7a1ae9c57236d70c67f2b64ad93d2c1dd1e005",
+      "sha256": "e5a41661dc35754ec7ea1b30fbb48a54ce0a10df495a976a6434dbdc6a99f0e4",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -210,30 +210,30 @@
         "submeshes": 0,
         "triangles": 0
       },
-      "total_triangles": 46753,
-      "total_vertices": 67873
+      "total_triangles": 70457,
+      "total_vertices": 115281
     },
     "Low": {
-      "bytes": 318932,
+      "bytes": 355592,
       "file": "Data/raw/derived/knyszyn-w/world/far_field.low.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 268,
+            "far_field_buildings": 484,
             "forest_edge_mixed_far_atlas": 788
           },
           "submeshes": 2,
-          "triangles": 1056,
-          "vertices": 1520
+          "triangles": 1272,
+          "vertices": 1952
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 704,
+            "far_field_buildings": 958,
             "forest_edge_mixed_far_atlas": 1496
           },
           "submeshes": 2,
-          "triangles": 2200,
-          "vertices": 3334
+          "triangles": 2454,
+          "vertices": 3842
         },
         "far_south": {
           "by_material": {
@@ -254,7 +254,7 @@
           "vertices": 2622
         }
       },
-      "sha256": "f3ab5c9eef97a829b8070db2688e5674cd1af301018c044711a701432b6ccdf4",
+      "sha256": "23d211101bad25586e0345ff3e1604e8591681ac5560f2e9c65e9fd43390488c",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -263,8 +263,8 @@
         "submeshes": 0,
         "triangles": 0
       },
-      "total_triangles": 5746,
-      "total_vertices": 8242
+      "total_triangles": 6216,
+      "total_vertices": 9182
     }
   }
 }
