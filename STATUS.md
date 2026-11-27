@@ -43,3 +43,5 @@
 - Następny krok pod slotem heavy: `. ./scripts/env.ps1`, następnie `Invoke-UnityBatch -LogFile artifacts/codex-main-verify-s24/logs/import-knyszyn-w-high.log -BuildTarget Win64 -Arguments @('-executeMethod','Game.World.Import.RegionImporter.ImportBatch','-region','knyszyn-w','-tiers','High','-materialTier','Medium')`.
 - Import Knyszyn-W High Win64: `IMPORT_RESULT: OK`, 64 chunki, 27 w korytarzu, 0 rozbieżności SHA-256. Log: `logs/import-knyszyn-w-high.log`.
 - Następny krok: `pwsh scripts/visual-qa.ps1 -Scene World_knyszyn-w_High -Tier High -Pc -BuildTarget Win64 -Width 1920 -Height 1080 -Lighting clear -Cameras cab-driver,dk65-goniadzka,hv0351-far-ne -OutputDir artifacts/codex-main-verify-s24/visual/after/clear`.
+- Visual QA Win64 High PC clear: `VISUALQA_RESULT: OK rendered=3`. Ujęcia `cab-driver`, `dk65-goniadzka`, `hv0351-far-ne`.
+- Następny krok: `pwsh scripts/visual-qa.ps1 -Scene World_knyszyn-w_High -Tier High -Pc -BuildTarget Win64 -Width 1920 -Height 1080 -Lighting overcast -Cameras cab-driver,dk65-goniadzka,hv0351-far-ne -OutputDir artifacts/codex-main-verify-s24/visual/after/overcast`.
