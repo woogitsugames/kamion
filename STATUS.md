@@ -83,3 +83,7 @@
 ### codex-seams-dk65-s25 — dopasowanie i diagnoza
 - Dopasowanie rezerwuje najpierw zgodne OSM way. Szkolna po zmianie zgodna; 4 stare UWAGI znikają. Zostaje 1 FAIL braku końca Sadowej: graf dk65-05 ma 0,048 m przy progu loadera 0,05 m. Testy syntetyczne audytu: 25 PASS.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -p no:cacheprovider tests/gis/test_seams_0224.py`.
+
+### codex-seams-dk65-s25 — weryfikacja i przekazanie
+- Audyt na danych main: 0 FAIL / 4 UWAGA / 1 PRZEJŚCIE → 1 FAIL / 0 UWAGA / 1 PRZEJŚCIE. Kolizja na osi Sadowej: ΔZ 0,0068 m, dwustronne pokrycie 37/51 w próbie przekroju. Obejrzano ortofoto i archiwum High; testy audytu 30/30, budżety i regresje 86/86. Raport w artifacts/codex-seams-dk65-s25/WYNIKI.md.
+- Następny krok lidera po imporcie w fali 15 i zajęciu slotu heavy: `foreach ($pogoda in 'clear','overcast') { pwsh scripts/visual-qa.ps1 -Scene World_dk65-04_High -Tier High -Pc -BuildTarget Win64 -Neighbours dk65-05 -Cameras top_szkolna -Lighting $pogoda -OutputDir "artifacts/codex-seams-dk65-s25/vqa/fala15/$pogoda" }`.
