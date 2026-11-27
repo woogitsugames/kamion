@@ -142,9 +142,13 @@ Shader "Kamion/Vegetation"
         half VegAlpha(float4 uv, half t)
         {
         #if defined(_IMPOSTOR)
+            // One exit (crown-lod-s24): fxc warned "potentially uninitialized variable (VegAlpha)" on the early return.
+            half a;
             if (_KamionImpostorBlend > 0.5)
-                return lerp(SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv.xy).a, SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv.zw).a, t) * _BaseColor.a;
-            return SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, t < 0.5 ? uv.xy : uv.zw).a * _BaseColor.a;
+                a = lerp(SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv.xy).a, SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv.zw).a, t);
+            else
+                a = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, t < 0.5 ? uv.xy : uv.zw).a;
+            return a * _BaseColor.a;
         #else
             return SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv.xy).a * _BaseColor.a;
         #endif
@@ -354,8 +358,9 @@ Shader "Kamion/Vegetation"
             #if defined(MAIN_LIGHT_CALCULATE_SHADOWS)
             #if defined(_KAMION_VEG_FAST)
                 half fade = GetMainLightShadowFade(positionWS);
-                UNITY_BRANCH if (fade > 0.999h) return 1.0h;
-                return lerp(MainLightRealtimeShadow(TransformWorldToShadowCoord(positionWS)), 1.0h, fade);
+                half sh = 1.0h;   // one exit (crown-lod-s24): fxc "potentially uninitialized variable (VegShadow)"
+                UNITY_BRANCH if (fade <= 0.999h) sh = lerp(MainLightRealtimeShadow(TransformWorldToShadowCoord(positionWS)), 1.0h, fade);
+                return sh;
             #else
                 return MainLightRealtimeShadow(TransformWorldToShadowCoord(positionWS));
             #endif
