@@ -16,3 +16,7 @@
 - GOTOWE DO SCALENIA PRZEZ LIDERA.
 - NASTĘPNY KROK (lider): przejrzeć diff na `neon-avenue-s24` i dowody w `artifacts/neon-avenue-s24/sbs/`, scalić gałąź, a następnie w kolejnej fali regeneracji przebudować kafle z szpalerami (`knyszyn-w`, `dk65-01..11`, `dw671-tykocin-*`, `dk65-monki-*`):
   `git merge --no-ff neon-avenue-s24`
+
+## codex-roofs-s24 — dachy budynków gospodarczych r4
+- Krok 1. Odczytano zasady, ADR 0238 i uwagę krytyka. Kafel dk65-07 skopiowano do prywatnego Data/raw/derived.
+- Następny krok w slocie heavy: `& $py tools/worldgen/roads/build_world.py --region dk65-07 --context` (stan bazowy r3).
