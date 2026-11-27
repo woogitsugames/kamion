@@ -26,3 +26,6 @@ Następny krok: pwsh scripts/build-lab.ps1 -SkipAudio -BuildTarget Win64 (jeśli
 
 Sterowanie, HUD i zegar piór spięte z audio. GIS Win64/Python: 62/62. DrivingLab odbudowany lokalnie, zrzuty bazowe High clear i overcast z TRAKT-em.
 Następny krok: pwsh scripts/test.ps1 -BuildTarget Win64
+
+Zaimportowano 8 klipów w Unity Win64, wpisano referencje do biblioteki i dodano testy logiki oraz przejazdu w DrivingLab.
+Następny krok: pwsh scripts/test.ps1 -Platform All -BuildTarget Win64
