@@ -35,3 +35,6 @@
 
 - [krok 6] Zastąpiono 8 startów edytora na fazę jednym wywołaniem istniejącego `VisualQaRunner` dla 8 wariantów, po 6 kamer. Przebieg czeka zgodnie z kolejką slotów. Scena knyszyn-w jest już zaimportowana.
 - Następny krok w trwającym przebiegu: `pwsh -File artifacts/codex-props-low-perf-s24/batch-qa.ps1 -Phase before -ImportTykocin`.
+
+- [krok 7] Sprawdzono dobór kamer względem przedziałów cullu na surowych pozycjach prototypów. Do macierzy weszły wjazd na rondo w knyszyn-w i widok placu oraz brzegu w Tykocinie. Surowe pozycje służą do doboru kamer, liczniki będą z visual-QA.
+- Następny krok: `pwsh -File artifacts/codex-props-low-perf-s24/batch-qa.ps1 -Phase before -ImportTykocin` (przebieg czeka w kolejce).
