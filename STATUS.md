@@ -42,3 +42,5 @@
 ## codex-gis-fix-s24
 - Krok 1. Przeczytano zasady i ADR. Punkt startowy d15ca070e zawiera cały kod main aed88604d. Różnica dotyczy wyłącznie HANDOVER.md.
 - Następny krok to `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner codex-gis-fix-s24` i bazowe pytest pięciu plików na prywatnych danych.
+- Krok 2. Skopiowano 13 798 plików danych pochodnych (44 411 721 665 B) do prywatnego katalogu i odpięto junction. Fixture GIS może zapisać cache wyłącznie w worktree.
+- Następny krok to `pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Lighting clear` i odpowiednik overcast.
