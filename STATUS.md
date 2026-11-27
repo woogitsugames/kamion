@@ -125,3 +125,7 @@
 ### codex-sadowa-seam-s25 — poprawka generatora i test syntetyczny
 - Zachowano krótkie cięcie w sieci, zarezerwowano odcinek do siatkowania i odróżniono w audycie rzeczywisty koniec cięcia od węzła wewnętrznego. Test 0,04 m potwierdza położenie końców oraz trójkąty nawierzchni i kolizji.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd artifacts/codex-sadowa-seam-s25/compare.py`
+
+### codex-sadowa-seam-s25 — zakres audytu
+- Rozpoznawanie końców zmienia się tylko przy wewnętrznym węźle zachowanego cięcia. Zapisano decyzję w ADR 0224. Przegląd objął archiwalne High clear/overcast i ortofoto GUGiK.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-sadowa-seam-s25/local_collision.py` po porównaniu szwów.

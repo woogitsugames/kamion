@@ -355,6 +355,9 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
             continue
         if seam_stub:
             seam_stubs.add(e["id"])
+            for node in (nodes[a], nodes[b]):
+                if not node["boundary"]:
+                    node["inside_seam_stub"] = True
         edges[e["id"]] = (e, g, a, b)
         nodes[a]["deg"] += 1
         nodes[b]["deg"] += 1
