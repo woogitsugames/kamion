@@ -22,3 +22,5 @@
 - Następny krok: przygotować prywatny kafel i wykonać pomiar bazowy: `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase before`.
 - [krok 2] Skopiowano kafel Tykocin do prywatnego derived, przygotowano shim i pipeline skryptów, zachowano bazowy asset i wyrenderowano 4 kadry Blender. Obejrzane zbliżenie potwierdza zlanie brwi, policzków i brody. Bazowy build Unity w toku.
 - Następny krok: porównać wypiek modelu z bazą i sprawdzić budżet w `artifacts/codex-monument-face-s24/candidate/tykocin_czarniecki_meta.json`.
+- [krok 3] Model i wypiek po dwóch rundach Blender. Rynek LOD0 35 678 → 35 832, głowa 2 600 → 3 798, cokół i platforma −1 128. Gotowy NPZ zachowano w `artifacts/codex-monument-face-s24/candidate/` do końca bazowej generacji kafla.
+- Następny krok po bazowym buildzie: `Copy-Item artifacts/codex-monument-face-s24/candidate/tykocin_czarniecki* art-source/world/landmarks/tykocin_czarniecki/` i `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase after`.
