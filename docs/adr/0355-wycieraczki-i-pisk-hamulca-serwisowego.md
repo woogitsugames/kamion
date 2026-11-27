@@ -15,7 +15,8 @@ zdarzeniem względem pisku opon w poślizgu (ADR 0145).
   Akcję można przypisać w Ustawieniach sterowania także na padzie. Klikalna etykieta
   w HUD (**Panel → Zestaw…**) pokazuje tryb i wykonuje tę samą zmianę.
 - `WiperDrive` na pojeździe prowadzi fazę ruchu i liczniki startu oraz powrotu do
-  spoczynku. Ruch piór korzysta z wyeksportowanej osi i kąta −95°. Wspólny zegar
+  spoczynku. Ruch piór korzysta z kąta +95° wokół lokalnej osi +Y po imporcie
+  FBX do Unity. Kierunek zweryfikowano na ujęciu z przodu. Wspólny zegar
   uruchamia klip silnika i tarcia obu suwów na starcie, a osobny stuk przy końcu.
   Zmiana biegu obowiązuje od następnego cyklu. Wyłączenie pozwala dokończyć
   bieżący cykl. Czasy `WORKING_VALUE`: 1,20 s (przerywany i 1), 0,80 s (2),
@@ -65,3 +66,7 @@ hamowania. Własny bank obejmuje 8 WAV mono 48 kHz o łącznym rozmiarze
 
 Źródła pomiaru: `artifacts/codex-audio-wipers-s24/drivinglab-events.log`
 i `wav-measurements.txt`.
+
+Pełny PlayMode na tej bazie wymagał lokalnej regeneracji brakującej mapy
+`bialystok-krywlany` poleceniem
+`& $python tools/ui/build_nav_map.py --region bialystok-krywlany`.

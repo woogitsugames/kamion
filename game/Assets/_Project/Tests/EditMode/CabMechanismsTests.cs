@@ -23,6 +23,7 @@ namespace Game.Tests
             Assert.AreEqual(0.5f, drive.Phase, 1e-5f);
             Assert.That(Quaternion.Angle(WiperDrive.Rotation(drive.Phase), Quaternion.identity),
                 Is.EqualTo(95f).Within(0.001f));
+            Assert.Greater((WiperDrive.Rotation(drive.Phase) * Vector3.forward).x, 0f);
             drive.Step(WiperDrive.SlowSeconds / 2f);
             Assert.AreEqual(1, drive.Parks);
             drive.Step(WiperDrive.IntermittentPause - 0.01f);

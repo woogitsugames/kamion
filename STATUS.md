@@ -41,3 +41,6 @@ Następny krok: pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64
 
 DrivingLab: 5 startów i 4 powroty piór przed końcem próby, pisk 17/64 w kabinie i 20/64 na zewnątrz, ciśnienie 0,460. Zmierzono 0 B GC w 8620 aktualizacjach.
 Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Lighting clear -WiperPhase 0.5
+
+Pierwsze PlayMode potwierdziło oba nowe testy. Jedyny błąd pełnego zestawu to brak mapy bialystok-krywlany.bytes. Generator odtworzył ją lokalnie. Pierwsze porównanie PNG wykazało ruch piór pod szybę, więc zmieniono znak kąta w osi riggu Unity.
+Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Lighting clear -WiperPhase 0.5

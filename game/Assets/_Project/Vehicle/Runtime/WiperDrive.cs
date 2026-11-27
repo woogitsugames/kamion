@@ -9,7 +9,7 @@ namespace Game.Vehicle.Runtime
     {
         // WORKING_VALUE, seconds per round trip and parked seconds between intermittent sweeps.
         public const float SlowSeconds = 1.2f, FastSeconds = 0.8f, IntermittentPause = 2.4f;
-        public const float SweepDegrees = -95f; // TRAKT exporter contract: about local +Y
+        public const float SweepDegrees = 95f; // Imported TRAKT pivots sweep up around their local +Y.
 
         public WiperMode Mode { get; private set; }
         public float CycleSeconds { get; private set; }
