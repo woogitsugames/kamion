@@ -24,3 +24,5 @@
 - Następny krok: `pwsh artifacts/codex-dash-items-s24/export.ps1`
 - [krok 3] Obniżono i cofnięto kubek po próbie promieniami. Finalna geometria zakryła 0/99 540 wcześniej wolnych promieni dla kamizelki i 0/81 072 dla kubka (przednia szyba, próbki z headboxu ±20 mm).
 - Następny krok po zakończeniu eksportu i QA PRZED: `pwsh artifacts/codex-dash-items-s24/install-export.ps1`
+- [krok 4] Unity Win64 zbudowało bazowe prefaby TRAKT/naczepy. Visual QA PRZED, DrivingLab PC High 1920×1080, 15 PNG w warunkach clear, overcast i lowsun, w tym cab-driver, cab-view-b i FOV 55/75.
+- Następny krok po zakończeniu Blendera: `pwsh artifacts/codex-dash-items-s24/install-export.ps1`
