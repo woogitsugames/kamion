@@ -104,3 +104,7 @@
 ### codex-monument-head-s25 — korekta po pierwszym renderze
 - Spłycono dolne powieki i wtopiono je w policzki. Usunięto boczne bryłki przy brodzie, pogłębiono nacięcia brody i dodano relief cofniętej linii włosów. Zwężono końce kołnierza i powtórzono wypiek LOD0 i LOD1.
 - Następny krok po renderach: `pwsh -File artifacts/codex-monument-head-s25/compare.ps1` i pomiar Rynku przez `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd artifacts/codex-monument-head-s25/measure.py`.
+
+### codex-monument-head-s25 — końcowy wypiek i ADR
+- Złagodzono relief linii włosów na obrysie. Po próbie ważenia zostawiono lokalne wygładzanie high poly i zwykłą decymację. Aktualny NPZ 26 672 / 1 964 tris. Zapisano decyzję r3 w ADR 0320.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -ra -p no:cacheprovider tests/gis/test_truss_bridge_0320.py tests/gis/test_props_grounding_0337.py::test_tykocin_rynek_authored_benches_qa tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py`.

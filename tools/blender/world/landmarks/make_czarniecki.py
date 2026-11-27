@@ -475,7 +475,8 @@ def carve_face(vertices):
     hairline = 0.053 - 0.034 * sstep(0.028, 0.100, np.abs(x)) + 0.009 * np.sin(38 * x + 0.5)
     hair = (1 - sstep(hairline - 0.020, hairline + 0.008, y)) * sstep(0.028, 0.122, z)
     sweep = x + 0.24 * y + 1.8 * (y - 0.025)**2
-    height = hair * (0.0015 + 0.0032 * np.sin(2 * math.pi * sweep / 0.025))
+    ridge = np.sin(2 * math.pi * sweep / 0.031 + 1.4 * np.sin(26 * y - 18 * x))
+    height = hair * (0.0010 + 0.0014 * ridge)
     vertices += vertices / np.linalg.norm(vertices, axis=1)[:, None] * height[:, None]
 
 
