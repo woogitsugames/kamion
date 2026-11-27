@@ -25,3 +25,8 @@
   2048×512, brzegi liściaste, wyraźnie ostrzejsze (`view/crop3.png`). Pełny rebake 28 drzew wystartował 16:3x (~70 min).
 - NASTĘPNY KROK: po `logs/blender-full.status`: skopiować impostor_tree_*.png do `game/Assets/_Generated/World/{knyszyn-w,dk65-07}/Textures`,
   ImpostorTrimBake.RunBatch -region <id>, audit + VQA `after` (`vqa.ps1 -Label after -Audit`).
+- [krok 5] ImpostorTrim: początek widoku k = round(k·4096/6) (było k·682 -> 3 px błędu widoku 5), dylatacja jako udział
+  widoku (DilateFor, 6 px @256 -> 16 px @682) + test. _components_min z pointer jumping (ten sam wynik, test ekwiwalencji
+  na losowych maskach, pine_0 7,5 -> 3,3 min). Pełny rebake restart 16:38 (ETA ~17:55). EditMode Win64 w toku (editmode1).
+- NASTĘPNY KROK: po `logs/blender-full.status`: `pwsh artifacts/impostor-rebake-s24/post.ps1`, potem
+  `pwsh artifacts/impostor-rebake-s24/vqa.ps1 -Label after -Audit`, `bash artifacts/impostor-rebake-s24/sbs.sh before after sbs`.
