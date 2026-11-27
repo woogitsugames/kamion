@@ -55,3 +55,7 @@
 ### codex-gen-fix-s25 — pomiary bazowe
 - Przeczytano reguły, recenzję i ADR 0023/0334/0351/0352. Gałąź zawiera scalenie GIS s24. Wrapper działa. Odczytano 54 cache: 23/41 samotnych wież, 4/6 różnic po odwróceniu listy przęseł (Low/High). Maski 1/3/5 m: 13/1/1 kart z końcem w masce.
 - Następny krok po poprawce WN: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_hv_wires_0351.py`.
+
+### codex-gen-fix-s25 — LOD i determinizm WN
+- Eksport przepuszcza wyłącznie podpory WN z przęseł LOD. QA zapisuje liczniki Low/High. Kanoniczny klucz rozstrzyga remisy. Testy WN 14 PASS, na 54 cache sieroty i różnice po permutacji: 0/0.
+- Następny krok po poprawce masek: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_fields_r3_0334.py tests/gis/test_fields_r4_0334.py`.

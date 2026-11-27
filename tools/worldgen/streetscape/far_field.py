@@ -2314,8 +2314,17 @@ def _select_far_hv(plan: dict, half: float, tier: str) -> tuple[list[dict], list
     def ekey(u: int, v: int) -> tuple[int, int]:
         return (u, v) if u < v else (v, u)
 
+    def support_key(k: int) -> tuple[float, float, str]:
+        node = nodes[k]
+        return float(node["e"]), float(node["n"]), str(node["id"])
+
+    def distance_key(k: int) -> tuple:
+        return eff_cache[k][2], support_key(k)
+
+    for neighbours in adj.values():
+        neighbours.sort(key=support_key)
     starts = [k for k, nbs in adj.items() if len(nbs) != 2 or nodes[k].get("seam")]
-    starts.sort(key=lambda k: (0 if nodes[k].get("seam") else 1, eff_cache[k][2], float(nodes[k]["e"]), float(nodes[k]["n"])))
+    starts.sort(key=lambda k: (not nodes[k].get("seam"), distance_key(k)))
     for s in starts:
         for nb in adj[s]:
             ek = ekey(s, nb)
@@ -2334,7 +2343,7 @@ def _select_far_hv(plan: dict, half: float, tier: str) -> tuple[list[dict], list
                 cur = nxt
             chains.append(chain)
     # Any closed cycles without degree!=2 vertices
-    for u in sorted(adj, key=lambda k: (eff_cache[k][2], float(nodes[k]["e"]), float(nodes[k]["n"]))):
+    for u in sorted(adj, key=distance_key):
         for v in adj[u]:
             ek = ekey(u, v)
             if ek in visited_edges:
@@ -2352,9 +2361,10 @@ def _select_far_hv(plan: dict, half: float, tier: str) -> tuple[list[dict], list
             chains.append(chain)
 
     for ch in chains:
-        if eff_cache[ch[-1]][2] < eff_cache[ch[0]][2]:
+        if distance_key(ch[-1]) < distance_key(ch[0]):
             ch.reverse()
-    chains.sort(key=lambda ch: (0 if nodes[ch[0]].get("seam") else 1, eff_cache[ch[0]][2]))
+    chains.sort(key=lambda ch: (not nodes[ch[0]].get("seam"), eff_cache[ch[0]][2],
+                                tuple(map(support_key, ch))))
 
     kept_ids: set[int] = set()
     kept_eff: list[tuple[float, float]] = []
@@ -2381,9 +2391,16 @@ def _select_far_hv(plan: dict, half: float, tier: str) -> tuple[list[dict], list
         for u, v in zip(chain_kept, chain_kept[1:]):
             render_spans.append((nodes[u], nodes[v]))
 
-    # Keep deterministic order matching plan["pylons"]
-    render_pylons = [p for p in plan["pylons"] if id(p) in kept_ids and not p.get("seam")]
+    wired = {id(p) for span in render_spans for p in span}
+    render_pylons = [p for p in plan["pylons"] if id(p) in wired and not p.get("seam")]
     return render_pylons, render_spans
+
+
+def far_hv_lod_stats(pylons, spans) -> dict:
+    """Count endpoints of the selected WN graph, before the separate conductor distance fade."""
+    wired = {id(p) for span in spans for p in span}
+    return {"pylons": len(pylons), "spans": len(spans),
+            "unwired_power_pylons": sum(id(p) not in wired for p in pylons)}
 
 
 def _select_far_mv(plan: dict, half: float) -> tuple[list[dict], list[tuple[dict, dict]]]:
@@ -3030,6 +3047,7 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
         out_path = out_root / fn
         out_path.write_bytes(data)
         qa_tiers[tier] = {
+            "power_lod": far_hv_lod_stats(hv_pylons, hv_spans),
             "file": f"Data/raw/derived/{region_id}/world/{fn}",
             "bytes": len(data),
             "sha256": hashlib.sha256(data).hexdigest(),
