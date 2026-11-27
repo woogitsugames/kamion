@@ -100,6 +100,8 @@ def plan_plots(w, rid, blds=None):
     rp["crossing_drops"] = {}
     rp["drops"] = list(rp["drops"]) + PVM.crossing_drops(w.net, w.ctx["points"], overrides, rp["crossing_drops"])
     rp["driveway_paving_color"] = bool((PVM.rules_of(overrides) or {}).get("driveway_paving_color"))
+    # weathering-s24: block / rendered fence variants (plots.block_variant), opt-in per region
+    rp["fence_variants"] = any(o.get("kind") == "facade_rules" and o.get("block_fence_variants") for o in overrides)
     return rp
 
 

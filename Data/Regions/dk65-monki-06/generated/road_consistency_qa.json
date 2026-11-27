@@ -1,9 +1,29 @@
 {
- "by_kind": {},
- "cases": [],
- "count": 0,
+ "by_kind": {
+  "marking_off_carriageway": 1
+ },
+ "cases": [
+  {
+   "chain": "c:w286989049:2906547564-1134845514",
+   "e": 106.56,
+   "junction": null,
+   "kind": "marking_off_carriageway",
+   "lat": 53.3820703,
+   "lon": 22.8134281,
+   "n": 1023.97,
+   "on_route": true,
+   "osm_ways": [
+    286989049
+   ],
+   "surface": "none",
+   "what": "P-7b"
+  }
+ ],
+ "count": 1,
  "frame": "e, n = local metres (EPSG:2180 minus region origin); lat, lon = WGS84",
- "on_route": {},
+ "on_route": {
+  "marking_off_carriageway": 1
+ },
  "params": {
   "dz_m": 0.8,
   "kerb_ring_m": 0.3,
@@ -29,6 +49,6 @@
   "lane_samples": 25560,
   "lane_samples_beyond_tile": 30,
   "marking_tris": 5066,
-  "props_checked": 317
+  "props_checked": 318
  }
 }

@@ -208,7 +208,8 @@ def test_authored_files_present_and_consistent(rid):
     assert "authored_override" in rt["provenance"]
     ov = yaml.safe_load((d / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]
     for o in ov:
-        assert {"id", "target", "reason", "confidence", "verify"} <= set(o), (rid, o.get("id"))
+        need = {"id", "reason", "confidence", "verify"} | (set() if o.get("kind") == "facade_rules" else {"target"})   # facade_rules = region-wide opt-in, no target (props-fix-s24)
+        assert need <= set(o), (rid, o.get("id"))
     built = (d / "region.yaml").exists()
     if not built:
         assert ov == []                                                         # definition: nothing measured yet

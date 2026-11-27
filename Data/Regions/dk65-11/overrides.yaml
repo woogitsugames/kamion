@@ -65,3 +65,15 @@ overrides:
       - {osm_way: 1511762695, class: motorway, edited: '2026-09-13', half_width_m: 30.0, line_epsg2180: [[762595.0, 609757.0], [762847.4, 609495.0]]}
       - {osm_way: 1511762696, class: motorway, edited: '2026-09-13', half_width_m: 30.0, line_epsg2180: [[762866.8, 609495.0], [762595.0, 609776.5]]}
   # END construction_site
+  # ADR 0238 d. props-fix-s24 (+ ADR 0162 dopisek props-fix): zagrody dostaja dach LoD2, sciany i cokol, a przystanki wiejskie
+  # stalowa wiate z nieprzezroczysta sciana tylna. Opt-in per region (Bialystok bit-identyczny).
+  - id: rural-outbuildings-shelters-props-fix-s24
+    kind: facade_rules
+    rural_outbuildings: true
+    rural_shelters: true
+    reason: >-
+      Wlaczenie props-fix-s24 w kaflu wiejskim (wzor dk65-07): budynki gospodarcze BDOT10k z dachem LoD2 zamiast plaskich
+      bialych pudel, wiata wiejska zamiast szklanej wiaty BKM. ADR 0238 dopisek d. i ADR 0162 dopisek props-fix.
+      WORKING_VALUE (paleta i wymiary bez pomiaru zagrod).
+    confidence: medium
+    verify: visual-qa High clear (kamery trasy kafla), budzet trojkatow kafla

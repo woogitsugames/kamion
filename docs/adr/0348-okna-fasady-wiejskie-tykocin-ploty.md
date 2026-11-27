@@ -65,3 +65,9 @@ Runda 3 (agent Claude po przerwaniu Neona limitem 429, 2026-11-25): import Win64
 - Pomiar czasu klatki w docelowym buildzie Windows (`pc-metrics.ps1`) pozostaje po stronie lidera po scaleniu; zmierzono pamięć importu oraz `drawsEst`/`trisExact` w edytorze (`stats.txt`).
 - Wzorzec `facade_rules: small_town: true` jest włączony na prototypowych kaflach `tykocin` i `dw671-tykocin-09`; rozszerzenie na pozostałe kafle wiejskie DW671/DK65 po akceptacji lidera.
 - **Zmiany globalne (wszystkie kafle po przebudowie/reimporcie):** `facade_atlas.sky_occ` `[0.5, 0.9] → [0.5, 0.35]` i nowe komórki `house` atlasu dotyczą też bloków/biur Białegostoku (niewyrenderowane w tej gałęzi — `UNVERIFIED`); tabele płotów `FRONT_BY_AGE`/`PICKET_PAINTS` zmieniają płoty na każdym kaflu z działkami; `facade_tint` wymusza strumień `COLOR_0` (+4 B/wierzchołek) na materiałach `plaster_*`/`plinth_dark` we wszystkich regionach.
+
+## Dopisek weathering-s24 (26.11)
+Płoty: rodzina „murek” rozszerzona o warianty ogrodzeń bloczkowych (łupany / gładki, daszek 3D + pilastry, 5 kolorów;
+opt-in `facade_rules: block_fence_variants: true`) i przepisany wiersz `concrete` atlasu `plot_kit` (bloczki w półwiązaniu,
+zacieki, brudna stopka). Cokoły: pas rozprysków 0,25–0,32 m nad terenem (`splash_band`). Szczegóły, liczby i dowody: ADR 0238,
+dopisek weathering-s24.

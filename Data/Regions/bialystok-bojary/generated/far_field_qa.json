@@ -44,7 +44,7 @@
     "chimneys": 20,
     "forest_polygons": 674,
     "power_lines": 151,
-    "pylons": 329
+    "pylons": 379
   },
   "forest_chm_ring": {
     "chm_share": 0.0,
@@ -60,22 +60,45 @@
     "members": 620,
     "usable_ids": 133679
   },
+  "power_plan": {
+    "dropped_towers_off_hv_lines": {
+      "słup energetyczny": 1
+    },
+    "lines": 151,
+    "lines_hv_bdot": 25,
+    "lines_hv_osm": 8,
+    "lines_not_hv": 93,
+    "masts": 24,
+    "mv_lines_near": 11,
+    "mv_poles": 55,
+    "mv_seam_supports": 1,
+    "mv_spans": 51,
+    "osm_hv_duplicates_of_bdot": 25,
+    "osm_untagged_dropped": 0,
+    "pylons": 355,
+    "pylons_dropped_unwired": 1,
+    "pylons_mapped": 184,
+    "pylons_rule": 171,
+    "seam_supports": 2,
+    "spans": 340,
+    "unwired_power_pylons": 0
+  },
   "region": "bialystok-bojary",
   "schema": "truck-sim-pl/far-field-qa/1",
   "streaming_building_policy": {
     "check_source_and_compressed_footprint": true,
     "excluded_buildings": 4069,
     "inputs_sha256": {
-      "Data/Regions/bialystok-bojary/route_start.json": "79dfeda03efeae6645633a686496935eece3174ca093fcba46b86c4f6c5070c5",
+      "Data/Regions/bialystok-bojary/route_start.json": "95a7d684ee19a92e16260c362d8fb9d54092a56b629886d2916f9219385255a2",
       "Data/Regions/bialystok-dojlidy/route_start.json": "b1a4cda462bfd6b2c21449ce38166bf59e68c874e341d4bd2d9316cf0e445c20",
       "Data/Regions/bialystok-industrial-c/route_start.json": "02d8f65178aaed2949e60436f0f8ed7690415ac5b8c6239b58efe3e20467cf7f",
       "Data/Regions/bialystok-kleeberga/route_start.json": "e9fbe12bda75cb7c982b5934c321643e37a7e6e0941c5e26910561055b2798d6",
       "Data/Regions/bialystok-knyszynska/route_start.json": "90fee55d1dccc03c03c5bb64b221d8bde23fb60aa152ce89ea655f3e8209ef80",
       "Data/Regions/bialystok-krywlany/route_start.json": "6420c28323be659c9560549230be9724905f9c87cf5dfa19f53b5f59d749eea6",
       "Data/Regions/bialystok-maczka/route_start.json": "9accdf190c111f76ed5cb7002df8aa48b962495efde89fcf22b4ce230b0ba92e",
-      "Data/Regions/bialystok-mickiewicza/route_start.json": "1c784a9b2e60f2c21559a58af026fb784a79c6f42981a3254e7d634a78079bc0",
+      "Data/Regions/bialystok-mickiewicza/route_start.json": "bc7fb1e38cd36ad82e8e632f84d9a93db7bb8d11869c0b5fad454c6c63a09319",
       "Data/Regions/bialystok-porosly/route_start.json": "e438ed35341570678912e9c6aec05fd41f0b5311adad3a8b76d664707a30ffa2",
-      "Data/Regions/bialystok-wygoda/route_start.json": "94bfa02f58f59408ce625a5cef23a7cdd2421413c29788f0d816273c1f687a70",
+      "Data/Regions/bialystok-wygoda/route_start.json": "126695bf146d1748c09ffabe853a06daa534797cae15fbc8d178eb4ae64e1e84",
       "Data/Regions/dk65-01/route_start.json": "6a3c8e49089816fc22947ff7b3dd53fc47a4fb127648aa118ae0c8e8e67de2e2",
       "Data/Regions/dk65-02/route_start.json": "b957b1fd8a1c1a55934f3335d29c4f8fe9acadb97704ad4a3cae8a10dda0b470",
       "Data/Regions/dk65-03/route_start.json": "19089c3524921719a2533b1eaa489b3a7e616b010780d0f20078647e4c14e59e",
@@ -92,8 +115,8 @@
       "Data/Regions/dk65-monki-03/route_start.json": "6007f3636eea090129681e1f2e5a1b7dffcc3b17e6e246e4464c298a1a100275",
       "Data/Regions/dk65-monki-04/route_start.json": "bce1280e7fb784d7560a09c3d521934cb90c373a2efc883e33e108fb1a92ad09",
       "Data/Regions/dk65-monki-05/route_start.json": "5896f4d6203a08b918ac75361df256590593abdb30689a5d9f4c9f9049587104",
-      "Data/Regions/dk65-monki-06/route_start.json": "0942db1acb84ff2fa32e86b548db78b68588f9ceed2cbc05600694b07b726d0a",
-      "Data/Regions/dk65-monki-07/route_start.json": "a4f73f91d0df53158fcf8d2af0c51d6d8bcf7daf5695c3a86be9afe29275381c",
+      "Data/Regions/dk65-monki-06/route_start.json": "282c82ff86eac6afbcd32806497917c7d06801ffddf1b97a10db0df4165a21b8",
+      "Data/Regions/dk65-monki-07/route_start.json": "9a3210c761f1ba551dd1410917a40e068d41b7f6bb53a72545dbb4b44f2d0937",
       "Data/Regions/dk8-korycin-01/route_start.json": "68ba16e5d431d351d98f727c3b4a0d00ec9a50af3a668cbb8b3bec2fcc6c5f2f",
       "Data/Regions/dk8-s8-jeroniki/route_start.json": "e61bfa905fe1a8e4641a375152a45cbfcc240840ddc53ab961567df444a3d261",
       "Data/Regions/dk8-wasilkow-01/route_start.json": "e702768af6f28557918a51be403b267bda951a284240b8c16dc1d47bcd89094e",
@@ -131,47 +154,47 @@
   },
   "tiers": {
     "High": {
-      "bytes": 17158748,
+      "bytes": 22895984,
       "file": "Data/raw/derived/bialystok-bojary/world/far_field.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 40877,
+            "far_field_buildings": 52383,
             "forest_edge_mixed_far_atlas": 14314
           },
           "submeshes": 2,
-          "triangles": 55191,
-          "vertices": 100927
+          "triangles": 66697,
+          "vertices": 123939
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 32348,
+            "far_field_buildings": 62970,
             "forest_edge_mixed_far_atlas": 18686
           },
           "submeshes": 2,
-          "triangles": 51034,
-          "vertices": 88928
+          "triangles": 81656,
+          "vertices": 150172
         },
         "far_south": {
           "by_material": {
-            "far_field_buildings": 22990,
+            "far_field_buildings": 25454,
             "forest_edge_mixed_far_atlas": 6050
           },
           "submeshes": 2,
-          "triangles": 29040,
-          "vertices": 54340
+          "triangles": 31504,
+          "vertices": 59268
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 39531,
+            "far_field_buildings": 46401,
             "forest_edge_mixed_far_atlas": 3006
           },
           "submeshes": 2,
-          "triangles": 42537,
-          "vertices": 82825
+          "triangles": 49407,
+          "vertices": 96565
         }
       },
-      "sha256": "59897002a5cba87385e44d58da502552c4e61ff8354cb56c225727aedec23f4c",
+      "sha256": "f48f1bfe02348cbfd075c4d1cd220b662e0db5398a96b255acce340e6af39ee4",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -180,51 +203,51 @@
         "submeshes": 1,
         "triangles": 3258
       },
-      "total_triangles": 181060,
-      "total_vertices": 333536
+      "total_triangles": 232522,
+      "total_vertices": 436460
     },
     "Low": {
-      "bytes": 2620280,
+      "bytes": 2843712,
       "file": "Data/raw/derived/bialystok-bojary/world/far_field.low.glb",
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 5698,
+            "far_field_buildings": 5946,
             "forest_edge_mixed_far_atlas": 1986
           },
           "submeshes": 2,
-          "triangles": 7684,
-          "vertices": 13874
+          "triangles": 7932,
+          "vertices": 14370
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 3367,
+            "far_field_buildings": 6239,
             "forest_edge_mixed_far_atlas": 2612
           },
           "submeshes": 2,
-          "triangles": 5979,
-          "vertices": 10035
+          "triangles": 8851,
+          "vertices": 15779
         },
         "far_south": {
           "by_material": {
-            "far_field_buildings": 6662,
+            "far_field_buildings": 6768,
             "forest_edge_mixed_far_atlas": 746
           },
           "submeshes": 2,
-          "triangles": 7408,
-          "vertices": 14332
+          "triangles": 7514,
+          "vertices": 14544
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 11937,
+            "far_field_buildings": 11575,
             "forest_edge_mixed_far_atlas": 456
           },
           "submeshes": 2,
-          "triangles": 12393,
-          "vertices": 24483
+          "triangles": 12031,
+          "vertices": 23759
         }
       },
-      "sha256": "e92f2ebd940653d291a995a993033af336b2a1d0538cdb6cef7f844337f0479e",
+      "sha256": "9726ef4e30af3d0df990bcd855d36c1cf69878327be34a375bc8a19b14d58c22",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -233,8 +256,8 @@
         "submeshes": 1,
         "triangles": 2288
       },
-      "total_triangles": 35752,
-      "total_vertices": 67300
+      "total_triangles": 38616,
+      "total_vertices": 73028
     }
   }
 }

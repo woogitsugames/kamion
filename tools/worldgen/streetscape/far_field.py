@@ -87,6 +87,7 @@ FAR_MAX_TOP_SLOPE = 0.26
 # crossed-card edge tree impostors (packed in forest_edge_mixed_far_atlas -> 0 extra draw calls). WORKING_VALUE.
 FAR_EDGE_WOBBLE_M = 5.0
 FAR_SKIRT_MAX_D_M = 2200.0
+LOW_HV_MAX_D_M = 2000.0   # wave 12: Low draws HV towers/spans up to 2.0 km (was 2.2 km) - keeps C Low <= 30k tris with 3 lacing panels
 FAR_IMPOSTOR_MAX_D_M = 1500.0
 # ADR 0334 r4 (fields4-s24, critic s24 wave 11 pt 10 "prosta krawędź lasu w tle"): the far stand edge read as one
 # smooth band - the +-30 % crown wave is rounded off by the slope limit, the curtain ends at full height where the
@@ -236,6 +237,19 @@ def haze_band(d_true: float) -> str:
         if d_true >= d0:
             suf = sx
     return suf
+
+
+def strip_curtain_mat(stand_mat: str, pts_eff: np.ndarray, half: float = 1024.0) -> str:
+    """far-forest-look-s24 (ADR 0330 addendum 3): haze band of ONE curtain strip by its own median true distance.
+    A stand was banded by its centroid only, so the 3-4 km back edge of a stand reaching to the border kept the near
+    ("") slot - sharp orange trunks and full-contrast crowns at true kilometres. All bands are slots of the same far atlas
+    and submesh, so per-strip banding costs no draw call, vertex or texture. Mix stays the stand's."""
+    if not stand_mat.startswith("forest_edge_") or len(pts_eff) == 0:
+        return stand_mat
+    rest = stand_mat[len("forest_edge_"):]
+    mix = rest.split("_", 1)[0]
+    _, _, d_true = unforeshorten_xy(pts_eff[:, 0], pts_eff[:, 1], half)
+    return f"forest_edge_{mix}{haze_band(float(np.median(d_true)))}"
 
 
 class RingChm:
@@ -1237,7 +1251,12 @@ class SectorBuilder:
         UV = np.vstack([uv_bot, uv_top])
         # ADR 0330 addendum: extra foreshortened distance [m] in TEXCOORD_1.x for shader KamionFogTauExtra
         d_extra = extra_dist_eff(pts_xy[:, 0], pts_xy[:, 1], half)
-        uv1_row = np.column_stack([d_extra, np.zeros(k)])
+        # far-forest-look-s24 (ADR 0330 addendum 3): TEXCOORD_1.y = column height [m], the same on the bottom and top
+        # vertex of a column. Kamion/Vegetation (_HLOD_EDGE) interpolates (v * H, H) and divides per pixel, so v follows
+        # the column height linearly whatever the quad's triangle split: no diagonal crease / sheared crowns where
+        # neighbouring columns differ in height (affine v in two triangles of a trapezoid). 0 = plain v (old data).
+        col_h = np.maximum(np.asarray(z_top, dtype=np.float64) - np.asarray(z_bot, dtype=np.float64), 0.05)
+        uv1_row = np.column_stack([d_extra, col_h])
         UV1 = np.vstack([uv1_row, uv1_row])
 
         base = self.count1
@@ -1583,7 +1602,8 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
         if np.hypot(*(P[0] - P[-1])) > 2.0:
             ht = ht * _smooth_end_taper(s, total_s)
         ht = _limit_top_slope(P, zg - 0.5, ht, max_slope=FAR_MAX_TOP_SLOPE, min_h=3.0)
-        sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0, **curtain)
+        run_mat = strip_curtain_mat(look["mat"], P, half)   # far-forest-look-s24: band per strip
+        sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0, **{**curtain, "mat": run_mat})
 
         # ADR 0330 r2 (High tier): patchy undulating undergrowth / shrub mantle skirt in front of outer stand edge
         d_min_run = float(d_true.min())
@@ -1621,7 +1641,7 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
                 sub_sink = np.array([0.35 + 0.50 * FH._vnoise2(x, y, 14.0, "ff_skz") for x, y in zip(sub_er, sub_nr)])
                 sub_h = _limit_top_slope(sub_p, sub_zg - sub_sink, sub_h, max_slope=0.30, min_h=2.0)
                 sec.add_curtain1(sub_p, sub_zg - sub_sink, sub_zg + sub_h, face_sign=1.0,
-                                 mat=look["mat"], u_shift=look["u_shift"] + 0.37, u_scale=look["u_scale"],
+                                 mat=run_mat, u_shift=look["u_shift"] + 0.37, u_scale=look["u_scale"],
                                  half=half, v_bot=1.0, v_top=vm_edge)
                 i0 = i1 + 1
 
@@ -1779,7 +1799,8 @@ def _stand_geometry(sec: SectorBuilder, poly_eff, mix: str, elev: BorderElevatio
                                             ring_chm=ring_chm, height_mult=stand_scale * 1.02,
                                             region_id=region_id) * end_taper
                     ht = _limit_top_slope(P, zg - 0.5, ht, max_slope=FAR_MAX_TOP_SLOPE, min_h=3.0)
-                    sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0, **curtain)
+                    sec.add_curtain1(P, zg - 0.5, zg + ht, face_sign=1.0,
+                                     **{**curtain, "mat": strip_curtain_mat(look["mat"], P, half)})
 
     # 3. Low flat under-canopy shadow base tucked 10 m inside (ADR 0330 r2: capped <= 3.6 m so it never reads as a
     #    green conical hill between curtains)
@@ -2247,7 +2268,7 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
     e_raw, n_raw = float(py["e"]), float(py["n"])
     h_raw = max(float(py.get("h") or 26.0), 22.0)
     ce, cn, d_raw, _ = foreshorten_point(e_raw, n_raw, half)
-    if tier == "Low" and d_raw > 2200.0:
+    if tier == "Low" and d_raw > LOW_HV_MAX_D_M:
         return
     _, s_h = foreshorten_scales(d_raw)
     sec = sectors[sector_of(ce, cn, half)]
@@ -2275,8 +2296,9 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
             [ce - ux * w + vx * w, cn - uy * w + vy * w, z],
         ]
 
-    def arm_members(link):
-        for frac, _ in _arm_levels():
+    def arm_members(link, first_only=False):
+        # wave 12 (Low budget 30k): at Low only the arm level that carries the (single) conductor pair is drawn
+        for frac, _ in (_arm_levels()[:1] if first_only else _arm_levels()):
             za = z_ref + h_eff * frac
             sp = arm_l * scale
             left = [ce - vx * sp, cn - vy * sp, za]
@@ -2319,7 +2341,7 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
                 a, b = (k, q) if (panel + k) % 2 == 0 else (q, k)
                 ribbon(lower[a], upper[b], 0.075 * scale)
         if arms:
-            arm_members(ribbon)
+            arm_members(ribbon, first_only=True)
         return
 
     # Open lattice, including in Low: solid crossed fins read as grey cones
@@ -2483,8 +2505,10 @@ def power_plan(gis: dict, half: float = 1024.0, region_id: str | None = None) ->
             ka, kb = key(a), key(b)
             if ka != kb and math.hypot(a["e"] - b["e"], a["n"] - b["n"]) >= 5.0:
                 spans.append((supports[ka], supports[kb]))
-    draw = [s for s in supports.values() if not s["seam"]]
     wired = {id(x) for ab in spans for x in ab}
+    # wave 12: a support whose only neighbours are < 5 m away has no span - drawing it would be an unwired tower
+    draw = [s for s in supports.values() if not s["seam"] and id(s) in wired]
+    stats["pylons_dropped_unwired"] = sum(1 for s in supports.values() if not s["seam"] and id(s) not in wired)
     # MV (High only, <= MV_FAR_MAX_M out): poles at the BDOT10k "słup energetyczny" left over by the HV lines
     poles_left = [p for p in towers if id(p) not in used and p.get("kind") == "słup energetyczny"]
     pole_xy = np.array([[p["e"], p["n"]] for p in poles_left], float).reshape(-1, 2)
@@ -2572,7 +2596,7 @@ def _add_span(sectors: dict[str, SectorBuilder], a: dict, b: dict, elev: BorderE
     ends = []
     for s in (a, b):
         ce, cn, d_raw, _ = foreshorten_point(float(s["e"]), float(s["n"]), half)
-        if tier == "Low" and (mv or d_raw > 2200.0):
+        if tier == "Low" and (mv or d_raw > LOW_HV_MAX_D_M):
             return
         _, s_h = foreshorten_scales(d_raw)
         if mv:
@@ -2600,7 +2624,7 @@ def _add_span(sectors: dict[str, SectorBuilder], a: dict, b: dict, elev: BorderE
         nseg = min(max(int(math.ceil(L / 20.0)), 3), 5)
     elif tier == "Low":
         hang = [(sx * arm_l, levels[0][1]) for sx in (-1.0, 1.0)]
-        nseg = min(max(int(math.ceil(L / 40.0)), 3), 8)
+        nseg = min(max(int(math.ceil(L / 90.0)), 3), 4)   # wave 12: Low budget 30k (was L/40, cap 8: C Low 32351 tris)
     else:
         hang = [(sx * arm_l, zf) for _, zf in levels for sx in (-1.0, 1.0)] + [(0.0, 1.0)]
         nseg = min(max(int(math.ceil(L / 15.0)), 6), 24)

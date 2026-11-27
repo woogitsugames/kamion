@@ -1174,3 +1174,15 @@ overrides:
     confidence: medium
     verify: qa/seams.py knyszyn,knyszyn-w
     set: {center_offset: 0.25}
+  # ADR 0238 d. props-fix-s24 (+ ADR 0162 dopisek props-fix): zagrody dostaja dach LoD2, sciany i cokol, a przystanki wiejskie
+  # stalowa wiate z nieprzezroczysta sciana tylna. Opt-in per region (Bialystok bit-identyczny).
+  - id: rural-outbuildings-shelters-props-fix-s24
+    kind: facade_rules
+    rural_outbuildings: true
+    rural_shelters: true
+    reason: >-
+      Wlaczenie props-fix-s24 w kaflu wiejskim (wzor dk65-07): budynki gospodarcze BDOT10k z dachem LoD2 zamiast plaskich
+      bialych pudel, wiata wiejska zamiast szklanej wiaty BKM. ADR 0238 dopisek d. i ADR 0162 dopisek props-fix.
+      WORKING_VALUE (paleta i wymiary bez pomiaru zagrod).
+    confidence: medium
+    verify: visual-qa High clear (kamery trasy kafla), budzet trojkatow kafla

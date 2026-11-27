@@ -142,6 +142,49 @@ ROOF_LOD1 = {"roof_karp_red": "roof_tiles_red"}
 ROOF_LOD1_SMALL_TOWN = {"roof_karp_red": "roof_tiles_red", "roof_tiles_old": "roof_tiles_red"}
 
 
+# weathering-s24 (ADR 0238 / 0348 addendum, opt-in per region: `kind: facade_rules`, `roof_weathering: true`): roof
+# covering COLOR_0 for Kamion/World PBR _ROOF_WEATHER - dirt runs down the slope, moss / lichen at the eave and the
+# ridge, odd (soaked / replaced) tiles. The age class follows the rule of the plots (plots.age_class: BDOT10k has no
+# year of construction; footprint + storeys) and the covering itself (old hand-laid tile, shingles, cement tile of the
+# old Podlasie houses = old; a pressed metal / sheet roof is younger unless it covers a farm outbuilding).
+# (age lo, age hi), moss: WORKING_VALUE (no survey; refs Data/raw/refs/posesje, tykocin-rynek-commons: old tile roofs
+# carry green-grey moss along the eave and in the laps of the north slope, 1990s+ roofs only a dust film).
+ROOF_WEATHER_AGE = {"old": (0.70, 1.00), "prl": (0.40, 0.72), "new": (0.15, 0.35)}
+ROOF_WEATHER_MOSS = {"old": 1.0, "prl": 0.60, "new": 0.20}
+ROOF_WEATHER_OLD_MATS = ("roof_tiles_old", "roof_shingles_grey", "roof_cement_grey")
+ROOF_WEATHER_YOUNG_MATS = ("roof_metal_", "roof_sheet_")
+
+
+def roof_age_class(b, key, rmat, wooden=False, rural_shed=False):
+    """'old' / 'prl' / 'new' of a pitched roof (weathering-s24; see ROOF_WEATHER_AGE)."""
+    if rmat in ROOF_WEATHER_OLD_MATS or wooden:
+        return "old"
+    if rural_shed:
+        return "old" if FK.hfloat(key, "rwshed") < 0.6 else "prl"
+    if rmat.startswith(ROOF_WEATHER_YOUNG_MATS):
+        return "new" if FK.hfloat(key, "rwmetal") < 0.7 else "prl"
+    p = b["props"]
+    st = p.get("storeys") or 1
+    h = p.get("height_m") or 6.0
+    area = b["poly"].area
+    base = "old" if (area < 95.0 and st <= 1) else "new" if (area >= 150.0 or (st >= 2 and h >= 8.5 and area >= 120.0)) else "prl"
+    x = FK.hfloat(key, "rwage")
+    if x < 0.12:
+        return {"old": "prl", "prl": "old", "new": "prl"}[base]
+    if x > 0.90:
+        return {"old": "prl", "prl": "new", "new": "new"}[base]
+    return base
+
+
+def roof_weather(b, key, rmat, wooden=False, rural_shed=False):
+    """(age 0..1, moss 0..1, seed 0..1) of a pitched roof for roofs.build(weather=...), deterministic per building."""
+    cls = roof_age_class(b, key, rmat, wooden, rural_shed)
+    lo, hi = ROOF_WEATHER_AGE[cls]
+    age = lo + (hi - lo) * FK.hfloat(key, "rwa")
+    moss = ROOF_WEATHER_MOSS[cls] * (0.6 + 0.4 * FK.hfloat(key, "rwm"))
+    return round(age, 4), round(moss, 4), round(FK.hfloat(key, "rws"), 4)
+
+
 def roof_variant(key, material, wooden, small_town=False):
     """The covering of a rule-chosen tile roof (see KARP_SHARE); other materials pass through."""
     if material != "roof_tiles_red":
@@ -1498,6 +1541,9 @@ def load(fc, origin, overrides, hero=None):
             if (b["typ"] == "shed" and not b["ovr"].get("typology") and b["poly"].area >= RURAL_SHED_MIN_AREA_M2
                     and b["props"].get("function") not in RURAL_SHED_NO_ROOF_FUNCS):
                 b["rural_outbuilding"] = True
+    if any(o.get("kind") == "facade_rules" and o.get("roof_weathering") for o in overrides):
+        for b in out:                             # weathering-s24, opt-in per region (roof COLOR_0)
+            b["roof_weather"] = True
     if small_town:                                # ADR 0336, opt-in per region
         for b in out:
             b["small_town"] = True
@@ -1792,6 +1838,7 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     any_st_roofs = any(b.get("small_town") and b.get("small_town_roofs", True) for b in blds)
     st_stats = {"buildings": 0, "stone_plinths": 0, "dormers": 0, "window_trim_tris": 0,
                 "joinery_white": 0, "joinery_brown": 0, "roof_materials": {}}
+    rw_stats = {"old": 0, "prl": 0, "new": 0}         # weathering-s24: roof age classes (report only when opted in)
     house_pal = house_palette(blds, roofs=SMALL_TOWN_ROOFS if any_st_roofs else None)
     Acc.runoff_tris = {"with_uv1": 0, "without_uv1": 0}
     signs = []
@@ -2448,7 +2495,10 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
                              fascia_mat=(wall if wooden else "hall_flashing" if rmat.startswith("roof_metal")
                                          else "soffit_boards"),
                              step_mat=wall,       # ADR 0107: wall faces closing the steps of a MultiRoof
-                             low_mat=roof_l1_map.get(rmat))
+                             low_mat=roof_l1_map.get(rmat),
+                             weather=(roof_weather(b, key, rmat, wooden, rural_shed) if b.get("roof_weather") else None))
+            if b.get("roof_weather"):
+                rw_stats[roof_age_class(b, key, rmat, wooden, rural_shed)] += 1
             # ADR 0097 (review 0094 P2-c "wiatrownica biała vs szara"): with a tile roof the fascia / verge boards are
             # the soffit boarding material, so main roof and wing show one board colour (was white reveal_plaster
             # fascia next to the grey soffit_boards under the short wing overhang)
@@ -2562,6 +2612,8 @@ def build(buf, blds, hf, zsample, yard_union, roads_poly, report, sign_out=None,
     if any_st:
         st_stats["roof_materials"] = dict(sorted(st_stats["roof_materials"].items()))
         report["small_town"] = st_stats
+    if any(b.get("roof_weather") for b in blds):
+        report["roof_weathering"] = rw_stats
     if sign_out is not None:
         sign_out.extend(signs)
     return all_docks

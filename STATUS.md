@@ -31,32 +31,19 @@
 - NASTEPNY KROK: review + visual-critic (lider); scalenie z fala 13 przez lidera; potem przebudowa 42 kafli wiejskich + far_field.
 
 # STATUS bank-smear-s24 (smuga na skarpie tykocin route_s0160, ADR 0311 dopisek)
+# STATUS far-forest-look-s24 (daleki plan lasu: smugi kurtyn, perspektywa powietrzna, widok z wysoka; dopiski ADR 0330/0354)
 
-- Worktree `agent-a13a4ba7b73214d27`, galaz `worktree-agent-a13a4ba7b73214d27`; prywatna kopia `Data/raw/derived/tykocin` (reszta derived = junction do main), Library z win-build (Win64).
-- [krok 1] Hook diag `KAMION_QA_DIAG`: `colorby:renderer|material|slot|prim|vcol|vcolb|nrm|wpos`, `mat:<prop>=v`, `noshadows` (VisualQaRunner + Editor/VisualQA/DiagPrimitive.shader).
-- [krok 2] Smuga = `terrain_band`/`M_terrain_grass` (WorldPBR) widziany stycznie (skarpa 33 deg, slad tekstury 15-100x anizotropowy); nie rzut z normalnych (WorldSurface bez zmian).
-- [krok 3] Poprawka: Var trawy z mipmapami (WorldPbrMaterials) + WorldPBR izotropowa probka/kolor darni na stoku przy skrajnej anizotropii. DC bez zmian (780). EditMode 39/39 (w tym GrassVarMipsTests), pytest GIS (shader/materials) 58 passed.
-- Dowody: `artifacts/bank-smear-s24/sbs/` (przed|po, diag). Otwarte: cienka linia sylwetki skarpy zostaje (geometria/karty trawy - lider).
-- NASTEPNY KROK: review + scalenie przez lidera; po scaleniu reimport kafli (tekstura Var trawy zmienia sig importu): `pwsh scripts/import-region.ps1 -Region <id> -BuildTarget Win64`.
-
-# STATUS hv-wires-s24 (przewody WN, CRITIC s24 fala 11 pkt 1)
-
-- [krok 1] Diagnoza: pylony na dk65-07 owner02-seam-n-cab to pylony FAR FIELD (kamera n=1080 > 1024, poza kaflem; dk65-08 nie wczytany).
-  far_field.py dokleja kratownice 27 m co 210 m wzdluz WSZYSTKICH linii z pierscienia (BDOT OT_SULN_L dowolnego napiecia + OSM line/minor_line)
-  i nigdy nie rysuje przewodow; BDOT "slup energetyczny" (glownie slupy SN) tez jako kratownica 26 m. dk65-07 far_field_qa: 307 pylonow, 0 przewodow.
-  Kolor COL_PYLON_STEEL (0.27, 0.285, 0.30) liniowo = ~2.3x jasniej niz pylon_steel w kaflu -> w sloncu bialy.
-- NASTEPNY KROK: audyt wszystkich kafli `uv run --project tools/worldgen python tools/worldgen/qa/hv_wires_audit.py`
-- [krok 2] In-tile: power_supports bierze zmapowane wieze na linii (rzut) -> 31/298 -> 0/308 bez przesla; BDOT slup na linii WN = pylon.
-- [krok 3] Far field: wieze tylko na liniach WN (BDOT wysokiego / OSM >=60kV), przesla z zawisem jako wstegi submesh 0, szew = podpora kafla,
-  ocynk z rozrzutem, maszty bez trawers. dk65-07: 307 -> 31 wiez + 5 masztow, 30 przesel, 0 bez przewodow. ADR 0351, testy tests/gis/test_hv_wires_0351.py.
-- NASTEPNY KROK: import Win64 dk65-07 + knyszyn-w (slot unity) i VQA -> artifacts/hv-wires-s24/
-- [krok 4] far field knyszyn-w: 328 -> 44 wiez + 4 maszty, 44 przesla, 2 podpory szwu (= podpory kafla 737.9/792.2,1024). Kamery hv0351_* dodane.
-  pytest (streetscape, world_v33, far_field*, pylons, hv_wires_0351, qa_tools): 405 passed. Import+VQA czeka na slot unity (skrypt w scratchpadzie).
-- NASTEPNY KROK: po VQA after -> render before (podmiana far_field.glb z main), porownanie, visual-critic
-- [krok 5] Daleki plan: linie SN do 600 m (slupy betonowe + 3 przewody, High). Import Win64 + VQA High-clear dk65-07 i knyszyn-w
-  przed|po: artifacts/hv-wires-s24/{vqa-before,vqa-after,cmp}/ (kopia w main artifacts/hv-wires-s24). knyszyn-w hv0351-seam-n:
-  przewody WN ciagle kafel -> szew -> daleki plan (przed: konczyly sie na szwie). dk65-07 owner02: zamiast 6 bialych kratownic
-  bez przewodow - linia SN dk65-08 (slupy + przewody). Audyt: in-tile wieze bez przesla 31 -> 0; far 17 110 -> 0 w przebudowanych.
-- DO ZROBIENIA (lider): far_field.py --region <id> dla wszystkich 54 kafli (~3,5 min/kafel, ekstrakcja GIS schematu 14);
-  build_world dla 26 kafli z liniami WN/wiezami (lista w raporcie); ocena visual-critic (subagent nie tworzy subagentow).
-- NASTEPNY KROK: brak - czeka na review/scalenie lidera. Nie scalone.
+- Worktree `agent-a3176de6fa331c9d3`, galaz `worktree-agent-a3176de6fa331c9d3`. Nie scalac (lider).
+- Srodowisko: Library + sceny kafli skopiowane z win-build; `Data/raw/*` = junction do main, `Data/raw/derived/*` junction
+  poza prywatnymi kopiami `dw671-tykocin-03`, `knyszyn-w` (w nich nowy far_field.glb). Junctiony odpinac `cmd /c rmdir`.
+- [krok 0-1] Probe (`Editor/VisualQA/FarFieldProbe.cs`): import win-build (zrodlo obrazow horizon-ring-s24) NIEAKTUALNY —
+  atlas 1024x2048, geometria sprzed r2 (shear v do 66 deg), las 03 edge-north 144 m / 9,6 deg. Aktualne derived: 385+ m, 2,1 deg.
+- [krok 2] Poprawki: (a) Vegetation.shader `_HLOD_EDGE` v rzutowe (v*H, H w zw uv; H = TEXCOORD1.y); (b) far_field.py:
+  TEXCOORD_1.y = wysokosc kolumny + pasmo zamglenia per pas; (c) RegionImporter.LoadForEdge odswieza material `*_far_atlas`
+  (wczesniej stary atlas zostawal po przebudowie krawedzi).
+- [krok 3] Render before|after (03 + knyszyn-w, High clear/overcast, -Neighbours auto, diag, zoom) — drawsEst/trisK identyczne
+  na 42 kamerach; A/B mgly (hazeGroundFactor=10) potwierdza mgle na kurtynach. EditMode 1448/0/152. pytest far_field 147/1
+  (fail istniejacy: sha glb C w main). Dopiski ADR 0330 (dopisek 3) i 0354. KONIEC zadania agenta.
+- NASTEPNY KROK (lider): review + scalenie; potem `far_field.py --region <id>` dla wszystkich kafli i RebuildEdgeBatch
+  (`Unity -batchmode -executeMethod Game.World.Import.WorldEdgeBuilder.RebuildEdgeBatch -region <id> -buildTarget Win64`)
+  w win-build; ponowny render dowodow ADR 0354.

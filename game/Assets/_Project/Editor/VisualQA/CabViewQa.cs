@@ -36,7 +36,7 @@ namespace Game.Editor.VisualQA
             if (string.IsNullOrEmpty(spec)) return;
             var p = spec.Split(',').Select(s => double.Parse(s.Trim(), Ci)).ToArray();
             if (p.Length != 3) throw new ArgumentException("-qaTruckPose E,N,headingDeg");
-            var root = UnityEngine.Object.FindAnyObjectByType<Game.World.WorldRegionRoot>();
+            var root = WorldNeighbourQa.StartRoot();   // not a QA neighbour's root (ADR 0353 auto neighbours)
             var tractor = UnityEngine.Object.FindObjectsByType<VehicleBody>(FindObjectsSortMode.None).FirstOrDefault();
             if (root == null || tractor == null) throw new InvalidOperationException("-qaTruckPose needs a world scene with a tractor");
             var trailer = UnityEngine.Object.FindObjectsByType<TrailerBody>(FindObjectsSortMode.None).FirstOrDefault();

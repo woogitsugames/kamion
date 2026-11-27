@@ -140,6 +140,7 @@ namespace Game.World.Import
             if (def.Get("vertex_grime") != null) colors = true;                          // _VERTEX_GRIME (ADR 0123)
             if (def.Get("bronze_patina") != null) colors = true;                         // _BRONZE_PATINA (ADR 0331)
             if (def.Get("facade_tint") is bool ft && ft) colors = true;                  // _FACADE_TINT (ADR 0348)
+            if (def.Get("roof_weather") is List<object>) colors = true;                  // _ROOF_WEATHER (weathering-s24)
             if (id == "sidewalk_paving" || id == "sidewalk_paving_red" || id == "sidewalk_slabs" || def.Get("paving_variation") != null) uv1 = true; // ADR 0349: kerb/edge distance
             if (def.Get("tactile") != null) uv0 = true;                                  // ADR 0349: tactile warning strip metres
         }
@@ -471,6 +472,18 @@ namespace Game.World.Import
                 mat.SetFloat("_SplashHeight", splashH ? (float)Num(def.Get("splash_h")) : id == "hall_plinth" ? 0.35f : 0.6f);
             }
             if (def.Get("facade_tint") is bool facadeTint && facadeTint) mat.EnableKeyword("_FACADE_TINT"); // ADR 0348
+            // weathering-s24: ground-contact band of the splash zone ("splash_band": [height m, strength, spatter]);
+            // read by _SPLASH only (no keyword of its own, w = 1 on)
+            if (def.Get("splash_band") is List<object> sband && sband.Count >= 3)
+                mat.SetVector("_SplashBand", new Vector4((float)Num(sband[0]), (float)Num(sband[1]), (float)Num(sband[2]), 1f));
+            // weathering-s24: roof covering weathering from COLOR_0 ("roof_weather": [tile width m, course m, half-offset
+            // 0/1, odd-tile strength, moss, dirt runs, lichen]); a mesh without COLOR_0 bakes a = 0 -> no-op
+            if (def.Get("roof_weather") is List<object> rweather && rweather.Count >= 7)
+            {
+                mat.EnableKeyword("_ROOF_WEATHER");
+                mat.SetVector("_RoofTile", new Vector4((float)Num(rweather[0]), (float)Num(rweather[1]), (float)Num(rweather[2]), (float)Num(rweather[3])));
+                mat.SetVector("_RoofWeather", new Vector4((float)Num(rweather[4]), (float)Num(rweather[5]), (float)Num(rweather[6]), 0f));
+            }
             if (Runoff(def)) mat.SetFloat("_MacroStrength", 0.12f);   // panel-to-panel tone drift of a 600 m facade (0071)
             // ADR 0091: manifest "macro": [size m, strength] overrides the macro tone drift (brick: firing lots)
             if (def.Get("macro") is List<object> mc && mc.Count >= 2)

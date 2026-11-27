@@ -2,9 +2,42 @@
  "schema": "truck-sim-pl/place-cameras/1",
  "provenance": "authored_override (ADR 0316): control cameras at named places of Tykocin. Position region-local E/N (origin 751371, 600319), height = terrain (NMT) + eye_m, heading_deg compass, fov_deg vertical, pitch_deg up. Positions from the road graph (Plac Stefana Czarnieckiego, +-5 m). No owner photo.",
  "cameras": [
-  {"id": "look_tykocin_plaza_photo_0325", "pos_en": [424.0, -98.5], "heading_deg": 48, "eye_m": 1.6, "fov_deg": 62, "pitch_deg": -9, "note": "ADR 0325 QA: pedestrian eye at the south-west of the plaza looking NE across the sett lattice to the monument (pair = Commons 'Mglisty poranek na placu Czarnieckiego w Tykocinie z pomnikiem')"},
-  {"id": "look_tykocin_plaza_setts_0325", "pos_en": [446.0, -95.0], "heading_deg": 320, "eye_m": 1.6, "fov_deg": 50, "pitch_deg": -32, "note": "ADR 0325 QA: close view of the granite fields and red bands 2-6 m from the eye"},
-  {"id": "look_tykocin_plaza_cab_0325", "pos_en": [452.0, -107.0], "heading_deg": 322, "eye_m": 2.5, "fov_deg": 60, "pitch_deg": -3, "note": "ADR 0325 QA: driver eye height on the carriageway south of the plaza looking NW across it"},
+  {
+   "id": "look_tykocin_plaza_photo_0325",
+   "pos_en": [
+    424.0,
+    -98.5
+   ],
+   "heading_deg": 48,
+   "eye_m": 1.6,
+   "fov_deg": 62,
+   "pitch_deg": -9,
+   "note": "ADR 0325 QA: pedestrian eye at the south-west of the plaza looking NE across the sett lattice to the monument (pair = Commons 'Mglisty poranek na placu Czarnieckiego w Tykocinie z pomnikiem')"
+  },
+  {
+   "id": "look_tykocin_plaza_setts_0325",
+   "pos_en": [
+    446.0,
+    -95.0
+   ],
+   "heading_deg": 320,
+   "eye_m": 1.6,
+   "fov_deg": 50,
+   "pitch_deg": -32,
+   "note": "ADR 0325 QA: close view of the granite fields and red bands 2-6 m from the eye"
+  },
+  {
+   "id": "look_tykocin_plaza_cab_0325",
+   "pos_en": [
+    452.0,
+    -107.0
+   ],
+   "heading_deg": 322,
+   "eye_m": 2.5,
+   "fov_deg": 60,
+   "pitch_deg": -3,
+   "note": "ADR 0325 QA: driver eye height on the carriageway south of the plaza looking NW across it"
+  },
   {
    "id": "look_tykocin_rynek_n",
    "pos_en": [
@@ -232,6 +265,42 @@
    "fov_deg": 60,
    "pitch_deg": -8,
    "note": "ADR 0323 QA (road surface): field-stone cobbles (OSM unhewn_cobblestone) of ul. Kozia, pedestrian eye"
+  },
+  {
+   "id": "wx_zlota_fence",
+   "pos_en": [
+    305.2,
+    -115.3
+   ],
+   "heading_deg": 320.0,
+   "eye_m": 1.6,
+   "fov_deg": 55.0,
+   "pitch_deg": -4.0,
+   "note": "weathering-s24 (ADR 0238/0348 addendum): roof weathering, block fences, wall-ground splash band"
+  },
+  {
+   "id": "wx_zlota_plinth",
+   "pos_en": [
+    311.0,
+    -121.0
+   ],
+   "heading_deg": 240.0,
+   "eye_m": 1.6,
+   "fov_deg": 50.0,
+   "pitch_deg": -5.0,
+   "note": "weathering-s24 (ADR 0238/0348 addendum): roof weathering, block fences, wall-ground splash band"
+  },
+  {
+   "id": "wx_roofs_low",
+   "pos_en": [
+    318.0,
+    -123.0
+   ],
+   "heading_deg": 300.0,
+   "eye_m": 9.0,
+   "fov_deg": 55.0,
+   "pitch_deg": -8.0,
+   "note": "weathering-s24 (ADR 0238/0348 addendum): roof weathering, block fences, wall-ground splash band"
   }
  ]
 }

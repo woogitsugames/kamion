@@ -755,6 +755,42 @@ M["balcony_slab"]["sky_occ"] = [0.0, 0.0]
 for _k in ("roof_tiles_red", "roof_tiles_brown", "roof_karp_red", "roof_cement_grey"):
     M[_k]["macro"] = [7.0, 0.16]
 
+# weathering-s24 (ADR 0238 / 0348 addendum; critic s24 wave 11 "dachy zbyt czyste"): `roof_weather` = Kamion/World PBR
+# _ROOF_WEATHER on the pitched coverings: [tile width m, course m, half-offset courses 0/1, odd-tile strength, moss,
+# dirt runs, lichen]. The tile grid is the grid of the set (art-source/world/materials/_src/sets_roof.py: S-tile 21 rolls
+# x 12 courses, karpiowka 23 x 28 half-offset, zakladkowa 18 x 12 half-offset, all on 4.2 m), so an odd tile is a whole
+# tile. Metal / sheet: no tile grid, little moss (a film of dust and runs). The weathering itself is driven by COLOR_0
+# of the covering, written only in regions that opt in (`facade_rules: roof_weathering: true`); everywhere else the
+# keyword runs on a = 0 and changes nothing. Strengths WORKING_VALUE (refs Data/raw/refs/posesje, tykocin-rynek-commons).
+ROOF_WEATHER = {
+    "roof_tiles_red": [0.2, 0.35, 0, 1.0, 1.0, 1.0, 1.0],
+    "roof_tiles_old": [0.2, 0.35, 0, 0.7, 0.8, 0.9, 0.8],       # the set already carries per-tile tone and moss
+    "roof_karp_red": [4.2 / 23, 4.2 / 28, 1, 1.0, 1.0, 1.0, 1.0],
+    "roof_tiles_brown": [4.2 / 18, 0.35, 1, 0.6, 1.0, 1.0, 1.0],   # factory tone: fewer odd tiles
+    "roof_cement_grey": [4.2 / 18, 0.35, 1, 0.8, 1.2, 1.0, 1.2],
+    "roof_metal_graphite": [0.0, 0.0, 0, 0.0, 0.15, 0.8, 0.0],
+    "roof_sheet_grey": [0.0, 0.0, 0, 0.0, 0.25, 1.0, 0.3],
+    "roof_shingles_grey": [0.0, 0.0, 0, 0.0, 1.2, 0.8, 1.0],
+}
+for _k, _v in ROOF_WEATHER.items():
+    M[_k]["roof_weather"] = [round(float(x), 5) for x in _v]
+
+# weathering-s24 (critic s24 wave 11 "zużycie i osadzenie 5/10: cokoły bez rozprysków, brak ciemniejszego pasa na styku
+# ściana-grunt"): `splash_band` = [height m, strength, spatter] of the ground-contact band of Kamion/World PBR _SPLASH -
+# a darker, browner band with a ragged top over the last 0.2-0.4 m above the terrain (UV0.v of plinths = metres above
+# the terrain at the wall), soil specks thrown up by the rain (Medium+) and a damp line in the last 7 cm. Material only
+# (no mesh change, +0 draws). WORKING_VALUE.
+SPLASH_BAND = {"plinth_dark": [0.32, 0.85, 1.0], "plinth_grey": [0.32, 0.85, 1.0], "fieldstone_plinth": [0.28, 0.7, 0.8],
+               "hall_plinth": [0.25, 0.7, 0.8], "brick_red": [0.3, 0.6, 0.8], "panel_concrete": [0.3, 0.6, 0.8]}
+for _k, _v in SPLASH_BAND.items():
+    M[_k]["splash_band"] = _v
+M["fieldstone_plinth"].setdefault("splash_h", 0.5)      # _SPLASH on (the band lives in it)
+for _k, _v in M.items():
+    if (_k.startswith(("plaster_", "log_wall_", "wood_planks")) and "__" not in _k and "texture_set" in _v
+            and "splash_band" not in _v):
+        _v["splash_band"] = [0.3, 0.75, 1.0]
+        _v.setdefault("splash_h", 1.2 if _k.startswith("plaster_") else 0.5)
+
 
 # ADR 0114 (zabudowa r7, house plots; additive block):
 # - `plot_kit`: ONE alpha-clip atlas (streetscape.plot_kit, colours in the texture, sRGB) for every fence / gate /
