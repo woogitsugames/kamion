@@ -1447,14 +1447,14 @@ def build_dash_items():
     set_attr_w(vest, "tint_add", lambda co, nr: -0.07 * (1.0 - max(0.0, nr.z))
                + 0.04 * (vnoise(co.x * 18.0, co.y * 18.0, 7.0) - 0.5), add=False)
 
-    # The tray grips the tapered mug on its side. The lid stays behind its lip, below the lower windscreen sightline.
-    mx, my = 0.777, 1.162
-    angle = math.radians(-8.0)
+    # The tapered mug rests on its side near the lip closest to the driver, low in the windscreen silhouette.
+    mx, my = 0.777, 1.116
+    angle = math.radians(-4.0)
     axis = V(math.cos(angle), math.sin(angle), 0.0)
     across = V(-axis.y, axis.x, 0.0)
     # (axial distance, radius) in metres. Narrow dark foot, enamel body, screw-lid joint and rounded top.
-    profile = [(-0.082, 0.021), (-0.078, 0.024), (-0.072, 0.025), (0.048, 0.029),
-               (0.051, 0.027), (0.055, 0.030), (0.072, 0.030), (0.079, 0.026)]
+    profile = [(-0.082, 0.018), (-0.078, 0.021), (-0.072, 0.022), (0.048, 0.023),
+               (0.051, 0.021), (0.055, 0.024), (0.072, 0.024), (0.079, 0.021)]
     if G.STATE["q"] <= 0.4:
         profile = [profile[i] for i in (0, 2, 4, 5, 7)]
     sides = G.Q(20, 6)

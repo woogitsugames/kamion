@@ -22,3 +22,5 @@
 - Następny krok: `pwsh artifacts/codex-dash-items-s24/qa.ps1 before`
 - [krok 2] Generator tworzy złożoną kamizelkę z dwiema taśmami i niski kubek w prawej tacce na istniejących slotach Fabric/Plastic. Wyrób obok CMR i tachografu, z dala od zegarów; czeka na pomiar.
 - Następny krok: `pwsh artifacts/codex-dash-items-s24/export.ps1`
+- [krok 3] Obniżono i cofnięto kubek po próbie promieniami. Finalna geometria zakryła 0/99 540 wcześniej wolnych promieni dla kamizelki i 0/81 072 dla kubka (przednia szyba, próbki z headboxu ±20 mm).
+- Następny krok po zakończeniu eksportu i QA PRZED: `pwsh artifacts/codex-dash-items-s24/install-export.ps1`
