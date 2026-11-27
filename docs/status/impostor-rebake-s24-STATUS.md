@@ -45,3 +45,9 @@
   Diagnostyka `impab.ps1` (rq_card=0.2, impostory blisko, stare vs nowe atlasy): `sbs-impab/` — nowe wyraźnie ostrzejsze.
   Przy normalnym High (impostor > 90 m) zysk subtelny (impostor 130-220 px wysokości przy 1080p).
 - NASTĘPNY KROK: EditMode `editmode2` (trwa), kopia dowodów do main, raport.
+- [krok 10] EditMode Win64 `editmode2` (finalne atlasy): 1632 / 1513 pass / 1 fail / 118 skip; jedyny fail jak w kroku 6
+  (StartClearanceTests dk65-07 — stara scena z win-build, środowisko). ImpostorTrimTests 5/5 (w tym ShippedImpostorAtlases
+  na 4096×1024), testy roślinności 24/24. Dowody skopiowane do main `artifacts/impostor-rebake-s24/`. KONIEC zadania.
+- NASTĘPNY KROK (lider): review + scalenie gałęzi `worktree-agent-af9193d9e837e4652`; reimport regionów
+  (`pwsh scripts/import-region.ps1 -Region <id> -SkipCopy -BuildTarget Win64`) żeby atlasy/trim weszły do _Generated;
+  build knyszyn-w + oględziny w playerze (A2C) i visual-critic; decyzja o albedo 4096 na High/Ultra (grupa mipmap w QualitySettings).
