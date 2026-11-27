@@ -352,3 +352,23 @@ skrzydła z różowo-płowych zrobiły się szarobrązowe, czytają się jak sta
 Dowody: `artifacts/plaza-barn-fix-s24/vqa-{before,after}/dk65-07/`, `sbs/`. **Otwarte:** dach budynku gospodarczego
 nadal jednolity (krytyk, uwaga poza zakresem r3); `knyszyn-w` (kadr `dk65-goniadzka`) nieprzebudowany w tym zadaniu —
 kod działa dla każdego kafla z `rural_outbuildings: true`, przebudowa po scaleniu przez lidera; FPS w playerze nie mierzony.
+
+## Dopisek codex-roofs-s24 (27.11): r4 — pokrycia dachów budynków gospodarczych
+
+Krytyk s24, dzień 27, pkt 6 wskazał jednolity dach. Ortofotomapa GUGiK 2024 w kadrze `top-kozince` pokazuje sąsiedztwo
+jasnych i szarych pokryć z ceglastą czerwienią. Dobór pokryć i stopień zużycia są `WORKING_VALUE`. Generator stosuje
+regułę dla budynków objętych `facade_rules: rural_outbuildings: true` i respektuje jawne `roof_material` na dachach spadzistych.
+
+- **Blacha trapezowa i ocynk** mają chłodnoszary ton z ziarna budynku, żebra w kierunku spadku, zacieki i rzadsze jaśniejsze
+  pasy wymienionej blachy na szerokość arkusza.
+- **Eternit falisty** ma żebra o przekroju sinusoidalnym, zakłady poprzeczne, plamy i mech przy okapie.
+- **Ceramika** korzysta z istniejących zestawów brązowej i czerwonej dachówki ze stonowaną barwą zmienną per budynek. Ceramika przypada
+  32% dachów z materiałem bazowym dachówki. W pozostałych dachach spadzistych podział blacha / eternit to 56% / 44%
+  (`WORKING_VALUE`, bez inwentaryzacji terenowej).
+- **Papa** na płaskich dachach korzysta z dotychczasowego `roof_membrane`. Wariant r4 jest ciemniejszy, z zakładami równoległymi
+  do dłuższej osi budynku i lokalnymi prostokątnymi naprawami. Pokrycia spadziste i papa mają ten sam wybór w LOD0 i LOD1.
+- Na połaciach spadzistych `COLOR_0.rgb` zachowuje wiek, mech i odległość od kalenicy. Bajt A
+  1–93 zawiera profil i jedno z 31 ziaren, a B = 255 oznacza istniejący gąsior. Dotychczasowe dane zużycia pozostają w
+  zakresie A ≥ 127. `_ROOF_WEATHER` wykorzystuje istniejące materiały i UV0. Papa korzysta z `_ROOF_FELT` w
+  `WorldSurface` oraz znacznika B = 64/255 i A = 1. UV0 w metrach względem środka budynku utrzymuje położenie szwów
+  przy zmianie początku świata. Shader ogranicza kontrast detalu w oddali na podstawie rozmiaru piksela.

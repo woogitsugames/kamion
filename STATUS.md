@@ -24,3 +24,5 @@
 - Następny krok po eksporcie stanu bazowego: `pwsh artifacts/codex-roofs-s24/run-vqa.ps1 -Phase before`.
 - Krok 3. Stan PRZED wyeksportowany z kodu r3: 64 chunki, 430 MiB High i 167 MiB Low. Manifest i log dołączone do dowodów.
 - Następny krok: `pwsh artifacts/codex-roofs-s24/run-vqa.ps1 -Phase before`.
+- Krok 4. Zapisano decyzję r4 w ADR 0238, odniesienie do ortofoto GUGiK oraz wagi WORKING_VALUE. Import bazowy przygotowuje zestawy PBR w worktree.
+- Następny krok po renderach PRZED: zastosować poprawkę shaderów i uruchomić `& $py -m pytest tests/gis/test_rural_outbuildings_props_fix_s24.py -q` w slocie heavy.

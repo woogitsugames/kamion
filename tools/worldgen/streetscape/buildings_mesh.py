@@ -103,6 +103,8 @@ SMALL_TOWN_SILL_CLEAN = 0.22    # ADR 0348: subtle sill runoff on ~78 % of rural
 # draws), wooden / brick walls (own materials, own wall generator) are not used for outbuildings.
 RURAL_SHED_WALLS = (("plaster_grey", 0.34), ("plaster_light", 0.22), ("plaster_cream", 0.22), ("plaster_beige", 0.22))
 RURAL_SHED_ROOFS = (("roof_metal_graphite", 0.34), ("roof_tiles_brown", 0.33), ("roof_tiles_red", 0.33))
+RURAL_SHED_CLAY_SHARE = 0.32              # of the tile carriers (WORKING_VALUE)
+RURAL_SHED_METAL_SHARE = 0.56             # of the roofs without clay (WORKING_VALUE)
 RURAL_SHED_REVEAL_M = 0.0                # flat atlas opening: the window is the atlas cell, not geometry (wall_with_openings)
 RURAL_SHED_TINT = (0.58, 0.86)            # luminance range of the plaster tint (darker than the houses 0.92-1.08)
 RURAL_SHED_MIN_AREA_M2 = 18.0
@@ -294,10 +296,10 @@ def rural_roof_profile(key, material):
     """ADR 0238 r4, WORKING_VALUE: keep clay on the existing tile texture sets."""
     pick = FK.hfloat(key, "r4cover")
     if material in ("roof_tiles_brown", "roof_tiles_red"):
-        if pick < 0.36:
+        if pick < RURAL_SHED_CLAY_SHARE:
             return RF.RURAL_CLAY
-        pick = (pick - 0.36) / 0.64
-    return RF.RURAL_METAL if pick < 0.56 else RF.RURAL_FIBRE_CEMENT
+        pick = (pick - RURAL_SHED_CLAY_SHARE) / (1.0 - RURAL_SHED_CLAY_SHARE)
+    return RF.RURAL_METAL if pick < RURAL_SHED_METAL_SHARE else RF.RURAL_FIBRE_CEMENT
 
 
 def roof_variant(key, material, wooden, small_town=False):
