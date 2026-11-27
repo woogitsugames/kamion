@@ -84,6 +84,46 @@ def test_surface_types_have_materials_with_existing_texture_sets():
         assert mat in PV.EDGED
 
 
+def test_town_fallback_is_stable_by_way_and_yields_to_sourced_surfaces():
+    points = np.array([[10.0, 10.0], [100.0, 100.0]])
+    highways = {way: "residential" for way in range(1, 101)}
+    highways[101] = "primary"
+    rules = {"mixed_sidewalks": True, "older_sidewalks": True}
+    zones = PVM.Zones(rules, way_highway=highways)
+    seen = set()
+    for way in highways:
+        surfaces, _, _ = PVM.surface_types(points, way, zones)
+        assert surfaces[0] == surfaces[1]
+        assert np.array_equal(surfaces, PVM.surface_types(points[::-1], way, zones)[0])
+        seen.update(surfaces)
+    assert seen == set(PVM.MIXED_SURFACES)
+    assert PVM.surface_types(points, 101, zones)[0].tolist() == ["paving_grey"] * 2
+    zones.rules = {"mixed_sidewalks": True}
+    assert all(PVM.surface_types(points, way, zones)[0][0].startswith("paving_") for way in highways)
+    zones.osm = [(LineString([(9, 10), (11, 10)]), "asphalt")]
+    assert PVM.surface_types(points, 1, zones)[0][0] == "asphalt"
+    zones.ways[1] = ("owner", "paving_red")
+    assert PVM.surface_types(points, 1, zones)[0].tolist() == ["paving_red"] * 2
+
+
+def test_town_surface_boundaries_survive_welding_as_one_primitive():
+    from roads import build_world
+
+    vertices = np.array([[0., 0., 0.], [1., 0., 0.], [1., 1., 0.], [0., 1., 0.]])
+    faces = np.array([[0, 1, 2], [0, 2, 3]])
+    parts = [M.Part("road", "sidewalk_paving", vertices, vertices[:, :2], faces, True, "w17")]
+    zones = PVM.Zones({"mixed_sidewalks": True}, polys=[
+        ("slabs", Polygon([(0.55, 0.), (1., 0.), (1., 1.), (0.55, 1.)]), "slabs")
+    ])
+    report = PVM.retype_sidewalks(parts, zones)
+    primitive, = next(iter(build_world.assemble(parts, {"road"}, 128, mixed_sidewalks=True).values()))["road"]
+    assert primitive["mat"] == "sidewalk_paving"
+    assert report["tris_in"] == report["tris_out"] == len(primitive["T"]) == 2
+    assert len(primitive["V"]) == 6
+    assert {tuple(color) for color in primitive["COL"]} == {(0., 0., 0., 1.), (2 / 3, 0., 0., 1.)}
+    assert all(np.ptp(primitive["COL"][face, 0]) == 0 for face in primitive["T"])
+
+
 def test_behaton_scaled_to_the_polish_double_t_block():
     """R6-023: double-T block 198 x 163 mm. The scan's block pitch is 275 x 160 mm (measured), so the 1.92 m tile
     laid blocks 37 % too long; the review's x 1.16 assumed 140 mm rows in the scan (ADR 0063 text), not a measurement."""
@@ -301,6 +341,9 @@ def test_bdot_cycle_path_material_follows_the_region_rules():
     assert PVM.bdot_cycle_material([], "grunt naturalny") is None
     assert PVM.bdot_cycle_material(RULES, "kostka prefabrykowana") == "cycle_red"
     assert PVM.bdot_cycle_material(RULES, "masa bitumiczna") == "cycle_asphalt"         # grey DDR asphalt (ADR 0188)
+    sidewalk_only = [dict(RULES[0], mixed_sidewalks=True, cycle_bdot_surface=False)]
+    assert PVM.bdot_cycle_material(sidewalk_only, "masa bitumiczna") == "cycle_red"
+    assert PVM.bdot_cycle_material(sidewalk_only, "grunt naturalny") is None
     grey = [dict(RULES[0], cycle_paver_material="sidewalk_paving")]
     assert PVM.bdot_cycle_material(grey, "kostka prefabrykowana") == "sidewalk_paving"
     assert PV.PATH_SURFACE["płyty betonowe"] == "sidewalk_slabs"

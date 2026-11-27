@@ -289,7 +289,7 @@ def chunk_of(e, n, half, size=CH.CHUNK_M):
     return ci, cj
 
 
-def assemble(parts, layers, half):
+def assemble(parts, layers, half, mixed_sidewalks=False):
     """Group triangles by (chunk, layer, material); weld smooth surfaces; per-vertex normals."""
     groups = {}
     for pi, p in enumerate(parts):
@@ -326,26 +326,35 @@ def assemble(parts, layers, half):
             first_p = np.full(len(up), -1)
             first_p[inv_p[::-1]] = np.arange(len(inv_p))[::-1]
             Tp = inv_p.reshape(-1, 3)
-            Tp = Tp[(Tp[:, 0] != Tp[:, 1]) & (Tp[:, 1] != Tp[:, 2]) & (Tp[:, 0] != Tp[:, 2])]
-            Np = smooth_normals(V[first_p], Tp)
-            if has1:
+            valid = (Tp[:, 0] != Tp[:, 1]) & (Tp[:, 1] != Tp[:, 2]) & (Tp[:, 0] != Tp[:, 2])
+            Np = smooth_normals(V[first_p], Tp[valid])
+            split_surface = mixed_sidewalks and mat == "sidewalk_paving" and hasc
+            if has1 or split_surface:
                 # Keep vertices split across UV1 jumps (e.g. arm edge -> junction plate >=20) while keeping smooth normals
-                q = np.column_stack([qp, np.round(UV1 * 1000).astype(np.int64)])
+                keys = [qp]
+                if has1:
+                    keys.append(np.round(UV1 * 1000).astype(np.int64))
+                if split_surface:
+                    keys.append(np.rint(COL * 255).astype(np.int64))
+                q = np.column_stack(keys)
                 u, inv = np.unique(q, axis=0, return_inverse=True)
                 inv = inv.ravel()
                 first = np.full(len(u), -1)
                 first[inv[::-1]] = np.arange(len(inv))[::-1]
                 Vw, UVw = V[first], UV[first]
-                UV1w = UV1[first]
+                UV1w = UV1[first] if has1 else None
                 COLw = COL[first] if hasc else None
                 T = inv.reshape(-1, 3)
-                T = T[(T[:, 0] != T[:, 1]) & (T[:, 1] != T[:, 2]) & (T[:, 0] != T[:, 2])]
+                if split_surface:
+                    T = T[valid]
+                else:
+                    T = T[(T[:, 0] != T[:, 1]) & (T[:, 1] != T[:, 2]) & (T[:, 0] != T[:, 2])]
                 Nw = Np[inv_p[first]]
             else:
                 Vw, UVw, Nw = V[first_p], UV[first_p], Np
                 UV1w = None
                 COLw = COL[first_p] if hasc else None
-                T = Tp
+                T = Tp[valid]
         else:
             ids = np.concatenate([np.full(it[4].size, it[0]) * 10_000_000 + it[4].ravel() for it in items])
             u, first, inv = np.unique(ids, return_index=True, return_inverse=True)
@@ -1160,7 +1169,8 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         w.rail.build(w.buf, _ground, _rz, log)
         log("rail bed QA", w.rail.bed_qa(_zc, _ground, _rz))
     _src_tally([p for p in w.buf.parts if not _is_verge(p)], half)
-    roads = assemble([p for p in w.buf.parts if not _is_verge(p)], LAYERS, half)
+    mixed_sidewalks = st["report"]["pavements"].get("mixed_sidewalks", False)
+    roads = assemble([p for p in w.buf.parts if not _is_verge(p)], LAYERS, half, mixed_sidewalks=mixed_sidewalks)
     log("road chunks", len(roads))
 
     out_root = out_root or (REPO / "Data" / "raw" / "derived" / region_id / "world")
@@ -1307,6 +1317,10 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         "chunks": chunks_meta, "sources_sha256": srcs,
         "overrides_applied": w.net.overrides_applied, "overrides_stale": w.net.overrides_stale,
     }
+    if mixed_sidewalks:
+        manifest["materials"] = {**manifest["materials"],
+                                 "sidewalk_paving": {**MATERIALS["sidewalk_paving"], "mixed_sidewalks": True},
+                                 "curb_concrete": {**MATERIALS["curb_concrete"], "town_kerb": True, "set_tile": True}}
     if w.water is not None:
         srcs["generated/water_sources.json"] = sha(WT.sources_path(region_id).read_bytes().replace(b"\r\n", b"\n"))
         manifest["nodes"]["water"] = ("water sheet (ADR 0210): flat surface at the measured water level; UV0 = local "

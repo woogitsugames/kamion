@@ -155,3 +155,41 @@ Kamery kontrolne (authored): `knyszyn_szkolna_junction` (oko kierowcy na Połudn
 rzeczywistej (`ortho_readings.json`, niepoprawiona); żółte barierki na narożnikach SW i NE widoczne z góry —
 UNVERIFIED, niemodelowane; sklep / zakład pogrzebowy / blok z muralem (bez marek, nazw i herbu) — poza zakresem;
 `roadgraph.py` bez tagów `sidewalk*`; wpis w `knyszyn-w`; pętla wizualna (render, `visual-critic`) po stronie lidera.
+
+## Dopisek s24 — nawierzchnie i krawężniki małych miast
+
+`pavement_rules.mixed_sidewalks` włącza wspólny materiał chodnika. Kolejność wyboru to
+override, OSM, BDOT10k, typologia i domyślna szara kostka. Gdy brakuje danych, klasy lokalne
+dostają wariant według stabilnego skrótu identyfikatora OSM way. Obie strony i wszystkie chunki
+odcinka dostają to samo rozstrzygnięcie. `older_sidewalks` dopuszcza płyty 35 × 35 cm i asfalt
+na ulicach lokalnych oraz klasach `secondary` i `tertiary`. Udziały fallbacku oraz pigment czerwieni są
+`WORKING_VALUE`. W Knyszynie fallback zachowuje kostkę zgodnie z uwagą właściciela.
+Wpisy `sidewalk_surface` pozostają sposobem na wprowadzenie potwierdzonych miejscowych różnic.
+
+Eksport zachowuje identyfikator `sidewalk_paving` i koduje wybór w COLOR_0. Na granicy typów
+wierzchołki zachowują osobne wartości koloru i wspólną normalną geometryczną. World PBR
+barwi szary skan kostki na czerwono albo pobiera istniejący skan płyt lub asfaltu.
+Płytę i kostkę różnicują też dotychczasowe maski wymian nawierzchni z ADR 0349. Asfalt
+ma własną maskę ciemniejszego uzupełnienia. Każdy wariant korzysta z tego samego prymitywu
+w obrębie warstwy i chunka.
+
+Krawężnik używa UV1 wzdłuż prefabrykatów i ziarna z identyfikatora pasa. Ton betonu zmienia się
+między prefabrykatami, a miejscowe ubytki na górnej krawędzi od strony jezdni są symulowane
+kolorem, chropowatością i normalną. Rozmiar i częstość ubytków są `WORKING_VALUE`. Obniżenia oznakowanych
+przejść używają istniejącej reguły tego ADR (2 cm, rampy 1 m, poza płytami skrzyżowań i mostami).
+
+W Tykocinie zachowano istniejące materiały dróg rowerowych BDOT przez `cycle_bdot_surface: false`.
+Obrys północnej pierzei rynku opiera się na zdjęciach Commons z ADR 0336. Czerwona kostka
+przy Bernardyńskiej to odcinek demonstracyjny na istniejącym chodniku (`WORKING_VALUE`).
+
+Pomiar eksportu Tykocina przed i po: 192 589 → 192 609 trójkątów warstwy `road` oraz
+120 → 120 jej prymitywów (High i Low). Wszystkie klucze chunk/warstwa/materiał są identyczne
+w obu stanach. Sama klasyfikacja chodników zachowuje 2057 trójkątów. Raport po klasyfikacji
+wykazuje 1616,9 m² szarej kostki, 143,9 m² czerwonej, 798,4 m² płyt i 179,3 m² asfaltu.
+Generator obniżył oba krawężniki przy czterech przejściach. Cztery kolejne były w płytach
+skrzyżowań lub zbyt blisko ich krawędzi, żeby zmieścić odcinek z rampami.
+
+Win64 PC High, clear i overcast: 20 porównań z 10 kamer. Estymaty wywołań siatek, cieni
+i instancji w każdej parze są stałe, a liczba trójkątów zmieniła się o 0–154 na kadr.
+Dodatkowe zbliżenia potwierdziły czytelność czerwonej kostki, płyt i asfaltu. Wszystkie
+123 testy chodników i budżetów przeszły. Dowody: `artifacts/codex-sidewalk-var-s24/`.

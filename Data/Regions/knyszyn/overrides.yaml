@@ -140,6 +140,7 @@ overrides:
   # ADR 0237 D38: sidewalks of the town streets (owner s23: "w Knyszynie chodniki wszędzie, obustronne, kostka").
   - id: knyszyn-pavement-rules-d38
     kind: pavement_rules
+    mixed_sidewalks: true
     implied_sidewalks: true
     sidewalk_bdot: false
     estate_slabs: false
@@ -150,7 +151,7 @@ overrides:
       API 0.6 2026-11-16), so implied_sidewalks lays a 2.0 m sidewalk (roads.standards.SIDEWALK_W) behind both kerbs
       of residential / tertiary / secondary / unclassified paved streets in the built-up area (BDOT10k residential
       zabudowa + 60 m) unless OSM says sidewalk=no / separate or a mapped path runs within 6 m of the kerb. Surface:
-      grey 20 x 10 blocks (the default; sidewalk_bdot off - the owner says kostka, BDOT10k 2008 materials are older).
+      20 x 10 blocks (grey or aged red; sidewalk_bdot off - the owner says kostka, BDOT10k 2008 materials are older).
       Kerbs lowered at the marked crossings (crossing_kerb_drops, R6-004). Widths not measured: WORKING_VALUE.
     confidence: medium
     verify: control camera knyszyn_szkolna_junction + owner check of Szkolna / Poludniowa; widths on the orthophoto

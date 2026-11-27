@@ -110,6 +110,7 @@ overrides:
   # unclassified road; 5 jednorodzinna BDOT10k zabudowa polygons - the rule acts only where they reach (+60 m).
   - id: knyszyn-s-pavement-rules-d38
     kind: pavement_rules
+    mixed_sidewalks: true
     implied_sidewalks: true
     sidewalk_bdot: false
     estate_slabs: false

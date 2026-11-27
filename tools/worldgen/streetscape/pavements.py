@@ -4,12 +4,8 @@ Scope: rules and data only. The kerbs and the roadside footway strips are meshed
   * lowers kerbs at marked pedestrian crossings (`crossing_drops`): entries for streetscape.plots.apply_drops, added
     to the driveway drops of ADR 0114 by streetscape.stage.plan_plots, so they reach the `side_edit` of pass 2 of
     build_world without a change there. Heights of existing stations only - the number of triangles cannot grow;
-  * renames the material of footway triangles at export (`retype_sidewalks` sets `Part.export_mat`) - the parts keep
-    `sidewalk_paving` for every QA / fidelity / cull rule keyed on it, and no triangle is added or removed.
-    NOT WIRED YET: it needs three small hunks in roads/build_world.py (assemble reads `export_mat` like the
-    `bridge_kerb` rename of ADR 0123, WELD, one call before the export), a file owned by budget-fix-s21 (ADR 0221)
-    while this was written. The patch is docs/adr/0237-build-world-hook.patch; until the lead applies it, `run` is
-    never called and every roadside footway stays grey 20 x 10 blocks.
+  * assigns footway types for export (`retype_sidewalks`). The legacy route sets `Part.export_mat`. Town rules
+    encode the type into COLOR_0 and keep the same material. Both keep `sidewalk_paving` for QA / fidelity / cull.
 
 Both are opt-in per region: an `overrides.yaml` entry `kind: pavement_rules` switches them on (bialystok-industrial-c,
 bialystok-dojlidy). A region without it is built exactly as before.
@@ -27,7 +23,10 @@ Override schema (Data/Regions/<id>/overrides.yaml):
     kind: pavement_rules
     sidewalk_bdot: true              # rule 3
     estate_slabs: false              # rule 4
+    mixed_sidewalks: true            # shared material and local-street fallback
+    older_sidewalks: true            # allow slabs/asphalt in the local-street fallback
     crossing_kerb_drops: true        # kerbs lowered at marked pedestrian crossings
+    cycle_bdot_surface: true        # classify BDOT cycleway surfaces; false preserves the original red finish
     cycle_paver_material: cycle_red  # material of a BDOT10k cycle path laid in blocks (cycle_red | sidewalk_paving)
   - id: ...
     kind: sidewalk_surface
@@ -38,6 +37,7 @@ Override schema (Data/Regions/<id>/overrides.yaml):
 
 from __future__ import annotations
 
+from hashlib import blake2s
 import re
 
 import numpy as np
@@ -149,7 +149,7 @@ def bdot_cycle_material(overrides, materialnawierzchni):
     if materialnawierzchni == "grunt naturalny":
         return None
     r = rules_of(overrides)
-    if r is None:
+    if r is None or not r.get("cycle_bdot_surface", True):
         return "cycle_red"
     if materialnawierzchni == "kostka prefabrykowana":
         return material_of(r["cycle_paver_material"]) if r.get("cycle_paver_material") else "cycle_red"
@@ -423,6 +423,32 @@ def _nearest(lines, pts, dmax):
     return out
 
 
+MIXED_SURFACES = ("paving_grey", "paving_red", "slabs", "asphalt")
+LOCAL_TOWN_STREETS = {"residential", "living_street", "unclassified", "service"}
+OLDER_TOWN_STREETS = LOCAL_TOWN_STREETS | {"secondary", "tertiary"}
+
+
+def _seed(key):
+    return int.from_bytes(blake2s(str(key).encode("utf-8"), digest_size=4).digest(), "little") / 2**32
+
+
+def _town_surface(way, zones):
+    """Fallback for unmapped surfaces. Same OSM way, both sides and all chunks."""
+    highway = zones.way_highway.get(way)
+    older = zones.rules.get("older_sidewalks") and highway in OLDER_TOWN_STREETS
+    local = highway in LOCAL_TOWN_STREETS
+    if way is None or not (local or older):
+        return DEFAULT
+    roll = _seed(way)
+    # Shares are WORKING_VALUE. Keep the older surfaces off streets covered by the owner's paving feedback.
+    if older:
+        if roll < 0.12:
+            return "asphalt"
+        if roll < 0.28:
+            return "slabs"
+    return "paving_red" if local and 0.28 <= roll < 0.46 else DEFAULT
+
+
 def surface_types(cen, way, zones: Zones, layer="road"):
     """Surface type and provenance of footway triangles with centroids `cen` (n, 2) that belong to carriageway OSM
     way `way` (int or None). Returns (types (n,) of str, provenance (n,) of str, {override id: triangles})."""
@@ -433,6 +459,10 @@ def surface_types(cen, way, zones: Zones, layer="road"):
     pts = shapely.points(np.asarray(cen, float).reshape(-1, 2))
     r = zones.rules
     if layer in LAYERS_RULES:
+        if r.get("mixed_sidewalks"):
+            fallback = _town_surface(way, zones)
+            if fallback != DEFAULT:
+                typ[:], prov[:] = fallback, "town_typology(WORKING_VALUE)"
         if r.get("estate_slabs") and zones.blocks and zones.way_highway.get(way) in ESTATE_CLASSES:
             near = _nearest(zones.blocks, pts, ESTATE_M) >= 0
             typ[near], prov[near] = "slabs", "typology(WORKING_VALUE)"
@@ -458,16 +488,26 @@ def surface_types(cen, way, zones: Zones, layer="road"):
 def retype_sidewalks(parts: list, zones: Zones | None) -> dict:
     """Give the footway triangles of `parts` (a MeshBuf.parts list, edited in place) their surface type.
 
-    A part of material `sidewalk_paving` whose triangles get another type is split: the triangles of each type move
-    to a new part that shares the vertex arrays and carries `export_mat` (the material written to the GLB). `mat`
-    stays `sidewalk_paving` on every part. Triangles are neither added nor removed (report: tris_in == tris_out)."""
+    A part with multiple types is split into groups of triangles with the same type. Each group retains the
+    original geometry and gets either `export_mat` or a constant COLOR_0 surface code (mixed town mode).
+    `mat` stays `sidewalk_paving`. In mixed mode the existing kerb strips also receive a tone/spall seed."""
     from roads.meshing import Part
     rep = {"enabled": zones is not None, "tris_in": 0, "tris_out": 0, "tris_by_material": {}, "m2_by_material": {},
            "tris_by_provenance": {}, "overrides_applied": [], "overrides_stale": []}
     if zones is None:
         return rep
+    mixed = zones.rules.get("mixed_sidewalks", False)
+    if mixed:
+        rep["mixed_sidewalks"] = True
+        rep["kerb_tris_with_detail"] = 0
     new, hits_all = [], {}
     for p in parts:
+        if mixed and p.layer == "road" and p.mat == "curb_concrete" and p.UV1 is not None:
+            # UV1 from the side strip: metres along the edge and distance from its gutter.
+            # Flanges at the back of the sidewalk and unparameterized meshes retain their old finish.
+            if np.min(np.abs(p.UV1[p.T, 1])) < 0.30:
+                p.COL = np.tile([_seed(p.src), 0., 0., 1.], (len(p.V), 1))
+                rep["kerb_tris_with_detail"] += len(p.T)
         if p.mat != SOURCE_MAT or p.layer not in LAYERS_OVERRIDE or getattr(p, "export_mat", None):
             continue
         tri = p.V[p.T]
@@ -482,16 +522,30 @@ def retype_sidewalks(parts: list, zones: Zones | None) -> dict:
         for pv in sorted(set(prov)):
             rep["tris_by_provenance"][pv] = rep["tris_by_provenance"].get(pv, 0) + int((prov == pv).sum())
         T0 = p.T
-        for mat in sorted(set(mats)):
+        for surface in MIXED_SURFACES:
+            mat = MATERIAL[surface]
             sel = mats == mat
+            if not sel.any():
+                continue
             rep["tris_by_material"][mat] = rep["tris_by_material"].get(mat, 0) + int(sel.sum())
             rep["m2_by_material"][mat] = rep["m2_by_material"].get(mat, 0.0) + float(area[sel].sum())
-            if mat == SOURCE_MAT:
+        if mixed:
+            if len(set(typ)) == 1:
+                p.COL = np.tile([MIXED_SURFACES.index(typ[0]) / 3., 0., 0., 1.], (len(p.V), 1))
+                rep["tris_out"] += len(T0)
                 continue
-            q = Part(p.layer, p.mat, p.V, p.UV, T0[sel], p.footprint, p.src, p.UV1, p.COL)
-            q.export_mat = mat
-            new.append(q)
-        p.T = T0[mats == SOURCE_MAT]
+            for code, surface in enumerate(MIXED_SURFACES):
+                face = T0[typ == surface]
+                if len(face):
+                    col = np.tile([code / 3., 0., 0., 1.], (len(p.V), 1))
+                    new.append(Part(p.layer, p.mat, p.V, p.UV, face, p.footprint, p.src, p.UV1, col))
+            p.T = T0[:0]
+        else:
+            for mat in sorted(set(mats) - {SOURCE_MAT}):
+                q = Part(p.layer, p.mat, p.V, p.UV, T0[mats == mat], p.footprint, p.src, p.UV1, p.COL)
+                q.export_mat = mat
+                new.append(q)
+            p.T = T0[mats == SOURCE_MAT]
         rep["tris_out"] += len(p.T)
     rep["tris_out"] += sum(len(q.T) for q in new)
     parts[:] = [p for p in parts if len(p.T)] + new
