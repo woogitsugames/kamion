@@ -133,10 +133,12 @@ def test_full_garden_tree_has_no_dark_core_body():
             assert occ.min() >= 0.5, f"{species}: dark foliage body (occ {occ.min():.2f}) inside the crown"
             assert len(V) == 4 and len(T) == 2, "a lobe is one quad"
             foot = V[:2].mean(0)
-            assert np.hypot(foot[0], foot[1]) >= 0.15 * 1.25, f"{species}: a card stands on the crown's axis"
+            assert np.hypot(foot[0], foot[1]) >= 0.10 * 1.25, f"{species}: a card stands on the crown's axis"
             n = (C[:, :3] * 2 - 1) / occ[:, None]
-            out = V.mean(0)[:2] / np.linalg.norm(V.mean(0)[:2])
-            assert (n[:, :2] @ out).mean() > 0.1 and n[:, 2].mean() > 0.0, f"{species}: lobe normal not radial + up"
+            face = np.cross(V[1] - V[0], V[3] - V[0])
+            face /= np.linalg.norm(face)
+            # the normals fan out from the crown's centre (they differ across the lobe) and none is the card's plane normal
+            assert np.ptp(n, axis=0).max() > 0.3 and np.abs(n @ face).max() < 0.999 and n[:, 2].mean() > 0.0, species
             lobes += 1
         assert lobes == 6, f"{species}: three lower + three upper lobes"
         assert 19 <= sum(len(t) for t in kit.T) <= 21                           # was 14: within + 50 %

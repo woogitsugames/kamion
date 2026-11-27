@@ -258,7 +258,7 @@ def test_garden_tree_geometry_full_and_lite():
     dense, open_ = PLT.Kit(), PLT.Kit()
     PT.garden_tree(dense, np.array([0.0, 0.0]), 0.0, 2.0, 6.5, 1.3, "linden", "d")
     PT.garden_tree(open_, np.array([0.0, 0.0]), 0.0, 2.0, 8.0, 1.3, "birch", "d")
-    assert len(dense.out()[2]) > len(open_.out()[2]) + 15                         # core + sprays only in the dense habits
+    assert len(dense.out()[2]) >= len(open_.out()[2]) + 14                        # inner sprays only in the dense habits (ADR 0352: no core)
 
 
 def _crowns(n, seed=7):

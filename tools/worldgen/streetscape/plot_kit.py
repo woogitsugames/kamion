@@ -925,6 +925,8 @@ def _crown_card(rng, h, w, kind):
             lx, ly = bx + math.cos(a) * r, by + math.sin(a) * r * (0.8 if kind != "birch" else 1.5)
             if not (leaf_px * 0.6 < lx < w - leaf_px * 0.6 and leaf_px * 0.6 < ly < h - 2):
                 continue
+            if kind != "birch" and ly > bot - 0.12 * (bot - top) and abs(lx - cx) > half(ly, 1 if lx > cx else -1) + 0.6 * leaf_px:
+                continue                                    # garden-trees-s24: the rounded underside stays rounded (_UNDER)
             k = k0 * rng.uniform(0.8, 1.18) * (0.78 + 0.3 * (1 - (ly - by) / max(br, 1)) * 0.5 + 0.22 * j / P["per"])
             col = np.array(P["leaf"], np.float32) * k + np.array([10, 4, -8], np.float32) * rng.uniform(-1, 1)
             ang = rng.uniform(0, 6.2832) if kind != "birch" else math.pi + rng.normal(0, 0.5)     # birch leaves hang
