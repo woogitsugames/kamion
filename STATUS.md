@@ -27,3 +27,5 @@
 - Następny krok: `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner codex-clouds-horizon-s24`, potem `pwsh scripts/visual-qa.ps1 -Scene World_knyszyn-w_High -Tier High -Pc -BuildTarget Win64 -Lighting clear -Cameras cab-driver` i pozostałe kadry A/B.
 - Krok 4. Obejrzano porównania PNG przed i po w obu pogodach oraz Clear z przypiętą mapą. Względem kadru bez chmur średnie odchylenie RGB w oknie niskiego nieba spadło o 47,8% i 52,1%. Overcast różni się o najwyżej 1 poziom na 1 i 4 pikselach.
 - Następny krok: `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` pod slotem heavy i unity, następnie cztery testy budżetowe GIS.
+- Krok 5. Pełny EditMode Win64 zakończony kodem 0. Wynik 1517 passed, 0 failed, 116 skipped. Oba nowe przypadki doboru przez graf przeszły.
+- Następny krok: `& 'C:/Users/matma/Documents/Claude/kamion/.claude/worktrees/agent-a492e5af856a32ed3/tools/worldgen/.venv/Scripts/python.exe' -m pytest tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py` pod slotem heavy i z PYTHONPATH bieżącego worktree.
