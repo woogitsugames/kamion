@@ -263,7 +263,7 @@ def layout_line(line: LineString, prm: dict, key: str):
     draws are made for every station."""
     rng = np.random.default_rng(_seed(key))
     lo, hi = (float(v) for v in prm["spacing_m"])
-    names = list(prm["species"])
+    names = sorted(prm["species"])
     w = np.array([prm["species"][k] for k in names], float)
     w /= w.sum()
     dom = names[int(rng.choice(len(names), p=w))]
@@ -418,7 +418,7 @@ def plan(lines, roads: list[Road], prm: dict, *, tracks=(), culverts=(), crossin
         # ADR 0352 addendum (neon-avenue-s24): single young replacements / self-seeded saplings in a share of
         # missing-tree gaps; all draws made per station before any cut (ADR 0173 determinism).
         yrng = np.random.default_rng(_seed(f"treerow_young:{key}"))
-        ynames = list(rprm["young_species"])
+        ynames = sorted(rprm["young_species"])
         yw = np.array([rprm["young_species"][k_] for k_ in ynames], float)
         yw /= yw.sum()
         ylo, yhi = (float(v) for v in rprm["young_height_m"])

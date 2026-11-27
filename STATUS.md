@@ -63,3 +63,7 @@
 ### codex-gen-fix-s25 — podstawy kart kukurydzy
 - Sprawdzanie komórek maski po transformacji obejmuje też krótkie karty i strays. Dla pasów 1/3/5 m zniknęło odpowiednio 13/1/1 kart; na podstawie trójkątów 0 przecięć. Testy pól: 21 PASS.
 - Następny krok po zmianie kolejności gatunków: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_treerows_0222.py tests/gis/test_trees_0352.py`.
+
+### codex-gen-fix-s25 — kanoniczne mieszanki szpalerów
+- Klucze `species` i `young_species` sortowane przed losowaniem. Oba warianty nowego testu odtwarzają błąd na bazie i przechodzą po zmianie. Zestaw szpalerów: 26 PASS.
+- Następny krok po oględzinach i aktualizacji bramek atlasów: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_world_v34.py tests/gis/test_vegetation_r2.py`.
