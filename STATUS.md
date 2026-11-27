@@ -28,3 +28,5 @@
 - Następny krok: dokończyć czekający `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1`; polecenie jest pierwsze w kolejce heavy.
 - [krok 5] Player #10 High clear, stałe dw671-tykocin-03/edge-north, dwa identyczne kafle Ready: OFF → ON 647 → 694 draw calls p95, 1 399 592 → 1 633 470 trójkątów p95, 1,278% pikseli Δ≥12/255. Obejrzana para PNG pokazuje las i zabudowę.
 - Następny krok: dokończyć próby edytora w kolejce unity oraz pozostałe pary `pwsh artifacts/codex-farring-diag-s24/run-player.ps1`.
+- [krok 6] Zakończono i obejrzano 8 par playera #10 High (clear i overcast). Północ DK65: 1,560 / 1,469%; wschód DK65: 0 px; nad wiaduktem Bieżeństwa: 3 / 0 px. Dopisek ADR 0354 z metrykami GPU/VRAM/RAM i zaleceniem zachowania ON.
+- Następny krok: dokończyć oczekujący `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1` i porównać per-renderer TSV z klatkami colorby.
