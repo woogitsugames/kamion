@@ -141,7 +141,8 @@ def test_ground_is_one_continuous_driveway_a_path_and_a_lawn():
     rp = _region(road, houses)
     bpoly = shapely.union_all([h["poly"] for h in houses])
     items = PL.paved_items(rp, road, bpoly, [])
-    assert {i["mat"] for i in items} <= {"plot_lawn", "yard_paving"} and all(i["source"] == "plot" for i in items)
+    # axis-driveway-s24: the driveway surface follows plot["surface"] (block paving or gravel)
+    assert {i["mat"] for i in items} <= {"plot_lawn", "yard_paving", "yard_gravel"} and all(i["source"] == "plot" for i in items)
     polys = [i["poly"] for i in items]
     for i, a in enumerate(polys):
         assert a.intersection(road).area < 0.05 and a.intersection(bpoly).area < 0.05

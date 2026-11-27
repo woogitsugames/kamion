@@ -2438,6 +2438,7 @@ DRIVE_GRAVEL_MAT = "yard_gravel"
 # Block-paved crossings of a rural verge end in a concrete edging along both sides (obrzeze 8 x 30 cm, top 3 cm over the
 # paving - roads.standards EDGING_W / EDGING_H), not on the asphalt edge (the paving meets the carriageway flush).
 CROSS_EDGE_ROAD_CLEAR_M = 0.35
+CROSS_EDGE_PARALLEL = 0.97      # |cos| of a side to the crossing axis (r2: 0.85 also edged the oblique corner filler)
 
 
 def drive_mat(plot):
@@ -2445,12 +2446,13 @@ def drive_mat(plot):
     return DRIVE_GRAVEL_MAT if plot.get("surface") == "gravel" else DRIVE_MAT
 
 
-def _crossing_edging(buf, poly, V, T, a, carriage, src, mat=DRIVE_MAT, zf=None):
+def _crossing_edging(buf, poly, V, T, a, carriage, src, mat=DRIVE_MAT, zf=None, apron=None):
     """Sides of a verge crossing (boundary runs parallel to the crossing axis `a`), stopped CROSS_EDGE_ROAD_CLEAR_M short
     of the carriageway; heights from the nearest crossing vertex. Block paving: concrete edging (top EDGING_H over the
     paving, EDGING_W wide) whose outer face runs down to the ground (the crossing ramps over a filled ditch: a culvert
     head instead of a slab edge in the air). Gravel: a battered gravel skirt to the ground (1 : 1.5). UV0 = (metres
-    along, metres down) so the faces carry the texture at its scale. Returns the triangle count."""
+    along, metres down) so the faces carry the texture at its scale. apron: the plot's paved drive - no side where the
+    crossing runs on into it (r2: an edging lay across the seam like a dropped pipe). Returns the triangle count."""
     from roads import standards as S
     ring = np.asarray(poly.exterior.coords)
     if not poly.exterior.is_ccw:
@@ -2461,7 +2463,10 @@ def _crossing_edging(buf, poly, V, T, a, carriage, src, mat=DRIVE_MAT, zf=None):
         p0, p1 = ring[k], ring[k + 1]
         dv = p1 - p0
         L = float(np.hypot(*dv))
-        if L < 0.5 or abs(float(dv @ a)) / L < 0.85:
+        if L < 0.5 or abs(float(dv @ a)) / L < CROSS_EDGE_PARALLEL:
+            continue
+        mid_out = 0.5 * (p0 + p1) + np.array([dv[1], -dv[0]]) / L * 0.25
+        if apron is not None and not apron.is_empty and apron.intersects(shapely.Point(*mid_out)):
             continue
         nsub = max(1, int(math.ceil(L / 0.75)))
         P = p0 + dv * (np.arange(nsub + 1) / nsub)[:, None]
@@ -2646,7 +2651,7 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
         tag = ":drive_cross" if cross_drive else ":verge"
         buf.add(GROUND_LAYER, mat, V, P.copy(), T, src=src_id + tag, UV1=np.tile([25.0, 25.0], (len(V), 1)))
         if not footway and not cross_drive:
-            _crossing_edging(buf, poly, V, T, a_ax, carriage, src_id + tag, mat=mat, zf=zf)
+            _crossing_edging(buf, poly, V, T, a_ax, carriage, src_id + tag, mat=mat, zf=zf, apron=plot.get("drive"))
         done = 1
     return done
 
