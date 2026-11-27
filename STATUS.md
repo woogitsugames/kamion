@@ -26,3 +26,6 @@
 
 - [krok 3] Kandydat w `artifacts/codex-props-low-perf-s24/prep/` skompilowany z bieżącymi źródłami i referencjami Roslyn. Wszystkie 30 przypadków NUnit przeszło poza Unity. Źródła używane przez Unity są na etapie referencyjnym, a pomiar czeka na slot Unity.
 - Następny krok po pomiarze bazowym: `Copy-Item artifacts/codex-props-low-perf-s24/prep/WorldInstances.cs,artifacts/codex-props-low-perf-s24/prep/WorldPropTierPolicy.cs game/Assets/_Project/World/Runtime/`.
+
+- [krok 4] Import bazowy knyszyn-w Win64 zakończony, 64 chunki, sceny Low i High. PBR przygotowane lokalnie w 1538 s. Pierwszy pomiar `before` czeka na ponowny slot heavy.
+- Następny krok w trwającym przebiegu: `pwsh scripts/visual-qa.ps1 -Scene World_knyszyn-w -Tier Low -Lighting clear -BuildTarget Win64 -Pc -Width 1920 -Height 1080`.
