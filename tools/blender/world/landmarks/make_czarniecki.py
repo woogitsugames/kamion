@@ -1,7 +1,8 @@
 """Stone parts of the Czarniecki monument in Tykocin (ADR 0320 dopisek tykocin-plaza-s24): sculpted figure + pedestal.
 
     blender -b --factory-startup -P tools/blender/world/landmarks/make_czarniecki.py -- [--output <dir>] [--render <dir>] [--blend]
-    blender -b --factory-startup -P tools/blender/world/landmarks/make_czarniecki.py -- --render-existing --render <abs dir>
+    blender -b --factory-startup -P tools/blender/world/landmarks/make_czarniecki.py -- --render-existing --render <abs dir> [--output <asset dir>]
+    Look-dev options: --lighting clear|overcast, --lod lod0|lod1, --cams <comma-separated names>, --samples <n>.
 
 Reads  art-source/world/landmarks/tykocin_czarniecki/dims.json (authored sizes and sources, all WORKING_VALUE).
 Writes art-source/world/landmarks/tykocin_czarniecki/tykocin_czarniecki.npz (plain git, ~0.5 MB: the world build must
@@ -1074,13 +1075,17 @@ TINT = {STONE: (0.37, 0.335, 0.265), PATINA: (0.06, 0.132, 0.092), GILT: (0.55, 
 
 
 def render(data, out_dir):
-    """Cycles look-dev of LOD0 with the baked vertex tint (QA only): cameras paired with the Commons photos."""
+    """Cycles look-dev with the baked vertex tint and fixed comparison cameras (QA only)."""
     out_dir.mkdir(parents=True, exist_ok=True)
+    render_lod = arg("--lod") or "lod0"
+    lighting = arg("--lighting") or "clear"
+    if render_lod not in BUDGET or lighting not in ("clear", "overcast"):
+        raise ValueError(f"Unsupported look-dev preset: {render_lod}, {lighting}")
     for ob in list(bpy.data.objects):
         bpy.data.objects.remove(ob)
     for key, d in data.items():
         lod, mat = key.split("|")
-        if lod != "lod0":
+        if lod != render_lod:
             continue
         me = bpy.data.meshes.new(key)
         me.from_pydata(d["V"].tolist(), [], d["T"].tolist())
@@ -1135,18 +1140,33 @@ def render(data, out_dir):
     w = bpy.data.worlds.new("w")
     sc.world = w
     w.use_nodes = True
-    sky = w.node_tree.nodes.new("ShaderNodeTexSky")
-    sky.sky_type = "NISHITA"
-    sky.sun_elevation = math.radians(48)
-    sky.sun_rotation = math.radians(200)                         # sun from the south-south-west (front of the figure)
-    sky.sun_intensity = 0.35
-    w.node_tree.links.new(sky.outputs[0], w.node_tree.nodes["Background"].inputs[0])
     sc.view_settings.view_transform = "Filmic"
-    sc.view_settings.exposure = -2.5
+    background = w.node_tree.nodes["Background"]
+    if lighting == "clear":
+        sky = w.node_tree.nodes.new("ShaderNodeTexSky")
+        sky.sky_type = "NISHITA"
+        sky.sun_elevation = math.radians(48)
+        sky.sun_rotation = math.radians(200)
+        sky.sun_intensity = 0.35
+        w.node_tree.links.new(sky.outputs[0], background.inputs[0])
+        sc.view_settings.exposure = -2.5
+    else:
+        background.inputs["Color"].default_value = (0.58, 0.63, 0.70, 1)
+        soft_light = bpy.data.lights.new("Cloud cover", "AREA")
+        soft_light.energy, soft_light.size = 2200, 14
+        lamp = bpy.data.objects.new(soft_light.name, soft_light)
+        sc.collection.objects.link(lamp)
+        lamp.location = (-2, 5, 15)
+        lamp.rotation_euler = (Vector((0, 0, 6)) - lamp.location).to_track_quat("-Z", "Y").to_euler()
+        sc.view_settings.exposure = -0.5
     cams = {"front_below": ((0.6, 9.5, 1.6), (0.1, 0.0, 5.9), 30, (900, 1200)), "front_left": ((-7.5, 8.5, 1.6), (0.0, 0.0, 4.6), 38, (900, 1200)),
             "figure_front": ((0.5, 16.0, 4.0), (0.1, 0.0, 6.15), 14, (1000, 1200)), "figure_left": ((-11.0, 11.0, 4.5), (0.0, 0.1, 6.15), 14, (1000, 1200)),
             "figure_right": ((12.0, 9.0, 4.5), (0.0, 0.1, 6.15), 14, (1000, 1200)), "figure_back": ((-3.0, -15.0, 5.0), (0.0, 0.0, 6.15), 14, (1000, 1200)),
             "head": ((1.6, 5.0, 6.6), (0.03, 0.05, 7.22), 9, (900, 900)), "pedestal": ((-1.2, 7.0, 1.6), (0.0, 0.0, 3.4), 40, (900, 1200))}
+    # Same 3/4 azimuth and eye height on both stations. Distance is horizontal to the monument axis.
+    for distance, elevation_target in ((6, 4.5), (15, 4.0)):
+        position = (0.6 * distance, 0.8 * distance, 1.7)
+        cams[f"eye_34_{distance}m"] = (position, (0.0, 0.0, elevation_target), 56, (1000, 1200))
     only = arg("--cams")
     for name, (pos, tgt, fov, res) in cams.items():
         if only and name not in only.split(","):
@@ -1169,7 +1189,8 @@ if "--render-existing" in argv:
         raise ValueError("--render-existing requires --render")
     bpy.ops.wm.read_factory_settings(use_empty=True)
     data = {}
-    with np.load(OUT / f"{ASSET}.npz") as asset:
+    source = Path(arg("--output")) if arg("--output") else OUT
+    with np.load(source / f"{ASSET}.npz") as asset:
         for key in asset:
             lod, mat, channel = key.split("|")
             data.setdefault(f"{lod}|{mat}", {})[channel] = asset[key] / 255.0 if channel == "COL" else asset[key]
