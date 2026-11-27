@@ -614,7 +614,37 @@ def build_architecture(low=False):
                     a = base + j * ns + i
                     d["T"] += [(a, a + 1, a + ns + 1), (a, a + ns + 1, a + ns)]
             d["n"] += ns * nz
+    if not low:
+        inscription_frame(out.setdefault(STONE, {"V": [], "UV": [], "T": [], "cls": [], "n": 0}))
     return {m: {"V": np.array(d["V"]), "UV": np.array(d["UV"]), "T": np.array(d["T"], np.int64), "cls": np.array(d["cls"])} for m, d in out.items()}
+
+
+# plaza-barn-fix-s24 (critic s24 day 27): the front of the block read as a blank new slab. The block carries an
+# inscription panel on the photos, but no legible source of its text exists here: a smooth field framed by a raised
+# moulding (no invented lettering). Frame on the front face (+y), field centred on the block shaft; sizes WORKING_VALUE.
+FRAME = {"cz": None, "hw": 0.60, "hh": 0.36, "bar": 0.055, "proud": 0.018}
+
+
+def inscription_frame(d):
+    """Four raised bars (5 faces each, back face against the block omitted) - 40 triangles, LOD0 only."""
+    sz, bt, hb = HZ["steps_top"], HZ["block_top"], HS["block"]
+    cz = FRAME["cz"] or 0.5 * ((sz + 0.19) + bt) + 0.04
+    hw, hh, b, pr = FRAME["hw"], FRAME["hh"], FRAME["bar"], FRAME["proud"]
+    bars = [((0.0, cz + hh - b / 2), (hw, b / 2)), ((0.0, cz - hh + b / 2), (hw, b / 2)),
+            ((-hw + b / 2, cz), (b / 2, hh - b)), ((hw - b / 2, cz), (b / 2, hh - b))]
+    for (x, z), (ax, az) in bars:
+        y0, y1 = hb, hb + pr
+        P = [np.array([x + sx * ax, y, z + sz_ * az]) for y in (y0, y1) for sz_ in (-1, 1) for sx in (-1, 1)]
+        # faces CCW seen from outside: front (+y), top, bottom, left, right
+        quads = [(6, 7, 5, 4), (2, 3, 7, 6), (4, 5, 1, 0), (2, 6, 4, 0), (7, 3, 1, 5)]
+        for q in quads:
+            base = d["n"]
+            for i in q:
+                d["V"].append(P[i])
+                d["UV"].append((P[i][0], P[i][2]))
+                d["cls"].append("frame")
+            d["T"] += [(base, base + 1, base + 2), (base, base + 2, base + 3)]
+            d["n"] += 4
 
 
 def build_mace(low=False):
@@ -739,7 +769,7 @@ def weather_colors(bvh, V, N, cls):
         kd.insert(Vector(q + np.array([0, 0, ZF + SLAB])), k)
     kd.balance()
     col = np.empty((len(V), 4))
-    fresh = np.isin(cls, ("block", "step", "cap"))            # the lower parts were renewed: paler, cleaner stone
+    fresh = np.isin(cls, ("block", "step", "cap", "frame"))   # the lower parts were renewed: paler, cleaner stone
     for i in range(len(V)):
         p, n = V[i], N[i]
         v = Vector(p)
@@ -749,11 +779,24 @@ def weather_colors(bvh, V, N, cls):
         down = max(-n[2], 0.0)
         # black crust: in creases and where the rain never washes the stone; rain-washed fronts stay pale
         crust = 0.85 * (1 - cav[i]) ** 1.1 + 0.50 * sh[i] * (0.35 + 0.65 * down) + 0.42 * (1 - ao[i]) ** 1.5
-        crust = 1.05 * crust * (0.75 + 0.5 * blot) + 0.85 * streak[i]
+        crust = 1.05 * crust * (0.75 + 0.5 * blot)
         # dirt lies on ledges and shoulders that the rain does not rinse clean
         crust += 0.20 * up * (0.4 + 0.6 * fine) * (0.3 + 0.7 * sh[i])
         if fresh[i]:
-            crust *= 0.45
+            # plaza-barn-fix-s24 (critic s24 day 27 "cokol za czysty"): the renewed plinth has weathered too - less
+            # cleaning (0.45 -> 0.72), the run-off tails from the band are NOT reduced, and the lower part carries a
+            # darker film: splash soil and algae over the treads and risers and up the foot of the block (Commons 01 / 08:
+            # grey-green bloom on the lowest course, dark tails under the band). WORKING_VALUE.
+            crust *= 0.72
+            z = float(p[2])
+            sz = HZ["steps_top"]
+            if z >= sz - 0.02:                                  # block: foot film 0.8 m up from the top step
+                foot = float(1 - sstep(sz, sz + 0.80, z)) * (1 - up)
+            else:                                               # steps and cap: everything low, treads most
+                foot = 0.55 * float(1 - sstep(0.0, sz, z)) + 0.35 * up
+            foot *= 0.65 + 0.7 * fine * blot
+            crust += 0.75 * float(np.clip(foot, 0, 1))
+        crust += 0.85 * streak[i] * (1.15 if fresh[i] else 1.0)
         if cls[i] == "fig":
             _, fk, fd = kd.find(v)
             crust += 0.30 * FUR_W[fk] * float(1 - sstep(0.06, 0.12, fd))
@@ -761,7 +804,7 @@ def weather_colors(bvh, V, N, cls):
         washed = (1 - sh[i]) * (0.25 + 0.75 * up) * ao[i]
         base = np.array([1.0, 1.0, 1.0]) * (0.92 + 0.16 * blot) * (0.97 + 0.06 * fine)
         if fresh[i]:
-            base = base * np.array([1.24, 1.22, 1.16])
+            base = base * np.array([1.13, 1.11, 1.06])          # plaza-barn-fix-s24: was 1.24 / 1.22 / 1.16 (read as new)
         elif cls[i] in ("vase", "band", "cornice", "cart"):
             base = base * np.array([0.97, 0.96, 0.95])
         base = base * (1 + 0.13 * washed)

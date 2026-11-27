@@ -182,8 +182,12 @@ M = {
                        "texture_set": "fence_concrete", "set_tile": True},
     # building cell atlas (ADR 0081; ADR 0348: sky_occ.y 0.9 -> 0.35 so smooth glass panes catch live sky reflection
     # instead of killing 90 % of horizontal reflections into black squares; matte frames have rough >= 0.40)
+    # plaza-barn-fix-s24 (ADR 0238 d. r3): facade_tint on the atlas - the weathered leaves and frames of the rural barn
+    # doors carry a COLOR_0 tint (a = 1); every other atlas vertex has no COLOR_0 (a = 0 -> exact no-op in WorldPBR,
+    # Acc.flush / WorldMeshBake fill a = 0), same material -> 0 extra draws; the building meshes of those chunks
+    # already carry COLOR_0 for the plaster tint, so no new vertex stream either
     "facade_atlas": {"color": _set_mean("facade_atlas", [0.30, 0.30, 0.29]), "rough": 0.5, "texture_set": "facade_atlas",
-                     "set_tile": True, "sky_occ": [0.5, 0.35]},
+                     "set_tile": True, "sky_occ": [0.5, 0.35], "facade_tint": True},
     "concrete_wall": {"color": [0.30, 0.30, 0.28], "rough": 0.9},
     "barrier_post": {"color": [0.40, 0.41, 0.41], "rough": 0.55, "metal": 0.9},
     # ADR 0060 (r7 N-2, D42 Mapillary 2018-07 / 2024-07 at g3b_eye_s1482 / s1632, reference only): the absorbing
@@ -549,8 +553,10 @@ M = {
     "wood_planks_bench": {"color": [0.105, 0.066, 0.040], "rough": 0.78, "texture_set": "wood_siding", "set_tile": True,
                           "set_tile_m": [3.0, 2.6], "facade_tint": True},
     # flower mass of the planters (begonias at the monument, petunias on the edges): foliage set, blossom / leaf colour
-    # per vertex in COLOR_0 (tint = 2 * rgb, so the base sits between red, green and purple)
-    "planter_flowers": {"color": [0.25, 0.08, 0.15], "rough": 0.95, "texture_set": "hedge_foliage", "facade_tint": True},
+    # per vertex in COLOR_0 (tint = 2 * rgb, so the base sits between red, green and purple). plaza-barn-fix-s24: base
+    # moved toward red (0.25, 0.08, 0.15 -> 0.30, 0.07, 0.12): carmine begonia = (0.48, 0.008, 0.036) linear with the
+    # BEGONIA tint, leaf = (0.03, 0.067, 0.018) - no grey-violet mix (WORKING_VALUE against Commons 01 / 08)
+    "planter_flowers": {"color": [0.30, 0.07, 0.12], "rough": 0.95, "texture_set": "hedge_foliage", "facade_tint": True},
     "truss_steel": {"color": [0.40, 0.41, 0.41], "rough": 0.62, "metal": 0.15},
     # piers, abutments and footway slabs of the truss bridge: the precast-concrete modulation set projected in world
     # metres like bridge_concrete (viaduct_concrete carries the red cornice paint of the Andersa viaduct: r1 render)

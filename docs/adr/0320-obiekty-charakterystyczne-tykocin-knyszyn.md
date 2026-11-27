@@ -201,3 +201,38 @@ Sam zwrot pomnika (południe) pozostaje ESTIMATED.
   wąsy, łuk brwiowy i łysina. Bez mapy normalnych — całe wietrzenie jest w wierzchołkach i w zestawie kafelkowym.
 - Pozycje donic i podział 6 ławek / 4 skrzynie są ESTIMATED; zdjęcie właściciela z Rynku rozstrzygnie.
 
+
+## Dopisek plaza-barn-fix-s24 (2026-11-27, worktree `agent-a8bad7a40407c997e`): skrzynie, kwiaty, cokół i ławki Rynku (krytyka s24 dzień 27, pkt 1)
+
+**Uwagi krytyka:** skrzynie z kwiatami za duże (1,6–2 m na kadrze, w kodzie 1,1–1,25 m + nawis kwiatów) zamiast ok.
+0,8–1,0 m; kwiaty blade, szaro-fioletowe (zdjęcie: karminowa begonia, pierścień 8–10 skrzyń przy ogrodzeniu); cokół za
+czysty (brak patyny, inskrypcji); ławki identyczne.
+
+**Decyzja (`tykocin_rynek_0320.py`, `make_czarniecki.py`, `materials.py`):**
+1. Skrzynie przy pomniku: **10 sztuk** w pierścieniu `RING_M = 2,80 m` od osi (3 z przodu, 3 z tyłu, po 2 na bokach),
+   między krawędzią platformy (2,45 m) a linią łańcucha (3,1 m); `MONUMENT_BOX` 0,91 × 0,40 × 0,32 m + kopuła kwiatów 0,25 m.
+   Skrzynie na krawędzi placu (`EDGE_BOX`) 0,97 × 0,42 × 0,34 m. Rozrzut ±4 cm i ±4° (ustawiane ręcznie). Mniejsze skrzynie
+   mają po 2 szersze deski na bok (było 3). Układ ESTIMATED (Commons 01 / 08, mglisty poranek), wymiary WORKING_VALUE.
+2. Kwiaty: kopuła wystaje 3 cm ponad krawędź i 12 % poza nią (było: brzeg 2 cm pod krawędzią); udział kwiatów 74 %
+   wierzchołków masy / 88 % kępek dla begonii (było 14 % / 72 % — masa czytała się jako zielona z fioletem); podstawa kępki
+   to przyciemniony własny kolor (wcześniej mieszanie czerwieni z zielenią dawało szaro-fiolet). `planter_flowers`
+   0,25 / 0,08 / 0,15 → **0,30 / 0,07 / 0,12**: begonia ≈ 0,48 / 0,008 / 0,036 linear, liść ≈ 0,03 / 0,067 / 0,018.
+3. Cokół (asset przebudowany Blenderem 4.2.16, `generator_sha256` w meta): odnowiony blok i stopnie mniej „czyste”
+   (redukcja skorupy 0,45 → 0,72, rozjaśnienie 1,24 → 1,13), zacieki spod pasa bez redukcji (×1,15), ciemniejszy nalot
+   w dolnej części: 0,8 m od górnego stopnia w górę bloku, stopnie i cokół platformy (bryzgi, glony). **Pole inskrypcji:**
+   gładkie pole z wypukłą ramką (1,20 × 0,72 m, listwa 5,5 cm, 1,8 cm przed licem) na froncie bloku — tekstu nie dodano,
+   bo brak czytelnego źródła (bez zmyślonego liternictwa). LOD0 26 476 → **26 516** (+40 trójkątów ramy), LOD1 bez zmian.
+4. Ławki: dwie bejce `BENCH_STAINS` — ciemny orzech i cieplejszy kasztan (×1,32 / 1,02 / 0,78), kolejność
+   `BENCH_STAIN_OF = (0, 1, 1, 0, 1, 0)`: nigdy trzy jednakowe obok siebie. WORKING_VALUE.
+
+**Budżet (zmierzony):** Rynek LOD0 35 446 → **35 678** (limit testu 36 000), LOD1 3 164 → 3 284; kwiaty 3 072 → 3 584,
+deski 2 592 → 2 272. Unity (edytor Win64, High / clear, `stats.txt`): `czarniecki-pedestal-0320b` `drawsEst` 293 → **293**,
+`trisExact` +232; `plaza-furniture-0320b` 370 → **370**; `look-tykocin-czarniecki` 307 → **307**; `look-tykocin-plaza-photo-0325`
+317 → **317**. Materiały +0.
+
+**Pętla wizualna:** look-dev cokołu `artifacts/plaza-barn-fix-s24/lookdev/`; Unity przed (kod HEAD 0e9424aaa, kafel
+przebudowany w prywatnej kopii derived) / po: `artifacts/plaza-barn-fix-s24/vqa-{before,after}/tykocin/`, arkusze
+przed|po `sbs/tykocin-*.jpg`, `sbs/czarn-side.jpg`. Okiem: pierścień małych skrzyń z czerwonymi kopułami przy ogrodzeniu
+jak na Commons 01; petunie na krawędzi placu nasycone (fiolet / róż); rama pola inskrypcji czytelna z kadru cokołu.
+**Otwarte:** nalot cokołu jest umiarkowany (z kadru 10 m czyta się głównie zacieki i ciemniejszy dół) — ocena
+`visual-critic` do zlecenia przez lidera; ławki — różnica bejc widoczna z bliska, z kabiny słabo.

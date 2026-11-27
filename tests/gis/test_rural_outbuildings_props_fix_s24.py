@@ -194,6 +194,49 @@ def test_outbuildings_r2_barn_doors_gutters_roof_weather_plinth_and_runoff():
     assert plaster_l0 and all(p.UV1 is not None for p in plaster_l0), "under-eave runoff UV1 expected on LOD0 plaster"
 
 
+def test_barn_doors_are_weathered_grey_brown_r3():
+    """ADR 0238 d. r3 (plaza-barn-fix-s24, critic s24 day 27 pkt 6): barn leaves and their timber frames carry a COLOR_0
+    tint on facade_atlas (facade_tint, same material: +0 draws) that brings the painted cells to weathered grey-brown
+    boards (albedo ~0.17-0.25), tone from the building seed; every other atlas vertex stays a = 0 (no-op)."""
+    from streetscape import buildings_mesh as BM
+    from streetscape import facade_atlas as FA
+    from streetscape import materials as MAT
+    assert MAT.M["facade_atlas"].get("facade_tint") is True
+
+    class _ColBuf:
+        def __init__(self):
+            self.parts = []
+
+        def add(self, layer, mat, V, UV, T, **kw):
+            self.parts.append(SimpleNamespace(layer=layer, mat=mat, UV=np.asarray(UV, float), COL=kw.get("COL"),
+                                              n=len(V)))
+
+    sheds, _, _, _ = _sheds("dk65-07")
+    flagged = [b for b in sheds if b.get("rural_outbuilding")]
+    buf = _ColBuf()
+    BM.build(buf, flagged, _HF, None, None, box(-5000, -5000, -4990, -4990), {}, sign_out=[])
+    fa = [p for p in buf.parts if p.mat == "facade_atlas" and p.layer == "buildings"]
+    fa = [p for p in fa if p.COL is not None]          # groups without a barn door carry no COLOR_0 at all
+    assert fa and all(len(p.COL) == p.n for p in fa)
+    UV, COL = np.concatenate([p.UV for p in fa]), np.concatenate([p.COL for p in fa])
+    tinted = COL[:, 3] > 0.99
+    assert tinted.any() and ((COL[:, 3] < 0.01) | tinted).all(), "atlas COLOR_0 is either a tint (a = 1) or a no-op (a = 0)"
+    lum = lambda c: c @ np.array([0.2126, 0.7152, 0.0722])
+    tones = set()
+    for v, mean in BM.RURAL_BARN_CELL_MEAN.items():
+        u0, v0, w, h = FA.cell("balf", v)
+        leaf = tinted & (UV[:, 0] > u0) & (UV[:, 0] < u0 + w) & (UV[:, 1] > v0) & (UV[:, 1] < v0 + h)
+        if not leaf.any():
+            continue
+        alb = COL[leaf, :3] * 2 * np.asarray(mean)          # implied leaf albedo
+        assert (lum(alb) > 0.12).all() and (lum(alb) < 0.26).all(), lum(alb).min()
+        assert (alb[:, 0] / alb[:, 2] < 1.8).all(), "no orange: weathered wood is grey-brown"
+        tones |= {tuple(c) for c in np.round(COL[leaf, :3], 3)}
+    assert len(tones) >= 4, "the leaf tone varies with the building seed"
+    # the untinted atlas (windows, gutters, hinges) keeps a = 0 - nothing else changes colour
+    assert (~tinted).sum() > tinted.sum()
+
+
 def test_dk65_07_outbuildings_stay_within_triangle_budget():
     """Budget gate (neon-outbuildings2-s24): total dk65-07 LOD0 building triangles <= +5 % vs main baseline (104 892)."""
     from streetscape import buildings_mesh as BM

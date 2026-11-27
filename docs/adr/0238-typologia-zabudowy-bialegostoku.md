@@ -322,3 +322,33 @@ idealnie płaskim szarym dachem z blachy (`roof_metal_graphite` bez `COLOR_0` i 
   Windows (`pc-metrics.ps1`) i przebudowa pozostałych kafli z `rural_outbuildings: true` poza `dk65-07` i `knyszyn-w` —
   po scaleniu przez lidera.
 
+
+## Dopisek plaza-barn-fix-s24 (27.11, worktree `agent-a8bad7a40407c997e`): r3 — zwietrzałe wrota stodół (krytyka s24 dzień 27, pkt 6)
+
+**Problem:** wrota z r2 brały komórki atlasu `balf` 2 (brązowa blacha trapezowa, linear ≈ 0,35 / 0,24 / 0,17) i `balf` 5
+(mata trzcinowa, ≈ 0,43 / 0,31 / 0,13) bez zmiany koloru — z drogi „jaskrawe, nowe”, pomarańczowe. Wrota stodół na
+podwórkach Podlasia to deski zostawione pogodzie: srebrnoszare do szarobrązowych, część ciemna (smoła / olej).
+
+**Decyzja (+0 materiałów, DC +0, +0 trójkątów; Białystok bit-identyczny):**
+1. `facade_atlas` dostaje `facade_tint: true` (ADR 0348): `albedo *= lerp(1, 2·rgb, a)` z `COLOR_0`. Wierzchołki atlasu bez
+   koloru mają `a = 0` (Acc.flush i `WorldMeshBake` wypełniają `a = 0`) → dokładny no-op; siatki budynków tych chunków
+   i tak niosą `COLOR_0` dla tynków, więc nie ma nowego strumienia wierzchołków.
+2. Skrzydło wrót (`barn_door`, płaski atlas) niesie w `ops[7]` tint `rural_barn_tint(key)` = ton docelowy / średnia
+   komórki × ½, `a = 1`. Tony `RURAL_BARN_WEATHERED` (linear, WORKING_VALUE): srebrnoszary 0,235 / 0,220 / 0,195,
+   szarobrązowy 0,215 / 0,180 / 0,145, chłodny szarobrązowy 0,200 / 0,170 / 0,150, ciemny (smoła) 0,165 / 0,135 / 0,105;
+   wybór z ziarna budynku, ±10 % luminancji → albedo skrzydła 0,12–0,25 (luminancja), r/b < 1,8 (bez pomarańczu).
+   `facade_kit.wall_pieces` przenosi `o[7:]` do kawałków ściany (wcześniej obcinał krotkę do 7 pól).
+3. Ościeżnica i nadproże (`_rural_barn_kit`): zamiast świeżych próbek „wood” (pomarańczowy) / „pvc_brown” (połysk) —
+   próbka `steel_grey` × `RURAL_BARN_BEAM_TINT` (1,45 / 1,18 / 0,92) → szare drewno ≈ 0,155 / 0,138 / 0,112, ⅓ ciemniejsza.
+
+**Testy:** `test_barn_doors_are_weathered_grey_brown_r3` (tint tylko a = 1 albo a = 0, albedo skrzydeł w zakresie, ≥ 4 tony
+na `dk65-07`), `test_rural_outbuildings_props_fix_s24` całość, `test_typology_0238` (Białystok C + Dojlidy bit-identyczne),
+`test_budget_0221`.
+
+**Pomiar (Unity edytor Win64, High / clear, `stats.txt` przed → po, przed SRP batching):** `dk65-07/drive-kozince`
+`drawsEst` 236 → **236**, `trisExact` 662 315 → 662 315; `route-s0144` 297 → **297**; `route-s0433` 236 → **236**;
+`rev-kozince` 264 → **264** — DC +0, trójkąty +0. Ocena okiem (crop 2× `artifacts/plaza-barn-fix-s24/sbs/crop-dk65-07-drive-kozince-barn.jpg`):
+skrzydła z różowo-płowych zrobiły się szarobrązowe, czytają się jak stare deski; ościeżnica szara zamiast pomarańczowej.
+Dowody: `artifacts/plaza-barn-fix-s24/vqa-{before,after}/dk65-07/`, `sbs/`. **Otwarte:** dach budynku gospodarczego
+nadal jednolity (krytyk, uwaga poza zakresem r3); `knyszyn-w` (kadr `dk65-goniadzka`) nieprzebudowany w tym zadaniu —
+kod działa dla każdego kafla z `rural_outbuildings: true`, przebudowa po scaleniu przez lidera; FPS w playerze nie mierzony.
