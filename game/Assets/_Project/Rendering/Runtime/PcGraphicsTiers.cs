@@ -221,6 +221,9 @@ namespace Game.Rendering
             t.mirrorMsaa = s.mirrorMsaa;
             t.mirrorShadows = s.mirrorShadows;
             t.mirrorWindowTexelsPerPixel = s.mirrorWindowTexelsPerPixel;
+            t.mirrorMainMinWidth = s.mirrorMainMinWidth;
+            t.mirrorMainMinHeight = s.mirrorMainMinHeight;
+            t.mirrorPost = s.mirrorPost;
             t.budgetStatus = s.status;
             return PcNightLighting.Overlay(tier, t);   // night-pc-s23: dusk / night fields (pools, highlight, headlamps)
         }

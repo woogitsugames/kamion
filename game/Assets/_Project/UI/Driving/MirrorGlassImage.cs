@@ -216,13 +216,11 @@ namespace Game.UI.Driving
         public const float HeadOut = 14f;
         /// <summary>Outer corner radius of the head [canvas units]. WORKING_VALUE.</summary>
         public const float HeadRadius = 27f;
-        /// <summary>Mounting arm stub: length (to the hinge barrel's far side) and sprite height [canvas units]. WORKING_VALUE.</summary>
-        public const float ArmLength = 68f, ArmHeight = 54f;
         /// <summary>Margin of the head sprite outside the plastic outline (contact shadow on the view) [canvas units].</summary>
         public const float HeadShadow = 4f;
 
         const int HeadPx = 160;
-        static Sprite s_Head, s_Arm;
+        static Sprite s_Head, s_Tube, s_Foot;
         static Texture2D s_FilmHead;
 
         /// <summary>Light on the moulded parts: from above, slightly from the left and the viewer (texture y up).</summary>
@@ -292,64 +290,134 @@ namespace Game.UI.Driving
         }
 
         /// <summary>
-        /// Mounting arm stub (drawn for the LEFT window, pointing right towards the cab; the right window mirrors it): a
-        /// round tube leaving the head and the vertical hinge barrel it ends in - the same parts as on the modelled TRAKT
-        /// mirror (two arms, upper and lower). Own shape, no brand. <see cref="ArmLength"/> x <see cref="ArmHeight"/> units.
+        /// Bracket tube (ADR 0340 addendum 2: the head hangs on the cab, the old stub ended in a hinge barrel "in the air"):
+        /// a round tube drawn pointing right, nine-sliced along its length - the root is shaded by the head it leaves, the
+        /// far end by the mounting foot it enters. The surface noise does not vary along the tube, so stretching the
+        /// centre leaves no streaks. Used for the horizontal tube and, thinner, for the diagonal strut. Own shape, no brand.
         /// </summary>
-        public static Sprite Arm()
+        public static Sprite Tube()
         {
-            if (s_Arm != null) return s_Arm;
-            int w = Mathf.RoundToInt(ArmLength * PxPerUnit), h = Mathf.RoundToInt(ArmHeight * PxPerUnit);
-            var tex = new Texture2D(w, h, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear, name = "MirrorArm" };
+            if (s_Tube != null) return s_Tube;
+            int w = 64, h = Mathf.RoundToInt(MirrorWindowLayout.MountTube * PxPerUnit);
+            var tex = new Texture2D(w, h, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear, name = "MirrorBracketTube" };
             tex.hideFlags = HideFlags.HideAndDontSave;
             var px = new Color32[w * h];
-            float cy = h * 0.5f, tube = h * 0.30f;                 // tube half thickness
-            float bw = h * 0.21f, bx = w - bw - 2f;                // barrel half width, centre x
-            float bh = h * 0.5f - 2f, cap = bw;                    // barrel half height, cap radius
+            float cy = h * 0.5f, rad = h * 0.5f - 1f;
             for (int y = 0; y < h; y++)
-            for (int x = 0; x < w; x++)
             {
-                float fx = x + 0.5f, fy = y + 0.5f;
-                float grain = 0.5f * Hash(x, y, 31) + 0.5f * ValueNoise(x * 0.4f, y * 0.4f, 37);
-                float dust = 0.4f + 0.6f * ValueNoise(x * 0.15f, y * 0.3f, 41);
-                // tube (round section across y), up to the barrel
-                float ty = (fy - cy) / tube;
-                float aTube = fx < bx ? Mathf.Clamp01((1f - Mathf.Abs(ty)) * tube + 0.5f) : 0f;
-                // barrel: vertical capsule (round section across x)
-                float qy = Mathf.Max(0f, Mathf.Abs(fy - cy) - (bh - cap));
-                float dx = fx - bx;
-                float dB = Mathf.Sqrt(dx * dx + qy * qy) - bw;
-                float aBar = Mathf.Clamp01(0.5f - dB);
-                Color32 c;
-                float a;
-                if (aBar > 0.01f)
+                float fy = y + 0.5f;
+                float sy = Mathf.Clamp((fy - cy) / rad, -1f, 1f);
+                var nrm = new Vector3(0f, sy, Mathf.Sqrt(Mathf.Max(0.02f, 1f - sy * sy))).normalized;
+                float grain = 0.5f * Hash(3, y, 31) + 0.5f * ValueNoise(1.7f, y * 0.4f, 37);
+                float dust = 0.45f + 0.55f * ValueNoise(0.6f, y * 0.3f, 41);
+                Color32 c = Plastic(nrm, grain, dust);
+                float a = Mathf.Clamp01((1f - Mathf.Abs(fy - cy) / rad) * rad + 0.5f);
+                for (int x = 0; x < w; x++)
                 {
-                    float sx = Mathf.Clamp(dx / bw, -1f, 1f), sy = Mathf.Clamp(qy / cap, 0f, 1f) * Mathf.Sign(fy - cy);
-                    var nrm = new Vector3(sx, sy * 0.8f, Mathf.Sqrt(Mathf.Max(0.02f, 1f - sx * sx - 0.64f * sy * sy))).normalized;
-                    c = Plastic(nrm, grain, dust); a = aBar;
+                    float fx = x + 0.5f;
+                    // the head shades the root, the foot's boss the far end
+                    float occl = 1f - 0.50f * Mathf.Clamp01(1f - fx / 14f) - 0.38f * Mathf.Clamp01(1f - (w - fx) / 12f);
+                    px[y * w + x] = new Color32((byte)(c.r * occl), (byte)(c.g * occl), (byte)(c.b * occl), (byte)(a * 255f));
                 }
-                else
-                {
-                    float sy = Mathf.Clamp(ty, -1f, 1f);
-                    var nrm = new Vector3(0f, sy, Mathf.Sqrt(Mathf.Max(0.02f, 1f - sy * sy))).normalized;
-                    c = Plastic(nrm, grain, dust); a = aTube;
-                    // the barrel shades the tube where they meet; the head shades its root
-                    float occl = 1f - 0.45f * Mathf.Clamp01(1f - (bx - bw - fx) / 5f) - 0.35f * Mathf.Clamp01(1f - fx / 7f);
-                    c = new Color32((byte)(c.r * occl), (byte)(c.g * occl), (byte)(c.b * occl), 255);
-                }
-                px[y * w + x] = new Color32(c.r, c.g, c.b, (byte)(Mathf.Clamp01(a) * 255f));
             }
             tex.SetPixels32(px);
             tex.Apply(false, true);
-            s_Arm = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 100f * PxPerUnit);
-            s_Arm.hideFlags = HideFlags.HideAndDontSave;
-            return s_Arm;
+            s_Tube = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0f, 0.5f), 100f * PxPerUnit, 0, SpriteMeshType.FullRect, new Vector4(20f, 0f, 20f, 0f));
+            s_Tube.hideFlags = HideFlags.HideAndDontSave;
+            return s_Tube;
+        }
+
+        /// <summary>Signed distance to a rounded box centred on the origin (negative inside), in pixels.</summary>
+        static float RoundBox(float x, float y, float halfW, float halfH, float radius)
+        {
+            float qx = Mathf.Abs(x) - (halfW - radius), qy = Mathf.Abs(y) - (halfH - radius);
+            float ox = Mathf.Max(qx, 0f), oy = Mathf.Max(qy, 0f);
+            return Mathf.Sqrt(ox * ox + oy * oy) + Mathf.Min(Mathf.Max(qx, qy), 0f) - radius;
+        }
+
+        /// <summary>
+        /// Mounting foot of the bracket: the moulded plate the tube and the strut end in, screwed to the cab (A-pillar) -
+        /// rolled edge, a round boss where the tube enters, two screw heads in recesses, dust on the upward faces and a
+        /// contact shadow on the surface it sits on. <see cref="MirrorWindowLayout.MountFoot"/> units plus
+        /// <see cref="HeadShadow"/> on every side. Own shape, no brand.
+        /// </summary>
+        public static Sprite Foot()
+        {
+            if (s_Foot != null) return s_Foot;
+            float m = HeadShadow * PxPerUnit;
+            float hw = MirrorWindowLayout.MountFoot.x * 0.5f * PxPerUnit, hh = MirrorWindowLayout.MountFoot.y * 0.5f * PxPerUnit;
+            int w = Mathf.RoundToInt(2f * (hw + m)), h = Mathf.RoundToInt(2f * (hh + m));
+            var tex = new Texture2D(w, h, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear, name = "MirrorBracketFoot" };
+            tex.hideFlags = HideFlags.HideAndDontSave;
+            var px = new Color32[w * h];
+            float rad = 7f * PxPerUnit, roll = 5f * PxPerUnit;
+            float boss = 0.5f * MirrorWindowLayout.MountTube * PxPerUnit + 5f;   // boss radius: the tube plus a collar
+            float screwY = hh - 9f * PxPerUnit, screwR = 3.6f * PxPerUnit;
+            for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+            {
+                float fx = x + 0.5f - w * 0.5f, fy = y + 0.5f - h * 0.5f;
+                float d = RoundBox(fx, fy, hw, hh, rad);
+                float gx = RoundBox(fx + 1f, fy, hw, hh, rad) - RoundBox(fx - 1f, fy, hw, hh, rad);
+                float gy = RoundBox(fx, fy + 1f, hw, hh, rad) - RoundBox(fx, fy - 1f, hw, hh, rad);
+                float gl = Mathf.Sqrt(gx * gx + gy * gy);
+                if (gl > 1e-4f) { gx /= gl; gy /= gl; }
+                float t = Mathf.Clamp01(-d / roll);
+                float tilt = (1f - t) * (1f - t);
+                var nrm = new Vector3(gx * tilt, gy * tilt, 1f - 0.7f * tilt).normalized;
+                float shade = 1f;
+                // boss: a low dome with a rolled rim and a dark joint around it
+                float rb = Mathf.Sqrt(fx * fx + fy * fy);
+                if (rb < boss + 1.5f)
+                {
+                    float e = Mathf.Clamp01((rb - 0.62f * boss) / (0.38f * boss));
+                    float k = e * e * 0.85f;
+                    if (rb > 1e-3f) nrm = new Vector3(fx / rb * k, fy / rb * k, 1f - 0.6f * k).normalized;
+                    shade *= 1f - 0.45f * Mathf.Clamp01(1f - Mathf.Abs(rb - boss) / 1.5f);
+                }
+                // screws: recess (dark ring) and a domed head with a cross slot
+                for (int sgn = -1; sgn <= 1; sgn += 2)
+                {
+                    float sx = fx, sy2 = fy - sgn * screwY;
+                    float rs = Mathf.Sqrt(sx * sx + sy2 * sy2);
+                    if (rs > screwR + 3f) continue;
+                    if (rs > screwR)
+                    {
+                        float lip = Mathf.Clamp01(1f - (rs - screwR) / 3f);
+                        nrm = new Vector3(-sx / rs * 0.7f * lip, -sy2 / rs * 0.7f * lip, 1f - 0.4f * lip).normalized;   // recess wall faces inward
+                        shade *= 1f - 0.30f * lip;
+                    }
+                    else
+                    {
+                        float k = (rs / screwR) * (rs / screwR) * 0.6f;
+                        nrm = rs > 1e-3f ? new Vector3(sx / rs * k, sy2 / rs * k, 1f - 0.4f * k).normalized : Vector3.forward;
+                        shade *= 0.80f;
+                        float slot = Mathf.Min(Mathf.Abs(sx + sy2 * 0.35f * sgn), Mathf.Abs(sy2 - sx * 0.35f * sgn));
+                        if (slot < 1.0f && rs < screwR * 0.72f) shade *= 0.45f;
+                    }
+                }
+                float inside = Mathf.Clamp01(0.5f - d);
+                float grain = 0.5f * Hash(x, y, 43) + 0.5f * ValueNoise(x * 0.35f, y * 0.35f, 47);
+                float dust = 0.45f + 0.55f * ValueNoise(x * 0.13f, y * 0.2f, 53);
+                Color32 c = Plastic(nrm, grain, dust);
+                float ds = RoundBox(fx, fy + 2.5f, hw, hh, rad);
+                float sh = Mathf.Clamp01(1f - ds / (m * 0.9f)) * 0.42f;
+                float a = inside + (1f - inside) * sh;
+                float kk = a > 1e-4f ? inside / a * shade : 0f;
+                px[y * w + x] = new Color32((byte)(c.r * kk), (byte)(c.g * kk), (byte)(c.b * kk), (byte)(Mathf.Clamp01(a) * 255f));
+            }
+            tex.SetPixels32(px);
+            tex.Apply(false, true);
+            s_Foot = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 100f * PxPerUnit);
+            s_Foot.hideFlags = HideFlags.HideAndDontSave;
+            return s_Foot;
         }
 
         /// <summary>Uniform veil of the head's glass film (alpha): a silvered glass under a dusty outer surface does not
-        /// return the scene's full contrast. With the veil colour (mid grey-blue) black lifts to ~0.035 and white drops
-        /// to ~0.975 (contrast x 0.94). WORKING_VALUE.</summary>
-        public const float FilmVeil = 0.060f;
+        /// return the scene's full contrast. With the veil colour (mid grey-blue) black lifts to ~0.018 and white drops
+        /// to ~0.987 (contrast x 0.97). ADR 0340 addendum 2 (critic day27 set 3: "reflection too bright / misty"): 0.060 ->
+        /// 0.030. WORKING_VALUE.</summary>
+        public const float FilmVeil = 0.030f;
         /// <summary>Largest film alpha in the middle third of the glass (the view must stay usable, D70) - tested.</summary>
         public const float FilmMidMax = 0.16f;
 

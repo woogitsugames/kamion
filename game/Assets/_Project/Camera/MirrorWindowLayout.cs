@@ -138,6 +138,78 @@ namespace Game.Cameras
             return 1f - Mathf.Clamp01(strength) * e;
         }
 
+        // ------------------------------------------------------------------ head bracket (ADR 0340 addendum 2, critic day27 set 3)
+
+        /// <summary>Tube / strut thickness and mounting-foot size of the head bracket [canvas units]. WORKING_VALUE.</summary>
+        public const float MountTube = 26f, MountStrut = 16f;
+        public static readonly Vector2 MountFoot = new Vector2(30f, 84f);
+        /// <summary>The tube root sits this far under the head's outline; the tube leaves the head no closer than
+        /// <see cref="MountEdgePad"/> to its top / bottom (rounded corners) [units].</summary>
+        public const float MountRootInset = 4f, MountEdgePad = 34f;
+        /// <summary>The cab mount must be at least this far beside the head for a bracket to show (closer / behind the head =
+        /// the head itself covers the mount); the diagonal strut needs <see cref="MountStrutMinGap"/> [units].</summary>
+        public const float MountMinGap = 10f, MountStrutMinGap = 26f;
+        /// <summary>The strut leaves the head this fraction of the head height below the tube (above it when there is no room).</summary>
+        public const float MountStrutDrop = 0.24f;
+        /// <summary>Longest bracket as a multiple of the head width: beyond it (the player looks far away from the mirror's
+        /// side) the bracket fades out over the last quarter instead of stretching across the view. WORKING_VALUE.</summary>
+        public const float MountReach = 2.2f;
+
+        /// <summary>The bracket of one mirror head (window units, origin = window bottom-left).</summary>
+        public struct MirrorMount
+        {
+            /// <summary>False = nothing drawn (mount behind the head, out of reach or behind the camera).</summary>
+            public bool Show, Strut;
+            /// <summary>+1 = the bracket leaves the head's right side, -1 its left side.</summary>
+            public int Side;
+            public Vector2 TubeFrom, StrutFrom, Foot;
+            public float Alpha;
+        }
+
+        /// <summary>
+        /// Bracket between a mirror head and the cab point it hangs on (the A-pillar mount of the modelled mirror arms,
+        /// projected to the screen): a near-horizontal tube from the head's side to the mount and a diagonal strut from
+        /// lower on the head to the same mount. <paramref name="head"/> = the head's plastic outline,
+        /// <paramref name="anchor"/> = the projected mount, both in window units. The tube stays horizontal while the
+        /// mount is level with the head's side (its root slides along the side). Pure, no allocation.
+        /// </summary>
+        public static void SolveMount(Rect head, Vector2 anchor, out MirrorMount m)
+        {
+            m = default;
+            if (head.width <= 0f || head.height <= 0f || float.IsNaN(anchor.x) || float.IsNaN(anchor.y)) return;
+            float x0;
+            if (anchor.x >= head.xMax + MountMinGap) { m.Side = 1; x0 = head.xMax - MountRootInset; }
+            else if (anchor.x <= head.xMin - MountMinGap) { m.Side = -1; x0 = head.xMin + MountRootInset; }
+            else return;
+            float pad = Mathf.Min(MountEdgePad, 0.45f * head.height);
+            float lo = head.yMin + pad, hi = head.yMax - pad;
+            float yT = Mathf.Clamp(anchor.y, lo, hi);
+            float drop = MountStrutDrop * head.height;
+            float yS = yT - drop >= lo ? yT - drop : Mathf.Min(hi, yT + drop);
+            m.TubeFrom = new Vector2(x0, yT);
+            m.StrutFrom = new Vector2(x0, yS);
+            m.Foot = anchor;
+            float gap = Mathf.Abs(anchor.x - (m.Side > 0 ? head.xMax : head.xMin));
+            m.Strut = gap >= MountStrutMinGap && Mathf.Abs(yS - yT) > 0.5f * MountStrut;
+            float reach = MountReach * head.width, len = (anchor - m.TubeFrom).magnitude;
+            float t = Mathf.Clamp01((len - 0.75f * reach) / Mathf.Max(1e-3f, 0.25f * reach));
+            m.Alpha = 1f - t * t * (3f - 2f * t);
+            m.Show = m.Alpha > 0.02f;
+        }
+
+        /// <summary>Local scale and rotation [deg, about z] that lay a sprite drawn pointing right (pivot at its left end, lit
+        /// from above) from <paramref name="from"/> towards <paramref name="to"/> without turning its lit side down: a
+        /// bracket that points left is mirrored, not rotated by 180 degrees. Returns the length. Pure.</summary>
+        public static float AimRight(Vector2 from, Vector2 to, out float scaleX, out float angleDeg)
+        {
+            Vector2 d = to - from;
+            float len = d.magnitude;
+            if (len < 1e-4f) { scaleX = 1f; angleDeg = 0f; return 0f; }
+            if (d.x >= 0f) { scaleX = 1f; angleDeg = Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg; }
+            else { scaleX = -1f; angleDeg = Mathf.Atan2(-d.y, -d.x) * Mathf.Rad2Deg; }
+            return len;
+        }
+
         public static void Solve(in MirrorWindowInput s, out MirrorWindowResult r)
         {
             r = default;

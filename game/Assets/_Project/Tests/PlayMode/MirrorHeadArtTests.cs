@@ -25,8 +25,16 @@ namespace Game.Tests
             Assert.AreSame(head, MirrorWindowArt.Head());
             Assert.Greater(head.border.x, 0f);
             Assert.Less(head.border.x + head.border.z, head.rect.width, "a stretchable centre is left");
-            var arm = MirrorWindowArt.Arm();
-            Assert.AreEqual(MirrorWindowArt.ArmLength / MirrorWindowArt.ArmHeight, arm.rect.width / arm.rect.height, 0.02f);
+            // ADR 0340 addendum 2: bracket tube (sliced along its length) and mounting foot, 2 px per canvas unit
+            var tube = MirrorWindowArt.Tube();
+            Assert.AreSame(tube, MirrorWindowArt.Tube());
+            Assert.Less(tube.border.x + tube.border.z, tube.rect.width, "the tube stretches along its length");
+            Assert.AreEqual(Game.Cameras.MirrorWindowLayout.MountTube, tube.rect.height / 2f, 0.01f);
+            var foot = MirrorWindowArt.Foot();
+            Assert.AreSame(foot, MirrorWindowArt.Foot());
+            Vector2 footUnits = Game.Cameras.MirrorWindowLayout.MountFoot + 2f * MirrorWindowArt.HeadShadow * Vector2.one;
+            Assert.AreEqual(footUnits.x, foot.rect.width / 2f, 0.51f);
+            Assert.AreEqual(footUnits.y, foot.rect.height / 2f, 0.51f);
             var lens = DrivingHud.TelltaleLens();
             Assert.AreSame(lens, DrivingHud.TelltaleLens());
             Assert.Less(lens.border.y + lens.border.w, lens.rect.height);

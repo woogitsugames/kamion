@@ -195,6 +195,9 @@ namespace Game.Rendering
             Game.Core.MirrorOverrides.TierMsaa = Mathf.Max(1, t.mirrorMsaa);                                // ADR 0342
             Game.Core.MirrorOverrides.TierShadows = t.mirrorShadows;
             Game.Core.MirrorOverrides.TierWindowTexelsPerPixel = Mathf.Max(0f, t.mirrorWindowTexelsPerPixel);
+            Game.Core.MirrorOverrides.TierMainMinWidth = Mathf.Max(0, t.mirrorMainMinWidth);                // ADR 0340 addendum 2
+            Game.Core.MirrorOverrides.TierMainMinHeight = Mathf.Max(0, t.mirrorMainMinHeight);
+            Game.Core.MirrorOverrides.TierPost = t.mirrorPost && t.postProcessing && t.hdr;
             if (worldTextures != null)
                 foreach (var tex in worldTextures)
                 {

@@ -207,6 +207,8 @@ namespace Game.Editor.VisualQA
                 qa.gameObject.SetActive(true);
 
                 // Vehicle mirrors and reversing cameras render into their textures first (LateUpdate does not run here).
+                // ADR 0340 addendum 2: as in the game, the mirrors know whether their picture goes to HUD windows (grading).
+                RenderTextureMirror.ForceRender = RenderTextureMirror.ForceWide = qa.includeDrivingHud && qa.drivingHudMirrorInsets;
                 foreach (var m in UnityEngine.Object.FindObjectsByType<RenderTextureMirror>(FindObjectsSortMode.None)) m.RenderNow();
                 MirrorDump.BenchOnce();   // ADR 0342: KAMION_MIRROR_BENCH=1 - GPU cost of the mirror configurations (interleaved, synced)
                 // Optional steering-wheel handwheel angle (deg, positive = clockwise / right turn, matching VehicleVisuals).
@@ -396,6 +398,11 @@ namespace Game.Editor.VisualQA
                                 continue;
                             }
                             if (mir.phase == 0) ctx.LeftMirrorTexture = () => mt; else ctx.RightMirrorTexture = () => mt;
+                            // ADR 0340 addendum 2: bracket of the HUD head to the cab mount as this control camera sees it
+                            var mm = mir; var viewCam = cam; float viewAspect = width / (float)height;
+                            Func<Vector3> mount = () => RenderTextureMirror.ViewportOf(viewCam, mm.CabMountWorld(), viewAspect);
+                            if (Environment.GetEnvironmentVariable("KAMION_QA_MIRROR_MOUNT") == "0") mount = null;
+                            if (mir.phase == 0) ctx.LeftMirrorMountViewport = mount; else ctx.RightMirrorMountViewport = mount;
                         }
                     }
                     // D90 / ADR 0294: cab control cameras render the cab-view HUD (no speed strip over the live dash cluster).
@@ -491,6 +498,7 @@ namespace Game.Editor.VisualQA
                 qa.gameObject.SetActive(wasActive);
                 UnityEngine.Object.DestroyImmediate(tex);
                 if (hud != null) UnityEngine.Object.DestroyImmediate(hud.gameObject);
+                RenderTextureMirror.ForceRender = RenderTextureMirror.ForceWide = false;
                 if (overlay != null || hud != null)
                 {
                     var es = UnityEngine.Object.FindAnyObjectByType<UnityEngine.EventSystems.EventSystem>();

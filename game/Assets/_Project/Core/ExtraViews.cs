@@ -107,6 +107,16 @@ namespace Game.Core
         public static float TierWindowTexelsPerPixel;
         /// <summary>ADR 0342: glass height of the on-screen class II mirror window in screen pixels (set by the HUD layout; 0 = unknown).</summary>
         public static float WindowPixelHeight;
+        /// <summary>ADR 0340 addendum 2 (critic day27 set 3): smallest class II (main) mirror texture of the active tier in
+        /// pixels (0 = off): the texture is at least this wide AND this tall, whatever the glass aspect.</summary>
+        public static int TierMainMinWidth, TierMainMinHeight;
+        /// <summary>rq_mirror_main: smallest class II texture height (width = half of it); 0 = off. null = tier value.</summary>
+        public static int? MainMinHeight;
+        /// <summary>ADR 0340 addendum 2: the active tier grades the mirror pictures shown as HUD windows like the main view
+        /// (HDR + the look volume: tone curve, saturation). false = the ungraded LDR picture (pre-addendum).</summary>
+        public static bool TierPost;
+        /// <summary>rq_mirror_post 0/1: A/B of <see cref="TierPost"/>. null = tier value.</summary>
+        public static bool? Post;
         /// <summary>rq_mirror_rate 0: the ADR 0046 fill-the-cap schedule instead of the due-based one on High.</summary>
         public static bool? DueSchedule;
         /// <summary>rq_mirror_legacy 1 (or the A/B toggler): the complete pre-ADR 0068 mirror configuration.</summary>
@@ -114,7 +124,7 @@ namespace Game.Core
         /// <summary>rq_mirror_off 1 (or the A/B toggler): no mirror renders at all (cost of the mirrors as a whole).</summary>
         public static bool Suspended;
 
-        public static bool Any => Cap.HasValue || LodScale.HasValue || FarClip.HasValue || Resolution.HasValue || Msaa.HasValue || Shadows.HasValue || DueSchedule.HasValue || Legacy || Suspended;
+        public static bool Any => Cap.HasValue || LodScale.HasValue || FarClip.HasValue || Resolution.HasValue || Msaa.HasValue || Shadows.HasValue || MainMinHeight.HasValue || Post.HasValue || DueSchedule.HasValue || Legacy || Suspended;
     }
 
     /// <summary>
