@@ -371,7 +371,8 @@ def build_figure():
     th = np.linspace(118 * D2R, 420 * D2R, 50)
     collar = np.stack([0.194 * np.cos(th), -0.015 + 0.171 * np.sin(th),
                        2.027 - 0.031 * np.sin(th) + 0.008 * np.cos(th)], 1)
-    tube(P, collar, 0.050, sides=16, smooth=0, flat=((0, 0, 1), 0.79))
+    collar_radius = 0.029 + 0.024 * np.sin(np.linspace(0, math.pi, len(th)))**0.55
+    tube(P, collar, collar_radius, sides=16, smooth=0, flat=((0, 0, 1), 0.79))
     FUR_PTS.extend(collar)
     FUR_W.extend([1.0] * (len(FUR_PTS) - len(FUR_W)))
     # fur lining shown on the turned-back wing (his right) - only sample points, the surface is the cloak
@@ -441,17 +442,19 @@ def carve_face(vertices):
         eye_z = z - (0.008 + 0.08 * (u - 0.045) + side * 0.002)
         arch = np.clip(1 - eye_x**2, 0, 1)
         eye_falloff = 1 - sstep(0.74, 1.04, np.abs(eye_x))
-        upper = eye_z - (0.003 + 0.010 * arch)
-        lower = eye_z - (0.003 - 0.009 * arch)
-        # A broad orbital plane, closed at the corners by both lids. The globe is plain stone.
-        depth -= 0.007 * np.exp(-0.65 * eye_x**2 - (eye_z / 0.024)**2)
-        depth += 0.018 * eye_falloff * np.exp(-(eye_x / 0.93)**2 - ((eye_z - 0.002) / 0.011)**2)
-        depth += 0.015 * eye_falloff * np.exp(-(upper / 0.0055)**2)
-        depth += 0.012 * eye_falloff * np.exp(-(lower / 0.0055)**2)
-        depth -= 0.006 * eye_falloff * np.exp(-((upper - 0.009) / 0.0045)**2)
+        upper = eye_z - (0.001 + 0.010 * arch)
+        lower = eye_z - (0.001 - 0.008 * arch)
+        # The lower lid rolls into the cheek. Both curves taper at the corners of the plain stone globe.
+        aperture = sstep(-0.004, 0.006, -upper) * sstep(-0.004, 0.006, lower)
+        depth -= 0.005 * np.exp(-0.65 * eye_x**2 - (eye_z / 0.024)**2)
+        depth += 0.014 * eye_falloff * aperture * np.exp(-(eye_x / 0.83)**2)
+        depth += 0.010 * eye_falloff * np.exp(-(upper / 0.0065)**2)
+        depth += 0.006 * eye_falloff * np.exp(-(lower / 0.007)**2)
+        depth -= 0.004 * eye_falloff * np.exp(-((upper - 0.011) / 0.007)**2)
         brow_z = eye_z - (0.029 + 0.007 * arch)
-        depth += 0.020 * np.exp(-(eye_x / 1.28)**2 - (brow_z / 0.014)**2)
+        depth += 0.015 * np.exp(-(eye_x / 1.28)**2 - (brow_z / 0.019)**2)
         depth += 0.018 * np.exp(-((u - 0.065) / 0.025)**2 - ((z + 0.028) / 0.025)**2)
+        depth += 0.010 * np.exp(-((u - 0.077) / 0.023)**2 - ((z + 0.099) / 0.032)**2)
         depth += 0.016 * np.exp(-((u - 0.021) / 0.013)**2 - ((z + 0.045) / 0.011)**2)
         depth -= 0.010 * np.exp(-((u - 0.020) / 0.008)**2 - ((z + 0.053) / 0.005)**2)
         depth -= 0.006 * np.exp(-((u - 0.038 + 0.32 * (z + 0.057)) / 0.010)**2 - ((z + 0.068) / 0.019)**2)
@@ -468,6 +471,12 @@ def carve_face(vertices):
     depth -= 0.008 * np.exp(-(x / 0.038)**4 - ((z + 0.087 + 0.07 * x) / 0.006)**2)
     depth += 0.006 * np.exp(-(x / 0.037)**4 - ((z + 0.098) / 0.009)**2)
     y += front * depth
+    # A receding hairline: relief begins further forward on the top than at the temples.
+    hairline = 0.053 - 0.034 * sstep(0.028, 0.100, np.abs(x)) + 0.009 * np.sin(38 * x + 0.5)
+    hair = (1 - sstep(hairline - 0.020, hairline + 0.008, y)) * sstep(0.028, 0.122, z)
+    sweep = x + 0.24 * y + 1.8 * (y - 0.025)**2
+    height = hair * (0.0015 + 0.0032 * np.sin(2 * math.pi * sweep / 0.025))
+    vertices += vertices / np.linalg.norm(vertices, axis=1)[:, None] * height[:, None]
 
 
 def carve_beard(vertices):
@@ -478,9 +487,9 @@ def carve_beard(vertices):
     cleft = np.exp(-(x / 0.019)**2) * chin
     z += 0.015 * cleft + 0.07 * x
     front = sstep(-0.008, 0.033, y)
-    across = x - 1.8 * x * z + 0.11 * z + 1.9 * z**2
+    across = x - 2.0 * x * z + 0.17 * z + 2.6 * z**2
     channels = (0.5 + 0.5 * np.cos(2 * math.pi * (across + 0.002) / 0.023))**4
-    y -= front * (0.009 * cleft + (0.004 + 0.003 * chin) * channels)
+    y -= front * (0.009 * cleft + (0.005 + 0.004 * chin) * channels)
 
 
 def build_head():
@@ -491,8 +500,7 @@ def build_head():
     ellipsoid(P, head_p((0, -0.034, 0.002)), (0.119, 0.116, 0.128), HEAD_R, seg=48, rings=32)
     for sx in (-1, 1):
         ellipsoid(P, head_p((sx * 0.106, 0.010, -0.015)), (0.016, 0.024, 0.035), HEAD_R, seg=20, rings=14)
-        ellipsoid(P, head_p((sx * 0.074, 0.037, -0.099)), (0.027, 0.035, 0.048), HEAD_R @ rot_y(-sx * 18 * D2R))
-    ellipsoid(P, head_p((0, 0.074, -0.151)), (0.086, 0.062, 0.092), HEAD_R @ rot_x(-18 * D2R),
+    ellipsoid(P, head_p((0, 0.074, -0.151)), (0.083, 0.059, 0.092), HEAD_R @ rot_x(-18 * D2R),
               seg=120, rings=64, deform=carve_beard)
     for c, r in (((0, -0.036, 0.003), (0.132, 0.131, 0.141)),
                  ((0.087, 0.011, -0.039), (0.045, 0.067, 0.087)),
@@ -555,7 +563,7 @@ def smooth_shoulders(ob):
         weights.add([int(i)], float(strength[i]), "REPLACE")
     modifier = ob.modifiers.new("Blend carved shoulders", "SMOOTH")
     modifier.vertex_group = weights.name
-    modifier.factor, modifier.iterations = 0.65, 18
+    modifier.factor, modifier.iterations = 0.62, 24
     bpy.ops.object.modifier_apply(modifier=modifier.name)
 
 
@@ -1038,7 +1046,6 @@ def main():
     cart = build_cartouches()
     head = build_head()
     remesh(fig)
-    bpy.context.view_layer.objects.active = fig
     smooth_shoulders(fig)
     detail_figure(fig)
     remesh(head, VOXEL * 0.40, passes=2)

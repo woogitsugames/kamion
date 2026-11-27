@@ -100,3 +100,7 @@
 ### codex-monument-head-s25 — rzeźba i eksport r3
 - Wypiek Blender 4.2.16. Powieki i gałki w płytkim reliefie, zwarte pasma wąsów i jedna bryła brody. Wygładzono połączenia ramion i delii, dodano stojący kołnierz żupana i wymodelowano guzy. NPZ ma 26 672 tris LOD0 i 1 964 tris LOD1.
 - Następny krok po renderach: `pwsh -File artifacts/codex-monument-head-s25/compare.ps1`, następnie oględziny wszystkich par.
+
+### codex-monument-head-s25 — korekta po pierwszym renderze
+- Spłycono dolne powieki i wtopiono je w policzki. Usunięto boczne bryłki przy brodzie, pogłębiono nacięcia brody i dodano relief cofniętej linii włosów. Zwężono końce kołnierza i powtórzono wypiek LOD0 i LOD1.
+- Następny krok po renderach: `pwsh -File artifacts/codex-monument-head-s25/compare.ps1` i pomiar Rynku przez `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd artifacts/codex-monument-head-s25/measure.py`.
