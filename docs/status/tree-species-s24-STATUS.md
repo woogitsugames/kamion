@@ -21,11 +21,18 @@ Gałąź `worktree-agent-a492e5af856a32ed3`, worktree `.claude/worktrees/agent-a
    `dw671-tykocin-03` „przed” NIE zrobiony w tym worktree (18 min czekania na slot Unity 2/2) — do porównania tylko
    `artifacts/regen-wave-11-s24/vqa/dw671-tykocin-03/High-clear/` (starszy derived, nie czyste A/B).
 
-## W toku / otwarte
-- [~] `pwsh artifacts/tree-species-s24/build.ps1` (build_world obu kafli, slot heavy) → `artifacts/tree-species-s24/build.status`.
-- [ ] `pwsh artifacts/tree-species-s24/vqa.ps1 -Label after` (import Win64 + High clear / overcast) i porównanie liczb `stats.txt`.
-- [ ] EditMode: `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` (nowe `TreeCrownWidthTests.cs` — Unity dopisze `.meta`, zacommitować).
-- [ ] visual-critic na parach przed / po; kopia `artifacts/tree-species-s24` do main.
-- Nie zrobione: wierzba w bibliotece, osobna forma drzew owocowych (`PLT.fruit_tree` nadal ma `_core`), dąb w lasach liściastych.
+## Wynik (27.11)
+- build_world: knyszyn-w 441 s (78 dębów), dw671-tykocin-03 683 s (112 dębów); skrajnia `violations_after` 0. Smart App Control nie zablokował.
+- Import Win64 + VQA High clear / overcast: `artifacts/tree-species-s24/after/`, pary `compare/<kafel>/*.jpg`, liczby `compare/<kafel>/stats-*.txt` (kopia w main).
+- knyszyn-w (czyste A/B): draw calle instancji −7…+2 / kamerę, trójkąty instancji −2964…+84, sceny −346…−5753.
+- EditMode Win64: 1603 total, 1488 passed, 0 failed (`artifacts/tests/editmode-20261127-083602.xml`). pytest drzew: 42 passed + 6 nowych.
+- Manifesty `Data/Regions/*/generated` z prywatnej przebudowy COFNIĘTE (derived main nieprzebudowany).
 
-NASTĘPNY KROK: po `build.status` = DONE → `pwsh artifacts/tree-species-s24/vqa.ps1 -Label after`.
+## Otwarte
+- Małe drzewa ogrodowe zestawu działek (promień < 1,6 m) nadal „lizaki” z ciemnym klinem w słońcu — ADR 0352 „Nie rozwiązane”.
+- dw671-tykocin-03: brak czystego „przed” (porównanie z renderami fali 11, tylko clear).
+- visual-critic nie uruchomiony (subagent nie tworzy subagentów) — do zlecenia przez lidera na `compare/`.
+- Wierzba, forma drzew owocowych (`PLT.fruit_tree` nadal ma `_core`), dąb w lasach liściastych; pamięć tekstur wyliczona, nie zmierzona.
+
+NASTĘPNY KROK (lider, po scaleniu): przebudowa wszystkich kafli (`oak_share`, karty `plot_kit`):
+`uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region <id>` + `pwsh scripts/import-region.ps1 -Region <id> -BuildTarget Win64`.
