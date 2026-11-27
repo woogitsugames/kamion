@@ -28,3 +28,5 @@
 - Następny krok po zakończeniu Blendera: `pwsh artifacts/codex-dash-items-s24/install-export.ps1`
 - [krok 5] Eksport LOD0/1/2 z AO 4096 spp, CHECK PASS i SIGHTLINE PASS. Trójkąty 107 305→107 641, 44 457→44 619, 21 787→21 875. Ponowny bake panoramy z LOD1, dopiski ADR 0341 i licencji. Przywrócono QualitySettings po pomiarze PRZED.
 - Następny krok: `pwsh artifacts/codex-dash-items-s24/qa.ps1 after`
+- [krok 6] Budżety GIS: 62/62 passed (0221, 0238, world v31, hero bridge). Slot heavy zajęty na bieżący przebieg; QA PO czeka w kolejce Unity.
+- Komenda wznowienia po zatrzymaniu przebiegu: `pwsh artifacts/codex-dash-items-s24/qa.ps1 after`
