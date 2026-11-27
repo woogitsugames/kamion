@@ -38,3 +38,6 @@ Następny krok: pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64
 
 Pierwsze EditMode: 1529 przeszło, 122 pominięto, 1 błąd limitu długości etykiety. Skrócono etykietę do Tryb wycieraczek. Nowe testy EditMode przeszły 11/11.
 Następny krok: pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64
+
+DrivingLab: 5 startów i 4 powroty piór przed końcem próby, pisk 17/64 w kabinie i 20/64 na zewnątrz, ciśnienie 0,460. Zmierzono 0 B GC w 8620 aktualizacjach.
+Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Lighting clear -WiperPhase 0.5
