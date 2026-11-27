@@ -38,3 +38,7 @@
 - Następny krok to `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` z wygenerowanym ciągnikiem.
 - Krok 10. Końcowy EditMode Win64 z prefabem TRAKT: 1524 zielone, 0 niepowodzeń, 122 pominięte. MirrorMount0340Tests 13/13. Zapisano XML, log i wyniki w dopisku 3. Slot zwolniony.
 - Następny krok dla lidera to `git diff c8ca07835..codex-mirror-right-s24` i przegląd zestawień `artifacts/codex-mirror-right-s24/comparison-*.png`.
+
+## codex-gis-fix-s24
+- Krok 1. Przeczytano zasady i ADR. Punkt startowy d15ca070e zawiera cały kod main aed88604d. Różnica dotyczy wyłącznie HANDOVER.md.
+- Następny krok to `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner codex-gis-fix-s24` i bazowe pytest pięciu plików na prywatnych danych.
