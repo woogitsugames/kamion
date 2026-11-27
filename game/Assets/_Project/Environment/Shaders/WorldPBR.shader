@@ -65,6 +65,15 @@ Shader "Kamion/World PBR"
         _PavingWeed ("Sidewalk edge weeds (ADR 0349): x weed strength, y kerb band m, z block jitter, w enabled", Vector) = (0, 0, 0, 0)
         _Tactile ("Tactile warning slabs (ADR 0349): x tile m, y dome pitch m, z dome radius m, w relief", Vector) = (0, 0, 0, 0)
         _KerbWear ("Kerb wear: joint dirt, mineral film, film threshold, enabled (ADR0118)", Vector) = (0, 0, 0.55, 0)
+        [HideInInspector] _SidewalkTiles ("Sidewalk slab/asphalt tile sizes (m)", Vector) = (0, 0, 0, 0)
+        [HideInInspector] _WalkSlabBaseMap ("Sidewalk slab albedo", 2D) = "grey" {}
+        [HideInInspector] _WalkSlabNormalMap ("Sidewalk slab normal", 2D) = "bump" {}
+        [HideInInspector] _WalkSlabMaskMap ("Sidewalk slab mask", 2D) = "white" {}
+        [HideInInspector] _WalkSlabVarMap ("Sidewalk slab joints", 2D) = "black" {}
+        [HideInInspector] _WalkAsphaltBaseMap ("Footway asphalt albedo", 2D) = "grey" {}
+        [HideInInspector] _WalkAsphaltNormalMap ("Footway asphalt normal", 2D) = "bump" {}
+        [HideInInspector] _WalkAsphaltMaskMap ("Footway asphalt mask", 2D) = "white" {}
+        [HideInInspector] _TownKerb ("Town kerb wear", Float) = 0
         _GroundWearExclude ("Ground wear exclusion: object-local E/N bounds, min/max (ADR0118)", Vector) = (0, 0, 0, 0)
         _GroundGrimeBase ("Ground grime inside exclusion: original coefficients (ADR0118)", Vector) = (0.45, 0.62, 0.3, 0.5)
         _SkyOcc ("Sky occlusion: x down-facing ambient, y horizon reflection (0 = off; ADR 0060)", Vector) = (0, 0, 0, 0)
@@ -139,6 +148,8 @@ Shader "Kamion/World PBR"
             float4 _BronzePatina, _BronzeRubbed, _BronzeParams;   // ADR 0331 weathered cast bronze + patina
             float _LowNoShadow;
             float4 _KerbWear;
+            float4 _SidewalkTiles;
+            float _TownKerb;
             float4 _GroundWearExclude, _GroundGrimeBase;
             float _DripBand;
             float4 _OilLook, _GrimeTraffic;   // ADR 0194 (KamionRoadStains.hlsl)
@@ -188,6 +199,7 @@ Shader "Kamion/World PBR"
             #pragma shader_feature_local _NIGHTWIN
             #pragma shader_feature_local _FACADE_TINT
             #pragma shader_feature_local _ROOF_WEATHER
+            #pragma shader_feature_local _TOWN_PAVEMENT
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             #include "Assets/_Project/Rendering/Shaders/KamionAtmosphere.hlsl"   // ADR 0080 height haze, Low tone toe, wetness
@@ -198,6 +210,13 @@ Shader "Kamion/World PBR"
             TEXTURE2D(_NormalMap); SAMPLER(sampler_NormalMap);
             TEXTURE2D(_MaskMap); SAMPLER(sampler_MaskMap);
             TEXTURE2D(_VarMap); SAMPLER(sampler_point_repeat);
+            TEXTURE2D(_WalkSlabBaseMap);
+            TEXTURE2D(_WalkSlabNormalMap);
+            TEXTURE2D(_WalkSlabMaskMap);
+            TEXTURE2D(_WalkSlabVarMap);
+            TEXTURE2D(_WalkAsphaltBaseMap);
+            TEXTURE2D(_WalkAsphaltNormalMap);
+            TEXTURE2D(_WalkAsphaltMaskMap);
             TEXTURE2D(_MacroMap); SAMPLER(sampler_MacroMap);
             TEXTURE2D(_CrackMap); SAMPLER(sampler_CrackMap);
             TEXTURE2D(_CrackNormal);
@@ -381,9 +400,46 @@ Shader "Kamion/World PBR"
                 if (_CarFlake.w > 0.5) uvb.x += i.carFilm.y;
                 #endif
 
+            #if defined(_TOWN_PAVEMENT)
+                // ADR 0237 s24: surface index is constant across a triangle, also at material boundaries.
+                int walkType = _SidewalkTiles.x > 0.0 && i.masks.a > 0.5 ? (int)round(i.masks.r * 3.0) : 0;
+                float2 du = ddx(uvb), dv = ddy(uvb);
+                half4 base, mask, normalTex;
+                UNITY_BRANCH
+                if (walkType >= 2)
+                {
+                    float2 size = walkType == 2 ? _SidewalkTiles.xy : _SidewalkTiles.zw;
+                    uvb = um / size;
+                    du *= _Tile.xy / size;
+                    dv *= _Tile.xy / size;
+                    UNITY_BRANCH
+                    if (walkType == 2)
+                    {
+                        base = SAMPLE_TEXTURE2D_GRAD(_WalkSlabBaseMap, sampler_BaseMap, uvb, du, dv);
+                        mask = SAMPLE_TEXTURE2D_GRAD(_WalkSlabMaskMap, sampler_MaskMap, uvb, du, dv);
+                        normalTex = SAMPLE_TEXTURE2D_GRAD(_WalkSlabNormalMap, sampler_NormalMap, uvb, du, dv);
+                    }
+                    else
+                    {
+                        base = SAMPLE_TEXTURE2D_GRAD(_WalkAsphaltBaseMap, sampler_BaseMap, uvb, du, dv);
+                        mask = SAMPLE_TEXTURE2D_GRAD(_WalkAsphaltMaskMap, sampler_MaskMap, uvb, du, dv);
+                        normalTex = SAMPLE_TEXTURE2D_GRAD(_WalkAsphaltNormalMap, sampler_NormalMap, uvb, du, dv);
+                    }
+                }
+                else
+                {
+                    base = SAMPLE_TEXTURE2D_GRAD(_BaseMap, sampler_BaseMap, uvb, du, dv);
+                    mask = SAMPLE_TEXTURE2D_GRAD(_MaskMap, sampler_MaskMap, uvb, du, dv);
+                    normalTex = SAMPLE_TEXTURE2D_GRAD(_NormalMap, sampler_NormalMap, uvb, du, dv);
+                    if (walkType == 1) base.rgb *= half3(1.01h, 0.60h, 0.53h); // aged red concrete; WORKING_VALUE
+                }
+            #else
+                const int walkType = 0;
                 half4 base = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uvb);
                 half4 mask = SAMPLE_TEXTURE2D(_MaskMap, sampler_MaskMap, uvb);
-                half3 tn = UnpackNormalScale(SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, uvb), _NormalStrength);
+                half4 normalTex = SAMPLE_TEXTURE2D(_NormalMap, sampler_NormalMap, uvb);
+            #endif
+                half3 tn = UnpackNormalScale(normalTex, _NormalStrength);
                 #if defined(_CARPAINT)
                 half carFilmOpacity = 0.0h;
                 if (_CarFlake.w > 0.5)
@@ -603,12 +659,17 @@ Shader "Kamion/World PBR"
                 // ---- per-element tone jitter (paving blocks, slabs): Var.G id + world tile index, faded when an
                 // element is smaller than ~2 px (no sparkle far away)
             #if defined(_KAMION_WORLD_DETAIL) && !defined(_DECAL_ALPHA) && !defined(_DECAL_TYRE)
-                if (_ElementJitter > 0.0)
+                if (_ElementJitter > 0.0 && walkType != 3)
                 {
+                #if defined(_TOWN_PAVEMENT)
+                    half4 var = walkType == 2 ? SAMPLE_TEXTURE2D_LOD(_WalkSlabVarMap, sampler_point_repeat, uvb, 0)
+                                              : SAMPLE_TEXTURE2D_LOD(_VarMap, sampler_point_repeat, uvb, 0);
+                #else
                     half4 var = SAMPLE_TEXTURE2D_LOD(_VarMap, sampler_point_repeat, uvb, 0);
+                #endif
                     float id = var.g + Hash12(floor(uvb) + 17.0);
                     half j = (Hash12(float2(id * 97.0, 3.1)) - 0.5) * 2.0;
-                    half fade = saturate(_ElementSize / (footprint * 2.5) - 0.5);
+                    half fade = saturate((walkType == 2 ? 0.35 : _ElementSize) / (footprint * 2.5) - 0.5);
                     albedo *= 1.0 + _ElementJitter * j * fade;
                     if (_PavingWeed.w > 0.5)
                     {
@@ -822,8 +883,14 @@ Shader "Kamion/World PBR"
                 // 1.5-24 m wear patches (macro B) broken by the 0.5-4 m mottling (macro A). Paving, yard concrete, yard and
                 // path asphalt. Low: +1 fetch (Var, bilinear).
             #if defined(_GRIME)
+                if (walkType != 3)
                 {
+                #if defined(_TOWN_PAVEMENT)
+                    half4 gv = walkType == 2 ? SAMPLE_TEXTURE2D_GRAD(_WalkSlabVarMap, sampler_BaseMap, uvb, du, dv)
+                                             : SAMPLE_TEXTURE2D_GRAD(_VarMap, sampler_BaseMap, uvb, du, dv);
+                #else
                     half4 gv = SAMPLE_TEXTURE2D(_VarMap, sampler_BaseMap, uvb);
+                #endif
                     float4 grime = _Grime;
                     if (groundWear < 1.0) grime = lerp(_GroundGrimeBase, _Grime, groundWear);
                     half jfade = saturate(0.012 / max(footprint, 1e-4));             // joints resolved: full dirt
@@ -844,7 +911,8 @@ Shader "Kamion/World PBR"
                         half gw = groundWear;
 
                         // (a) 3 concrete pallet / batch tones stepped along 0.20 m paver courses
-                        float2 pq = floor(p45 / 0.20) * 0.20;
+                        float course = walkType == 2 ? 0.35 : 0.20;
+                        float2 pq = floor(p45 / course) * course;
                         float bv = ValueNoise12(pq / 5.5 + 13.7) * 0.65 + ValueNoise12(pq / 2.4 + 31.1) * 0.35;
                         half bCool = (half)(1.0 - smoothstep(0.34, 0.40, bv));
                         half bWarm = (half)smoothstep(0.60, 0.66, bv);
@@ -862,7 +930,7 @@ Shader "Kamion/World PBR"
                             {
                                 float2 ctr = (cell + 0.25 + 0.50 * float2(Hash12(cell + 4.1), Hash12(cell + 8.7))) * 8.5;
                                 float2 hsz = float2(0.55 + 0.85 * Hash12(cell + 12.3), 0.45 + 0.65 * Hash12(cell + 27.9));
-                                float2 dp = abs(floor(po / 0.20 + 0.5) * 0.20 - ctr) - hsz;
+                                float2 dp = abs(floor(po / course + 0.5) * course - ctr) - hsz;
                                 float pDist = max(dp.x, dp.y);
                                 half pMask = (half)(1.0 - smoothstep(-0.04, 0.04, pDist)) * _PavingVar.w * gw;
                                 half pRim = (half)(1.0 - smoothstep(0.0, 0.09, abs(pDist))) * _PavingVar.w * gw;
@@ -914,6 +982,22 @@ Shader "Kamion/World PBR"
                 }
             #endif
 
+            #if defined(_TOWN_PAVEMENT)
+                if (walkType == 3)
+                {
+                    // Sparse bituminous reinstatement, with a softer edge than the joints of relaid blocks.
+                    float2 po = TransformWorldToObject(pw).xz;
+                    float2 cell = floor(po / 9.0);
+                    float seed = Hash12(cell + 53.0);
+                    float2 centre = (cell + 0.25 + 0.5 * float2(seed, Hash12(cell + 67.0))) * 9.0;
+                    float2 edge = float2(0.6 + seed, 0.45 + seed * 0.6) - abs(po - centre);
+                    float inset = RoundedInset(edge, 0.025);
+                    half patch = step(0.72, seed) * smoothstep(-footprint, footprint, inset);
+                    albedo *= 1.0h - 0.22h * patch;
+                    smooth = lerp(smooth, max(smooth, 0.2h), patch * 0.25h);
+                }
+            #endif
+
                 // ADR0118 r2: opt-in kerb mineral dirt, using already fetched masks only.
                 // The kerb scan stores 1-joints in Mask.B (source PNG contract checked).
                 // No new texture, UV channel or keyword variant on Low.
@@ -923,6 +1007,22 @@ Shader "Kamion/World PBR"
                     half film = smoothstep(_KerbWear.z, _KerbWear.z + 0.18, macro.b * 0.6 + macro.a * 0.4);
                     albedo *= (1.0 - groundWear * _KerbWear.x * joints) * (1.0 - groundWear * _KerbWear.y * film);
                 }
+            #if defined(_TOWN_PAVEMENT)
+                if (_TownKerb > 0.5 && i.masks.a > 0.5)
+                {
+                    float along = i.uv.z;
+                    float seed = Hash12(float2(floor(along), i.masks.r * 79.0));
+                    albedo *= lerp(0.93h, 1.07h, seed);
+                    // Small spalls near the gutter-side edge, represented by exposed aggregate on the top face.
+                    float offset = frac(along) - (0.20 + seed * 0.52);
+                    float depth = (0.018 + 0.010 * seed) * saturate(1.0 - abs(offset) / (0.035 + 0.040 * seed));
+                    float aa = max(fwidth(i.uv.w), 0.001);
+                    half spall = step(0.86, seed) * smoothstep(0.67, 0.9, n.y)
+                               * smoothstep(-aa, aa, depth - i.uv.w) * step(0.001, depth);
+                    albedo = lerp(albedo, albedo * 0.71h + 0.012h, spall);
+                    smooth *= 1.0h - 0.4h * spall;
+                }
+            #endif
 
                 // ---- decals
             #if defined(_DECAL_PATCH)

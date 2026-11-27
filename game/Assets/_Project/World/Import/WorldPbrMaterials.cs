@@ -143,6 +143,8 @@ namespace Game.World.Import
             if (def.Get("roof_weather") is List<object>) colors = true;                  // _ROOF_WEATHER (weathering-s24)
             if (id == "sidewalk_paving" || id == "sidewalk_paving_red" || id == "sidewalk_slabs" || def.Get("paving_variation") != null) uv1 = true; // ADR 0349: kerb/edge distance
             if (def.Get("tactile") != null) uv0 = true;                                  // ADR 0349: tactile warning strip metres
+            if (def.Get("mixed_sidewalks") is true) colors = true;
+            if (def.Get("town_kerb") is true) { uv1 = true; colors = true; }
         }
 
         /// <summary>ADR 0071 r11: manifest "weather": true = wall material of an authored asset that carries the splash
@@ -247,6 +249,7 @@ namespace Game.World.Import
             // metres through mesh UV0, so they also need the set's own tile size.
             bool isAtlasSet = set != null && set.Get("atlas") is bool isAtlas && isAtlas;
             if ((def.Get("set_tile") is bool stl && stl) || elementScan || isAtlasSet) mat.SetVector("_Tile", tile);
+            ApplyTownPavement(r, mat, def);
 
             float scale = 1f;
             Vector3 tint = Vector3.one;
@@ -644,6 +647,41 @@ namespace Game.World.Import
             if (info == null) return null;
             string slot = normal ? "_NormalMap" : srgb ? "_BaseMap" : "_MaskMap";
             return Import(r, setName, Str(info.Get("dir")), file, info, slot);
+        }
+
+        // The four surfaces share the sidewalk material. Red uses the grey block scan with a different pigment.
+        // Alternate scans use the existing imported textures and sampling modes of World PBR.
+        static void ApplyTownPavement(RegionImporter.Result r, Material mat, Dictionary<string, object> def)
+        {
+            mat.SetVector("_SidewalkTiles", Vector4.zero);
+            bool kerb = def.Get("town_kerb") is true;
+            mat.SetFloat("_TownKerb", kerb ? 1f : 0f);
+            if (kerb) mat.EnableKeyword("_TOWN_PAVEMENT");
+            if (!(def.Get("mixed_sidewalks") is true)) return;
+            mat.EnableKeyword("_TOWN_PAVEMENT");
+
+            Vector2 Bind(string setName, string prefix, bool joints)
+            {
+                var set = Set(setName);
+                var info = set == null ? null : FilesFor(set);
+                if (info == null) throw new InvalidOperationException($"Missing town pavement texture set {setName}");
+                string dir = Str(info.Get("dir"));
+                var slots = new[] { ("BaseColor", "_BaseMap"), ("Normal", "_NormalMap"), ("MaskMap", "_MaskMap"), ("Var", "_VarMap") };
+                var names = Arr(info.Get("files")).Select(Str).ToArray();
+                foreach (var (suffix, slot) in slots)
+                {
+                    if (suffix == "Var" && !joints) continue;
+                    string file = names.First(name => name.EndsWith($"_{suffix}.png", StringComparison.Ordinal));
+                    mat.SetTexture($"_{prefix}{slot.Substring(1)}", Import(r, setName, dir, file, info, slot));
+                }
+                var size = Arr(set.Get("tile_m"));
+                return new Vector2((float)Num(size[0]), (float)Num(size[1]));
+            }
+
+            var slab = Bind("sidewalk_slab_35", "WalkSlab", true);
+            Bind("asphalt_worn", "WalkAsphalt", false);
+            // The asphalt set uses the same 4 m mapping as path_asphalt.
+            mat.SetVector("_SidewalkTiles", new Vector4(slab.x, slab.y, 4f, 4f));
         }
 
         /// <summary>Copies one PNG of a set into the generated folder and applies the import settings of its slot.</summary>

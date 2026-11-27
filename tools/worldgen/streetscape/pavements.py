@@ -38,6 +38,7 @@ Override schema (Data/Regions/<id>/overrides.yaml):
 
 from __future__ import annotations
 
+from hashlib import blake2s
 import re
 
 import numpy as np
@@ -423,6 +424,28 @@ def _nearest(lines, pts, dmax):
     return out
 
 
+MIXED_SURFACES = ("paving_grey", "paving_red", "slabs", "asphalt")
+LOCAL_TOWN_STREETS = {"residential", "living_street", "unclassified", "service"}
+
+
+def _seed(key):
+    return int.from_bytes(blake2s(str(key).encode("utf-8"), digest_size=4).digest(), "little") / 2**32
+
+
+def _town_surface(way, zones):
+    """Fallback for unmapped surfaces. Same OSM way, both sides and all chunks."""
+    if way is None or zones.way_highway.get(way) not in LOCAL_TOWN_STREETS:
+        return DEFAULT
+    roll = _seed(way)
+    # Shares are WORKING_VALUE. Keep the older surfaces off streets covered by the owner's paving feedback.
+    if zones.rules.get("older_sidewalks"):
+        if roll < 0.12:
+            return "asphalt"
+        if roll < 0.28:
+            return "slabs"
+    return "paving_red" if 0.28 <= roll < 0.46 else DEFAULT
+
+
 def surface_types(cen, way, zones: Zones, layer="road"):
     """Surface type and provenance of footway triangles with centroids `cen` (n, 2) that belong to carriageway OSM
     way `way` (int or None). Returns (types (n,) of str, provenance (n,) of str, {override id: triangles})."""
@@ -433,6 +456,10 @@ def surface_types(cen, way, zones: Zones, layer="road"):
     pts = shapely.points(np.asarray(cen, float).reshape(-1, 2))
     r = zones.rules
     if layer in LAYERS_RULES:
+        if r.get("mixed_sidewalks"):
+            fallback = _town_surface(way, zones)
+            if fallback != DEFAULT:
+                typ[:], prov[:] = fallback, "town_typology(WORKING_VALUE)"
         if r.get("estate_slabs") and zones.blocks and zones.way_highway.get(way) in ESTATE_CLASSES:
             near = _nearest(zones.blocks, pts, ESTATE_M) >= 0
             typ[near], prov[near] = "slabs", "typology(WORKING_VALUE)"
@@ -466,8 +493,16 @@ def retype_sidewalks(parts: list, zones: Zones | None) -> dict:
            "tris_by_provenance": {}, "overrides_applied": [], "overrides_stale": []}
     if zones is None:
         return rep
+    mixed = zones.rules.get("mixed_sidewalks", False)
+    if mixed:
+        rep["mixed_sidewalks"] = True
     new, hits_all = [], {}
     for p in parts:
+        if mixed and p.layer == "road" and p.mat == "curb_concrete" and p.UV1 is not None:
+            # UV1 from the side strip: metres along the edge and distance from its gutter.
+            # Flanges at the back of the sidewalk and unparameterized meshes retain their old finish.
+            if np.min(np.abs(p.UV1[p.T, 1])) < 0.30:
+                p.COL = np.tile([_seed(p.src), 0., 0., 1.], (len(p.V), 1))
         if p.mat != SOURCE_MAT or p.layer not in LAYERS_OVERRIDE or getattr(p, "export_mat", None):
             continue
         tri = p.V[p.T]
@@ -482,16 +517,30 @@ def retype_sidewalks(parts: list, zones: Zones | None) -> dict:
         for pv in sorted(set(prov)):
             rep["tris_by_provenance"][pv] = rep["tris_by_provenance"].get(pv, 0) + int((prov == pv).sum())
         T0 = p.T
-        for mat in sorted(set(mats)):
+        for surface in MIXED_SURFACES:
+            mat = MATERIAL[surface]
             sel = mats == mat
+            if not sel.any():
+                continue
             rep["tris_by_material"][mat] = rep["tris_by_material"].get(mat, 0) + int(sel.sum())
             rep["m2_by_material"][mat] = rep["m2_by_material"].get(mat, 0.0) + float(area[sel].sum())
-            if mat == SOURCE_MAT:
+        if mixed:
+            if len(set(typ)) == 1:
+                p.COL = np.tile([MIXED_SURFACES.index(typ[0]) / 3., 0., 0., 1.], (len(p.V), 1))
+                rep["tris_out"] += len(T0)
                 continue
-            q = Part(p.layer, p.mat, p.V, p.UV, T0[sel], p.footprint, p.src, p.UV1, p.COL)
-            q.export_mat = mat
-            new.append(q)
-        p.T = T0[mats == SOURCE_MAT]
+            for code, surface in enumerate(MIXED_SURFACES):
+                face = T0[typ == surface]
+                if len(face):
+                    col = np.tile([code / 3., 0., 0., 1.], (len(p.V), 1))
+                    new.append(Part(p.layer, p.mat, p.V, p.UV, face, p.footprint, p.src, p.UV1, col))
+            p.T = T0[:0]
+        else:
+            for mat in sorted(set(mats) - {SOURCE_MAT}):
+                q = Part(p.layer, p.mat, p.V, p.UV, T0[mats == mat], p.footprint, p.src, p.UV1, p.COL)
+                q.export_mat = mat
+                new.append(q)
+            p.T = T0[mats == SOURCE_MAT]
         rep["tris_out"] += len(p.T)
     rep["tris_out"] += sum(len(q.T) for q in new)
     parts[:] = [p for p in parts if len(p.T)] + new

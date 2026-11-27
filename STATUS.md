@@ -20,3 +20,5 @@
 ## codex-sidewalk-var-s24
 - Przeczytano zasady i ADR 0237. Kafel Tykocin skopiowano do prywatnego derived; junction do main odłożono pod inną nazwą.
 - Następny krok: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 before`
+- Mechanizm gotowy za flagą regionu. COLOR_0 wybiera skan/pigment, spoiny i naprawy są w shaderze, krawężniki używają UV1 i koloru. Dodano test stabilności i zachowania granicy w jednym prymitywie.
+- Następny krok: dokończyć `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 before`, następnie włączyć flagi w overrides obu miast.
