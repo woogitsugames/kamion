@@ -1021,6 +1021,7 @@ Shader "Kamion/World PBR"
                                * smoothstep(-aa, aa, depth - i.uv.w) * step(0.001, depth);
                     albedo = lerp(albedo, albedo * 0.71h + 0.012h, spall);
                     smooth *= 1.0h - 0.4h * spall;
+                    tn = normalize(tn + half3(0.0h, -0.22h * spall, 0.0h));
                 }
             #endif
 

@@ -1320,7 +1320,7 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
     if mixed_sidewalks:
         manifest["materials"] = {**manifest["materials"],
                                  "sidewalk_paving": {**MATERIALS["sidewalk_paving"], "mixed_sidewalks": True},
-                                 "curb_concrete": {**MATERIALS["curb_concrete"], "town_kerb": True}}
+                                 "curb_concrete": {**MATERIALS["curb_concrete"], "town_kerb": True, "set_tile": True}}
     if w.water is not None:
         srcs["generated/water_sources.json"] = sha(WT.sources_path(region_id).read_bytes().replace(b"\r\n", b"\n"))
         manifest["nodes"]["water"] = ("water sheet (ADR 0210): flat surface at the measured water level; UV0 = local "

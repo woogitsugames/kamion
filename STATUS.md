@@ -24,3 +24,5 @@
 - Następny krok: dokończyć `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 before`, następnie włączyć flagi w overrides obu miast.
 - Dopisano kontrakt wariantów do ADR 0237. Przygotowano testy pod slotem heavy oraz lokalne kopie instancji regionu C potrzebne do bramek.
 - Następny krok po renderach: `pwsh artifacts/codex-sidewalk-var-s24/test.ps1`
+- Dopasowano skalę tekstury krawężnika do istniejącego zestawu z prefabrykatami metrowymi. Ubytek moduluje też normalną. Obejrzano referencje Commons cs153250600 i cs202183436.
+- Następna komenda po zakończeniu kolejki i bazowego przebiegu: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`
