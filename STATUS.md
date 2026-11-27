@@ -15,3 +15,12 @@
   `plots._verge_overlay` + apron) zawinięty w rowie, "patyki" = `M_verge_tufts` (verge_flora, karty trawy/ziol rowu) stojace
   NA zjezdzie. Poprawka (a) w decals.py (commit c82222636), testy 0323 14/14.
 - NASTEPNY KROK: build_world knyszyn-w z KAMION_DBG_DRIVE_AT (diagnoza rowu pod zjazdem), potem poprawka (b).
+- [krok 2] Przyczyna (b): brama w plocie 12-14 m od DK65 i skosna do drogi (41 st.) -> zjazd po normalnej bramy po skosie
+  przez row; zasyp rowu (apply_drops) tylko +-(w/2+0,4) m tam, gdzie skos trafial w asfalt -> kostka zawinieta w
+  niezasypanym rowie; nakladka w starym (szerszym, pass 1) obrysie drogi trzymala wysokosc jezdni (wisiala / fałda z
+  apronem); kazdy podjazd `yard_paving` mimo plot["surface"] (zwir dla starych dzialek). Poprawki w plots.py:
+  `_perpendicular_crossing` (zjazd prostopadle do jezdni od wejscia w obrys, zasyp w tym miejscu), rampa do gruntu,
+  `drive_mat` (zwir/kostka z ziarna dzialki), `_crossing_edging` (obrzeze kostki / skarpa zwiru do gruntu),
+  `crossing_keepout` + verge_flora keepout (103 karty mniej w knyszyn-w). after-r1 obejrzany: zwir w lusterku bez patykow,
+  szew osi obok kreski; r2 w toku (rampa + bez fałdy).
+- NASTEPNY KROK: obejrzec `artifacts/axis-driveway-s24/after-r2`, ew. iteracja; testy tests/gis; dopiski ADR 0335/0349.
