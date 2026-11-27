@@ -70,7 +70,9 @@ def render(kit, eye, at, fov=62.0, size=(900, 560), low=True, sky=(0.42, 0.60, 0
             nl = np.linalg.norm(n, axis=-1, keepdims=True)
             occ = np.clip(nl, 0, 1)
             n = n / np.maximum(nl, 1e-3)
-            lam = np.clip(n @ SUN, 0, 1)[..., None]
+            nol = (n @ SUN)[..., None]
+            # foliage as Kamion/World PlotKit: wrapped diffuse + transmission (hard surfaces: plain Lambert)
+            lam = np.where(fol[..., None], np.clip(nol * 0.6 + 0.4, 0, 1) * 0.85 + 0.22 * np.clip(-nol, 0, 1), np.clip(nol, 0, 1))
             lit = 0.38 * np.array([0.8, 0.9, 1.0]) * (0.6 + 0.4 * n[..., 2:3]) + 0.85 * lam
             alb = np.where(fol[..., None], tex[..., :3] * occ, tex[..., :3] * col[..., :3] * 2)
             shade = np.where(fol[..., None], alb * lit, alb * 0.8)

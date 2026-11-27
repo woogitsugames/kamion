@@ -117,18 +117,28 @@ def test_spruce_card_is_green_not_turquoise():
 
 def test_full_garden_tree_has_no_dark_core_body():
     """render-artifacts-s24 (critic s24 wave 11 P0 #3): the High (full) kit tree's 4-sided dark _core (occ 0.26) showed
-    through the card gaps as straight-edged dark rhombi in the crown (knyszyn-w tykocka-dw671-out). No foliage vertex of
-    the full crown is darker than the cards' shaded middle; the cards darken towards the axis (occ_mid) instead."""
-    for species in ("maple", "linden"):
+    through the card gaps as straight-edged dark rhombi in the crown (knyszyn-w tykocka-dw671-out). ADR 0352 addendum
+    (garden-trees-s24): the small full tree is lobes of foliage on boughs (small_trees.young_tree) - no foliage vertex
+    is darker than a shaded lobe foot, no card stands on the crown's axis (three crossed there drew a dark wedge in
+    sunlight), and every lobe shades by the direction from the crown's centre, not by its own plane."""
+    for species in ("maple", "linden", "birch"):
         kit = PLT.Kit()
         PG.garden_tree(kit, np.array([0.0, 0.0]), 0.0, 1.25, 4.7, 1.6, species, "k", lite=False, cards=3)
-        mids = 0
-        for V, C in zip(kit.V, kit.C):
+        lobes = 0
+        for V, C, T in zip(kit.V, kit.C, kit.T):
             fol = C[:, 3] > 0.5
             if not fol.any():
                 continue
             occ = np.linalg.norm(C[fol, :3] * 2 - 1, axis=1)
             assert occ.min() >= 0.5, f"{species}: dark foliage body (occ {occ.min():.2f}) inside the crown"
-            if len(V) == 5 and np.hypot(V[4, 0], V[4, 1]) < 0.4 and occ[4] < 0.75:
-                mids += 1
-        assert mids == 3, f"{species}: three crown cards with a shaded middle"
+            assert len(V) == 4 and len(T) == 2, "a lobe is one quad"
+            foot = V[:2].mean(0)
+            assert np.hypot(foot[0], foot[1]) >= 0.05, f"{species}: a card stands on the crown's axis"
+            n = (C[:, :3] * 2 - 1) / occ[:, None]
+            face = np.cross(V[1] - V[0], V[3] - V[0])
+            face /= np.linalg.norm(face)
+            # the normals fan out from the crown's centre (they differ across the lobe) and none is the card's plane normal
+            assert np.ptp(n, axis=0).max() > 0.3 and np.abs(n @ face).max() < 0.999 and n[:, 2].mean() > 0.0, species
+            lobes += 1
+        assert lobes == 6, f"{species}: three lower + three upper lobes"
+        assert 19 <= sum(len(t) for t in kit.T) <= 21                           # was 14: within + 50 %

@@ -244,18 +244,21 @@ def test_garden_tree_geometry_full_and_lite():
             V, UV, T, C = kit.out()
             fol = C[:, 3] > 0.5
             assert len(T) <= cap
-            assert V[fol][:, 2].min() - 10.0 == pytest.approx(cb, abs=0.2)        # the crown starts at the crown base ...
+            # the crown starts at the crown base; the full variant of a small tree (ADR 0352 addendum: lobes on
+            # boughs, small_trees.young_tree) hangs its lowest lobe up to 0.1 of the crown height below it
+            young = kit is full and H < PT.small_trees.YOUNG_H_MAX_M
+            assert -(0.12 * (H - cb) + 0.05 if young else 0.2) <= V[fol][:, 2].min() - 10.0 - cb <= 0.2
             assert (V[fol][:, 2].min() - 10.0) / H <= 0.33                        # ... low: no bare stem under an umbrella
             assert V[:, 2].max() - 10.0 == pytest.approx(H, rel=0.06)
             assert np.ptp(V[fol][:, 0]) == pytest.approx(2 * R_MED, rel=0.3)      # as wide as the crown on the orthophoto
             assert V[~fol][:, 2].min() < 10.0 and V[~fol][:, 2].max() > 10.0 + cb  # the stem reaches into the crown
         u = full.out()[1][:, 0]
         s0, s1 = PK.SPRITE[sprite]
-        assert ((u >= s0 - 1e-6) & (u <= s1 + 1e-6)).sum() >= 12                  # three crossed cards of the habit
+        assert ((u >= s0 - 1e-6) & (u <= s1 + 1e-6)).sum() >= 12                  # three crossed cards / six lobes of the habit
     dense, open_ = PLT.Kit(), PLT.Kit()
     PT.garden_tree(dense, np.array([0.0, 0.0]), 0.0, 2.0, 6.5, 1.3, "linden", "d")
     PT.garden_tree(open_, np.array([0.0, 0.0]), 0.0, 2.0, 8.0, 1.3, "birch", "d")
-    assert len(dense.out()[2]) > len(open_.out()[2]) + 15                         # core + sprays only in the dense habits
+    assert len(dense.out()[2]) >= len(open_.out()[2]) + 14                        # inner sprays only in the dense habits (ADR 0352: no core)
 
 
 def _crowns(n, seed=7):

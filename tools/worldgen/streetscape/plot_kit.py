@@ -824,12 +824,18 @@ def _sprites(rng, h, w):
 # ADR 0163: silhouettes of whole crowns, bottom -> top (t 0..1) -> half width (0..1). Sources: G7 #14 (Ebben habit:
 # linden ovate and dense, maple / horse chestnut round-oval and dense, birch narrow-ovate and open) and the Bialystok
 # measurements G7-T01..T04 (crown starts low: no umbrella on a bare stem).
+# ADR 0352 addendum (garden-trees-s24): half width of the dense crowns at their very foot. Was 0.30 / 0.34: the card ended
+# in a straight cut a third of its width long - the flat underside of the "lollipop". Now the underside is rounded and
+# belongs to leaf clusters; the stem enters it at one point.
+_UNDER = 0.07
+
+
 def _crown_hw(kind, t):
     t = min(max(float(t), 0.0), 1.0)
     if kind == "ovoid":                                   # widest at 0.34 of the crown height, a rounded point on top
-        return 0.30 + 0.70 * (t / 0.34) ** 0.7 if t < 0.34 else max(1.0 - ((t - 0.34) / 0.66) ** 1.9, 0.0) ** 0.62
+        return _UNDER + (1.0 - _UNDER) * (t / 0.34) ** 0.55 if t < 0.34 else max(1.0 - ((t - 0.34) / 0.66) ** 1.9, 0.0) ** 0.62
     if kind == "round":                                   # widest at 0.46, a flatter underside, a broad dome
-        return 0.34 + 0.66 * (t / 0.46) ** 0.6 if t < 0.46 else max(1.0 - ((t - 0.46) / 0.54) ** 2.2, 0.0) ** 0.5
+        return _UNDER + (1.0 - _UNDER) * (t / 0.46) ** 0.5 if t < 0.46 else max(1.0 - ((t - 0.46) / 0.54) ** 2.2, 0.0) ** 0.5
     if t < 0.45:                                          # birch: slim foot, widest in the middle, a spire
         return 0.22 + 0.78 * (t / 0.45) ** 0.8
     return max(1.0 - ((t - 0.45) / 0.55) ** 1.6, 0.0) ** 0.75
@@ -919,6 +925,8 @@ def _crown_card(rng, h, w, kind):
             lx, ly = bx + math.cos(a) * r, by + math.sin(a) * r * (0.8 if kind != "birch" else 1.5)
             if not (leaf_px * 0.6 < lx < w - leaf_px * 0.6 and leaf_px * 0.6 < ly < h - 2):
                 continue
+            if kind != "birch" and ly > bot - 0.12 * (bot - top) and abs(lx - cx) > half(ly, 1 if lx > cx else -1) + 0.6 * leaf_px:
+                continue                                    # garden-trees-s24: the rounded underside stays rounded (_UNDER)
             k = k0 * rng.uniform(0.8, 1.18) * (0.78 + 0.3 * (1 - (ly - by) / max(br, 1)) * 0.5 + 0.22 * j / P["per"])
             col = np.array(P["leaf"], np.float32) * k + np.array([10, 4, -8], np.float32) * rng.uniform(-1, 1)
             ang = rng.uniform(0, 6.2832) if kind != "birch" else math.pi + rng.normal(0, 0.5)     # birch leaves hang
