@@ -193,7 +193,7 @@ Shader "Kamion/Sky"
                     // The display cap gives Low and post tiers the same cloud tones. This does not alter the
                     // irradiance model, exposure, surface shading or the legacy overcast deck.
                     float cap = lerp(_KamionSkyCap.x, _KamionSkyCap.y, smoothstep(0.0, 0.5, d.y));
-                    float cloudY = cap * lerp(0.35, 1.22, clearCloud.y);
+                    float cloudY = cap * lerp(0.32, 1.18, clearCloud.y);
                     // Reflection captures explicitly bypass display compression, as the analytic dome does.
                     if (_KamionSkyCapOff > 0.5)
                         cloudY = _SkyZenith.w * (1.0 + 2.0 * max(d.y, 0.0)) / 3.0 * clearCloud.y;
@@ -205,15 +205,13 @@ Shader "Kamion/Sky"
                     // their shape down to ~2 deg, the last ~1 deg melts into the horizon colour of the terrain fog).
                     const float kCloudVeilM = 300.0;
                     float cloudT = exp(-_KamionHaze.x * kCloudVeilM / max(d.y, 1e-3));
-                    // glass-sky-s24 (critic s24 build #8 P2, t0720 / t0830): the veil target was the flat _SkyFogColor, the
-                    // AZIMUTH MEAN of the horizon radiance (SkyModel.HorizonColorExposed). Toward the sun the local horizon
-                    // is brighter than that mean (clouds melt in fine: DW671, heading ~ sun azimuth); away from the sun it
-                    // is darker, so every low cloud ended in a pale flat band brighter than the blue sky beside and below
-                    // it (Szosa Knyszynska, heading W with the sun at 200 deg). The in-scattered light of the veil in front
-                    // of a cloud is the light of the clear sky in that same direction (the dome IS the single-scattering
-                    // in-scatter of the full path), so the veil fades a cloud into the sky right behind it.
-                    float3 cloud = lerp(sky, cloudY.xxx, cloudT);
-                    sky = lerp(sky, cloud, clearCloud.x * (1.0 - _SkyMisc.x));
+                    // agy-clouds-s24 (ADR 0332 addendum 3): shaded cloud undersides catch cool sky scatter while sunlit
+                    // tops stay warm-white (unit-luma tints so exposure stays anchored; D100 sky saturation x2 above is
+                    // untouched). Soft wispy opacity curve removes the sharp cotton-sprite contour at zero extra fetches.
+                    float3 cloudTint = lerp(float3(0.91, 0.98, 1.13), float3(1.02, 1.00, 0.97), smoothstep(0.15, 0.85, clearCloud.y));
+                    float3 cloud = lerp(sky, cloudY * cloudTint, cloudT);
+                    float softAlpha = clearCloud.x * (0.68 + 0.32 * clearCloud.x);
+                    sky = lerp(sky, cloud, softAlpha * (1.0 - _SkyMisc.x));
                 }
                 // Sun disc (0.53° nominal, slightly enlarged so it survives render scale), with limb darkening.
                 float cosSun = dot(d, _SkySunDir.xyz);

@@ -136,9 +136,12 @@ namespace Game.Rendering
             // rq_ev exposure bias in stops, rq_wet wetness 0..1, rq_grassvar lawn variation 0..1).
             Clouds = I(arg("rq_clouds")); GroundHaze = B(arg("rq_haze")); Ssao = B(arg("rq_ssao"));
             WorldAtmosphere.ClearCloudCoverOverride = F(arg("rq_clearcover")); // ADR 0108, null restores the preset.
+            WorldAtmosphere.CloudVariantOverride = I(arg("rq_cloudvar")); // ADR 0332 agy-clouds-s24: 0..N-1 explicit variant.
+            WorldAtmosphere.CloudMirrorOverride = B(arg("rq_cloudmirror")); // ADR 0332 agy-clouds-s24: meridian mirror.
+            WorldAtmosphere.CloudSeed = I(arg("rq_cloudseed")) ?? 0; // ADR 0332 agy-clouds-s24: deterministic cloud seed.
             WorldAtmosphere.HeadlampsOverride = B(arg("rq_headlamps")); // ADR 0108 r2; null restores preset opt-in.
             int? look = I(arg("rq_look")); float? ev = F(arg("rq_ev")); float? wet = F(arg("rq_wet")); float? gvar = F(arg("rq_grassvar"));
-            Look = look.HasValue || ev.HasValue || wet.HasValue || gvar.HasValue || WorldAtmosphere.ClearCloudCoverOverride.HasValue || WorldAtmosphere.HeadlampsOverride.HasValue;
+            Look = look.HasValue || ev.HasValue || wet.HasValue || gvar.HasValue || WorldAtmosphere.ClearCloudCoverOverride.HasValue || WorldAtmosphere.CloudVariantOverride.HasValue || WorldAtmosphere.CloudMirrorOverride.HasValue || WorldAtmosphere.CloudSeed != 0 || WorldAtmosphere.HeadlampsOverride.HasValue;
             WorldAtmosphere.LookVariant = look ?? -1;
             CabToe = F(arg("rq_cabtoe"));
             CabSoft = B(arg("rq_cabsoft")); CabSpill = B(arg("rq_cabspill"));   // ADR 0297
