@@ -163,7 +163,7 @@ zmyślaj” ma pierwszeństwo przed opisem zadania.
 |---|---|---|---|
 | asset pomnika LOD0 | — | 26 476 | figura 10 500, głowa 2 600, kartusze 1 300, architektura 11 240 + 448 (kostka platformy), buława 420 |
 | asset pomnika LOD1 | — | 1 914 | figura 540, głowa 110, kartusze 96, architektura 1 064, buława 120 |
-| cały Rynek (`tykocin_rynek_0320`) LOD0 | 2 870 | 33 910 | + ogrodzenie i łańcuchy 3 036, ławki i skrzynie 2 592, kwiaty 1 536 |
+| cały Rynek (`tykocin_rynek_0320`) LOD0 | 2 870 | 35 446 | + ogrodzenie, łańcuchy i żeliwo ławek 3 036, deski ławek i skrzyń 2 592, kwiaty 3 072 |
 | cały Rynek LOD1 | 1 562 | 3 164 | 9 % LOD0 |
 | materiały | 4 | +3 (`monument_sandstone_aged`, `wood_planks_bench`, `planter_flowers`) | `monument_sandstone` (ADR 0320) nieużywany |
 | tekstury | — | +1 zestaw 1024² (`sandstone_weathered_tint`) | reszta to zestawy już w buildzie |
@@ -179,4 +179,25 @@ LOD1 ≤ 10 % LOD0, kolory wierzchołków w obu LOD, warianty i obrót ławek). 
 Look-dev Blender (Cycles, LOD0 z wypieczonym kolorem) r1–r4, `artifacts/tykocin-plaza-s24/lookdev/`: r1 futro jak
 „stos naleśników”, ręka za krótka, kartusze jak kraby → r2 próba ważonej decymacji zniszczyła korpus (odrzucona) →
 r3 głowa jako osobny blok, nieregularne loki, kartusz z ramą → r4 broda wyłożona na pierś.
+
+Unity (High / clear, Win64; kafel `tykocin` przebudowany w prywatnej kopii derived worktree, `build_world` exit 0,
+630 s): przed `artifacts/tykocin-plaza-s24/vqa-before/` (import stanu main), po `vqa-after1/` → `vqa-r2/` → `vqa-after/`.
+r1: skrzynie jasne jak surowa sosna, kwiaty jak złożone kartki w paski (kępki za duże, UV zdegenerowane), tablice
+za duże i białe, kamień oliwkowy → r2: drewno ×0,6, tablice −30 %, kamień jaśniejszy i mniej zielony → r3: futro
+ciemniejsze od żupana (jak na „1762 01”), masa kwiatów zielona z drobnymi kępkami kwiatów. Arkusze zdjęcie | przed | po:
+`artifacts/tykocin-plaza-s24/sbs/`.
+
+**Znalezisko przy okazji:** figura z ADR 0320 stała **tyłem do DW671** — kadr `czarniecki_figure_0320b` „przed” (z
+południa) pokazuje plecy i pelerynę, choć `MONUMENT_FORWARD` mówił „południe” (bryły toczone miały przód po stronie −y).
+Nowy asset ma przód = +y w swoim układzie i w kadrze z południa widać twarz, pętlice i buławę po lewej jak na Commons 01.
+Sam zwrot pomnika (południe) pozostaje ESTIMATED.
+
+### Otwarte
+- Ocena `visual-critic` (subagent nie tworzy subagentów — do zlecenia przez lidera); pomiar FPS w playerze.
+- Inskrypcje pól cokołu (na zdjęciach czytelne jako poziome wiersze) i herb kartusza pominięte — bez liternictwa w świecie.
+- Latarnie Rynku: na zdjęciach stoją stylizowane dwuramienne latarnie, w grze zostały słupy uliczne z reguły dróg
+  (pozycji latarni nie ma w danych; ADR 0320 §4.2 bez zmian).
+- Twarz z bliska jest uproszczona (2,6 k trójkątów na głowę); z ziemi (≥ 8 m, głowa 7 m nad brukiem) czyta się broda,
+  wąsy, łuk brwiowy i łysina. Bez mapy normalnych — całe wietrzenie jest w wierzchołkach i w zestawie kafelkowym.
+- Pozycje donic i podział 6 ławek / 4 skrzynie są ESTIMATED; zdjęcie właściciela z Rynku rozstrzygnie.
 

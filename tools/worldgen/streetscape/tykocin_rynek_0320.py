@@ -257,7 +257,7 @@ def _flowers(acc, layer, c, z, t, n, hl, hw, hgt, palette, key):
         return
     V, COL, T = [], [], []
     UV = []
-    for k in range(64):                                         # small tufts standing out of the mound (leaves, blossoms)
+    for k in range(48):                                         # small tufts standing out of the mound (leaves, blossoms)
         u, v = 1.9 * _h(key, "tu", k) - 0.95, 1.8 * _h(key, "tv", k) - 0.9
         base = c3 + t3 * u * hl + n3 * v * hw + np.array([0, 0, hgt * (0.25 + 0.5 * (1 - max(abs(u) ** 2, abs(v) ** 2)))])
         a = math.pi * _h(key, "ta", k)
