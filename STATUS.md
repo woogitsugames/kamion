@@ -29,3 +29,5 @@
 - Następny krok: `& $python tools/ui/build_nav_map.py --region bialystok-krywlany` oraz pod slotem heavy `pwsh scripts/build-lab.ps1 -SkipAudio -BuildTarget Win64`.
 - Wygenerowano brakującą mapę KNAV Krywlany z istniejących danych regionu (95 973 B, 452 drogi, 689 budynków, 617 punktów trasy) i zapisano metadane wygenerowane przez Unity. Wszystkie 44 unikalne kafle korytarzy mają oba zasoby na dysku.
 - Następny krok po generatorze DrivingLab: przywrócić uboczne modyfikacje plików śledzonych przez Git, następnie `pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64`.
+- `build-lab.ps1 -SkipAudio -BuildTarget Win64` zwrócił `DRIVINGLAB_RESULT: OK`. Prefab TRAKT ma GUID oczekiwany przez scenę (`4cd4c98f4f348194ea87e419fbf570d6`). Przywrócono cztery śledzone pliki przepisane przez generator, zachowując lokalne wygenerowane prefaby.
+- Następny krok: `pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64`.
