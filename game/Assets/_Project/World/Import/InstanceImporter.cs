@@ -725,6 +725,10 @@ namespace Game.World.Import
         /// <summary>Kamion/World FenceMesh when it exists and compiles; the one lookup both importers use.</summary>
         public static Shader FenceShaderOrNull() => UsableShaderOrNull(Shader.Find(Game.Rendering.FenceMeshCoverage.ShaderName));
 
+        /// <summary>PC importer of the tree impostor atlases (impostor_tree_*.png / _n.png; ImpostorAtlasAudit measures it).</summary>
+        public const TextureImporterNPOTScale ImpostorNpotScale = TextureImporterNPOTScale.ToNearest;
+        public const int ImpostorMaxSize = 2048;
+
         public static Texture2D ImportTexture(RegionImporter.Result r, string png, bool clamp, bool linear = false)
         {
             string file = Path.GetFileName(png);
