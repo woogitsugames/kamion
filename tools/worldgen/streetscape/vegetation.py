@@ -336,6 +336,104 @@ def _scatter(poly, spacing, rng):
 TREE_GROUP_DEFAULTS = {"group_size": [3, 7], "in_group_m": [3.0, 5.5], "gap_m": [15.0, 40.0], "depth_m": 3.0,
                        "rows_replace_m": 12.0, "species": {"linden": 0.5, "pine": 0.2, "birch": 0.2, "maple": 0.1}}
 
+# ADR 0352 addendum (neon-avenue-s24, critic build #10 TOP #10 "klony-bliźniaki"): roadside tree-row variation shared
+# by BDOT10k OT_OIPR_L rows (tiles without tree_rows.yaml, e.g. dk65-monki-01 / dw671-tykocin-*, plus non-corridor rows)
+# and tree_rows.yaml avenues. Breaks the "identical twin every ~25 m" look without adding prototypes or draw calls:
+#   - age / height scale 0.70-1.15 x href_m (clamped to row height_m when given)
+#   - no consecutive identical model variant (v0/v1/v2) on neighbouring trees of the same species
+#   - >= 60 deg (1.05 rad) yaw separation between consecutive trees along the row
+#   - natural along-row (10-16 m) & lateral (+-1-2.5 m) scatter, missing-tree gaps (~16 %), young replacements / saplings
+#   - species admixture (linden / maple / oak / birch / alder; ash -> linden per ADR 0308). WORKING_VALUE.
+AVENUE_ROW_SPACING_M = (10.0, 16.0)
+AVENUE_ROW_LATERAL_SD_M = 1.0
+AVENUE_ROW_LATERAL_MAX_M = 2.5
+AVENUE_ROW_MISSING_SHARE = 0.16
+AVENUE_ROW_REPLANT_SHARE = 0.35
+AVENUE_ROW_DOMINANT_SHARE = 0.62
+AVENUE_ROW_AGE_SCALE = (0.70, 1.15)
+AVENUE_ROW_MIN_YAW_DIFF = 1.05
+AVENUE_ROW_SPECIES = {"linden": 0.30, "maple": 0.28, "oak": 0.16, "birch": 0.16, "alder": 0.10}
+AVENUE_ROW_YOUNG_SPECIES = {"birchyoung": 0.35, "linden": 0.25, "maple": 0.25, "shrub": 0.15}
+AVENUE_ROW_YOUNG_H_M = (4.0, 8.2)
+
+
+def avenue_row_candidates(line, rng):
+    """Lay out a BDOT10k OT_OIPR_L 'rząd drzew' line with natural rhythm, lateral scatter, gaps, young replacements /
+    self-seeded saplings and species admixture (ADR 0352 addendum). Deterministic per line; every random draw is made
+    for every station before any gap filter so partial cuts stay local (ADR 0173).
+    Returns (P_base [k, 2], P_jit [k, 2], species [k], young_h [k])."""
+    L = line.length
+    lo, hi = AVENUE_ROW_SPACING_M
+    names = list(AVENUE_ROW_SPECIES)
+    w = np.array([AVENUE_ROW_SPECIES[k] for k in names], float)
+    w /= w.sum()
+    ynames = list(AVENUE_ROW_YOUNG_SPECIES)
+    yw = np.array([AVENUE_ROW_YOUNG_SPECIES[k] for k in ynames], float)
+    yw /= yw.sum()
+    dom = names[int(rng.choice(len(names), p=w))]
+    s = float(rng.uniform(1.5, min(10.0, hi)))
+    P0, Pj, S, YH = [], [], [], []
+    while s < L:
+        lat = float(np.clip(rng.normal(0.0, AVENUE_ROW_LATERAL_SD_M), -AVENUE_ROW_LATERAL_MAX_M, AVENUE_ROW_LATERAL_MAX_M))
+        miss = float(rng.uniform()) < AVENUE_ROW_MISSING_SHARE
+        replant = float(rng.uniform()) < AVENUE_ROW_REPLANT_SHARE
+        sp = dom if float(rng.uniform()) < AVENUE_ROW_DOMINANT_SHARE else names[int(rng.choice(len(names), p=w))]
+        ysp = ynames[int(rng.choice(len(ynames), p=yw))]
+        yh = float(rng.uniform(*AVENUE_ROW_YOUNG_H_M))
+        step = float(rng.uniform(lo, hi))
+        if not miss or replant:
+            p0 = np.array(line.interpolate(s).coords[0], float)
+            a = np.array(line.interpolate(max(s - 0.5, 0.0)).coords[0], float)
+            b = np.array(line.interpolate(min(s + 0.5, L)).coords[0], float)
+            t = b - a
+            nt = float(np.hypot(*t))
+            nrm = np.array([-t[1] / nt, t[0] / nt]) if nt > 1e-9 else np.array([0.0, 1.0])
+            P0.append(p0)
+            Pj.append(p0 + nrm * lat)
+            if miss and replant:
+                S.append(ysp)
+                YH.append(round(yh, 1))
+            else:
+                S.append(sp)
+                YH.append(None)
+        s += step
+    return (np.array(P0, float).reshape(-1, 2), np.array(Pj, float).reshape(-1, 2), S, YH)
+
+
+def _avenue_emit_attrs(sp, rng, hrange, age_scale, young_h, href_map, prev):
+    """Per-tree (h, v, yaw, lean) along a roadside avenue row (ADR 0352 addendum): age/scale 0.70-1.15 x href_m,
+    anti-clone variant selection (no consecutive identical variant on the same species), >= 60 deg yaw separation from
+    the previous tree, natural lean 0.005-0.065 rad. Young replacements keep their own species height range."""
+    import math
+    nvar = NVAR.get(sp, 3)
+    v = int(rng.integers(0, nvar))
+    prev_sp, prev_v, prev_yaw, prev_h = prev
+    if sp == prev_sp and nvar > 1 and v == prev_v:
+        v = (prev_v + 1 + int(rng.integers(0, max(nvar - 1, 1)))) % nvar
+    yaw = float(rng.uniform(0.0, 6.2832))
+    if prev_yaw is not None:
+        da = abs((yaw - prev_yaw + math.pi) % (2.0 * math.pi) - math.pi)
+        if da < AVENUE_ROW_MIN_YAW_DIFF:
+            yaw = (prev_yaw + 1.2 + float(rng.uniform(0.0, 3.8))) % 6.2832
+    lean = float(rng.uniform(0.005, 0.065))
+    scale = float(rng.uniform(age_scale[0], age_scale[1]))
+    if young_h is not None:
+        if sp in ("shrub", "birchyoung", "pineyoung"):
+            ylo, yhi = HEIGHT[sp]
+            h = float(rng.uniform(ylo, yhi))
+        else:
+            h = float(young_h)
+    else:
+        hs = href_map.get(sp)
+        href = float(hs[min(v, len(hs) - 1)]) if hs else float(HREF_DEFAULT.get(sp, sum(HEIGHT[sp]) * 0.5))
+        h = href * scale
+        if sp == prev_sp and prev_h is not None and abs(h - prev_h) < 1.4:
+            alt = scale + (0.12 if scale < 0.5 * (age_scale[0] + age_scale[1]) else -0.12)
+            h = href * float(np.clip(alt, age_scale[0], age_scale[1]))
+        if hrange is not None:
+            h = float(np.clip(h, hrange[0], hrange[1]))
+    return round(h, 1), v, round(yaw, 3), round(lean, 3)
+
 
 def group_positions(line, rng, prm):
     """Clumps along `line` (shapely LineString): n trees (group_size) spaced in_group_m along the line with lateral
@@ -559,6 +657,26 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
                 out[-1]["fk"] = fk          # forest stand tree (texture mix of the forest HLOD, forest_hlod.py)
             if tier:
                 out[-1]["tier"] = tier
+
+    href_map = proto_href()
+
+    def emit_avenue(P, species, rng, src_id, hrange=None, age_scale=AVENUE_ROW_AGE_SCALE, young_h=None, keep=None):
+        """ADR 0352 addendum: emit roadside avenue trees with age/scale variation, non-repeating consecutive variants,
+        separated yaw and optional young replacements; draws for every candidate before filtering (ADR 0173)."""
+        if not len(P):
+            return
+        good, z = ok(P)
+        if keep is not None:
+            good = good & keep
+        yh_list = young_h if young_h is not None else [None] * len(P)
+        prev = (None, None, None, None)
+        for (x, y), zz, sp, yh, g in zip(P, z, species, yh_list, good):
+            h, v, yaw, lean = _avenue_emit_attrs(sp, rng, hrange, age_scale, yh, href_map, prev)
+            prev = (sp, v, yaw, h)
+            if not g:
+                continue
+            out.append({"p": f"tree_{sp}", "v": v, "e": round(float(x), 2), "n": round(float(y), 2),
+                        "z": round(float(zz), 2), "h": h, "yaw": yaw, "lean": lean, "src": src_id})
 
     def pick(rng, mix, n):
         return rng.choice(SPECIES[:len(mix)], size=n, p=np.asarray(mix) / np.sum(mix))   # 6-weight mixes: no spruce
@@ -864,11 +982,9 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
             n_fb += (len(out) - n0) if f"bdot:{f['id']}" in tr_fallback else 0
             grep["rows_grouped"] += 1
             continue
-        P = np.array([line.interpolate(s).coords[0] for s in np.arange(2.0, line.length, 8.0)]).reshape(-1, 2)
-        sp = [["linden", "maple"][_seed(f["id"]) % 2]] * len(P)
-        Pj = P + rng.normal(0, 0.3, P.shape)
+        P, Pj, sp, yh = avenue_row_candidates(line, rng)
         n0 = len(out)
-        emit(Pj, sp, rng, f"bdot:{f['id']}", keep=tr_keep(f, line, P, Pj))
+        emit_avenue(Pj, sp, rng, f"bdot:{f['id']}", young_h=yh, keep=tr_keep(f, line, P, Pj))
         n_fb += (len(out) - n0) if f"bdot:{f['id']}" in tr_fallback else 0
     for gl, prm, key in groups:
         rng = np.random.default_rng(_seed(key))
@@ -881,12 +997,15 @@ def place(src, origin, hf, zc, blocked, report, overrides=None, hard=None, tree_
         emit(P, [gsp[g] for g in G], rng, key)
         grep["trees"] += len(out) - n0
         grep["groups"] += int(G.max()) + 1 if len(G) else 0
-    if tree_rows:                               # ADR 0222: roadside rows (positions + species from the plan)
+    if tree_rows:                               # ADR 0222 / ADR 0352 addendum: roadside rows (positions + species from plan)
         n_tr = len(out)
         for row in tree_rows["rows"]:
             if len(row["P"]):
                 rng = np.random.default_rng(_seed(row["key"]) + 1)
-                emit(row["P"], row["species"], rng, row["key"], hrange=tree_rows["height_m"].get(row["key"]))
+                emit_avenue(row["P"], row["species"], rng, row["key"],
+                            hrange=tree_rows["height_m"].get(row["key"]),
+                            age_scale=row.get("age_scale", AVENUE_ROW_AGE_SCALE),
+                            young_h=row.get("young_h"))
         planned = sum(len(r["P"]) for r in tree_rows["rows"])
         # blocked_dropped: planned trunks the clearance grid (roads / yards / buildings, dilated) refused - a trunk
         # the plan moved to the minimum set-back usually ends here (review of PR #101, FIX 3)

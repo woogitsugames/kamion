@@ -117,7 +117,7 @@ def test_deterministic_and_cut_local():
 def test_too_close_row_pushed_to_set_back():
     graph, roads, _, _ = _scene()
     lines = [("bdot:X", LineString([(-500.0, 4.5), (-200.0, 4.5)]), "bdot")]      # 1.0 m from the edge
-    res = TR.plan(lines, roads, {"missing_share": 0.0}, graph=graph)
+    res = TR.plan(lines, roads, {"missing_share": 0.0, "lateral_sd_m": 0.5}, graph=graph)
     P = _all(res)
     assert len(P) > 10 and res["report"]["moved_to_min_offset"] == len(P)
     d, _ = TR.edge_distance(roads, P)
@@ -143,7 +143,7 @@ def test_vegetation_place_opt_in():
     zc = np.zeros(blocked.shape, np.float32)
     base, _ = VG.place(src, (0.0, 0.0), hf, zc, blocked, {}, overrides=[])
     again, _ = VG.place(src, (0.0, 0.0), hf, zc, blocked, {}, overrides=[], tree_rows=None)
-    assert json.dumps(base) == json.dumps(again) and len(base) == 23          # 2, 10, ... 178 m: 8 m rule
+    assert json.dumps(base) == json.dumps(again) and 8 <= len(base) <= 20     # ADR 0352 addendum: 10-16 m + gaps/replants
     graph = {"edges": [_edge("m", "A", "B", [[0.0, 50.0], [200.0, 50.0]])]}
     plan = TR.plan([("bdot:PL.TEST.ROW.1", LineString(line), "bdot")], TR.roads_from_graph(graph, (0, 0)),
                    {"missing_share": 0.0}, graph=graph)
@@ -197,16 +197,16 @@ def test_partly_taken_bdot_row_keeps_old_trees_on_the_rest():
     old = [t for t in new if t["src"] == "bdot:PL.TEST.ROW.2"]
     row = [t for t in new if t["src"].startswith("treerow:")]
     assert len(old) + len(row) == len(new)
-    # the half that is not taken: the old rule, 8 m apart, inside the tile only
-    assert 22 <= len(old) <= 24 and all(abs(t["n"] - 150.0) < 1.5 and 9.0 <= t["e"] <= 201.0 for t in old)
+    # the half that is not taken: the default BDOT row rule (ADR 0352 addendum: 10-16 m + +-2.5 m lateral + gaps), inside the tile only
+    assert 8 <= len(old) <= 22 and all(abs(t["n"] - 150.0) <= 2.6 and 9.0 <= t["e"] <= 201.0 for t in old)
     xs = sorted(t["e"] for t in old)
-    assert all(5.5 < b - a < 10.5 for a, b in zip(xs, xs[1:]))
+    assert all(b - a >= 8.0 for a, b in zip(xs, xs[1:]))
     # ... and they are the very trees the rule alone puts there (same stream: nothing shifts along the line)
-    base = [t for t in _place(src, None) if abs(t["n"] - 150.0) < 1.5 and t["e"] <= 201.0]
+    base = [t for t in _place(src, None) if abs(t["n"] - 150.0) <= 2.6 and t["e"] <= 201.0]
     assert json.dumps(old) == json.dumps(base)
-    # the taken half: tree_rows trees only (no 8 m tree doubled under the row), nothing outside the tile
-    assert 9 <= len(row) <= 16 and all(abs(t["n"] - 60.0) < 4.0 and t["e"] <= 200.0 for t in row)
-    assert not [t for t in new if t["e"] > 201.0 or 64.0 < t["n"] < 148.0]
+    # the taken half: tree_rows trees only (no default-rule tree doubled under the row), nothing outside the tile
+    assert 8 <= len(row) <= 16 and all(abs(t["n"] - 60.0) < 4.0 and t["e"] <= 200.0 for t in row)
+    assert not [t for t in new if t["e"] > 201.0 or 64.0 < t["n"] < 147.0]
     assert rep["tree_rows"]["lines_handled"] == 0 and rep["tree_rows"]["lines_partly_handled"] == 1
     assert rep["tree_rows"]["fallback_trees"] == len(old)
     assert rep["tree_rows"]["blocked_dropped"] == 0 and rep["tree_rows"]["plan"]["lines_partly_taken"] == 1
@@ -220,7 +220,7 @@ def test_partly_taken_bdot_row_respects_sight_fields():
     plan["cuts"] = list(plan["cuts"]) + [box(60.0, 140.0, 110.0, 160.0)]
     cut = [t for t in _place(src, plan) if t["src"].startswith("bdot:")]
     assert not [t for t in cut if 60.0 <= t["e"] <= 110.0]
-    assert 4 <= len(free) - len(cut) <= 8                                    # 50 m / 8 m
+    assert 2 <= len(free) - len(cut) <= 8                                    # 50 m / 10-16 m
     assert json.dumps([t for t in free if not 60.0 <= t["e"] <= 110.0]) == json.dumps(cut)
 
 
