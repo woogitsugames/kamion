@@ -52,6 +52,52 @@ def test_square_gate_keeps_the_straight_crossing():
     assert acc["ok"] and acc.get("cross") is None and abs(drop["s"] - 100.0) < 0.5
 
 
+def test_driveway_ramp_reuses_continuous_shoulder_in_both_meshes():
+    from roads import meshing as M
+    from roads.xsec import Shoulder
+
+    c = _chain()
+    c.side["L"]["mat"] = np.full(len(c.line.s), Shoulder("ground", 0.08, 1.0, "test").code)
+    net = SimpleNamespace(chains=[c])
+    c.interp = lambda arr, s: np.interp(s, c.line.s, arr)
+    c.crossfall_z = lambda s, lat: np.full_like(s, 100.0)
+    mid, half = 101.25, 2.15
+    assert PLT.apply_drops(net, [{"chain": c.id, "side": "L", "s": mid, "half": half, "plot": "p1"}]) == 1
+    for coarse in (False, True):
+        s = M.stations(c, 90.0, 112.0, coarse)
+        mouth = np.flatnonzero(np.isclose(s, mid + half))[0]
+        outside = np.flatnonzero(np.isclose(s, mid + half + PLT.DROP_RAMP_M))[0]
+        p = c.line.point(s)
+        buf = M.MeshBuf()
+        M.build_side_strip(buf, c, s, "L", 1.0, p, c.line.frame(s)[1], c.hw_at(s), np.zeros(len(s), bool), coarse)
+        asphalt, gravel = buf.parts[:2]
+        assert asphalt.mat == ("collision_asphalt" if coarse else "road_asphalt")
+        np.testing.assert_allclose(asphalt.V[1::2], gravel.V[0::2])
+        np.testing.assert_allclose(asphalt.V[0::2, 1:], np.tile([3.5, 100.0], (len(s), 1)))
+        np.testing.assert_allclose(asphalt.V[2 * mouth + 1, 1:], [3.80, 99.964])
+        np.testing.assert_allclose(asphalt.V[2 * outside + 1, 1:], [3.58, 99.9984])
+        np.testing.assert_allclose(gravel.V[1::2, 1], 4.58)
+
+
+def test_rural_driveway_joins_at_final_asphalt_toe():
+    from roads.meshing import MeshBuf
+
+    carriage = _carriage(hw=3.8)
+    roads = _carriage(hw=8.0)
+    gate = {"m": np.array([100.0, 9.0]), "n": np.array([0.0, -1.0]), "w": 3.5}
+    plot = {"lay": {"gate": gate}, "access": {"d_cw": 5.42, "kind": NW.RURAL}, "surface": "gravel"}
+    surf = SimpleNamespace(top=lambda e, n: 99.964 - 0.03 * (n - 3.8))
+    buf = MeshBuf()
+    assert PLT._verge_overlay(buf, plot, surf, "drive", lambda p: surf.top(*p), roads, carriage) == 1
+    overlay = next(p for p in buf.parts if p.src == "drive:verge")
+    # The join follows the widened asphalt edge, with clearance for the footprint
+    # grid and enough height to resolve depth ordering over the shoulder.
+    assert 3.8 < overlay.V[:, 1].min() < 3.82
+    toe = overlay.V[np.isclose(overlay.V[:, 1], overlay.V[:, 1].min())]
+    lift = toe[:, 2] - np.array([surf.top(e, n) for e, n in toe[:, :2]])
+    assert np.all((lift > 0.0) & (lift < 0.005))
+
+
 def test_drive_material_follows_the_plot_surface():
     assert PLT.drive_mat({"surface": "gravel"}) == PLT.DRIVE_GRAVEL_MAT
     assert PLT.drive_mat({"surface": "paving"}) == PLT.DRIVE_MAT
