@@ -102,13 +102,14 @@ ujawnił pusty horyzont).
 
 ## Weryfikacja w buildzie #10 (nie wykonano tutaj)
 1. Build Windows z tą gałęzią; przejazd autopilota Białystok → Tykocin z `-Scene knyszyn-w` lub `dw671-tykocin-03`
-   (`pwsh scripts/build-windows.ps1 -SkipBuild -Run -Scene knyszyn-w -Tier High -Autopilot route -Speed 50
-   -RunSeconds 240 -ShotSeconds 120`), drugi przebieg z `$env:KAMION_FAR_RING='off'` w tej samej sesji PowerShell
+   (`& ./scripts/build-windows.ps1 -SkipBuild -Run -Scene knyszyn-w -Tier High -Autopilot route -Speed 50
+   -RunSeconds 240 -ShotSeconds 120 -ExtraPlayerArgs '-stream','1'`), drugi przebieg z `$env:KAMION_FAR_RING='off'` w tej samej sesji PowerShell
    (zmienna dziedziczona przez player; równoważnie argument playera `-farRing off`) — A/B w tym samym buildzie.
 2. W logu: `[STREAM] ready …` bez ostrzeżenia `far ring: more than 16`; brak błędów shadera.
 3. Zrzuty z boku trasy (pola dw671): las/WN na horyzoncie w `on`, mgła w `off`; brak ścian lasu na drodze sąsiada przy
    szwie (wjazd w kafel ~400 m po Ready).
-4. `pwsh scripts/pc-metrics.ps1 … -Class zalecany` on vs off: p95 klatki w budżecie; spodziewany koszt GPU niewielki
+4. `pwsh scripts/pc-metrics.ps1 … -Class zalecany -Extra 'stream=1,farRing=on'` vs `'stream=1,farRing=off'`:
+   p95 klatki w budżecie; spodziewany koszt GPU niewielki
    (wierzchołki dalekiego planu, pętla ≤ 16 w jego pikselach).
 
 ## Otwarte
@@ -128,3 +129,31 @@ ujawnił pusty horyzont).
 - Przyczyny smug i poprawki (odświeżanie materiału atlasu przy przebudowie krawędzi, v rzutowe, pasmo per pas): ADR 0330
   dopisek 3. Dowody: `artifacts/far-forest-look-s24/`. Weryfikacja w buildzie #10 z tego ADR wymaga najpierw przebudowy
   krawędzi wszystkich kafli w `win-build`.
+
+## Dopisek (2026-11-27, `codex-farring-diag-s24`): A/B w playerze #10
+
+- Przejazdy #10 Knyszyn Zachód–Mońki miały aktywny streaming w obu wariantach. Kadry z kabiny patrzyły wzdłuż drogi
+  między szpalerami i miały różne pozycje pojazdu. Cztery osobne pomiary PC na postoju uruchomiono bez `-stream 1`.
+  Oba starty mają `needsNeighbourContext=false`, a logi nie mają `[STREAM]`. Przełącznik pierścienia działa przez
+  `WorldStreamer`, więc te cztery pomiary nie izolują jego kosztu.
+- Player #10 `8511a411d8`, High 1920×1080, stałe `-qacam`, `-stream 1`, clear i overcast. Przy progu
+  maksymalnej różnicy kanału RGB ≥ 12/255 na północ od dw671-tykocin-03 zmienia się **1,278% / 1,279%** kadru
+  (las i zabudowa, 01 i 02 Ready w obu wariantach). Na północ od dk65-07 zmienia się **1,560% / 1,469%**
+  (linia lasu, 06 Ready, 08 poza promieniem streamingu). Wschodni `hv0351-far-e` na dk65-07 zmienia **0 px**,
+  podniesione `biezenstwa-above` **3 / 0 px**, a wjazd na Andersa `route-onramp-andersa` **0 / 0 px**.
+- GTX 1070, limit 60 FPS, 8 s próbek po rozgrzewce na wariant, bez utraty fokusu. ON dodaje **17–47 draw calls
+  p95** i około **204–634 tys. trójkątów p95** w licznikach całej klatki. Poza wjazdem na Andersa zmiany p95 GPU **−3,17 do +2,39 ms**
+  mają oba znaki. Zmiany szczytu VRAM procesu **−2,6 do +1,6 MiB**, prywatnej pamięci **−30,0 do +10,5 MiB**.
+  To krótkie pomiary na współdzielonej maszynie. Dodatkowe draw calle są powtarzalne, izolowany koszt w ms pozostaje
+  `UNVERIFIED`. Na wjeździe na Andersa p95 całej klatki w ON wynosiło 20,47–20,81 ms, w OFF 36,37–39,91 ms,
+  przy braku różnic w obrazie. Pozostałe kadry w ON osiągały 16,67–16,69 ms.
+- Edytor na kopii zaimportowanych scen #10, High PC, 12 przebiegów i 33 pary. Na `edge-north` dw671-tykocin-03
+  (01, 02, 04 w kontekście) licznik stożka kamery rośnie **0 → 3 renderery pierścienia**, **0 → 6 podsiatek**,
+  **0 → 24 331 trójkątów** przed klipem. W obrazie różni się **1,341% / 1,275%** pikseli (clear / overcast).
+  Kadr osiowy `route-s2035` zmienia 1 / 0 px, a diagnostyczne ujęcie z wysoka `ring-high-e` 33 / 0 px.
+  Na dk65-07 z załadowanymi 06 i 08 wschodnie `hv0351-far-e` ma **1 → 7 rendererów**,
+  **25 767 → 205 259 trójkątów** przed klipem i **0 zmienionych pikseli**. `colorby:renderer` wraz z legendą
+  wskazuje siatki. Podmienia ich shadery, dlatego efekt klipu oceniamy na zwykłych ujęciach.
+- Zalecenie: zachować ON. Jeżeli potrzebna jest większa czytelność horyzontu, poprawić sylwetkę z danych CHM
+  selektywnie na odsłoniętych kierunkach, z zachowaniem perspektywy powietrznej ADR 0330. Pary PNG 960 px,
+  logi, liczniki i komendy odtworzenia w `artifacts/codex-farring-diag-s24/`.
