@@ -45,3 +45,5 @@
 - Następny krok: po zakończeniu bieżącego importu przenieść pomiary pośrednie do `after-three-materials`, powtórzyć `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after` z bliskim kadrem Bernardyńskiej.
 - Pośredni Win64 High i oba przebiegi visual-QA (10 kamer, clear/overcast) zakończyły się sukcesem. Pliki w `after-three-materials`. Dodano trzy prywatne kadry kontrolne mierzone z GLB na Bernardyńskiej, Puchalskiego i Sokołowskiej.
 - Następny krok: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after` dla finalnych czterech nawierzchni.
+- Finalny eksport Tykocina: 4 nawierzchnie (szara 1616,9 m², czerwona 143,9 m², płyty 798,4 m², asfalt 179,3 m²), oba authored overrides trafione, obniżenia 4 z 8 przejść. Identyczne prymitywy w całym eksporcie: 2358 High, 1479 Low.
+- Następna komenda po finalnym visual-QA: `pwsh artifacts/codex-sidewalk-var-s24/compare.ps1`.

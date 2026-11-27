@@ -177,3 +177,14 @@ Krawężnik używa UV1 wzdłuż prefabrykatów i ziarna z identyfikatora pasa. T
 między prefabrykatami, a miejscowe ubytki na górnej krawędzi od strony jezdni są symulowane
 kolorem, chropowatością i normalną. Rozmiar i częstość ubytków są `WORKING_VALUE`. Obniżenia oznakowanych
 przejść używają istniejącej reguły tego ADR (2 cm, rampy 1 m, poza płytami skrzyżowań i mostami).
+
+W Tykocinie zachowano istniejące materiały dróg rowerowych BDOT przez `cycle_bdot_surface: false`.
+Obrys północnej pierzei rynku opiera się na zdjęciach Commons z ADR 0336. Czerwona kostka
+przy Bernardyńskiej to odcinek demonstracyjny na istniejącym chodniku (`WORKING_VALUE`).
+
+Pomiar eksportu Tykocina przed i po: 192 589 → 192 609 trójkątów warstwy `road` oraz
+120 → 120 jej prymitywów (High i Low). Wszystkie klucze chunk/warstwa/materiał są identyczne
+w obu stanach. Sama klasyfikacja chodników zachowuje 2057 trójkątów. Raport po klasyfikacji
+wykazuje 1616,9 m² szarej kostki, 143,9 m² czerwonej, 798,4 m² płyt i 179,3 m² asfaltu.
+Generator obniżył oba krawężniki przy czterech przejściach. Cztery kolejne były w płytach
+skrzyżowań lub zbyt blisko ich krawędzi, żeby zmieścić odcinek z rampami.
