@@ -29,3 +29,6 @@
 
 - [krok 4] Import bazowy knyszyn-w Win64 zakończony, 64 chunki, sceny Low i High. PBR przygotowane lokalnie w 1538 s. Pierwszy pomiar `before` czeka na ponowny slot heavy.
 - Następny krok w trwającym przebiegu: `pwsh scripts/visual-qa.ps1 -Scene World_knyszyn-w -Tier Low -Lighting clear -BuildTarget Win64 -Pc -Width 1920 -Height 1080`.
+
+- [krok 5] Dodano tabelę prefiksów i progów PC Low/Medium. Renderer referencyjny nie wywołuje jeszcze tabeli. Bazowe zdjęcia są w kolejce.
+- Następny krok po zdjęciach: `Copy-Item artifacts/codex-props-low-perf-s24/prep/WorldInstances.cs game/Assets/_Project/World/Runtime/`.
