@@ -164,7 +164,7 @@ function Invoke-WaveTile([string]$Tile, [switch]$Redo) {
                 (Get-Item -LiteralPath $slotFile).LastWriteTime = Get-Date
                 Invoke-WaveStep 'far_field' $python @('tools/worldgen/streetscape/far_field.py', '--region', $Tile) $log
                 Invoke-WaveStep 'export-route' $python @('scripts/export-route.py', '--region', $Tile) $log
-                Invoke-WaveStep 'fidelity' $python @('tools/worldgen/fidelity/run.py', '--region', $Tile, '--art', "$evidenceDir/fidelity/$Tile") $log
+                Invoke-WaveStep 'fidelity' $python @('tools/worldgen/fidelity/run.py', '--region', $Tile, '--art', "artifacts/$waveName/fidelity/$Tile") $log  # s25: run.py wymaga ścieżki w repo worktree (relative_to)
             }
             Set-Content -LiteralPath $worldReady -Value (Get-Date -Format o)
         }
