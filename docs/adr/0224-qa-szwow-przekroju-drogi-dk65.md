@@ -47,3 +47,11 @@ P4, P4b). Szwy 06–10 i 01/02: zgodne we wszystkich parametrach (Δ osi 0,000 m
 1. P1 wymaga zgody/zakończenia 0216 (knyszyn-s) i zmiany testów 0214 (lista w raporcie §5).
 2. P6 (próbkowanie NMT na krawędzi) — osobne zadanie, regeneracja grafów.
 3. Render szwów po przebudowie (zasada 4) — lider: WorldC, kamery nad szwami 10/11 i 05/06.
+
+## Uzupełnienie po fali 13
+
+Audyt najpierw rezerwuje pary z tym samym `osm_way` w obrębie całego szwu, a następnie dopasowuje pozostałe końce
+w granicy 5 m. Na szwie dk65-04 / dk65-05 koniec Sadowej (`w176274699`) mógł wcześniej zająć jedyny koniec
+Szkolnej (`w244403508`) po stronie dk65-05. Po rozdzieleniu dróg Szkolna ma zgodny przekrój, a audyt osobno zgłasza
+brak końca Sadowej w sieci. W jej grafie po stronie dk65-05 jest fragment 0,048 m, poniżej filtra 0,05 m w `network.load`.
+Ocena przejezdności tego połączenia wymaga kontroli siatki i kolizji skrzyżowania.

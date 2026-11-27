@@ -79,3 +79,7 @@
 ### codex-seams-dk65-s25 — odtworzenie audytu
 - Na dk65-04 / dk65-05 odtworzono 0 FAIL, 4 UWAGA i 1 PRZEJŚCIE. Ostrzeżenia dotyczą dwóch dróg bocznych. Pliki audytu zapisane przed błędem kodowania konsoli; kolejne uruchomienia z PYTHONIOENCODING=utf-8.
 - Następny krok: cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd C:/Users/matma/Documents/Claude/kamion/artifacts/codex-seams-dk65-s25/probe.py.
+
+### codex-seams-dk65-s25 — dopasowanie i diagnoza
+- Dopasowanie rezerwuje najpierw zgodne OSM way. Szkolna po zmianie zgodna; 4 stare UWAGI znikają. Zostaje 1 FAIL braku końca Sadowej: graf dk65-05 ma 0,048 m przy progu loadera 0,05 m. Testy syntetyczne audytu: 25 PASS.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -p no:cacheprovider tests/gis/test_seams_0224.py`.

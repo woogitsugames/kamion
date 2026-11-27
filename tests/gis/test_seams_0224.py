@@ -149,6 +149,15 @@ def test_synthetic_road_ending_on_one_side_fails():
     assert len(roads) == 1 and r["droga po drugiej stronie"]["status"] == "FAIL"
 
 
+def test_nearby_unpaired_branch_leaves_same_way_continuation_available():
+    """A branch cut just before a junction cannot consume the continuation of the through road."""
+    branch = SM.Crossing("a", "branch", 7, "residential", (100.0, 50.0), False, {})
+    through_a = SM.Crossing("a", "through-a", 8, "tertiary", (100.0, 50.584), False, {})
+    through_b = SM.Crossing("b", "through-b", 8, "tertiary", (100.0, 50.584), False, {})
+    assert SM.match([branch, through_a], [through_b]) == [(branch, None), (through_a, through_b)]
+    assert SM.match([through_b], [through_a, branch]) == [(through_b, through_a), (None, branch)]
+
+
 def test_synthetic_edge_line_spacing_rule_adr0220():
     st = {"width": 7.6, "edge_lines": "both"}
     a, b = _tile("a", 0.0, set_=st), _tile("b", 100.0, set_=st)
