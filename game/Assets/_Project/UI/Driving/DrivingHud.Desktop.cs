@@ -43,6 +43,7 @@ namespace Game.UI.Driving
         int m_DWarnCount = -1;
         DesktopHudInput m_DIn;
         DesktopHudResult m_D;
+        Vector2 m_DScreenUnits, m_DContentOrigin, m_DMirrorOuterLimits;
         HudVisibility m_Vis;
         bool m_DValid, m_DesktopApplied, m_DesktopKnown;
         int m_DPrefsVersion = int.MinValue, m_MirrorAdjustVersion = int.MinValue;
@@ -210,7 +211,17 @@ namespace Game.UI.Driving
             d.Telemetry = TelemetryVisible;
             d.DevText = DevDiagnostics;
             d.Compact = m_Vis.Compact;
-            d.ScreenWidth = m_View.PixelsPerUnit > 0f ? m_View.PixelSize.x / m_View.PixelsPerUnit : 0f;
+            if (screenChanged || !m_DesktopApplied)
+            {
+                m_DScreenUnits = m_View.PixelSize / m_View.PixelsPerUnit;
+                m_DContentOrigin = Vector2.Scale(m_SafeArea.anchorMin, m_DScreenUnits);
+                float reserve = MirrorWindowArt.HeadOut + MirrorWindowLayout.MountEdgeGap;
+                m_DMirrorOuterLimits = new Vector2(reserve - m_DContentOrigin.x,
+                    reserve - (1f - m_SafeArea.anchorMax.x) * m_DScreenUnits.x);
+            }
+            d.ScreenWidth = m_DScreenUnits.x;
+            d.MirrorOuterLimits = cab && (m_Ctx.LeftMirrorMountViewport != null || m_Ctx.RightMirrorMountViewport != null)
+                ? m_DMirrorOuterLimits : (Vector2?)null;
             if (!screenChanged && m_DValid && m_DesktopApplied && d.SameAs(m_DIn) && m_DPrefsVersion == HudPreferences.Version) return;
             m_DIn = d; m_DValid = true; m_DPrefsVersion = HudPreferences.Version;
             DesktopHudLayout.Solve(d, out m_D);
@@ -229,8 +240,8 @@ namespace Game.UI.Driving
             ApplyBlockStyle(m_D.ShowStrip, m_D.Compact);
             SetRect((RectTransform)m_MirrorLGo.transform, m_D.MirrorLeft);
             SetRect((RectTransform)m_MirrorRGo.transform, m_D.MirrorRight);
-            LayoutMirrorHead(m_HeadL, m_D.MirrorLeft, m_D.MirrorWideLeft, m_D.ShowMirrorWide);
-            LayoutMirrorHead(m_HeadR, m_D.MirrorRight, m_D.MirrorWideRight, m_D.ShowMirrorWide);
+            LayoutMirrorHead(m_HeadL, m_D.MirrorLeft, m_D.MirrorWideLeft, m_D.ShowMirrorWide, d.MirrorOuterLimits.HasValue);
+            LayoutMirrorHead(m_HeadR, m_D.MirrorRight, m_D.MirrorWideRight, m_D.ShowMirrorWide, d.MirrorOuterLimits.HasValue);
             SetRect(m_ReverseRt, m_D.ReverseView);
             SetRect(m_DevToggleRt, m_D.DevToggle);
             SetRect(m_DevPanelRt, m_D.DevPanel);

@@ -537,6 +537,8 @@ namespace Game.UI.Driving
             public float Below;
             public bool Desktop, MountShown;
             public Vector2 MountAt;
+            public Vector2 ScreenOrigin;
+            public Rect? MountFrame;
             public float MountAlpha = -1f;
             public RawImage FilmImage;
             public MirrorGlassImage WideGlass;
@@ -645,7 +647,7 @@ namespace Game.UI.Driving
         }
 
         /// <summary>Monitor: lays the head out around the window - with or without the wide-angle glass (on change only).</summary>
-        void LayoutMirrorHead(MirrorHead h, Rect window, Rect wide, bool showWide)
+        void LayoutMirrorHead(MirrorHead h, Rect window, Rect wide, bool showWide, bool cabMount)
         {
             float o = MirrorWindowArt.HeadOut + MirrorWindowArt.HeadShadow;
             float below = showWide ? window.yMin - wide.yMin : 0f;
@@ -657,6 +659,8 @@ namespace Game.UI.Driving
             }
             h.WideShown = showWide;
             h.Below = below;
+            h.ScreenOrigin = -(m_DContentOrigin + window.min);
+            h.MountFrame = cabMount ? new Rect(h.ScreenOrigin, m_DScreenUnits) : (Rect?)null;
             h.MountAlpha = -1f;   // the head changed: lay the bracket out again
         }
 
@@ -673,8 +677,9 @@ namespace Game.UI.Driving
         /// and the cab. The cab mount (<see cref="DrivingHudContext.LeftMirrorMountViewport"/>) is projected into the
         /// window's own units; a tube runs from the head's side to it and a strut from lower on the head to the same
         /// mounting foot (<see cref="MirrorWindowLayout.SolveMount"/>), so the head hangs on the A-pillar wherever the
-        /// pillar is in the frame (field of view, window position and size are player settings). A mount beyond the
-        /// frame edge = the tube leaves the frame. Laid out only when the mount moved by more than a quarter unit.
+        /// pillar is in the frame (field of view, window position and size are player settings). ADR 0340 addendum 3:
+        /// a pillar beyond the outboard cab-view edge is joined by both shafts through the edge. The viewport and
+        /// window share canvas units cached by desktop layout. Updated at a quarter-unit movement threshold.
         /// </summary>
         void UpdateMirrorMount(MirrorHead h, Func<Vector3> src)
         {
@@ -682,25 +687,24 @@ namespace Game.UI.Driving
             if (!h.Desktop || src == null || !h.Window.gameObject.activeInHierarchy) { HideMirrorMount(h); return; }
             Vector3 vp = src();
             if (!(vp.z > 0f)) { HideMirrorMount(h); return; }
-            var cam = m_Canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : m_Canvas.worldCamera;
-            Vector2 sp = cam != null ? (Vector2)cam.ViewportToScreenPoint(vp) : new Vector2(vp.x * Screen.width, vp.y * Screen.height);
-            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(h.Window, sp, cam, out Vector2 local)) { HideMirrorMount(h); return; }
+            Vector2 at = h.ScreenOrigin + Vector2.Scale(vp, m_DScreenUnits);
             Rect wr = h.Window.rect;
-            Vector2 at = local - wr.min;
             if (h.MountAlpha >= 0f && (at - h.MountAt).sqrMagnitude < 0.0625f) return;
             h.MountAt = at;
             float o = MirrorWindowArt.HeadOut;
             var head = new Rect(-o, -o - h.Below, wr.width + 2f * o, wr.height + h.Below + 2f * o);
-            MirrorWindowLayout.SolveMount(head, at, out var m);
+            MirrorWindowLayout.SolveMount(head, at, out var m, h.MountFrame, h.Right ? 1 : -1);
             if (!m.Show) { HideMirrorMount(h); return; }
             h.MountShown = true; h.MountAlpha = m.Alpha;
             var tint = new Color(1f, 1f, 1f, m.Alpha);
-            PlaceBracketTube(h.Tube, h.TubeImage, m.TubeFrom, m.Foot, MirrorWindowLayout.MountTube, tint, true);
-            PlaceBracketTube(h.Strut, h.StrutImage, m.StrutFrom, m.Foot, MirrorWindowLayout.MountStrut, tint, m.Strut);
-            if (!h.Foot.gameObject.activeSelf) h.Foot.gameObject.SetActive(true);
+            PlaceBracketTube(h.Tube, h.TubeImage, m.TubeFrom, m.TubeTo, MirrorWindowLayout.MountTube, tint, true);
+            PlaceBracketTube(h.Strut, h.StrutImage, m.StrutFrom, m.StrutTo, MirrorWindowLayout.MountStrut, tint, m.Strut);
+            bool foot = m.FootAlpha > 0f;
+            if (h.Foot.gameObject.activeSelf != foot) h.Foot.gameObject.SetActive(foot);
+            if (!foot) return;
             h.Foot.anchoredPosition = m.Foot;
             h.Foot.localScale = new Vector3(m.Side, 1f, 1f);
-            h.FootImage.color = tint;
+            h.FootImage.color = new Color(1f, 1f, 1f, m.Alpha * m.FootAlpha);
         }
 
         static void PlaceBracketTube(RectTransform rt, Image img, Vector2 from, Vector2 to, float thickness, Color tint, bool on)

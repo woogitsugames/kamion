@@ -30,13 +30,16 @@ namespace Game.Controls
         /// <summary>Full window width in the same units (&gt; <see cref="Width"/> on ultrawide monitors, where the content is
         /// narrowed to 16:9); 0 = same as <see cref="Width"/>. The mirror windows may use the side bands (§7 p.6).</summary>
         public float ScreenWidth;
+        /// <summary>Optional minimum outer offsets of the left and right windows relative to the content [units],
+        /// leaving room for the cab brackets at the physical display edges.</summary>
+        public Vector2? MirrorOuterLimits;
 
         public bool SameAs(in DesktopHudInput o) =>
             Width == o.Width && Height == o.Height && Strip == o.Strip && Extended == o.Extended && MirrorLeft == o.MirrorLeft
             && MirrorRight == o.MirrorRight && MirrorAspect == o.MirrorAspect && MirrorSize == o.MirrorSize && MirrorDrop == o.MirrorDrop
             && MirrorInset == o.MirrorInset && ReverseView == o.ReverseView && DevToggle == o.DevToggle && DevPanelOpen == o.DevPanelOpen
             && Telemetry == o.Telemetry && DevText == o.DevText && Compact == o.Compact && ScreenWidth == o.ScreenWidth
-            && MirrorWide == o.MirrorWide;
+            && MirrorWide == o.MirrorWide && MirrorOuterLimits == o.MirrorOuterLimits;
     }
 
     /// <summary>Monitor HUD zones, content canvas units, origin bottom-left, y up.</summary>
@@ -259,6 +262,9 @@ namespace Game.Controls
             r.MirrorOutboard = band;
             float outer = Margin - band;
             float room = r.ClearView.xMin - Gap - outer;   // outer edge .. clear view, per side
+            Vector2 limits = s.MirrorOuterLimits ?? new Vector2(outer, outer);
+            float outerLeft = Mathf.Max(outer, limits.x), outerRight = Mathf.Max(outer, limits.y);
+            float roomLeft = room - (outerLeft - outer), roomRight = room - (outerRight - outer);
 
             // Bottom limit: the content edge, or above any part of the HUD block that reaches under a mirror column.
             float bottom = Margin;
@@ -268,13 +274,15 @@ namespace Game.Controls
 
             float mh = Mathf.Min(size * h, top - bottom);
             float mw = mh * aspect;
-            if (mw > room) { mw = Mathf.Max(0f, room); mh = mw / aspect; }
+            float mirrorRoom = Mathf.Min(roomLeft, roomRight);
+            if (mw > mirrorRoom) { mw = Mathf.Max(0f, mirrorRoom); mh = mw / aspect; }
             bool fits = mh >= MirrorMinHeight - 1e-3f;
 
-            float xLeft = outer + inset * Mathf.Max(0f, room - mw);
+            float xLeft = outerLeft + inset * Mathf.Max(0f, roomLeft - mw);
+            float xRight = outerRight + inset * Mathf.Max(0f, roomRight - mw);
             float yTop = top - drop * Mathf.Max(0f, top - bottom - mh);
             r.MirrorLeft = new Rect(xLeft, yTop - mh, mw, mh);
-            r.MirrorRight = new Rect(w - xLeft - mw, yTop - mh, mw, mh);
+            r.MirrorRight = new Rect(w - xRight - mw, yTop - mh, mw, mh);
             r.ShowMirrorLeft = s.MirrorLeft && fits;
             r.ShowMirrorRight = s.MirrorRight && fits;
         }
