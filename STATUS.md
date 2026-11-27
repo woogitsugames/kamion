@@ -41,3 +41,6 @@
 
 - [krok 8] Import Tykocina Win64 zakończony, 64 chunki, sceny Low i High. Przywrócono dwa śledzone pliki metadanych PBR po generatorze. Obie pary scen są gotowe, macierz referencyjna czeka na slot.
 - Następny krok: `pwsh -File artifacts/codex-props-low-perf-s24/batch-qa.ps1 -Phase before` (bez ponownego importu).
+
+- [krok 9] Visual-QA przed zakończone. Zapisano 48 PNG i osiem plików stats.txt (PC 1920×1080, sześć kamer każdego kafla). Tykocin miał 106 rozbieżności SHA względem manifestu, oba przebiegi użyją tych samych scen.
+- Następny krok: `Copy-Item artifacts/codex-props-low-perf-s24/prep/WorldInstances.cs game/Assets/_Project/World/Runtime/`.
