@@ -1722,11 +1722,12 @@ def main():
                 # still reject isolated specks. Non-pine and forest HLOD retain
                 # their established opening / component rules (far shimmer guard).
                 open_r = willow_open if sp == "willow" else (0 if sp in ("pine", "spruce", "pineyoung") else 1)
-                # impostor-rebake-s24: radii / island sizes were tuned in texels of a 384-row view; keep them the same
-                # size in metres at the new resolution (else the finer bake keeps sub-texel twigs that shimmer far away)
+                # impostor-rebake-s24: the island size was tuned in texels of a 384-row view - kept the same in metres
+                # (area x kr^2). The opening radius is not scaled: r 1 still drops 1-2 texel specks (< 1 texel of the
+                # 2048 x 512 GPU copy), while the 7 x 7 square of r 3 cut every crown edge into visible blocks.
                 kr = res[1] / IMP_REF_H
                 pack([f"impostor_{name}_{k}" for k in range(IMP_NF)], png, VEG / f"impostor_{name}_n.png",
-                     open_r=int(round(open_r * kr)),
+                     open_r=open_r,
                      min_island=int(round(16 * kr * kr)) if sp in ("pine", "spruce", "pineyoung") else 0,
                      width=int(round(IMP_ATLAS_W * res[1] / IMP_RES[1])))
             o2 = impostor_object(name, H, png, S)

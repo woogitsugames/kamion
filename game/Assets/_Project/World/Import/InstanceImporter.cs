@@ -771,13 +771,15 @@ namespace Game.World.Import
             }
             ti.filterMode = FilterMode.Trilinear;
             ti.anisoLevel = forestEdge ? 8 : (text ? 4 : 2);
-            ti.maxTextureSize = farAtlas && !linear ? 4096 : 2048;
-            // explicit: NPOT impostor atlases (1536 x 384) with npotScale None are stored uncompressed (3 MB each; ADR 0025)
-            ti.npotScale = TextureImporterNPOTScale.ToNearest;
+            ti.maxTextureSize = farAtlas && !linear ? 4096 : file.StartsWith("impostor_tree_") ? ImpostorMaxSize : 2048;
+            // explicit: NPOT atlases with npotScale None are stored uncompressed (ADR 0025). Tree impostors are power-of-two
+            // since impostor-rebake-s24 (4096 x 1024 strip, _n 2048 x 512): the PC max size (2048) gives a 2x supersampled
+            // 2048 x 512 copy at the old memory (the 1536 x 384 strip used to be stretched up to 2048 x 512).
+            ti.npotScale = file.StartsWith("impostor_tree_") ? ImpostorNpotScale : TextureImporterNPOTScale.ToNearest;
             ti.textureCompression = TextureImporterCompression.Compressed;
             ti.SetPlatformTextureSettings(new TextureImporterPlatformSettings
             {
-                // impostor atlases are 6 views x 256 px wide (1536): keep them whole on the phone (ADR 0023)
+                // impostor atlases: 4096 x 1024 source -> 2048 x 512 on the phone, as on PC (ADR 0023)
                 // plot_kit (ADR 0114): one 2048 atlas carries every fence / garden texture of the house plots
                 name = "Android", overridden = true, maxTextureSize = (file.StartsWith("impostor_") && !linear) || file.StartsWith("plot_kit") ? 2048 : 1024,
                 format = text ? TextureImporterFormat.ASTC_4x4 : TextureImporterFormat.ASTC_6x6,
