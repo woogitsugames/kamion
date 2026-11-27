@@ -1,19 +1,9 @@
-# STATUS neon-outbuildings2-s24 (budynki gospodarcze r2: brama, rynny, blacha z żebrami, cokół i zacieki; dopisek ADR 0238 d. props-fix)
+# STATUS plaza-barn-fix-s24 (krytyk s24 dzień 27: skrzynie/kwiaty/cokół/ławki rynku Tykocina + wrota stodół)
 
-- Worktree `neon-outbuildings2-s24`, gałąź `neon-outbuildings2-s24`. Nie scalane ani nie pushowane (do przeglądu lidera).
-- Środowisko: prywatne kopie `Data/raw/derived/{dk65-07,knyszyn-w}` (bez zapisu do main), Win64 `game/Library` + `_Generated` lokalnie.
-- [krok 1] Rendery PRZED (`before`, Win64 High PC 1920×1080, clear + overcast): `dk65-07` (`drive-kozince`, `route-s0144`, `route-s0433`) i `knyszyn-w` (`dk65-goniadzka`).
-- [krok 2] Implementacja (+0 materiałów, DC ≤ +0):
-  - `tools/worldgen/streetscape/buildings_mesh.py`: (1) wrota stodoły z pionowych desek (`facade_atlas` wycinek `balf(2/5)`) + 16 tr. nadproża/ościeżnicy/4 zawiasów pasowych w `facade_atlas`, wiejskie `garage(0/1/5)` bez graffiti, także na długiej ścianie okapowej od drogi (`barn_edges`); (2) rynny L (4 tr./okap) i rury spustowe V (4 tr./rura) LOD0-only w `facade_atlas`; (3) `roof_weather` COLOR_0 na spadzistych dachach `rural_outbuildings`; (4) cokół 0,45–0,65 m (slope-safe) i ciemniejszy (`pl 0,38..0,54`) + zacieki pod okapem (`lod0_ro` → `_RUNOFF`).
-  - `game/Assets/_Project/World/Import/WorldPbrMaterials.cs` + `game/Assets/_Project/Environment/Shaders/WorldPBR.shader`: `_RoofWeather.w = 1` dla `roof_metal_*` / `roof_sheet_*` → żebra trapezowe T-18 / faliste w kierunku spadku (`tn.x` + antyaliasing `fwidth`), cieniowanie korytek, zakładki arkuszy co 1,05 m i subtelne przebarwienia/nalot rdzy.
-  - `tests/gis/test_rural_outbuildings_props_fix_s24.py`: +2 testy (wrota/rynny/COLOR_0/cokół/runoff + budżet ≤ +5 % `dk65-07`).
-- [krok 3] `build_world.py --context` (`dk65-07` 521,6 s, `knyszyn-w` 431,3 s):
-  - `dk65-07` `world_manifest.json`: `buildings` LOD0 104 376 → 107 204 (**+2 828 = +2,71 %** ≤ +5 %), `buildings_lod1` +0, 0 nowych materiałów (−1 w `7_1`).
-  - `knyszyn-w` `world_manifest.json`: `buildings` LOD0 140 061 → 142 241 (**+2 180 = +1,56 %**), `buildings_lod1` +0, 0 nowych materiałów (−1 w `0_6`, `2_4`, `3_2`).
-- [krok 4] Import Win64 (`IMPORT_RESULT: OK` oba regiony) + visual-QA PO (`after`, High PC 1920×1080 clear + overcast) + inspekcja PNG i cropów 1:1:
-  - `drive-kozince`: `drawsEst` 459 → 458 (−1), `trisExact` 1 160 324 → 1 160 644 (+320).
-  - `route-s0144`: `drawsEst` 504 → 503 (−1), `trisExact` 993 132 → 993 198 (+66).
-  - `route-s0433`: `drawsEst` 457 → 456 (−1), `trisExact` 1 166 669 → 1 166 989 (+320).
-  - `dk65-goniadzka`: `drawsEst` 328 → 328 (+0), `trisExact` 1 098 119 → 1 098 711 (+592).
-- [krok 5] Dopisek ADR 0238, kopia dowodów do `C:\Users\matma\Documents\Claude\kamion\artifacts\neon-outbuildings2-s24\`, pełny pytest (84/84 zielone), commit końcowy.
-- NASTĘPNY KROK (dla lidera): obejrzeć cropy w `artifacts/neon-outbuildings2-s24/sbs/`, scalić gałąź `neon-outbuildings2-s24` do `main`, a potem przebudować i zaimportować pozostałe kafle z `rural_outbuildings: true`: `pwsh scripts/import-region.ps1 -Region dk65-07 -Build -BuildTarget Win64` (oraz pozostałe kafle wg `artifacts/props-fix-s24/outbuildings-per-tile.txt`).
+- Worktree `agent-a8bad7a40407c997e`, gałąź `worktree-agent-a8bad7a40407c997e`. `Data/raw/derived` = PRYWATNA kopia (`tykocin`, `dk65-07`, `cache`),
+  reszta `Data/raw/*` = junction do main; Library + `_Generated` (bez regionów) z worktree a492 (Win64). Układ: `artifacts/plaza-barn-fix-s24/setup.ps1`.
+- Python: shim `artifacts/plaza-barn-fix-s24/shim/uv.cmd` (interpreter a492, Smart App Control).
+- [krok 1] Rozpoznanie + setup; przebieg „przed” (kod HEAD 0e9424aaa): `pwsh artifacts/plaza-barn-fix-s24/pipeline.ps1 -Tag before`
+  → `artifacts/plaza-barn-fix-s24/vqa-before/<region>/`.
+- NASTĘPNY KROK: po „przed” — poprawki w `tykocin_rynek_0320.py`, `make_czarniecki.py`, `buildings_mesh.py`, potem
+  `pwsh artifacts/plaza-barn-fix-s24/pipeline.ps1 -Tag after`.
