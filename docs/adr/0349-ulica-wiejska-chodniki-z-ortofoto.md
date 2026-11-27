@@ -106,3 +106,36 @@ Odpowiedź na krytyka wave10-pre §3 (kostka sterylna, brak obniżonego krawęż
 - **Obniżenie krawężnika** do 2 cm na przejściach (Dz.U. 2016 poz. 124 § 127 ust. 10; Dz.U. 2022 poz. 1518 § 36 ust. 3) plus pas płytek z wypustkami 0,50 m (WORKING_VALUE), proceduralnie w shaderze (płyty 25 cm, kopułki co 5 cm).
 - **Zjazdy**: kontrastowa kostka `driveway_paving_red` (stonowana, kolor 0,15/0,094/0,084), szerokość = brama 3-4,5 m (WORKING_VALUE), tylko na chodniku (kerb -> tył nawierzchni drogi), ~35 % bram (hash `drvcross`), reszta = ta sama szara kostka; pierwsza wersja kładła pas od bramy do jezdni (do 10 m) i była zbyt nasycona.
 - Ryzyko: `test_world_roads::test_export_is_deterministic` (region C) czerwony także na kodzie main (manifest C nieodświeżony po fields3) — niezwiązany z dopiskiem.
+
+## Dopisek axis-driveway-s24 (27.11): zjazd jako biała smuga i „patyki” w lusterku (krytyk build #10 pkt 7)
+
+**Diagnoza** (`KAMION_QA_DIAG=colorby:material`, kamery w miejscu spawnu buildu #10 `artifacts/axis-driveway-s24/drv_cameras.json`;
+`dbg_plan.py`, `glb_probe.py`): zjazd = `M_yard_paving` (apron `plots.paved_items` + nakładka `plots._verge_overlay`),
+„patyki” = `M_verge_tufts` (karty `streetscape.verge_flora` w rowie) stojące NA zjeździe. Przyczyny w generatorze:
+1. brama w płocie 12–14 m od DK65 (Obozowa), skośna do drogi o 41°: nakładka szła po normalnej bramy po skosie przez
+   pobocze i rów, a zasyp rowu (przepust, `apply_drops`) obejmował tylko ±(w/2+0,4) m w miejscu, gdzie skos trafiał
+   w asfalt — kostka zawinięta w niezasypanym rowie (pomiar GLB: ścieżka zjazdu 123,79 m przy jezdni 124,29 m);
+2. nakładka w obrysie drogi z pass 1 (rów niezasypany, szerszy) trzymała wysokość jezdni — wisiała nad gruntem albo
+   fałdowała się z apronem;
+3. każdy podjazd był `yard_paving`, choć `region_plan` losuje `plot["surface"]` (żwir dla starych działek) — nieużywane;
+4. verge_flora nie znała zjazdów.
+
+**Decyzja** (`streetscape/plots.py`, `streetscape/verge_flora.py`, `roads/build_world.py`; WORKING_VALUE):
+- `_perpendicular_crossing`: brama skośna > 12° do normalnej drogi na boku wiejskim → zjazd od wejścia promienia bramy
+  w obrys drogi PROSTOPADLE do krawędzi jezdni, zasyp rowu w tym miejscu (knyszyn-w: 9 z 11 zjazdów wiejskich);
+- nakładka tylko w obrysie drogi (apron działki przejmuje grunt za nim), narożnik między skośnym apronem a zjazdem
+  wypełniony otoczką; poza powierzchnią drogi rampa od jezdni do gruntu na końcu apronu (nigdy pod gruntem);
+- `drive_mat`: nawierzchnia podjazdu i zjazdu z ziarna działki (`yard_paving` / `yard_gravel`; knyszyn-w 37 z 86 żwir);
+- `_crossing_edging`: boki zjazdu z kostki — obrzeże 8 cm (+3 cm nad kostką) z licem do gruntu (głowica przepustu
+  zamiast krawędzi płyty w powietrzu); zjazd żwirowy — skarpa żwiru 1:1,5 do gruntu; bez obrzeża przy asfalcie
+  (styk na równo) i na styku z apronem;
+- `crossing_keepout` + `verge_flora.build(keepout=)`: brak kart trawy/ziół na zjazdach (knyszyn-w: 103 karty mniej).
+- Koszt (VQA High, ta sama scena): drawsEst +1…+6 na kamerę (`yard_gravel` i `curb_concrete` w warstwie `plot_ground`
+  kafla), trisK bez zmian (np. drv_cab_spawn 540→546 / 1643k→1643k, dk65-goniadzka 170→171). Build playera
+  i pomiar `pc-metrics` NIE wykonane (prototyp w prywatnym derived).
+- Testy: `tests/gis/test_driveway_crossing_s24.py` (6), `test_banks_verges_0324::test_verge_flora_keeps_off_driveway_crossings`,
+  `test_buildings_r7` (dopuszcza `yard_gravel`); podzbiór tests/gis (plot/drive/verge/seal/patch/pavement/kerb/…) 229/230,
+  jedyny czerwony (r7, materiał) poprawiony.
+- Dowody: `artifacts/axis-driveway-s24/{before,after,after-overcast,diag-before-material,diag-after-material,sbs}`.
+- Otwarte: ocena visual-critic (subagent nie może jej uruchomić — lider); apron skośnej bramy nadal skośny przez trawnik
+  przed płotem (geometria działki z BDOT); obniżony krawężnik dotyczy tylko boków miejskich (wiejskie nie mają krawężnika).
