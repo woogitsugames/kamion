@@ -84,3 +84,44 @@ farfield-low-s24 (≤ 2 submesze na sektor). Zgłoszenie: `artifacts/critic-s24-
 - Wszystkie 54 kafle przebudowane `far_field.py` po tej zmianie. Low > 30 000 poza C (test 30k dotyczy tylko C) mają
   bojary 38 502 (było 35 752 przed 0351), mickiewicza 33 843 (32 299), krywlany 31 755 (33 257), maczka 30 530 (29 996),
   wygoda — patrz raport fali 12. WORKING_VALUE, bez pomiaru na urządzeniu.
+
+## Dopisek (2026-11-27, `neon-hvfar-s24`): sylwetki „A”/„Y” wież WN, LOD gęstości i zanikanie przewodów dalekiego planu
+- **Kontekst (krytyk build #10, `artifacts/critic-s24-build10/CRITIC.md`, zrzut `t0180` + klatki `hv0351-*`)**: kratownice i
+  7 nieprzezroczystych wstęg przewodów przy horyzoncie zlewały się w szare kratkowane pasmo („jak siatka, nie linia WN”).
+  Pomiar w generatorze wykazał trzy przyczyny:
+  1. Kompresja radialna (`foreshorten_dist`) zgniatała sąsiednie wieże na 2–3,6 km do **1,6–15 m** odstępu (`knyszyn-w`
+     1,6 m przy d=3,5 km; `dk65-07` 10,2 m przy d=2,4 km), przy rozpiętości ramion 5,6 m (`scale = max(s_h, 0.65)`).
+  2. Każda wieża High miała 222 trójkąty gęstych rurek 3-bocznych w tym 12 grubych pierścieni poziomych i płaską górę.
+  3. 7 nieprzezroczystych wstęg przewodów (`FAR_WIRE_PX_FRAC = 0.6`, półszerokość do ~0,22 m = 44 cm na horyzoncie) bez
+     zanikania z odległością + 245 przęseł SN do 600 m tworzyło ciemne poziome pasmo na niebie i nad koronami.
+- **Decyzja (0 nowych draw calli, ≤ 2 podsiatki/sektor, bez nowych materiałów ani keywordów shadera; parametry `WORKING_VALUE`):**
+  1. **LOD gęstości w przestrzeni skróconej** (`far_field._select_far_hv`, `_select_far_mv`): przejście po łańcuchach od
+     podpór szwu na zewnątrz; minimalny odstęp w przestrzeni skróconej `_hv_min_eff_sep` 45→140 m (High, `HIGH_HV_MAX_D_M`
+     3400 m) / 45→170 m (Low, 2000 m), łączący sąsiednie zachowane podpory w przęsła bez rozrywania linii. Słupy SN do
+     `MV_FAR_MAX_M = 380 m` z odstępem ≥ 28 m. Raport `power_plan()` zachowuje pełną topologię GIS.
+  2. **Czytelna pionowa sylweta „A”/„Y”** (`far_field._add_pylon`): usunięto pierścienie poziome, proporcjonalna skala
+     `_pylon_scale = max(s_h, 0.38)`, stożkowy korpus „A” zbieżny do szpica (jak `props.pylon_half_width`). Do 800 m (High):
+     otwarta rama 3D „A” (150 tri). Powyżej 800 m (High) i na Low: otwarta wstęgowa sylweta „A”/„Y” zwrócona ku kaflowi z
+     wyraźnym prześwitem nieba wewnątrz „A” (2 poziomy ramion „Y” od 1500 m i na Low; **22–28 tri/wieża** zamiast 222).
+  3. **Cieńsze przewody z LOD żył i zanikaniem w `WorldSurface.shader`**: `FAR_WIRE_PX_FRAC` 0,60→0,42 HV (limit półszerokości
+     0,095 m) i 0,26 MV (limit 0,042 m), zwężanie z odległością; liczba żył High 7 (≤ 450 m — ciągłość szwu) → 3 główne
+     (450–1050 m) → 0 (> 1050 m, gdzie przewód 24 mm ma < 0,03 px); Low do 900 m. W `TEXCOORD_1 = (fadeStart/100,
+     -(100 + fadeEnd/100))` przy `COLOR_0.a == 0` (rozłączne z elewacjami i flagą skyline `-16`): `WorldSurface.shader`
+     (`_FAR_FACADE`) płynnie wtapia kontrast przewodów w mgłę/perspektywę powietrzną (`KamionFogTauExtra`, 420–1350 m WN,
+     200–480 m SN) jak `Kamion/World Wire`, a pod `_FAR_RING_CLIP` (ADR 0354, ForwardLit + DepthOnly) odrzuca piksele po
+     całkowitym zaniku.
+- **Liczby przed → po (prototyp `knyszyn-w` i `dk65-07`):**
+  | Region / tier | Wieże WN rysowane (min. odstęp skrócony) | Trójkąty sieci WN+SN | Trójkąty całego dalekiego planu | Podsiatki/sektor |
+  |---|---|---|---|---|
+  | `knyszyn-w` High | 44 (1,6 m) → **27 (58,1 m)** | 25 592 → **8 964** (−65,0 %) | 63 921 → **46 753** (−26,9 %) | 2 → 2 (+0 DC) |
+  | `knyszyn-w` Low | 44 (1,6 m) → **23 (58,1 m)** | 1 238 → **792** (−36,0 %) | 6 216 → **5 746** (−7,6 %) | 2 → 2 (+0 DC) |
+  | `dk65-07` High | 30 (10,2 m) → **14 (101,2 m)** | 14 104 → **2 004** (−85,8 %) | 99 214 → **86 322** (−13,0 %) | 2 → 2 (+0 DC) |
+  | `dk65-07` Low | 30 (10,2 m) → **4 (152,4 m)** | 320 → **96** (−70,0 %) | 10 648 → **10 392** (−2,4 %) | 2 → 2 (+0 DC) |
+- **Dowody**: `artifacts/neon-hvfar-s24/` (High PC 1920×1080 clear + overcast, `-Neighbours auto` i `none`, cropy 1:1 `sbs/`;
+  w `-Neighbours auto` dla `knyszyn-w` odświeżono też lokalnie krawędzie sąsiadów `knyszyn` i `dk65-monki-01`, aby widoczny
+  za nimi horyzont używał nowego generatora). Pomiary `stats.txt` (High clear): `knyszyn-w` `hv0351-seam-n` (`none`)
+  `drawsEst` 23 → 23 (+0 DC), `trisExact` 234 588 → **218 932**; `hv0351-seam-n` (`auto`) `drawsEst` 142 → 132,
+  `trisExact` 671 282 → **585 041**; `dk65-07` `hv0351-far-e` (`auto`) `drawsEst` 131 → 131 (+0 DC), `trisExact`
+  671 927 → **660 139**; `owner02-seam-n-cab` (`none`) `drawsEst` 5 → 5 (+0 DC), `trisExact` 50 731 → **41 981**.
+  Testy: `test_hv_wires_0351`, `test_far_field*`, budżetowe (`0221`, `0238`, `v31`, `hero_bridge`) — **167 pass, 3 skip, 0 fail**.
+  Przebudowa pozostałych kafli dla lidera: `far_field.py --region <id>` + `WorldEdgeBuilder.RebuildEdgeBatch` (Win64).
