@@ -103,6 +103,8 @@ namespace Game.Editor.VisualQA
             var env = UnityEngine.Object.FindAnyObjectByType<EnvironmentLighting>();
             if (env != null)
             {
+                var region = WorldNeighbourQa.StartRoot();
+                if (region != null) env.SetCloudTile(region.anchorX, region.anchorY);
                 if (!string.IsNullOrEmpty(lighting) && !env.SetPreset(lighting)) throw new ArgumentException("unknown lighting preset " + lighting);
                 env.Apply();
             }

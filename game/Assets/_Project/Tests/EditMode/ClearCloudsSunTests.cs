@@ -138,6 +138,38 @@ namespace Game.Tests
             finally { Object.DestroyImmediate(preset); }
         }
 
+        [TestCase(0)]
+        [TestCase(-7)]
+        public void CloudVariants_DifferAcrossEveryTileSeam(int seed)
+        {
+            var graph = Game.World.Streaming.TileGraph.LoadDefault();
+            Assert.IsNotNull(graph);
+            var variants = new int[graph.Count];
+            var mirrors = new bool[graph.Count];
+            for (int i = 0; i < graph.Count; i++)
+            {
+                var tile = graph.Tiles[i];
+                int phase = Game.Rendering.PhotographicClouds.TilePhase(tile.anchorX, tile.anchorY);
+                Game.Rendering.PhotographicClouds.ResolveVariant(seed, "World_" + tile.id, 12f, 200f,
+                    out variants[i], out mirrors[i], out _, phase);
+                Game.Rendering.PhotographicClouds.ResolveVariant(seed, "World_other_High", 12f, 200f,
+                    out int streamedVariant, out bool streamedMirror, out _, phase);
+                Assert.That((streamedVariant, streamedMirror), Is.EqualTo((variants[i], mirrors[i])), tile.id);
+            }
+
+            for (int i = 0; i < graph.Count; i++)
+            for (int k = 0; k < graph.Neighbors[i].Length; k++)
+            {
+                int j = graph.Neighbors[i][k];
+                string seam = $"{graph.Tiles[i].id} → {graph.Tiles[j].id}";
+                var side = graph.NeighborSides[i][k];
+                if (side == Game.World.Streaming.TileSide.N || side == Game.World.Streaming.TileSide.S ||
+                    side == Game.World.Streaming.TileSide.E || side == Game.World.Streaming.TileSide.W)
+                    Assert.That(variants[i], Is.Not.EqualTo(variants[j]), seam);
+                Assert.That((variants[i], mirrors[i]), Is.Not.EqualTo((variants[j], mirrors[j])), seam);
+            }
+        }
+
         [Test]
         public void CloudEdges_AreSoftened_NotHardBinaryCutout()
         {

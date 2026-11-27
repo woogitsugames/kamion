@@ -11,6 +11,7 @@ namespace Game.Rendering
     /// </summary>
     public static class WorldAtmosphere
     {
+        static Texture2D s_RuntimeCloudTexture;
         // ---- owner A/B overrides (launch args / visual QA -Rq; RenderOverrides): not defaults
         /// <summary>rq_look: -1 = the preset's toe; 0 = none (variant A), 1..4 = variants B..E.</summary>
         public static int LookVariant = -1;
@@ -20,7 +21,7 @@ namespace Game.Rendering
         public static int? CloudOverride;
         /// <summary>rq_clearcover: clear cloud coverage ablation (null = preset).</summary>
         public static float? ClearCloudCoverOverride;
-        /// <summary>rq_cloudvar: 0..N-1 explicit photographic clear-cloud variant (null = deterministic from seed/scene/time).</summary>
+        /// <summary>rq_cloudvar: 0..N-1 explicit photographic clear-cloud variant (null = deterministic from seed, tile and time).</summary>
         public static int? CloudVariantOverride;
         /// <summary>rq_cloudmirror: explicit sun-meridian mirror of photographic clear clouds (null = deterministic).</summary>
         public static bool? CloudMirrorOverride;
@@ -157,9 +158,9 @@ namespace Game.Rendering
             float contrast = q < 0 ? 0f : p.cloudContrast;
             // Clear clouds share the existing noise texture and sky pass. A zero coverage keeps the legacy dome.
             float clearCover = q < 0 ? 0f : Mathf.Clamp01(ClearCloudCoverOverride ?? p.clearCloudCover);
-            Shader.SetGlobalFloat(k_ClearCloudCover, clearCover);
             Shader.SetGlobalFloat(k_ClearSkySaturation, Mathf.Clamp(p.clearSkySaturation, 1f, 4f));
             bool photo = clearCover > 0f && PhotographicClouds.VariantCount > 0;
+            float photoCoverage = 1f;
             int cloudVar = 0;
             bool cloudMirror = false;
             float cloudYawDeg = 0f;
@@ -167,8 +168,10 @@ namespace Game.Rendering
             Vector3 cloudSourceSun = Vector3.zero;
             if (photo)
             {
+                int? tilePhase = env.CloudTilePhase(out photoCoverage);
+                if (CloudVariantOverride.HasValue && CloudMirrorOverride.HasValue) photoCoverage = 1f;
                 PhotographicClouds.ResolveVariant(CloudSeed, env.gameObject.scene.name, p.clockHour, p.sunAzimuthDeg,
-                    out cloudVar, out cloudMirror, out cloudYawDeg);
+                    out cloudVar, out cloudMirror, out cloudYawDeg, tilePhase);
                 if (CloudVariantOverride.HasValue)
                 {
                     int n = PhotographicClouds.VariantCount;
@@ -178,6 +181,7 @@ namespace Game.Rendering
                 photo = PhotographicClouds.TryGet(cloudVar, out cloudTex, out cloudSourceSun)
                      || PhotographicClouds.TryGet(0, out cloudTex, out cloudSourceSun);
             }
+            Shader.SetGlobalFloat(k_ClearCloudCover, photo ? clearCover * photoCoverage : clearCover);
             Shader.SetGlobalFloat(k_ClearCloudPhoto, photo ? 1f : 0f);
             float sourceMinElevation = Mathf.Clamp(p.clearCloudSourceMinElevationDeg, 0f, 5f);
             Shader.SetGlobalVector(k_ClearCloudSourceLimits,
@@ -185,6 +189,11 @@ namespace Game.Rendering
             if (photo && cloudTex != null)
             {
                 Shader.SetGlobalTexture(k_ClearCloudTex, cloudTex);
+                if (Application.isPlaying && cloudTex != s_RuntimeCloudTexture)
+                {
+                    PhotographicClouds.ReleaseInactive(cloudTex);
+                    s_RuntimeCloudTexture = cloudTex;
+                }
                 Vector3 sun = env.Model != null ? env.Model.SunDirection : Vector3.up;
                 Shader.SetGlobalMatrix(k_ClearCloudRotation, PhotographicClouds.SourceMatrix(sun, cloudSourceSun, cloudMirror, cloudYawDeg));
             }
@@ -299,13 +308,21 @@ namespace Game.Rendering
             return m;
         }
 
-        /// <summary>Deterministic variant + meridian-mirror selection from seed, canonical scene name (tier suffix
-        /// stripped so Low/High match), clock hour, and sun azimuth bucket.</summary>
+        /// <summary>Cloud phase on the 2048 m EPSG:2180 lattice (ADR 0235). Neighbor phases differ by 1 or 2
+        /// on an edge and by 1 or 3 on a corner, independent of the floating origin.</summary>
+        public static int TilePhase(double east, double north)
+        {
+            const double tileM = 2048.0;
+            return (int)System.Math.Floor(east / tileM) + 2 * (int)System.Math.Floor(north / tileM);
+        }
+
+        /// <summary>Deterministic variant + meridian-mirror selection. The seed, hour and sun azimuth rotate the whole
+        /// lattice through the same layouts. Scenes without a world region keep the canonical scene-name selection.</summary>
         public static void ResolveVariant(int seed, string sceneName, float clockHour, float sunAzimuthDeg,
-            out int variantIndex, out bool mirror, out float yawOffsetDeg)
+            out int variantIndex, out bool mirror, out float yawOffsetDeg, int? tilePhase = null)
         {
             int count = Mathf.Max(VariantCount, 1);
-            string canonical = CanonicalSceneName(sceneName);
+            string canonical = tilePhase.HasValue ? string.Empty : CanonicalSceneName(sceneName);
             unchecked
             {
                 uint h = 2166136261u;
@@ -317,8 +334,12 @@ namespace Game.Rendering
                 h ^= h >> 16;
                 h *= 2246822519u;
                 h ^= h >> 13;
-                variantIndex = (int)(h % (uint)count);
-                mirror = ((h / (uint)count) & 1u) != 0u;
+                int period = 2 * count;
+                int layout = (int)(h % (uint)period);
+                if (tilePhase.HasValue)
+                    layout = ((layout + tilePhase.Value % period) + period) % period;
+                variantIndex = layout % count;
+                mirror = layout >= count;
             }
             yawOffsetDeg = 0f;
         }
@@ -333,6 +354,17 @@ namespace Game.Rendering
         }
 
         public static bool TryGet(out Texture2D texture, out Vector3 sunDirection) => TryGet(0, out texture, out sunDirection);
+
+        internal static void ReleaseInactive(Texture2D active)
+        {
+            for (int i = 0; i < s_Textures.Length; i++)
+            {
+                if (s_Textures[i] == null || s_Textures[i] == active) continue;
+                Resources.UnloadAsset(s_Textures[i]);
+                s_Textures[i] = null;
+                s_TexLoaded[i] = false;
+            }
+        }
 
         public static bool TryGet(int variantIndex, out Texture2D texture, out Vector3 sunDirection)
         {

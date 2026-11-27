@@ -151,3 +151,36 @@ zawsze zablokowanej na stałym słońcu `LP_Clear` (200°/42°).
 - **Dowody i testy:** visual-qa przed|po (`World_knyszyn-w_High`, High PC 1920×1080, clear, overcast, var0/1/2, var1_mirror) w
   `artifacts/agy-clouds-s24/compare/`; EditMode (`ClearCloudsSunTests`, `SkyDisplayCapTests`, `SkyModelTests`, `LightPostPolicyTests`,
   `WindscreenLayer0341Tests`, `WorldSkyBakeTests`) 39/39 passed (1 skipped: brak zaimportowanego kafla C).
+
+## Dopisek 4 codex-clouds-horizon-s24 (2026-11-27) — rzadszy horyzont i wybór chmur w trasie
+
+Krytyk day27, zestaw 5 (P2). Projekcja HDRI ściska obrysy chmur przy horyzoncie, gdzie wyrównanie słońca może też
+odsłonić powielony najniższy wiersz mapy. Wcześniejsze wygaszanie krycia kończyło się już przy 0,69°. W `Sky.shader`
+istniejące `smoothstep(0, 0.012, d.y)` poszerzono do `smoothstep(0, 0.24, d.y)` (13,9°, `WORKING_VALUE`).
+Mnożnik krycia przy 2° / 5° / 10° wynosi teraz 5,7% / 30,0% / 81,3% (poprzednio po 100%). Gładka krzywa
+łączy się z pełnym kryciem powyżej 13,9°. Welon Beer–Lamberta wciąż wygasza kontrast do barwy nieba w danym kierunku.
+Nasycenie ×2 wg D100 obowiązuje także po tej zmianie.
+
+Dopisek 3 wybierał układ według sceny oświetlenia, która pozostaje sceną startową podczas streamingu. Teraz w świecie
+fazę określa środek kafla w metrach EPSG:2180, `floor(E/2048) + 2·floor(N/2048)`. Ziarno, godzina i sektor słońca
+przesuwają cykl sześciu układów (trzy mapy CC0 z dopisku 3, każda także w odbiciu w południku słońca).
+W aktualnym grafie 54 kafli wszystkie 96 par stykających się kafli mają różne układy, a na 57 wspólnych
+krawędziach różni się także mapa. Start jazdy i visual QA korzystają z tej samej kotwicy. Podczas jazdy
+zmiana następuje po przesunięciu początku świata przez streamer w głąb kolejnego kafla. Krycie starej mapy
+schodzi do zera, po czym krycie nowej wraca do wartości presetu (po 2 s na fazę, `WORKING_VALUE`).
+Sceny bez regionu korzystają z hasha nazwy sceny. `rq_cloudvar` i `rq_cloudmirror` nadal działają w A/B.
+
+Koszt według kodu shadera to **+0 ALU, 1 → 1 fotograficzne próbkowanie Clear** i **+0 przebiegów, draw calli oraz
+wariantów shadera**. Zmiana progu wykorzystuje ten sam `smoothstep`, a wybór mapy i wygaszanie w czasie liczy CPU
+przez istniejący parametr krycia. Po podmianie gra zwalnia poprzednią mapę. Czas klatki i chwilowy szczyt pamięci
+podczas podmiany w playerze pozostają `UNVERIFIED`.
+
+Visual QA z `cab-driver`, PC High 1920×1080. Dla tej samej mapy średnie bezwzględne odchylenie od kadru Clear
+bez chmur w oknie x=[900,1000), y=[325,400) wyniosło 18,02 → 9,40 sRGB na `knyszyn-w` i 58,31 → 27,92 na `dk65-07`.
+W domyślnym Clear (ziarno 0) `knyszyn-w` wybrał mapę 2 bez odbicia, a `dk65-07` mapę 0 z odbiciem. W Overcast
+różnica na pełnym kadrze sięgała 1 poziomu sRGB w 1 / 4 pikselach odpowiednio. Obejrzane kadry, logi i pomiary są
+w `artifacts/codex-clouds-horizon-s24/`. Import lokalnego cache GLB ostrzegł o 80 / 98 różnicach SHA względem
+manifestów. Pary przed i po wykorzystują te same zaimportowane sceny.
+
+Gates po zmianie. EditMode Win64 1517 passed, 0 failed i 116 skipped. Z tego Sky/Cloud i powiązane fixtury
+41 passed i 1 skipped. Cztery wskazane pliki testów budżetowych GIS dały 62 passed.

@@ -890,6 +890,7 @@ namespace Game.World.Streaming
             TilePlacement.RebaseOffset(m_Wx, m_Wy, d.anchorX, d.anchorY, out float ox, out float oz);
             var offset = new Vector3(ox, 0f, oz);
             m_Wx = d.anchorX; m_Wy = d.anchorY;
+            Game.Rendering.EnvironmentLighting.Instance?.SetCloudTile(d.anchorX, d.anchorY, fade: true);
             for (int s = 0; s < SceneManager.sceneCount; s++)
             {
                 var scene = SceneManager.GetSceneAt(s);

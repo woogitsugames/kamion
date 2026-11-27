@@ -251,6 +251,7 @@ namespace Game.Gameplay
             var regionRoot = FindAnyObjectByType<Game.World.WorldRegionRoot>();
             if (regionRoot != null)
             {
+                FindAnyObjectByType<EnvironmentLighting>()?.SetCloudTile(regionRoot.anchorX, regionRoot.anchorY);
                 SafetyNet = gameObject.AddComponent<WorldSafetyNet>();
                 SafetyNet.bootstrap = this;
                 SafetyNet.vehicle = vehicle;
