@@ -96,3 +96,7 @@
 ### codex-monument-head-s25 — baza i kamery
 - Obejrzano referencje s24. Widoczna zwarta broda przy brodzie i kołnierzu, zawinięte wąsy, lamówka delii i zapięcia żupana. Bazowy asset zachowany do porównań (26 670 / 1 914 tris).
 - Następny krok: `& 'C:/Program Files/Blender Foundation/Blender 4.2/blender.exe' -b --factory-startup -t 3 --python-exit-code 1 -P tools/blender/world/landmarks/make_czarniecki.py -- --render-existing --render artifacts/codex-monument-head-s25/lookdev-before/clear --cams head,figure_front,figure_right,eye_34_6m,eye_34_15m --samples 24`.
+
+### codex-monument-head-s25 — rzeźba i eksport r3
+- Wypiek Blender 4.2.16. Powieki i gałki w płytkim reliefie, zwarte pasma wąsów i jedna bryła brody. Wygładzono połączenia ramion i delii, dodano stojący kołnierz żupana i wymodelowano guzy. NPZ ma 26 672 tris LOD0 i 1 964 tris LOD1.
+- Następny krok po renderach: `pwsh -File artifacts/codex-monument-head-s25/compare.ps1`, następnie oględziny wszystkich par.
