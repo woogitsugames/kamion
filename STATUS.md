@@ -47,3 +47,4 @@
 - NASTEPNY KROK (lider): review + scalenie; potem `far_field.py --region <id>` dla wszystkich kafli i RebuildEdgeBatch
   (`Unity -batchmode -executeMethod Game.World.Import.WorldEdgeBuilder.RebuildEdgeBatch -region <id> -buildTarget Win64`)
   w win-build; ponowny render dowodow ADR 0354.
+- 2026-11-27 09:00: fala 13 start (agent-a1e9a7a0a869fb425): main zmergowany, overrides weathering w 52 kaflach, derived = junction do main, lancuchy A-E: artifacts/regen-wave-13-s24 (nastepny krok: pwsh artifacts/regen-wave-13-s24/redo-one.ps1 -Tile <id> dla ponowki).
