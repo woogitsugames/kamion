@@ -44,3 +44,7 @@
 - Następny krok to `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner codex-gis-fix-s24` i bazowe pytest pięciu plików na prywatnych danych.
 - Krok 2. Skopiowano 13 798 plików danych pochodnych (44 411 721 665 B) do prywatnego katalogu i odpięto junction. Fixture GIS może zapisać cache wyłącznie w worktree.
 - Następny krok to `pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Lighting clear` i odpowiednik overcast.
+- Krok 3. Cztery pliki bazowe GIS dały 84 PASS, 10 FAIL, 1 XFAIL. Zgodność kopii danych C z manifestem: 192/192 pliki kafla, 2/2 GLB dalekiego planu. Win64 PC High clear i overcast wyrenderowano i obejrzano. Brak TRAKT ogranicza pierwsze kadry do placu testowego.
+- Następny krok to `& $py -m pytest -q tests/gis/test_world_roads.py --basetemp artifacts/codex-gis-fix-s24/pytest/world-seed4` i powtórka testu eksportu z seedem 9. Utworzono nadrzędny katalog --basetemp po błędzie przygotowania pierwszego przebiegu.
+- Krok 4. Test zjazdu sprawdza wartości 2 cm i rampę zgodnie z ADR 0349. Osiem wariantów testu wieży sprawdza nową sylwetkę ADR 0351 przy właściwym kierunku projekcji.
+- Następny krok to `& $py -m pytest -q tests/gis/test_buildings_r7.py tests/gis/test_embankment_pylons_s24.py tests/gis/test_far_field.py tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py`.
