@@ -414,22 +414,26 @@ POSITION = ("oś jezdni E [m]", "oś jezdni N [m]")
 
 
 def match(ca: list[Crossing], cb: list[Crossing]):
-    """Pairs (a, b) by OSM way and distance on the seam; unmatched ends come back as (a, None) / (None, b)."""
-    pairs, used = [], set()
-    for a in sorted(ca, key=lambda c: (c.osm_way, c.xy)):
-        best = None
-        for j, b in enumerate(cb):
-            if j in used:
+    """Match same-way ends first across the entire seam, then use proximity for remaining ends."""
+    ca = sorted(ca, key=lambda c: (c.osm_way, c.xy, c.chain))
+    cb = sorted(cb, key=lambda c: (c.osm_way, c.xy, c.chain))
+    matched, used = {}, set()
+    # A nearby branch without its own mate must leave the continuation of another way available.
+    for same_way_only in (True, False):
+        for i, a in enumerate(ca):
+            if i in matched:
                 continue
-            d = float(np.hypot(a.xy[0] - b.xy[0], a.xy[1] - b.xy[1]))
-            score = d + (0.0 if b.osm_way == a.osm_way else 1000.0)
-            if d <= MATCH_M and (best is None or score < best[0]):
-                best = (score, j)
-        if best is None:
-            pairs.append((a, None))
-        else:
-            used.add(best[1])
-            pairs.append((a, cb[best[1]]))
+            best = None
+            for j, b in enumerate(cb):
+                if j in used or (same_way_only and a.osm_way != b.osm_way):
+                    continue
+                d = float(np.hypot(a.xy[0] - b.xy[0], a.xy[1] - b.xy[1]))
+                if d <= MATCH_M and (best is None or (d, j) < best):
+                    best = (d, j)
+            if best is not None:
+                matched[i] = best[1]
+                used.add(best[1])
+    pairs = [(a, cb[matched[i]] if i in matched else None) for i, a in enumerate(ca)]
     pairs += [(None, b) for j, b in enumerate(cb) if j not in used]
     return pairs
 
