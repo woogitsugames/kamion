@@ -64,12 +64,12 @@ def blade(species):
             pts.append((0.42 + 0.58 * r * math.cos(th), 0.58 * r * math.sin(th)))
         return pts
     if species == "oak":                                # Quercus robur: obovate, 4-5 rounded lobes a side, short petiole
-        m = 72
+        m = 110
         for side in (1, -1):
             for k in range(m + 1):
                 x = k / m if side > 0 else 1.0 - k / m
                 env = 0.33 * math.sin(math.pi * min(x, 1.0) ** 1.45) ** 0.72          # widest at ~0.62 of the blade
-                lobe = 0.56 + 0.44 * (0.5 + 0.5 * math.cos(2 * math.pi * (3.3 * x ** 1.1 + (0.08 if side > 0 else 0.30)))) ** 0.55
+                lobe = 0.50 + 0.50 * (0.5 + 0.5 * math.cos(2 * math.pi * (3.6 * x ** 1.1 + (0.10 if side > 0 else 0.34)))) ** 0.8
                 w = env * lobe + 0.018 * math.exp(-((x - 0.03) / 0.03) ** 2)           # the two small auricles at the base
                 pts.append((x, side * w))
         return pts

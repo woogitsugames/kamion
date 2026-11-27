@@ -34,12 +34,14 @@ def _tables():
 
 
 def _lobes(species):
-    """Number of local maxima of the half width along one side of the blade."""
+    """Lobes of one side of the blade: maxima of the half width that stand >= 0.05 blade lengths above the sinuses
+    beside them (the fine teeth of a linden or birch margin are ~0.02-0.04)."""
+    from scipy.signal import find_peaks
     pts = np.asarray(LS.blade(species))
     side = pts[pts[:, 1] > 1e-4]
     side = side[np.argsort(side[:, 0])]
-    w = side[:, 1]
-    return int(sum(1 for i in range(1, len(w) - 1) if w[i] > w[i - 1] and w[i] >= w[i + 1] and w[i] > 0.05))
+    w = np.concatenate([[0.0], side[:, 1], [0.0]])
+    return len(find_peaks(w, prominence=0.05)[0])
 
 
 def test_oak_blade_is_round_lobed_and_unlike_the_other_species():
@@ -118,9 +120,9 @@ def test_garden_crown_cards_use_the_blade_of_their_species():
     rng = np.random.default_rng(1)
     st = {sp: PK._blade_stamps(rng, sp, n=12) for sp in ("linden", "maple", "birch")}
     width = {sp: float(np.mean([s.shape[1] for s in ss])) for sp, ss in st.items()}
-    assert width["maple"] > width["linden"] > width["birch"], width
+    assert width["linden"] > 1.2 * width["birch"], width      # broad heart vs slim rhombus
     fill = {sp: float(np.mean([s[..., 3].mean() for s in ss])) for sp, ss in st.items()}
-    assert fill["maple"] < fill["linden"], "a lobed blade covers less of its box than a heart"
+    assert fill["maple"] < 0.75 * fill["linden"] and fill["birch"] < fill["linden"], "a lobed blade covers less of its box than a heart"
     assert set(PK._CROWN_BLADE) == {"ovoid", "round", "birch"}
     assert {v[0] for v in PK._CROWN_BLADE.values()} == {"linden", "maple", "birch"}
 

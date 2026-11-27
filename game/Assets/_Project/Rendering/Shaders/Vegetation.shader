@@ -39,6 +39,8 @@ Shader "Kamion/Vegetation"
         [NoScaleOffset] _NormalOcc ("Normal XY (RG), sky visibility (B) - impostor / HLOD edge", 2D) = "bump" {}
         _Impostor ("Impostor: x views, y visibility strength (ambient), z visibility strength (sun)", Vector) = (6, 0.6, 0.35, 0)
         _CrownShade ("Leaf cards: sky occlusion of the lower crown (ambient; ADR 0088)", Range(0, 1)) = 0.5
+        // ADR 0352: per-tree variation of instanced tree foliage (0 = off: hedges, Fab plants, HLOD walls).
+        _TreeVar ("Tree variation: x brightness +-, y hue +-, z crown clump shading, w clump frequency (rad / m)", Vector) = (0, 0, 0, 1.5)
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 0
         [Toggle] _AlphaToMask ("Alpha to coverage", Float) = 0
         // ADR 0113: colour-pass depth state. Defaults = two-pass path (depth pass + ZWrite Off / pulled-in colour pass);
@@ -63,6 +65,7 @@ Shader "Kamion/Vegetation"
             half _AlphaToMask;
             float4 _Impostor;
             half _CrownShade;
+            float4 _TreeVar;
         CBUFFER_END
         TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
         TEXTURE2D(_NormalOcc); SAMPLER(sampler_NormalOcc);
@@ -137,6 +140,30 @@ Shader "Kamion/Vegetation"
         #else
             return SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv.xy).a * _BaseColor.a;
         #endif
+        }
+
+        // ADR 0352 (critic s24 wave 11 # 10: every crown of a species the same green, a rigid light / dark gradient).
+        // Per-tree seed from the instance matrix: yaw and height scale differ per instance and do not change when the
+        // floating origin moves the region root (a hash of the world position would re-tint every tree on a shift).
+        // Every LOD of a tree is drawn with the same matrix, so cards and impostor take the same tint.
+        half2 TreeSeed()
+        {
+            float3 ax = UNITY_MATRIX_M._m00_m10_m20, az = UNITY_MATRIX_M._m02_m12_m22;
+            float2 k = float2(dot(float3(ax.x, ax.z, az.z), float3(127.1, 311.7, 74.7)), dot(float3(ax.z, az.x, ax.y + 1.0), float3(269.5, 183.3, 246.1)));
+            return (half2)frac(sin(k) * 43758.5453);
+        }
+        // Albedo multiplier of the tree: brightness +-x, hue +-y (+ = yellower / sunlit, - = cooler blue-green).
+        half3 TreeTint(half2 s)
+        {
+            half h = _TreeVar.y * (s.y * 2.0 - 1.0);
+            return half3(1.0 + h, 1.0, 1.0 - 1.5 * h) * (1.0 + _TreeVar.x * (s.x * 2.0 - 1.0));
+        }
+        // Smooth pseudo-noise (-1..1) over the crown in model metres, phase per tree: lit and shaded clumps of foliage
+        // a few metres across instead of one top-to-bottom ramp. Two warped sines: no texture, vertex stage only.
+        half TreeClump(float3 positionOS, half2 s)
+        {
+            float3 p = positionOS * _TreeVar.w + float3(s.x, s.y, s.x + s.y) * 17.0;
+            return (half)(sin(p.x + 1.7 * sin(p.z * 0.83 + p.y * 0.6)) * sin(p.y * 1.31 + 1.3 * sin(p.x * 0.71 - p.z * 1.13)));
         }
 
         // Alpha-to-coverage edge: alpha sharpened to ~1 pixel around the cutoff (as URP Lit's SharpenAlpha).
@@ -267,6 +294,9 @@ Shader "Kamion/Vegetation"
             #elif defined(_HLOD_EDGE) && defined(_KAMION_VEG_FAST)
                 half3 ambL2 : TEXCOORD5;         // L2 SH band of the wall normal (even in n: valid for both faces)
             #endif
+            #if !defined(_HLOD_EDGE)
+                half4 treeVar : TEXCOORD9;       // ADR 0352: rgb albedo multiplier of this tree, a crown clump noise (-1..1; cards)
+            #endif
                 UNITY_VERTEX_OUTPUT_STEREO
             };
             V vert(A v)
@@ -286,6 +316,7 @@ Shader "Kamion/Vegetation"
                 o.ambient = LeafAmbient(iv.toCamWS);
                 o.ambUpT = half4(LeafAmbient(iv.upWS), iv.t);
                 o.ambDown = LeafAmbient(-iv.upWS);
+                o.treeVar = half4(TreeTint(TreeSeed()), 0.0);
             #else
                 float3 pOS = v.positionOS.xyz;
                 float2 u = TRANSFORM_TEX(v.uv, _BaseMap);
@@ -295,6 +326,13 @@ Shader "Kamion/Vegetation"
                 o.ambient = LeafAmbient(o.normalWS);
             #if defined(_HLOD_EDGE) && defined(_KAMION_VEG_FAST)
                 o.ambL2 = SHEvalLinearL2(o.normalWS, unity_SHBr, unity_SHBg, unity_SHBb, unity_SHC);
+            #endif
+            #if !defined(_HLOD_EDGE)
+                {
+                    half2 seed = TreeSeed();
+                    half clump = TreeClump(pOS, seed) * step(0.0001, _TreeVar.z);
+                    o.treeVar = half4(TreeTint(seed) * (1.0 + 0.5 * _TreeVar.z * clump), clump);
+                }
             #endif
             #endif
                 o.positionWS = TransformObjectToWorld(pOS);
@@ -331,7 +369,11 @@ Shader "Kamion/Vegetation"
                 half alpha = 1.0;
                 if (_AlphaToMask > 0.5) { alpha = CoverageAlpha(tex.a); clip(alpha - 0.0001); }
                 else clip(tex.a - _Cutoff);
+            #if !defined(_HLOD_EDGE)
+                half3 albedo = tex.rgb * i.treeVar.rgb;
+            #else
                 half3 albedo = tex.rgb;
+            #endif
                 half3 n = normalize(i.normalWS);
             #if !defined(_IMPOSTOR)
                 n = front ? n : -n;             // impostor: the billboard always faces the camera, whatever its winding
@@ -342,7 +384,8 @@ Shader "Kamion/Vegetation"
                 // ADR 0060 (review r7 N-2): leaf-card normals point away from the crown centre (make_trees.py), so their
                 // height on the crown is known: the lower half sees less sky through the leaves above it (the impostors
                 // and HLOD walls carry a baked visibility instead). Unflipped normal: a card seen from its back keeps its place.
-                occA = lerp(1.0 - _CrownShade, 1.0, smoothstep(-0.6, 0.75, normalize(i.normalWS).y));
+                // ADR 0352: the ramp follows the foliage clumps (+-0.45 of the normal's height), not one level line.
+                occA = lerp(1.0 - _CrownShade, 1.0, smoothstep(-0.6, 0.75, normalize(i.normalWS).y + 0.45 * i.treeVar.a));
             #endif
             #if defined(_IMPOSTOR)
                 // View-space normal of the bake: x right, y up, z towards the camera.

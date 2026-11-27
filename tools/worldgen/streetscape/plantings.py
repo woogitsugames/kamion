@@ -1048,9 +1048,7 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
     top = p + lean * (cb / H)
     cc = p + lean * (0.5 + 0.5 * cb / H)                      # axis of the crown
     tr = (0.035 + 0.011 * H) * (0.8 if species == "birch" else 1.0)
-    # ADR 0352: the stem of a young linden / maple / ash is smooth and grey (the dark `trunk` swatch under a small
-    # round crown read as a chocolate stick: "lizakowe drzewka"); the furrowed dark bark stays on the grown trees
-    bark = PLT.PK.SWATCH["concrete" if species == "birch" else "wood_grey" if not lite and H < 7.5 else "trunk"]
+    bark = PLT.PK.SWATCH["concrete" if species == "birch" else "trunk"]
     zt = z + cb + hc * (0.55 if species == "birch" else 0.22)
     if lite:
         for k in range(2):
@@ -1077,7 +1075,9 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
             hq = 0.90 + 0.16 * PLT.hfloat(key, "ch", i)
             offq = (np.array([PLT.hfloat(key, "cx", i), PLT.hfloat(key, "cy", i)]) - 0.5) * 0.36 * r
             tip = (np.array([PLT.hfloat(key, "clx", i), PLT.hfloat(key, "cly", i)]) - 0.5) * 0.30 * r
-            _crown_quad(kit, cc + offq, z + cb - 0.02 * hc, sprite, W * wq, hc * hq, a0 + 0.4 + (i + 0.5 * (PLT.hfloat(key, "ca", i) - 0.5)) * math.pi / cards,
+            # a small tree (< 6.5 m) carries its lowest twigs below the nominal crown base: 1.0-1.3 m of bare stem, not 1.6
+            skirt = (0.12 + 0.12 * PLT.hfloat(key, "ck", i)) if H < 6.5 else 0.02
+            _crown_quad(kit, cc + offq, z + cb - skirt * hc, sprite, W * wq, hc * (hq + skirt - 0.02), a0 + 0.4 + (i + 0.5 * (PLT.hfloat(key, "ca", i) - 0.5)) * math.pi / cards,
                         occ, flip=PLT.hfloat(key, "cf", i) < 0.5, lean=tip)
             continue
         shade = 0.50 + 0.10 * PLT.hfloat(key, "co", i) if core and dense_sp else None

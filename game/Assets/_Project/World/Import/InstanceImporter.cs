@@ -57,6 +57,29 @@ namespace Game.World.Import
 
 
         /// <summary>
+        /// ADR 0352 (critic s24 wave 11: "identical lollipop trees in the distance"): horizontal scale of a library
+        /// tree, 0.84-1.0 of the modelled width, from a hash of its position (cm) - the same prototype at the same
+        /// height no longer repeats one silhouette, on every LOD (cards, impostor, trunk collider share the matrix).
+        /// Never wider than the model: the road clearance of ADR 0347 is measured on the unscaled mesh. WORKING_VALUE.
+        /// </summary>
+        public static float TreeCrownWidth(float e, float n)
+        {
+            unchecked
+            {
+                uint h = (uint)Mathf.RoundToInt(e * 100f) * 0x9E3779B1u ^ ((uint)Mathf.RoundToInt(n * 100f) * 0x85EBCA77u);
+                h ^= h >> 15; h *= 0x2C1B3C6Du; h ^= h >> 12; h *= 0x297A2D39u; h ^= h >> 15;
+                return 0.84f + 0.16f * (h / 4294967295f);
+            }
+        }
+
+        /// <summary>Scale both horizontal model axes by width (0.5..1); height, origin, lean and yaw are kept.</summary>
+        public static Matrix4x4 ApplyTreeCrownWidth(Matrix4x4 source, float width)
+        {
+            if (float.IsNaN(width) || width < 0.5f || width >= 1f) return source;
+            return source * Matrix4x4.Scale(new Vector3(width, 1f, width));
+        }
+
+        /// <summary>
         /// Keep every pre-Fab matrix at its legacy sorted index. Runtime forest thinning uses the absolute
         /// matrix index, so inserting licensed details into the old sort changes the selected trees. Sort the
         /// unchanged legacy input separately with precisely the old comparison (including its equal-key order),
@@ -393,6 +416,8 @@ namespace Game.World.Import
                         m = TreeMatrix(new Vector3(e, z - 0.15f, n), yaw, lean * Mathf.Cos(yaw * 3f), lean * Mathf.Sin(yaw * 3f), (float)Num(it.Get("h")) / href);
                         if (it.Get("garden_canopy_width") != null)
                             m = ApplyGardenCanopyWidth(m, IsHighOnly(it.Get("tier")), (float)Num(it.Get("garden_canopy_width")));
+                        else
+                            m = ApplyTreeCrownWidth(m, TreeCrownWidth(e, n));
                     }
                     else
                     {

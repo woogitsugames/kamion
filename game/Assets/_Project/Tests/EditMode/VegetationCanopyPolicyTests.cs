@@ -30,5 +30,30 @@ namespace Game.Tests
             }
             finally { Object.DestroyImmediate(material); }
         }
+
+        // ADR 0352: per-tree tint / clump shading only on library tree foliage; conifers vary less than broadleaves.
+        [TestCase("M_leaves_linden (simple)", .11f, .05f, .30f)]
+        [TestCase("M_leaves_oak", .11f, .05f, .30f)]
+        [TestCase("M_impostor_tree_birch_2", .11f, .05f, .30f)]
+        [TestCase("M_leaves_pine", .07f, .02f, .18f)]
+        [TestCase("M_impostor_tree_spruce_1", .07f, .02f, .18f)]
+        [TestCase("M_forest_edge_mixed", 0f, 0f, 0f)]
+        [TestCase("M_fab_elderberry", 0f, 0f, 0f)]
+        [TestCase("M_fire_station_thuja_shell", 0f, 0f, 0f)]
+        public void TreeVariationOnlyOnLibraryTrees(string name, float brightness, float hue, float clump)
+        {
+            var material = new Material(Shader.Find("Kamion/Vegetation")) { name = name };
+            try
+            {
+                Assert.That(material.GetVector("_TreeVar"), Is.EqualTo(new Vector4(0f, 0f, 0f, 1.5f)), "shader default = off");
+                VegetationCanopyPolicy.Apply(material);
+                var v = material.GetVector("_TreeVar");
+                Assert.That(v.x, Is.EqualTo(brightness).Within(1e-6));
+                Assert.That(v.y, Is.EqualTo(hue).Within(1e-6));
+                Assert.That(v.z, Is.EqualTo(clump).Within(1e-6));
+                Assert.That(v.w, Is.GreaterThan(0.5f));
+            }
+            finally { Object.DestroyImmediate(material); }
+        }
     }
 }
