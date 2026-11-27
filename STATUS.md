@@ -42,3 +42,6 @@
 ## codex-review-day27-s24
 - Krok 1. Ustalono migawkę bfaccaf1a i zakres 34 scaleń (33 na pierwszym rodzicu), przeczytano zasady oraz kontekst ADR.
 - Następny krok: `git diff 2d5744863^1 bfaccaf1a -- '*.cs' '*.hlsl' '*.shader' '*.py'`.
+
+- Krok 2. Porównano 34 scalenia z pierwszym rodzicem i sprawdzono połączone ścieżki renderingu, streamingu, HUD i danych. Cztery bramki GIS: 62/62 w 60,29 s.
+- Następny krok: `git diff 2d5744863^1 bfaccaf1a -- tests/gis` oraz izolowane reprodukcje rozbieżności.
