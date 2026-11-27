@@ -42,7 +42,7 @@ namespace Game.World.Import
             var alpha = new byte[px.Length];
             for (int i = 0; i < px.Length; i++) alpha[i] = px[i].a;
             int views = Mathf.Max(1, Mathf.RoundToInt(mat.GetVector("_Impostor").x));
-            var fit = ImpostorTrim.Fit(alpha, w, h, views);
+            var fit = ImpostorTrim.Fit(alpha, w, h, views, ImpostorTrim.Bands, ImpostorTrim.DilateFor(w / views));   // impostor-rebake-s24
             if (fit == null) return -1f;
             var poly = fit.Value;
 
