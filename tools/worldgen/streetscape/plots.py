@@ -1683,44 +1683,12 @@ def bush_lite(kit, p, z, r, h, key, red=False):
 
 
 def fruit_tree(kit, p, z, h, key, r=None):
-    """Small orchard / garden tree (apple, plum, cherry): 3.2-6 m. ADR 0132 (review 0124 P1-e: crossed cards): a
-    trunk that forks into three limbs, a dark core and two tiers of leaf sprays on the crown's skin + a tent over the
-    top (crown radius r - read off the orthophoto when there is one). ~65 triangles."""
-    p = np.asarray(p, float)
-    R = float(r) if r is not None else h * (0.36 + 0.10 * hfloat(key, "fr"))
-    R = min(max(R, 1.0), 0.62 * h)
-    a0 = hfloat(key, "fy") * 6.2832
-    occ = 0.84 + 0.16 * hfloat(key, "fo")
-    fork = h * (0.28 + 0.08 * hfloat(key, "ff"))
-    zc0 = z + max(h - 1.9 * R, fork * 0.85)                  # underside of the crown
-    hc = z + h - zc0
-    tr = 0.055 + 0.022 * h / 3.4
-    lean = (np.array([hfloat(key, "flx"), hfloat(key, "fly")]) - 0.5) * 0.5
-    top = p + lean * fork / max(h, 1.0)
-    t = np.array([math.cos(a0), math.sin(a0)])
-    kit.box(p, t, tr, tr, z - 0.1, z + fork, PK.SWATCH["trunk"], top=False, shift=top - p)
-    for k in range(2):                                       # limbs into the crown (r4: 2, were 3)
-        az = a0 + 3.1416 * k + 0.5 * (hfloat(key, "fl", k) - 0.5)
-        d = np.array([math.cos(az), math.sin(az)])
-        e = top + d * R * 0.5
-        ze = zc0 + hc * 0.40
-        nrm = np.array([-d[1], d[0]]) * tr * 0.7
-        kit.quad([[*(top - nrm), z + fork - 0.05], [*(top + nrm), z + fork - 0.05], [*(e + nrm * 0.5), ze], [*(e - nrm * 0.5), ze]],
-                 [PK.SWATCH["trunk"]] * 4)
-    cc = top + lean * 0.3
-    _core(kit, cc, zc0 + hc * 0.14, R * 0.50, hc * 0.60, key, sides=4, occ=0.26 * occ, rings=2)
-    low = "apple_a" if hfloat(key, "fa") < 0.5 else "apple_b"
-    for i in range(5):                                       # lower tier: sprays hanging out and down
-        az = a0 + 2 * math.pi * (i + 0.4 * (hfloat(key, "tj", i) - 0.5)) / 5
-        c = cc + np.array([math.cos(az), math.sin(az)]) * R * (0.40 + 0.10 * hfloat(key, "td", i))
-        _skin_card(kit, c, zc0 - 0.03 * hc, az, R * (1.45 + 0.3 * hfloat(key, "tw", i)), hc * (0.70 + 0.12 * hfloat(key, "th", i)),
-                   low if i % 2 == 0 else "shrub_a", 0.12 + 0.16 * hfloat(key, "tt", i), occ, flip=hfloat(key, "tf", i) < 0.5)
-    for i in range(4):                                       # upper tier
-        az = a0 + 0.8 + 2 * math.pi * i / 4
-        c = cc + np.array([math.cos(az), math.sin(az)]) * R * 0.24
-        _skin_card(kit, c, zc0 + hc * 0.30, az, R * 1.55, hc * 0.62, "shrub_a", 0.34 + 0.18 * hfloat(key, "ut", i), occ,
-                   flip=i % 2 == 1)
-    _tent(kit, cc, zc0 + hc * 0.58, a0 + 0.3, R * 0.34, R * 1.2, hc * 0.46, "shrub_a", occ)
+    """Small orchard / garden tree (apple, plum, pear, cherry): 3.2-6 m. ADR 0352 addendum (garden-trees-s24): a short
+    stem forking into 3-4 scaffold limbs with clumps of foliage on them, no dark core - small_trees.orchard_tree
+    (ADR 0132 had a dark 4-sided core under two tiers of skin cards: a ball on a stick with a dark rhombus in it).
+    40 / 50 triangles. Same size, lean and seed as fruit_tree_lite()."""
+    from . import small_trees
+    return small_trees.orchard_tree(kit, p, z, h, key, r=r)
 
 
 def shrub(kit, p, z, h, key):

@@ -34,6 +34,7 @@ from shapely.geometry import LineString, Point, Polygon
 
 from terrain_mesh.chunks import CHUNK_M
 from . import plots as PLT
+from . import small_trees
 
 HEDGE_H = (0.5, 0.65)       # m, clipped berberis hedge (review r7 N-4: low 0.5-0.7 m band, CC0 Bieżeństwa photo)
 BAND_M = (1.1, 1.4)         # m, width of the clipped band laid along a traced bed (r7 N-4: narrow strip, not the bed)
@@ -1042,6 +1043,12 @@ def garden_tree(kit, p, z, r, H, cb, species, key, lite=False, cards=3, sprite=N
     separate dark core: build 2 had one and it showed as a box under the cards (review s17 0170 P1)."""
     p = np.asarray(p, float)
     sprite = sprite or HABIT[species]
+    if not lite and H < small_trees.YOUNG_H_MAX_M:
+        # ADR 0352 addendum (garden-trees-s24): the full variant of a small tree is a stem with lobes of foliage on
+        # boughs (20-21 triangles), not three whole-crown cards crossed on the axis (14): those were a ball on a stick
+        # with a dark wedge between the cards facing away from the sun
+        small_trees.young_tree(kit, p, z, r, H, cb, species, sprite, key)
+        return
     hc = H - cb
     a0 = PLT.hfloat(key, "ty") * 6.2832
     lean = (np.array([PLT.hfloat(key, "tlx"), PLT.hfloat(key, "tly")]) - 0.5) * 0.06 * H
