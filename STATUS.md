@@ -121,3 +121,7 @@
 ### codex-sadowa-seam-s25 — diagnoza
 - Przyczynę potwierdza graf dk65-05: zachował cięcie Sadowej, ale `network.load` odrzuca odcinek 0,048 m. Zachowanie jego oryginalnych końców pozwala utrzymać położenie przecięcia Szkolnej.
 - Następny krok: `git diff -- tools/worldgen/roads/network.py tools/worldgen/roads/meshing.py tests/gis/test_seams_0224.py` po próbie zachowania krótkiego odcinka przy szwie.
+
+### codex-sadowa-seam-s25 — poprawka generatora i test syntetyczny
+- Zachowano krótkie cięcie w sieci, zarezerwowano odcinek do siatkowania i odróżniono w audycie rzeczywisty koniec cięcia od węzła wewnętrznego. Test 0,04 m potwierdza położenie końców oraz trójkąty nawierzchni i kolizji.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd artifacts/codex-sadowa-seam-s25/compare.py`

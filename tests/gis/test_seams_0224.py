@@ -11,6 +11,7 @@ import copy
 import sys
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -84,6 +85,43 @@ def test_oblique_non_boundary_end_is_not_invented_as_a_crossing():
     roads, rows = _rows(SM.run(loaded=[a, b], taper=False))
     assert len(roads) == 1 and roads[0]["chain_left"] is None
     assert rows["droga po drugiej stronie"]["status"] == "FAIL"
+
+
+def test_cut_four_centimetres_from_junction_keeps_seam_ribbon():
+    from roads import meshing as M
+
+    a, b = _tile("a", 0.0), _tile("b", 100.0)
+    b.graph["bbox"] = b.bbox
+    inner = dict(b.graph["nodes"][0], id="junction", x=100.04, boundary=False)
+    branch_end = dict(inner, id="branch", x=105.0, y=90.0)
+    b.graph["nodes"] += [inner, branch_end]
+    edge = b.graph["edges"][0]
+    stub = dict(edge, id="w7:cut-junction", to=inner["id"], length_m=0.04, clipped=True,
+                geometry=[[100.0, 50.0], [100.04, 50.0]])
+    edge["from"] = inner["id"]
+    edge["geometry"][0] = [100.04, 50.0]
+    branch = dict(edge, id="w8:junction-branch", osm_way=8, to=branch_end["id"],
+                  geometry=[[100.04, 50.0], [105.0, 90.0]])
+    b.graph["edges"] += [stub, branch]
+    pairs = SM.adjacent_pairs([a, b])
+    nets = SM.build_nets([a, b], pairs, taper=False, trims=True)
+    seam = pairs[0][2]
+    left, = SM.crossings(a, seam, nets[a.id])
+    right, = SM.crossings(b, seam, nets[b.id])
+    assert left.osm_way == right.osm_way == 7
+    assert left.xy == right.xy == (100.0, 50.0)
+
+    chain = next(c for c in nets[b.id].chains if c.id == right.chain)
+    assert chain.length == pytest.approx(0.04)
+    assert chain.t_a == chain.t_b == 0.0
+    chain.z = np.zeros_like(chain.line.s)
+    chain.e = np.zeros_like(chain.line.s)
+    for coarse, layer in ((False, "road"), (True, "collision")):
+        buf = M.MeshBuf()
+        M.build_ribbon(buf, nets[b.id], chain, coarse=coarse)
+        asphalt = next(p for p in buf.parts if p.layer == layer and p.mat.endswith("asphalt"))
+        assert len(asphalt.T) >= 2
+        assert np.unique(asphalt.V[:, 0] + b.origin[0]) == pytest.approx([100.0, 100.04])
 
 
 def _pair_0p2():

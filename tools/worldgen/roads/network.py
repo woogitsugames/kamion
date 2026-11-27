@@ -306,6 +306,8 @@ class Network:
 
 
 SEAM_DIR_EPS_M = 0.05      # seam-knw-s24: a boundary node lies on a bbox edge within this distance
+MIN_EDGE_M = 0.05          # ordinary graph fragments shorter than this are discarded
+MIN_SEAM_EDGE_M = 1e-6     # exclude coincident cut points (graph coordinates are stored to 1 mm)
 
 
 def _seam_dir(n: dict, bbox) -> np.ndarray | None:
@@ -335,6 +337,7 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
                           "boundary": bool(n.get("boundary")), "z_terrain": n.get("z_terrain"),
                           "seam_u": _seam_dir(n, graph.get("bbox"))}
     edges = {}
+    seam_stubs = set()
     for e in sorted(graph["edges"], key=lambda e: e["id"]):
         g = np.array(e["geometry"], float) - np.array([ox, oy])
         a, b = e["from"], e["to"]
@@ -343,8 +346,15 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
             e = dict(e)
             e["attrs"] = dict(e["attrs"])
             e["attrs"]["oneway"] = {"v": "yes", "src": "derived", "conf": "high"}
-        if len(g) < 2 or cumlen(g)[-1] < 0.05:
+        if len(g) < 2:
             continue
+        length = cumlen(g)[-1]
+        seam_stub = (e.get("clipped") and length <= MIN_EDGE_M
+                     and any(nodes[n]["seam_u"] is not None for n in (a, b)))
+        if length < (MIN_SEAM_EDGE_M if seam_stub else MIN_EDGE_M):
+            continue
+        if seam_stub:
+            seam_stubs.add(e["id"])
         edges[e["id"]] = (e, g, a, b)
         nodes[a]["deg"] += 1
         nodes[b]["deg"] += 1
@@ -358,6 +368,8 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
     sec_index = {s.edge_id: i for i, s in enumerate(net.sec_list)}
     net.chains = build_chains(nodes, edges)
     for c in net.chains:
+        if any(eid in seam_stubs for eid, _ in c.edges):
+            c.meta["seam_stub"] = True
         prepare_chain(c, net, sec_index)
     from . import compact_roundabout as CR_          # ADR 0274: designed lanes of kerb-mode compact roundabouts
     CR_.lay_lanes(net)

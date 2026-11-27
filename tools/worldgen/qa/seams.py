@@ -289,17 +289,21 @@ def crossings(t: Tile, se, net=None) -> list[Crossing]:
     net = net or build_net(t)
     o = np.array(t.origin)
     nab = np.array(se["normal_ab"])
+    axis = 0 if se["axis"] == "x" else 1
     out = []
     qa = {c["id"]: c for c in (t.roads_qa or {}).get("chains", [])}
     for c in net.chains:
         for end in (0, -1):
             pg = c.line.p[end] + o
             # D94 can shift an oblique carriageway end off the tile plane by centimetres.
-            # Membership belongs to the boundary node; keep the generated position below
-            # so real placement / cross-section differences still fail their own rows.
+            # Use the graph cut for membership. A real OSM node may lie exactly
+            # on the tile edge without the boundary flag (coordinates rounded
+            # to millimetres); a junction 4 cm inside the tile is not a cut.
             node = net.nodes.get(c.node_a if end == 0 else c.node_b, {})
             boundary_xy = np.asarray(node.get("xy", c.line.p[end])) + o
-            if not (_on_seam(pg, se) or (node.get("boundary") and _on_seam(boundary_xy, se))):
+            if not _on_seam(boundary_xy, se):
+                continue
+            if not node.get("boundary") and abs(boundary_xy[axis] - se["at"]) > 0.0005:
                 continue
             s = float(c.line.s[end])
             i_sec = int(c.sec_idx[end])

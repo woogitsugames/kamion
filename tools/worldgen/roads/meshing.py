@@ -65,6 +65,8 @@ def grid_tris(nr, nc, flip=False):
 def stations(c, s0, s1, coarse=False):
     L = s1 - s0
     if L <= 0.05:
+        if c.meta.get("seam_stub") and L > 1e-6:
+            return np.array([s0, s1])
         return np.array([])
     base = 4.0 if coarse else 2.0
     ss = [s0]
