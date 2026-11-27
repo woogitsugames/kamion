@@ -27,3 +27,7 @@
 
 - Suchy przebieg `dk65-monki-03` (236 s wg logu fali 13) przeszedł i nie utworzył stanu wykonania. Shim potwierdzony przez `export-route.py --help`. Zapisano instrukcję, pomiary dysku i czas importów builda #10.
 - Następny krok (lider, po zakończeniu i integracji fali 13): `pwsh -NoProfile -File artifacts/regen-wave-14-s24/prepare.ps1`
+
+- Bramka przygotowania: cztery pliki budżetowe, 62/62 zaliczone w 140,15 s; slot heavy zwolniony. Parser PowerShell i porównanie kolejki ze wszystkimi regionami posiadającymi region.yaml przeszły.
+- Dowody: `artifacts/codex-wave14-prep-s24/{dry-run.log,budgets.log}` w głównym katalogu artefaktów. Regeneracja, Unity, pełny GIS i pętla visual-QA pozostają do wykonania przez lidera podczas fali 14.
+- Następny krok po końcu i integracji fali 13: `pwsh -NoProfile -File artifacts/regen-wave-14-s24/prepare.ps1`
