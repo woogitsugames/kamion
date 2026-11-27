@@ -16,3 +16,8 @@
 - GOTOWE DO SCALENIA PRZEZ LIDERA.
 - NASTĘPNY KROK (lider): przejrzeć diff na `neon-avenue-s24` i dowody w `artifacts/neon-avenue-s24/sbs/`, scalić gałąź, a następnie w kolejnej fali regeneracji przebudować kafle z szpalerami (`knyszyn-w`, `dk65-01..11`, `dw671-tykocin-*`, `dk65-monki-*`):
   `git merge --no-ff neon-avenue-s24`
+
+## codex-wave14-prep-s24
+
+- Kolejka fali 14 obejmuje 54 regiony z fali 13. Zapisano czasy udanych przebiegów fali 13 i uzupełniono brakujące pomiary z fali 12.
+- Następny krok po dodaniu skryptów: `pwsh -NoProfile -File artifacts/regen-wave-14-s24/chain.ps1 -Tile knyszyn-s -WhatIf`
