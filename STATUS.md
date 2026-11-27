@@ -45,3 +45,6 @@
 
 - Krok 2. Porównano 34 scalenia z pierwszym rodzicem i sprawdzono połączone ścieżki renderingu, streamingu, HUD i danych. Cztery bramki GIS: 62/62 w 60,29 s.
 - Następny krok: `git diff 2d5744863^1 bfaccaf1a -- tests/gis` oraz izolowane reprodukcje rozbieżności.
+
+- Krok 3. Zweryfikowano 8 znalezisk: 6 ważnych i 2 drobne. Rozszerzone GIS: 289 pass, 9 fail. Obejrzano istniejące pary PNG High clear/overcast. Raport w `artifacts/codex-review-day27-s24/REVIEW.md`.
+- Następny krok dla lidera: `git show codex-review-day27-s24:artifacts/codex-review-day27-s24/REVIEW.md`.
