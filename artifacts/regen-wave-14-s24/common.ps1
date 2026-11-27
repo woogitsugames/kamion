@@ -7,7 +7,7 @@ $mainRoot = Split-Path $commonGit
 $waveName = 'regen-wave-14-s24'
 $evidenceDir = Join-Path $mainRoot "artifacts/$waveName"
 $stateDir = Join-Path $waveDir 'run'
-$python = 'C:\Users\matma\Documents\Claude\kamion\.claude\worktrees\agent-a492e5af856a32ed3\tools\worldgen\.venv\Scripts\python.exe'
+$python = 'C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd'  # s25: .venv python.exe zablokowany przez SAC (27.11 22:10)
 $queue = @(Import-Csv "$waveDir/queue.csv")
 if ($queue.Count -ne 54 -or @($queue.tile | Sort-Object -Unique).Count -ne 54) {
     throw 'Kolejka musi zawierać 54 unikalne regiony.'
