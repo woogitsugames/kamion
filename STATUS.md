@@ -54,3 +54,5 @@
 - Następny krok to `& $py artifacts/codex-gis-fix-s24/compare-exports.py artifacts/codex-gis-fix-s24/pytest/world-seed4/world0 artifacts/codex-gis-fix-s24/pytest/world-seed9/world0 Data/raw/derived/bialystok-industrial-c/world`.
 - Krok 7. Oba procesy eksportu C dały identyczne 197/197 plików z katalogu świata, w tym 128 GLB chunka, 64 instancje i 2 GLB dalekiego planu. Stary manifest jest do regeneracji w fali 14. Przywrócono uboczne zmiany atlasu i nawigacji.
 - Następny krok to `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` w slocie heavy, potem visual QA po zmianie testów w clear i overcast.
+- Krok 8. EditMode Win64: 1688 testów, 1538 PASS, 0 FAIL, 150 skip. Cztery wskazane shadery zaimportowane bez diagnostyki kompilacji. Wygenerowano kadry High po zmianie asercji w clear i overcast, przywrócono uboczne zmiany Unity.
+- Następny krok to `& $py -m pytest -q tests/gis --junitxml artifacts/codex-gis-fix-s24/gis-full.xml` w slocie heavy i przegląd pozostałych błędów.
