@@ -47,3 +47,6 @@
 - Następny krok: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after` dla finalnych czterech nawierzchni.
 - Finalny eksport Tykocina: 4 nawierzchnie (szara 1616,9 m², czerwona 143,9 m², płyty 798,4 m², asfalt 179,3 m²), oba authored overrides trafione, obniżenia 4 z 8 przejść. Identyczne prymitywy w całym eksporcie: 2358 High, 1479 Low.
 - Następna komenda po finalnym visual-QA: `pwsh artifacts/codex-sidewalk-var-s24/compare.ps1`.
+- Finalny import Win64 High i visual-QA zakończone. Obejrzano 10 porównań clear/overcast i trzy zbliżenia. W 20 parach DC siatek/cieni/instancji bez zmian, tris sceny +0…154. Finalny pytest: 123 passed (179,30 s). Zgodność SHA-256 128/128 GLB.
+- Finalny raport i dowody: `C:/Users/matma/Documents/Claude/kamion/artifacts/codex-sidewalk-var-s24/WYNIKI.md`. Finalna kopia wygenerowanych JSON w `after/generated/`. Cofnięto zmiany śledzonych produktów generatora.
+- Następny krok dla lidera po przeglądzie gałęzi: uruchomić `tools/worldgen/roads/build_world.py --region tykocin` i analogicznie dla knyszyn / knyszyn-w / knyszyn-s, potem `pwsh scripts/import-region.ps1 -Region tykocin -BuildTarget Win64`.

@@ -188,3 +188,8 @@ w obu stanach. Sama klasyfikacja chodników zachowuje 2057 trójkątów. Raport 
 wykazuje 1616,9 m² szarej kostki, 143,9 m² czerwonej, 798,4 m² płyt i 179,3 m² asfaltu.
 Generator obniżył oba krawężniki przy czterech przejściach. Cztery kolejne były w płytach
 skrzyżowań lub zbyt blisko ich krawędzi, żeby zmieścić odcinek z rampami.
+
+Win64 PC High, clear i overcast: 20 porównań z 10 kamer. Estymaty wywołań siatek, cieni
+i instancji w każdej parze są stałe, a liczba trójkątów zmieniła się o 0–154 na kadr.
+Dodatkowe zbliżenia potwierdziły czytelność czerwonej kostki, płyt i asfaltu. Wszystkie
+123 testy chodników i budżetów przeszły. Dowody: `artifacts/codex-sidewalk-var-s24/`.
