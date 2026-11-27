@@ -1,12 +1,12 @@
-# STATUS plaza-barn-fix-s24 (krytyk s24 dzień 27: skrzynie/kwiaty/cokół/ławki rynku Tykocina + wrota stodół)
+# STATUS plaza-barn-fix-s24 (krytyk s24 dzień 27: skrzynie/kwiaty/cokół/ławki rynku Tykocina + wrota stodół) — KONIEC
 
-- Worktree `agent-a8bad7a40407c997e`, gałąź `worktree-agent-a8bad7a40407c997e`. `Data/raw/derived` = PRYWATNA kopia (`tykocin`, `dk65-07`, `cache`),
-  reszta `Data/raw/*` = junction do main; Library + `_Generated` (bez regionów) z worktree a492 (Win64). Układ: `artifacts/plaza-barn-fix-s24/setup.ps1`.
-- Python: shim `artifacts/plaza-barn-fix-s24/shim/uv.cmd` (interpreter a492, Smart App Control).
-- [krok 1] Setup; build_world „przed” (kod HEAD 0e9424aaa) tykocin 965 s, dk65-07 746 s, exit 0.
-- [krok 2] Kod: `tykocin_rynek_0320.py` (10 skrzyń 0,91 m w pierścieniu 2,80 m, begonie karminowe kopułką, 2 bejce ławek),
-  `make_czarniecki.py` (nalot/zacieki dołu cokołu, pole inskrypcji z ramą; asset przebudowany Blenderem, LOD0 26 516),
-  `buildings_mesh.py`/`facade_kit.py`/`materials.py` (wrota stodół: tint COLOR_0 na facade_atlas, zwietrzałe szaro-brązowe).
-  pytest truss_bridge_0320 + rural_outbuildings + typology_0238 + budget_0221: 59/59.
-- [krok 3] W toku: `after.ps1` czeka na import+VQA „przed”, potem `pipeline.ps1 -Tag after` → `artifacts/plaza-barn-fix-s24/vqa-{before,after}/<region>/`.
-- NASTĘPNY KROK: arkusze przed|po (`magick`), dopiski ADR 0320 / 0238, commit. Nie scalać.
+- Worktree `agent-a8bad7a40407c997e`, gałąź `worktree-agent-a8bad7a40407c997e` (nie scalać — lider). `Data/raw/derived` = PRYWATNA
+  kopia (`tykocin`, `dk65-07`, `cache`; NIE kopiować do main — wspólny derived przebuduje lider po scaleniu), reszta = junction.
+- [krok 1] Setup + build „przed” (HEAD 0e9424aaa). [krok 2] Kod + Blender + testy. [krok 3] Unity przed/po (High, clear, Win64):
+  `artifacts/plaza-barn-fix-s24/vqa-{before,after}/{tykocin,dk65-07}/`, arkusze `sbs/`.
+- Wyniki: DC +0 we wszystkich kadrach; tykocin +232 trójkątów (Rynek LOD0 35 678 ≤ 36 000); dk65-07 +0.
+- Testy: test_truss_bridge_0320 (12), test_rural_outbuildings_props_fix_s24 (+1 r3), test_typology_0238, test_budget_0221 — zielone.
+- Dopiski ADR 0320 i 0238.
+- NASTĘPNY KROK (lider): `visual-critic` na `artifacts/plaza-barn-fix-s24/sbs/*.jpg`; po scaleniu
+  `uv run --project tools/worldgen tools/worldgen/roads/build_world.py --region tykocin` (+ dk65-07, knyszyn-w i inne kafle z
+  `rural_outbuildings: true`) → `pwsh scripts/import-region.ps1 -Region <id> -BuildTarget Win64 -MaterialTier High`.
