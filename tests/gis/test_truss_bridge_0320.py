@@ -187,6 +187,34 @@ def test_tykocin_square_objects():
     assert r["status"] == "skipped" and r["monument"] is None
 
 
+def test_tykocin_square_planters_flowers_benches_fix_s24():
+    """plaza-barn-fix-s24 (critic s24 day 27): small boxes (0.8-1.0 m) in a ring of 8-10 inside the chain, carmine
+    begonia domes over the rim (blossom dominant, no grey-violet), two wood finishes on the benches."""
+    from streetscape import materials as MAT
+    assert 8 <= len(TY.MONUMENT_PLANTERS) <= 10
+    for hl, hw, h, fh in (TY.MONUMENT_BOX, TY.EDGE_BOX):
+        assert 0.80 <= 2 * (hl + 0.014) <= 1.00 and 2 * hw <= 0.5 and h <= 0.40 and 0.15 <= fh <= 0.30
+    hp = TY.hero()[1]["bbox_max"][0]                        # platform half size of the hero asset (2.45 m)
+    for pr, pf in TY.MONUMENT_PLANTERS:
+        inner = max(abs(pr), abs(pf)) - TY.MONUMENT_BOX[1] - 0.04
+        outer = max(abs(pr), abs(pf)) + TY.MONUMENT_BOX[1] * 1.12 + 0.04
+        assert inner > hp and outer < 3.1 - 0.03, (pr, pf)   # between the platform and the chain line
+    buf, rep = Buffer(), {}
+    r = TY.build(buf, "tykocin", [751371.0, 600319.0], [], lambda e, n: np.zeros_like(e) + 104.0, rep)
+    assert len([p for p in r["planters"] if p["kind"].startswith("begonias")]) == len(TY.MONUMENT_PLANTERS)
+    # flower colour = material colour x 2 x COLOR_0 rgb: most vertices are red blossom, saturated, none greyish
+    base = np.asarray(MAT.M["planter_flowers"]["color"])
+    alb = buf.cols[("buildings", TY.FLOWERS)][:, :3] * 2 * base
+    red = (alb[:, 0] > 3 * alb[:, 1]) & (alb[:, 0] > 2.5 * alb[:, 2])
+    grey = (alb.max(1) - alb.min(1)) < 0.45 * alb.max(1)                 # washed-out, grey-violet mix
+    assert red.mean() > 0.45 and grey.mean() < 0.03, (red.mean(), grey.mean())
+    assert np.median(alb[red, 0]) > 0.30
+    # two wood finishes, never three benches of one finish side by side
+    stains = [b["stain"] for b in r["benches"]]
+    assert set(stains) == {0, 1} and all(len(set(stains[i:i + 3])) == 2 for i in range(len(stains) - 2))
+    assert r["tris"]["buildings"] <= 36000
+
+
 def test_czarniecki_hero_asset_budget_and_provenance():
     """The Blender asset is in plain git, was built from the committed generator + dims and keeps its LOD budgets."""
     import hashlib

@@ -27,6 +27,9 @@ if (-not $SkipBuild) {
     if ($res | Where-Object { $_ -notmatch 'exit 0$' }) { exit 1 }
 }
 $cams = @{ 'tykocin' = ''; 'dk65-07' = '' }
+$lock = "$PSScriptRoot\unity.lock"                  # one Unity per project directory: pipelines of this worktree queue here
+while (Test-Path $lock) { Start-Sleep 20 }
+Set-Content $lock "$PID $Tag $($Regions -join ',')"
 pwsh scripts/unity-slot.ps1 -Acquire -Owner $owner | Select-Object -Last 1
 try {
     foreach ($r in $Regions) {
@@ -41,6 +44,7 @@ try {
     }
 } finally {
     pwsh scripts/unity-slot.ps1 -Release -Owner $owner | Select-Object -Last 1
+    Remove-Item $lock -ErrorAction SilentlyContinue
     git -C $wt checkout -- game/Assets/_Project/Rendering/Settings/Lighting/M_Sky.mat game/ProjectSettings/QualitySettings.asset game/ProjectSettings/ProjectSettings.asset 2>$null
 }
 "PIPELINE DONE $Tag"

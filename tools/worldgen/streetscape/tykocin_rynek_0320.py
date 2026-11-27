@@ -56,13 +56,27 @@ WOOD = "wood_planks_bench"            # dark stained slats / planter boards: COL
 FLOWERS = "planter_flowers"           # foliage set, COLOR_0 = blossom / leaf colour / 2
 PLATE = "plaster_white"               # blank notice boards on the fence (lettering omitted)
 PLATFORM_TOP, FENCE_HALF, FENCE_H = 0.42, 2.20, 1.25
-# planters with red begonias round the monument: (right, forward) of the box centre in the monument frame, ESTIMATED
-# from Commons 01 / 08 and the fog photo (boxes outside the chain, two per side)
-MONUMENT_PLANTERS = ((-1.9, 3.75), (2.0, 3.7), (3.75, 1.55), (3.7, -1.7), (-3.7, 1.6), (-3.75, -1.5), (-1.6, -3.7), (1.75, -3.75))
-BEGONIA = ((1.45, 0.10, 0.20), (1.65, 0.20, 0.30), (1.2, 0.08, 0.15))     # tint x the FLOWERS colour: reds
-PETUNIA = ((0.50, 0.35, 1.00), (1.05, 0.90, 1.15), (0.70, 0.30, 0.90))   # purple, pale pink, magenta
-LEAF = ((0.13, 0.95, 0.12), (0.10, 0.75, 0.09), (0.18, 1.15, 0.14))
+# planters with red begonias round the monument: (right, forward) of the box centre in the monument frame.
+# plaza-barn-fix-s24 (critic s24 day 27): the boxes were 1.1-1.2 m and stood out by the chain posts; the Commons photos
+# (01 / 08, fog photo; sheets artifacts/tykocin-plaza-s24/sbs/r3-*) show a ring of small low boxes (about 0.8-1.0 m)
+# close round the fenced platform, inside the chain: ten boxes, three on the front and back, two on each side,
+# centres 2.80 m from the axis (platform edge 2.45 m, chain line 3.1 m). Layout ESTIMATED, sizes WORKING_VALUE.
+RING_M = 2.80
+MONUMENT_PLANTERS = ((-1.65, RING_M), (0.0, RING_M), (1.65, RING_M), (-1.65, -RING_M), (0.0, -RING_M), (1.65, -RING_M),
+                     (RING_M, -0.95), (RING_M, 0.95), (-RING_M, -0.95), (-RING_M, 0.95))
+MONUMENT_BOX = (0.44, 0.20, 0.32, 0.25)   # half length, half depth, height of the box, height of the flower dome (m)
+EDGE_BOX = (0.47, 0.21, 0.34, 0.21)       # edge planters on the orthophoto marks (0.94 m long)
+# tint x the FLOWERS colour (materials.py planter_flowers): saturated carmine begonias (Begonia semperflorens, the
+# bedding begonia of Polish town squares), a dome of blossom with a little dark glossy leaf showing
+BEGONIA = ((1.60, 0.12, 0.30), (1.75, 0.18, 0.36), (1.40, 0.08, 0.26))
+PETUNIA = ((0.57, 0.43, 1.40), (1.00, 1.00, 1.17), (0.73, 0.29, 0.92))   # purple, pale pink, magenta
+LEAF = ((0.10, 0.95, 0.15), (0.08, 0.75, 0.12), (0.14, 1.10, 0.18))      # dark glossy green, no grey-violet
+BLOOM = {"begonia": (0.74, 0.88), "petunia": (0.58, 0.80)}              # blossom share: mound vertices, tufts
 BENCH_VARIANTS = ("arms", "plain", "backless")
+# two wood finishes on the benches (critic s24 day 27: all benches read identical): dark walnut stain and a warmer
+# chestnut-brown stain that some of them got at the last repaint - WORKING_VALUE multipliers of the slat tint
+BENCH_STAINS = ((1.0, 1.0, 1.0), (1.32, 1.02, 0.78))
+BENCH_STAIN_OF = (0, 1, 1, 0, 1, 0)       # by bench order along the row: never three of one finish side by side
 
 
 def _p(xy, z):
@@ -231,20 +245,23 @@ def _strip(acc, layer, z_at):
 
 
 def _flowers(acc, layer, c, z, t, n, hl, hw, hgt, palette, key):
-    """Flower mass of a planter: a lumpy mound + standing tufts, blossom / leaf colour per vertex (COLOR_0)."""
+    """Flower mass of a planter: a dome rising over the rim + standing tufts, blossom / leaf colour per vertex (COLOR_0).
+    plaza-barn-fix-s24: blossom dominates (a bedding planter in July is a cushion of flowers, the leaves show only in
+    the gaps); the edge ring hangs a few cm over the boards instead of sinking below the rim."""
     low = layer == "buildings_low"
     t3, n3 = np.r_[t, 0.], np.r_[n, 0.]
     c3 = np.r_[c, z]
+    bloom_m, bloom_t = BLOOM["begonia" if palette is BEGONIA else "petunia"]
     nu, nv = (3, 2) if low else (8, 4)
     V, COL, T = [], [], []
     for j in range(nv + 1):
         for i in range(nu + 1):
             u, v = 2 * i / nu - 1, 2 * j / nv - 1
             inner = 0 < i < nu and 0 < j < nv
-            hh = hgt * (1 - max(abs(u) ** 4, abs(v) ** 2)) ** 0.5 * (0.65 + 0.6 * _h(key, "h", i, j)) if inner else -0.02
-            spill = 1.0 if inner else 1.07                      # the plants hang over the rim
+            hh = hgt * (1 - max(abs(u) ** 4, abs(v) ** 2)) ** 0.5 * (0.75 + 0.45 * _h(key, "h", i, j)) if inner else 0.03
+            spill = 1.0 if inner else 1.12                      # the plants hang over the rim
             V.append(c3 + t3 * u * hl * spill + n3 * v * hw * spill + np.array([0, 0, hh]))
-            pal = palette if _h(key, "c", i, j) < (0.45 if low else 0.14) else LEAF
+            pal = palette if _h(key, "c", i, j) < (max(bloom_m, 0.6) if low else bloom_m) else LEAF
             cc = np.array(pal[int(_h(key, "k", i, j) * len(pal)) % len(pal)]) * (0.70 + 0.35 * _h(key, "s", i, j))
             COL.append([*np.clip(cc * 0.5, 0, 1), 1.0])
     for j in range(nv):
@@ -265,9 +282,10 @@ def _flowers(acc, layer, c, z, t, n, hl, hw, hgt, palette, key):
         d = (t3 * math.cos(a) + n3 * math.sin(a)) * hwq
         hq = 0.035 + 0.05 * _h(key, "th", k)
         lean = (t3 * (_h(key, "tl", k) - .5) + n3 * (_h(key, "tm", k) - .5)) * 0.14 + np.array([0, 0, hq])
-        pal = palette if _h(key, "tc", k) < 0.72 else LEAF
-        cc = np.clip(np.array(pal[int(_h(key, "tp", k) * len(pal)) % len(pal)]) * (0.75 + 0.45 * _h(key, "ts", k)) * 0.5, 0, 1)
-        dark = np.clip(np.array(LEAF[k % len(LEAF)]) * 0.5 * 0.8, 0, 1)
+        pal = palette if _h(key, "tc", k) < bloom_t else LEAF
+        cc = np.clip(np.array(pal[int(_h(key, "tp", k) * len(pal)) % len(pal)]) * (0.80 + 0.35 * _h(key, "ts", k)) * 0.5, 0, 1)
+        # foot of a tuft: a darker shade of its own colour (the old blend toward leaf green turned red blossoms grey-violet)
+        dark = cc * 0.62
         u0, v0 = 1.5 * _h(key, "uu", k), 1.5 * _h(key, "uv", k)
         for face in (1, -1):
             b = len(V)
@@ -287,8 +305,8 @@ def _planter(acc, layer, at, z, t, hl, hw, h, flower_h, palette, key):
     c = np.r_[np.asarray(at, float), z]
     age = _h(key, "age")
     for k, (d, nn, half, other) in enumerate(((t3, n3, hl + .014, hw), (t3, -n3, hl + .014, hw), (n3, t3, hw, hl), (n3, -t3, hw, hl))):
-        rows = 1 if low else 3
-        for j in range(rows):                                   # three boards per side, each its own tone
+        rows = 1 if low else (2 if h < 0.38 else 3)             # the small boxes (0.32-0.34 m) take two wide boards
+        for j in range(rows):                                   # boards per side, each its own tone
             z0 = .06 + (h - .06) * j / rows
             z1 = .06 + (h - .06) * (j + 1) / rows - (.0 if low else .008)
             g = 0.20 + 0.16 * _h(key, "b", k, j) + 0.16 * age
@@ -305,7 +323,7 @@ def _planter(acc, layer, at, z, t, hl, hw, h, flower_h, palette, key):
     _flowers(acc, layer, c[:2], z + h - .03, t, n, hl - .02, hw - .02, flower_h, palette, key)
 
 
-def _bench(acc, layer, at, z, t, n, variant, key, z_at):
+def _bench(acc, layer, at, z, t, n, variant, key, z_at, stain=(1.0, 1.0, 1.0)):
     """Bench with cast-iron ends and dark stained slats; variants: 0 = with arms (1.8 m), 1 = plain back (1.5 m),
     2 = backless (1.8 m). Each slat has its own tone (bleached / re-stained / replaced), sits a few mm off and the
     worn front edge of the seat is paler. Dimensions WORKING_VALUE (typical Polish cast-end park bench)."""
@@ -329,7 +347,7 @@ def _bench(acc, layer, at, z, t, n, variant, key, z_at):
 
     def slat_col(i, front=False):
         g = 0.24 + 0.14 * _h(key, "g", i) + 0.26 * age
-        col = np.array([g, g * (0.96 + 0.06 * age), g * (0.86 + 0.20 * age)])
+        col = np.array([g, g * (0.96 + 0.06 * age), g * (0.86 + 0.20 * age)]) * np.asarray(stain)
         if i == swap:
             col = np.array([0.80, 0.66, 0.46])                  # replaced board: fresh pale softwood
         if front:
@@ -412,16 +430,18 @@ def build(buf, region, origin, overrides, zsurf, report):
                               "dimensions": "WORKING_VALUE", "hero_asset": HERO, "hero_tris": meta["tris"]}
         for k, (pr, pf) in enumerate(MONUMENT_PLANTERS):
             key = ("mp", k)
-            xy = np.asarray(MONUMENT_EN) + r[:2] * (pr + .25 * (_h(key, "x") - .5)) + f[:2] * (pf + .25 * (_h(key, "y") - .5))
+            # a few cm out of line (set down by hand), never into the platform or across the chain
+            xy = np.asarray(MONUMENT_EN) + r[:2] * (pr + .08 * (_h(key, "x") - .5)) + f[:2] * (pf + .08 * (_h(key, "y") - .5))
             zz = ground(xy)
             if not math.isfinite(zz):
                 continue
             side = r[:2] if abs(pf) > abs(pr) else f[:2]
-            a = math.radians(16.0 * (_h(key, "yaw") - .5))
+            a = math.radians(8.0 * (_h(key, "yaw") - .5))
             t = np.array([side[0] * math.cos(a) - side[1] * math.sin(a), side[0] * math.sin(a) + side[1] * math.cos(a)])
             for layer in LAYERS:
-                _planter(acc, layer, xy, zz, t, .55, .26, .46, .30, BEGONIA, key)
-            KP._box(acc, "collision", "collision_steel", xy, zz - .1, zz + .7, .57, .28, t)
+                _planter(acc, layer, xy, zz, t, *MONUMENT_BOX, BEGONIA, key)
+            KP._box(acc, "collision", "collision_steel", xy, zz - .1, zz + MONUMENT_BOX[2] + .15, MONUMENT_BOX[0] + .02,
+                    MONUMENT_BOX[1] + .02, t)
             result["planters"].append({"at_en": [round(float(v), 2) for v in xy], "kind": "begonias at the monument",
                                        "confidence": "ESTIMATED (Commons photos)"})
     else:
@@ -450,16 +470,17 @@ def build(buf, region, origin, overrides, zsurf, report):
             continue
         if k in PLANTER_MARKS:
             for layer in LAYERS:
-                _planter(acc, layer, xy, z, t, .62, .23, .40, .22, PETUNIA, key)
-            KP._box(acc, "collision", "collision_steel", xy, z - .1, z + .6, .64, .25, t)
+                _planter(acc, layer, xy, z, t, *EDGE_BOX, PETUNIA, key)
+            KP._box(acc, "collision", "collision_steel", xy, z - .1, z + EDGE_BOX[2] + .15, EDGE_BOX[0] + .02, EDGE_BOX[1] + .02, t)
             result["planters"].append({"at_en": list(xy0), "kind": "edge planter", "confidence": "ESTIMATED (orthophoto mark)"})
             continue
         variant = (0, 1, 0, 2, 0, 1)[nb % 6]
+        stain = BENCH_STAIN_OF[nb % len(BENCH_STAIN_OF)]
         nb += 1
         for layer in LAYERS:
-            _bench(acc, layer, xy, z, t, n, variant, key, ground)
+            _bench(acc, layer, xy, z, t, n, variant, key, ground, BENCH_STAINS[stain])
         KP._box(acc, "collision", "collision_steel", xy, z - .1, z + .9, (.90, .75, .90)[variant], .30, t)
-        result["benches"].append({"at_en": list(xy0), "variant": BENCH_VARIANTS[variant], "yaw_off_deg": round(math.degrees(a), 1),
+        result["benches"].append({"at_en": list(xy0), "variant": BENCH_VARIANTS[variant], "stain": stain, "yaw_off_deg": round(math.degrees(a), 1),
                                   "confidence": "ESTIMATED (orthophoto mark)"})
     # LOD1 reuses materials that the chunk already has - except the weathered stone, the bench wood and the flowers,
     # which keep their COLOR_0 tint so that nothing changes colour at the LOD switch (3 extra low draws in one chunk)
