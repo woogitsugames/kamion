@@ -50,3 +50,7 @@ Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 
 
 Visual QA High w clear i overcast oraz dodatkowy kadr połowy suwu przeszły własną i niezależną ocenę. Pióra w obrysie szyby, z odstępem od słupka A. Estymaty draw calli 236/106 przed i po.
 Następny krok: pwsh scripts/test.ps1 -Platform All -BuildTarget Win64, z lokalnie wygenerowaną mapą Krywlany do pełnego PlayMode.
+
+Końcowe EditMode Win64: 1530 zdanych, 122 pominięte. PlayMode Win64: 209 zdanych, 17 pominiętych, z lokalną mapą Krywlany. Zero błędów. GIS: 62/62. Visual QA High clear, overcast i półsuwa PASS.
+Końcowy DrivingLab: pisk 14/64 w kabinie i 20/64 na zewnątrz przy 10 km/h. 0 B GC w 8620 aktualizacjach. Odsłuch i opóźnienie wyjścia audio w playerze pozostają UNVERIFIED.
+Następny krok dla lidera: git log --oneline c283addc6..HEAD oraz pwsh scripts/build-lab.ps1 -SkipAudio -BuildTarget Win64 do odsłuchu w DrivingLab. Dla pełnego PlayMode odtworzyć brakującą mapę podaną w ADR 0355.

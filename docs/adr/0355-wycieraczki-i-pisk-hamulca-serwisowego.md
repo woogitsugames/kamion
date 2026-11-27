@@ -57,10 +57,10 @@ z klatkami playera pozostają `UNVERIFIED`.
 
 ## Pomiar
 
-PlayMode Win64, DrivingLab. Przy zadanej prędkości 10 km/h i pedale 0,55
-odnotowano 17 zdarzeń na 64 aplikacje w kabinie oraz 20 na 64 z kamery
-pościgowej. Maksymalne ciśnienie komory koła z kontaktem w chwili startu
-pisku wynosiło 0,460 maksimum w obu scenariuszach. Próba wycieraczek
+PlayMode Win64, DrivingLab. W końcowym przebiegu przy zadanej prędkości
+10 km/h i pedale 0,55 odnotowano 14 zdarzeń na 64 aplikacje w kabinie oraz
+20 na 64 z kamery pościgowej. Maksymalne ciśnienie komory koła z kontaktem
+w chwili startu pisku wynosiło 0,454–0,460 maksimum. Próba wycieraczek
 zapisała 5 startów i 4 powroty (ostatni cykl jeszcze trwał) oraz wybór
 suchego klipu w kabinie i mokrego na zewnątrz. Zmierzono 0 B GC w 300
 aktualizacjach wycieraczek i w 8320 aktualizacjach audio ze scenariuszy
