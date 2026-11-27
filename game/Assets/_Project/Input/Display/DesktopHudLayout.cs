@@ -48,12 +48,15 @@ namespace Game.Controls
         public Rect Strip, Telltales, ReverseView, MirrorLeft, MirrorRight, DevToggle, DevPanel, Telemetry, DevText;
         /// <summary>GPS widget (guidance banner + minimap, ADR 0150): bottom-left column, under or beside the left mirror.</summary>
         public Rect Nav;
+        /// <summary>PC HUD horn button attached on the left edge of the bottom block (symmetric to DevToggle).</summary>
+        public Rect Horn;
         /// <summary>Kept free of HUD furniture except the reversing view (which replaces the road view while reversing) and
         /// the developer overlays: the road ahead between the mirrors.</summary>
         public Rect ClearView;
         public bool ShowStrip, ShowMirrorLeft, ShowMirrorRight, ShowReverseView, ShowDevToggle, ShowDevPanel, ShowTelemetry, ShowDevText;
         /// <summary>The GPS widget fits (and the developer telemetry does not use that corner).</summary>
         public bool ShowNav;
+        public bool ShowHorn;
         /// <summary>Compact cab block (extended row only, right of the wheel) is laid out.</summary>
         public bool Compact;
         /// <summary>How far the mirror windows may reach outside the content on each side (ultrawide side band; units).</summary>
@@ -64,8 +67,8 @@ namespace Game.Controls
         public Rect MirrorWideLeft, MirrorWideRight;
         public bool ShowMirrorWide;
 
-        public const int ZoneCount = 10;
-        static readonly string[] k_Names = { "Strip", "Telltales", "ReverseView", "MirrorLeft", "MirrorRight", "DevToggle", "DevPanel", "Telemetry", "DevText", "Nav" };
+        public const int ZoneCount = 11;
+        static readonly string[] k_Names = { "Strip", "Telltales", "ReverseView", "MirrorLeft", "MirrorRight", "DevToggle", "DevPanel", "Telemetry", "DevText", "Nav", "Horn" };
         public static string ZoneName(int i) => k_Names[i];
 
         /// <summary>Zone <paramref name="i"/>; returns whether it is on screen.</summary>
@@ -82,7 +85,8 @@ namespace Game.Controls
                 case 6: r = DevPanel; return ShowDevPanel;
                 case 7: r = Telemetry; return ShowTelemetry;
                 case 8: r = DevText; return ShowDevText;
-                default: r = Nav; return ShowNav;
+                case 9: r = Nav; return ShowNav;
+                default: r = Horn; return ShowHorn;
             }
         }
     }
@@ -110,6 +114,7 @@ namespace Game.Controls
         public static readonly Vector2 TelltaleSize = new Vector2(720f, 52f);
         public static readonly Vector2 ReverseSize = new Vector2(560f, 316f);
         public static readonly Vector2 DevToggleSize = new Vector2(150f, 56f);
+        public static readonly Vector2 HornSize = new Vector2(136f, 52f);
         public static readonly Vector2 DevPanelSize = new Vector2(424f, 378f);
         public const float TelemetryMaxWidth = 760f, TelemetryWideEnough = 640f, TelemetryMaxHeight = 600f;
         public const float DevTextHeight = 112f, DevTextWidth = 760f;
@@ -159,6 +164,8 @@ namespace Game.Controls
             float ty = r.ShowStrip ? r.Strip.yMax : Margin;
             r.Telltales = new Rect(gx, ty, TelltaleSize.x, TelltaleSize.y);
             r.DevToggle = new Rect(gx + StripSize.x + ToggleGap, Margin, DevToggleSize.x, DevToggleSize.y);
+            r.ShowHorn = true;
+            r.Horn = new Rect(gx - ToggleGap - HornSize.x, Margin, HornSize.x, HornSize.y);
 
             // ---- developer text above the telltales; developer panel at the right edge above the button (and above the
             // block when the compact block reaches under it)
@@ -237,6 +244,7 @@ namespace Game.Controls
             float x1 = Mathf.Min(r.ClearView.xMin, r.Telltales.xMin) - Gap;
             if (r.ShowStrip) x1 = Mathf.Min(x1, r.Strip.xMin - Gap);
             if (r.ShowDevToggle) x1 = Mathf.Min(x1, r.DevToggle.xMin - Gap);
+            if (r.ShowHorn) x1 = Mathf.Min(x1, r.Horn.xMin - Gap);
             // under the mirror (full column)
             float yTop = r.ShowMirrorLeft ? r.MirrorLeft.yMin - Gap : top;
             float w = Mathf.Min(NavPreferred.x, x1 - Margin), h = Mathf.Min(NavPreferred.y, yTop - Margin);
@@ -271,6 +279,7 @@ namespace Game.Controls
             bottom = AboveIfUnderColumn(bottom, r.ShowStrip, r.Strip, outer, room, w);
             bottom = AboveIfUnderColumn(bottom, true, r.Telltales, outer, room, w);
             bottom = AboveIfUnderColumn(bottom, r.ShowDevToggle, r.DevToggle, outer, room, w);
+            bottom = AboveIfUnderColumn(bottom, r.ShowHorn, r.Horn, outer, room, w);
 
             float mh = Mathf.Min(size * h, top - bottom);
             float mw = mh * aspect;

@@ -173,4 +173,34 @@ namespace Game.UI.Driving
         public void OnScroll(PointerEventData e) => onZoom?.Invoke(Mathf.Sign(e.scrollDelta.y));
         public void OnPointerClick(PointerEventData e) { if (e.clickCount >= 2) onDoubleTap?.Invoke(); }
     }
+
+    /// <summary>Press-and-hold horn button on the PC HUD (short click triggers minimum blast, hold sustains).</summary>
+    public sealed class HornButtonWidget : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+    {
+        public Action<bool> onHeldChanged;
+        int m_Pointer = int.MinValue;
+
+        public bool Held => m_Pointer != int.MinValue;
+
+        public void OnPointerDown(PointerEventData e)
+        {
+            if (m_Pointer != int.MinValue) return;
+            m_Pointer = e.pointerId;
+            onHeldChanged?.Invoke(true);
+        }
+
+        public void OnPointerUp(PointerEventData e)
+        {
+            if (e.pointerId != m_Pointer) return;
+            m_Pointer = int.MinValue;
+            onHeldChanged?.Invoke(false);
+        }
+
+        void OnDisable()
+        {
+            if (m_Pointer == int.MinValue) return;
+            m_Pointer = int.MinValue;
+            onHeldChanged?.Invoke(false);
+        }
+    }
 }

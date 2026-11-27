@@ -834,7 +834,7 @@ namespace Game.Gameplay
             // Camera (C / top face button), pad look-around and pad horn come from the rebindable actions of PcInputBridge
             // (ADR 0264, one source). It disables the fixed-key Keyboard source; until it is installed C still works here.
             if (!menuGate && Keyboard.Enabled && kb != null && kb.cKey.wasPressedThisFrame) m_Rig.NextMode();   // C: cab → chase → orbit
-            Game.Core.AudioCues.HornHeld = !menuGate && kb != null && kb.kKey.isPressed;   // horn (ADR 0142); PcInputBridge ORs the Horn action in after this
+            Game.Core.AudioCues.HornHeld = !menuGate && Keyboard.Enabled && kb != null && kb.kKey.isPressed;   // horn (ADR 0142); PcInputBridge ORs the rebindable Horn action in after this
             ApplyCommands(intent);
             UpdateTurnSignals(intent, fb.RoadWheelAngleNormalized);
 

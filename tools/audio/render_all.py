@@ -251,6 +251,10 @@ def main() -> None:
     for name, x, perspective in cab_mechanism_clips():
         write_sfx(name, x, False, perspective, "mech")
 
+    from horn_rattle import clips as horn_rattle_clips
+    for name, x, perspective, is_loop in horn_rattle_clips():
+        write_sfx(name, x, is_loop, perspective, "mech")
+
     if not args.no_previews:
         for n_ in ("tyre_concrete_loop", "tyre_cobbles_loop", "tyre_squeal_loop", "retarder_loop", "compressor_loop"):
             x, _ = sf.read(OUT / "sfx" / f"{n_}.wav")

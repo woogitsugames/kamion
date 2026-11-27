@@ -350,7 +350,7 @@ namespace Game.Tests
             Assert.AreSame(HudTexts.Speed(42), HudTexts.Speed(42), "looked up, not formatted per frame");
 
             var brand = new Regex(@"\b(scania|volvo|man|daf|iveco|renault|mercedes|actros|ets2?|euro truck|scs|kenworth|peterbilt|freightliner)\b", RegexOptions.IgnoreCase);
-            var texts = new List<string> { HudTexts.KmH, HudTexts.Bar, HudTexts.Retarder, HudTexts.BrakeCruise, HudTexts.Trailer, HudTexts.ReverseCamera };
+            var texts = new List<string> { HudTexts.KmH, HudTexts.Bar, HudTexts.Retarder, HudTexts.BrakeCruise, HudTexts.Trailer, HudTexts.ReverseCamera, HudTexts.Horn };
             for (int i = 1; i < HudTexts.WarningCount; i++) texts.Add(HudTexts.Warning((HudWarning)i));
             foreach (var d in DrivingActionCatalog.All) texts.Add(d.LabelPl);
             foreach (var t in texts)
