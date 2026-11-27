@@ -253,19 +253,21 @@ SIGN_POST_LOD1_SCALE = 1.20     # WORKING_VALUE (ADR 0337): LOD1 tube radius boo
 
 
 def sign_post():
-    """Ø60.3 mm galvanised road-sign post (ADR 0337, critic build #5 pkt 10).
+    """Ø60.3 mm galvanised / painted road-sign post (ADR 0337, critic build #5 pkt 10; wear/U-channel addendum).
 
     Local z runs 0..1 and is scaled per instance by `sz` (~2.7-3.5 m). Uses a single material slot (`sign_post_galv`,
-    weathered matte hot-dip zinc reusing `furniture_galv` grain + foot splash: +0 draws). The buried end (-0.04 in
-    unit scale = ~11-14 cm embedded at typical sign heights) stays inside the 15 cm contact-audit window (ADR 0102),
-    and a subtle ground collar anchors the post visually into verges and paving. LOD1 uses a 6-sided tube scaled by
-    `SIGN_POST_LOD1_SCALE` so posts do not sub-pixel away against rural fields.
+    weathered matte hot-dip zinc reusing `furniture_galv` grain + foot splash: +0 draws). The 12-sided LOD0 ring lets
+    `Kamion/Furniture Post` reshape municipal-road instances (`wear.y > 0.5`) into a 50x30 mm U-channel profile and
+    switch painted grey-white vs weathered zinc per instance (`wear.x`) without extra prototypes or draw calls.
+    The buried end (-0.04 in unit scale = ~11-14 cm embedded at typical sign heights) stays inside the 15 cm
+    contact-audit window (ADR 0102), and a subtle ground collar anchors the post visually into verges and paving.
+    LOD1 uses a 6-sided tube scaled by `SIGN_POST_LOD1_SCALE` so posts do not sub-pixel away against rural fields.
     """
     m, l1, col = Mesh(), Mesh(), Mesh()
     r = S.SIGN_POST_D / 2
-    # LOD0: shaft + subtle ground collar (same single material slot, UV v maps foot splash to the bottom)
-    m.tube("sign_post_galv", [0, 0, -0.04], [0, 0, 1.0], r, None, 10)
-    m.tube("sign_post_galv", [0, 0, -0.025], [0, 0, 0.022], r * 1.85, r * 1.18, 10)
+    # LOD0: 12-sided shaft + subtle ground collar (same single material slot, UV v maps foot splash to the bottom)
+    m.tube("sign_post_galv", [0, 0, -0.04], [0, 0, 1.0], r, None, 12)
+    m.tube("sign_post_galv", [0, 0, -0.025], [0, 0, 0.022], r * 1.85, r * 1.18, 12)
     # Remap vertical UVs on LOD0 to the lower 35 % of furniture_galv (foot splash at z <= 0.06, clean zinc above)
     for Vs, _, UVs in [m.prims["sign_post_galv"]]:
         for V, UV in zip(Vs, UVs):

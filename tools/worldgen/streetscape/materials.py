@@ -1081,8 +1081,11 @@ for _k in ("office", "ribbon"):
 # lose contrast against rural green fields and overcast skies. Oxidised hot-dip zinc (metal 0.42, rough 0.62,
 # WORKING_VALUE) keeps a sunlit metallic edge and a clear shaded side, reusing the existing `furniture_galv`
 # texture for subtle zinc grain and ground-line splash (no new texture, 1 slot on sign_post = +0 draws).
+# ADR 0337 (critic build #5 pkt 10; sign wear addendum): weathered matte hot-dip galvanised steel vs grey-white
+# paint and U-channel profile on municipal roads via `Kamion/Furniture Post` per-instance MPB (+0 draws).
 M["sign_post_galv"] = {"color": [0.36, 0.37, 0.38], "rough": 0.62, "metal": 0.42,
-                       "texture": "furniture_galv", "sky_occ": SKY_OCC_STRUCT}
+                       "texture": "furniture_galv", "sky_occ": SKY_OCC_STRUCT,
+                       "shader": "Kamion/Furniture Post"}
 
 # ADR 0346: round straw and wrapped silage bales on rural fields of the ADR 0334 mosaic (streetscape.field_bales).
 # Single opaque atlas (`field_bale_atlas`) shared by both prototypes and both LODs (1 material = 0 extra materials

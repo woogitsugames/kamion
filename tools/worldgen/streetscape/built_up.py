@@ -434,7 +434,8 @@ def _place(pl, c, s, dn, code, src, codes, rep):
     if pl.near("sign", p, 1.5):
         rep["skipped_near_sign"] = rep.get("skipped_near_sign", 0) + 1
         return None
-    for cd in FU.sign_assembly(pl, p, -tang * dn, code if isinstance(code, list) else [code], src, sidewalk=w > 0.5):
+    road_cls = c.section(float(np.clip(s, 0.5, c.length - 0.5)), net.sec_list).cls
+    for cd in FU.sign_assembly(pl, p, -tang * dn, code if isinstance(code, list) else [code], src, sidewalk=w > 0.5, road_cls=road_cls):
         codes.add(cd)
         rep["placed"][cd] = rep["placed"].get(cd, 0) + 1
     pl.pts.setdefault("sign", []).append((p[0], p[1]))
