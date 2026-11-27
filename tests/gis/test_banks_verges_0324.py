@@ -63,6 +63,26 @@ def test_verge_flora_cards_stand_on_the_cross_section():
     assert np.array_equal(buf2.parts[-1].V, p.V)
 
 
+def test_verge_flora_keeps_off_driveway_crossings():
+    """axis-driveway-s24 (critic build #10 pkt 7: "patyki" on the paving in the mirror): no card stands on a driveway
+    crossing (plots.crossing_keepout footprint); the rest of the strip keeps its sward."""
+    from shapely.geometry import box
+    from streetscape import plots as PLT
+    keep = box(20.0, 0.0, 26.0, 12.0)                     # a 6 m wide crossing over the whole side strip
+    buf = _rural_side()
+    rep = {}
+    VF.build(buf, VF.sections(buf.parts), rep, keepout=keep)
+    V = buf.parts[-1].V.reshape(-1, 4, 3)
+    feet = V[:, :2, :2].mean(1)
+    assert not ((feet[:, 0] > 20.3) & (feet[:, 0] < 25.7)).any()
+    assert rep["verge_flora"]["keepout_skipped"] > 0 and len(V) > 20
+    plan = {"plots": [{"access": {"d_cw": 6.0}, "lay": {"gate": {"m": np.array([10.0, 12.0]), "n": np.array([0.0, -1.0]), "w": 4.0}}},
+                      {"access": None, "lay": {"gate": None}}]}
+    k = PLT.crossing_keepout(plan)
+    assert k.contains(shapely.Point(10.0, 7.0)) and k.contains(shapely.Point(11.9, 6.0)) and not k.contains(shapely.Point(13.0, 7.0))
+    assert PLT.crossing_keepout({"plots": []}) is None
+
+
 def test_verge_flora_flat_verge_has_no_tall_grass_and_skips_culled_stations():
     buf = _rural_side(depth=0.06)
     rep = {}

@@ -1125,7 +1125,9 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
 
         def _zfn(e, n):      # r5: terrain height behind the gravel (shoulder-edge plants of a flat verge)
             return float(_PVz.bilinear(st["zc"], w.hf, np.atleast_1d(np.asarray(e, float)), np.atleast_1d(np.asarray(n, float)))[0])
-        if VF.build(w.buf, _vsecs, _vrep, zfn=_zfn):
+        from streetscape import plots as _PLTk           # axis-driveway-s24: no tufts on the driveway crossings
+        _keep = _PLTk.crossing_keepout(w.plot_plan) if getattr(w, "plot_plan", None) else None
+        if VF.build(w.buf, _vsecs, _vrep, zfn=_zfn, keepout=_keep):
             w.verge_flora = True
         _vrep["verge_flora"]["ditch_parts_to_terrain"] = VF.tag_for_terrain(_vsecs)
         st["col"] = VF.ditch_colours(st["col"], w.hf, _vsecs, _vrep["verge_flora"])

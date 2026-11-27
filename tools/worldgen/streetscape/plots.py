@@ -2392,6 +2392,21 @@ def build(buf, rp, zf, surf_top, report, items=None):
     return {"keepout": keepout, "lawns": [p["lawn"] for p in plots if p.get("lawn") is not None], "plots": plots, "trees": trees}
 
 
+def crossing_keepout(rp, pad=0.35):
+    """axis-driveway-s24: plan footprint of every driveway crossing (gate -> carriageway edge, gate width + 2 x pad),
+    where the verge flora (streetscape.verge_flora.build) puts no card: tall forbs of the ditch stood on the paving and
+    read as sticks poking through it in the mirror (critic build #10 pkt 7)."""
+    strips = []
+    for plot in rp.get("plots", ()):
+        acc = plot.get("access")
+        g = plot.get("lay", {}).get("gate")
+        if acc is None or g is None:
+            continue
+        m, n = np.asarray(g["m"], float), np.asarray(g["n"], float)
+        strips.append(LineString([m - n * 0.3, m + n * (float(acc["d_cw"]) + 0.6)]).buffer(float(g["w"]) / 2 + pad, cap_style="flat"))
+    return shapely.unary_union(strips) if strips else None
+
+
 def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carriage=None, driveway_color=False):
     """Between the gate apron (a paved item, cut at the road footprint) and the carriageway the driveway crosses
     whatever the road profile has there: a footway (stays as it is, lowered with the kerb — or paved in contrasting
