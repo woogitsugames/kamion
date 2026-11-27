@@ -16,3 +16,7 @@
 - GOTOWE DO SCALENIA PRZEZ LIDERA.
 - NASTĘPNY KROK (lider): przejrzeć diff na `neon-avenue-s24` i dowody w `artifacts/neon-avenue-s24/sbs/`, scalić gałąź, a następnie w kolejnej fali regeneracji przebudować kafle z szpalerami (`knyszyn-w`, `dk65-01..11`, `dw671-tykocin-*`, `dk65-monki-*`):
   `git merge --no-ff neon-avenue-s24`
+
+## codex-audio-wipers-s24 — rozpoznanie
+Przeczytano reguły, ADR 0142 i 0341. Stan bazowy: zaparkowane pióra, brak osobnego zdarzenia serwisowego pisku.
+Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Lighting clear
