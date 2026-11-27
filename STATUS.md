@@ -28,3 +28,5 @@
 - Następny krok po renderach bazowych: `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase after`.
 - [krok 5] Zielone testy GIS (73/73, 116,38 s): `test_truss_bridge_0320.py`, `test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py`. Log `artifacts/codex-monument-face-s24/logs/tests.log`.
 - Następny krok: po bazowym imporcie i 8 PNG uruchomić `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase after`.
+- [krok 6] Bazowy import Win64 High (64 chunki) oraz 8 PNG 1920×1080, cztery kamery clear i overcast. Zapisano przebiegi w `artifacts/codex-monument-face-s24/before/`. Zrzut figury pokazuje zlanie rysów w kadrze z ulicy.
+- Następny krok: `pwsh artifacts/codex-monument-face-s24/pipeline.ps1 -Phase after`.
