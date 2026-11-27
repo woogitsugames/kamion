@@ -23,3 +23,6 @@
   wybrane 0,3 (przerwy 1 px znikają, duże prześwity zostają). Ostrzeżenia fxc (VegAlpha/VegShadow, były też w buildzie #10)
   usunięte. EditMode 1631: 1509 pass / 1 fail (NavVoicePlayer0328Tests - audio, niezwiązany) / 121 skip; testy roślinności 61/61.
 - NASTĘPNY KROK: (trwa) VQA `after2` + build ebcf857 + `artifacts/crown-lod-s24/metrics.ps1` (pc-metrics b10/new/new-old).
+- [krok 5] VQA `after2` (`compare-before2-after2.md`, `zoom/`), build eda41ab (0 ostrzeżeń Vegetation), pc-metrics
+  b10/new/new-old: GPU w szumie (same content −0,03…−0,23 ms), DC +4 %. Dopiski ADR 0308 / 0352 / 0023. KONIEC zadania.
+- NASTĘPNY KROK (lider): review + scalenie gałęzi `worktree-agent-a380c075164a3cedd`; potem build pełny i oględziny z kabiny.

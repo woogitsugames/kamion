@@ -190,3 +190,14 @@ oraz player build #10 / build gałęzi, `artifacts/crown-lod-s24/`).
 kafla bez zmian na 8 kamerach; draw calle instancji +0…+11 (cab-driver 96 → 106), trójkąty instancji +3,6k…+17k
 (cab-driver 47,3k → 58,7k), trójkąty cieni instancji +3,6k…+17k (karty LOD1 rzucają cień, `treeShadowLodMask` 3).
 Czas klatki: patrz `pc-metrics` niżej.
+
+**pc-metrics** (`artifacts/crown-lod-s24/pc/`, GTX 1070 + i5-10400F, maszyna dewelopera ≠ referencja → werdykt INVALID
+z definicji; `knyszyn-w` High 1920 × 1080, autopilot trasy 50 km/h, 90 s). Ta sama treść (build gałęzi, A/B parametrami):
+| przebieg | GPU p50 / p95 / p99 [ms] | draw calls p50 / p95 | trójkąty p95 |
+|---|---|---|---|
+| bez klatkowania, stare ustawienia (`rq_card 1, rq_lodfade 0, rq_leaffill 0`) | 6,10 / 8,18 / 8,89 | 1411 / 1703 | 3,78 M |
+| bez klatkowania, ta gałąź | 6,07 / 7,99 / 8,66 | 1468 / 1742 | 3,84 M |
+| build #10 (baza, inna treść kafla), bez klatkowania | 6,07 / 7,58 / 8,21 | 1410 / 1681 | 3,91 M |
+| 60 FPS: build #10 / ta gałąź | 8,69 / 9,89 / 10,37 → 8,91 / 10,03 / 10,50 | 1435 → 1504 | 3,98 → 3,91 M |
+Wniosek: koszt GPU zmian w szumie pomiaru (A/B tej samej treści: −0,03…−0,23 ms), draw calle +4 % (+57 p50), pamięć
+VRAM 964 = 964 MB. Jedna klatka 15,5 ms w przebiegu gałęzi (p99 8,6 ms) — pojedynczy skok, niepowtórzony w 60 FPS.
