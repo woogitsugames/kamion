@@ -16,3 +16,7 @@
 - GOTOWE DO SCALENIA PRZEZ LIDERA.
 - NASTĘPNY KROK (lider): przejrzeć diff na `neon-avenue-s24` i dowody w `artifacts/neon-avenue-s24/sbs/`, scalić gałąź, a następnie w kolejnej fali regeneracji przebudować kafle z szpalerami (`knyszyn-w`, `dk65-01..11`, `dw671-tykocin-*`, `dk65-monki-*`):
   `git merge --no-ff neon-avenue-s24`
+
+## codex-props-low-perf-s24 — ADR 0136
+- [krok 1] Przeczytano zasady i ustalono punkt odniesienia 98bbb8724. PC Low/Medium używają dziś cull 200/300 m dla wszystkich zaparkowanych pojazdów. Brak scen pomiarowych w worktree.
+- Następny krok: `pwsh -File artifacts/codex-props-low-perf-s24/qa.ps1 -Phase before -Import` (prywatne dane dwóch kafli, baseline z PC visual-QA).
