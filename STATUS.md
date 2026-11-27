@@ -22,3 +22,6 @@
 
 - [krok 1] Przeczytane zasady i ADR-y. Zastąpiono junction prywatną kopią derived `knyszyn-w`; SHA pierwszej bryły zgodny z manifestem, Python 3.12.16 dostępny. Kamery i shim zapisane w lokalnych artefaktach.
 - Następny krok: `pwsh artifacts/codex-patches-edges-s24/qa.ps1 -Stage before`.
+
+- [krok 2] Zjazdy: istniejące pasy asfaltu i żwiru tworzą profil rampy w siatce renderu i kolizji; zjazd w mieście obniżono do 2 cm. Test zjazdów po skorygowaniu wartości bazowego spadku: 7/7. Import bazowy trwa i generuje lokalne mapy PBR.
+- Następny krok: skończyć `pwsh artifacts/codex-patches-edges-s24/qa.ps1 -Stage before`, zapisać obraz przed, wdrożyć maskę łaty.

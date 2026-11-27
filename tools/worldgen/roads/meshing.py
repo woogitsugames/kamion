@@ -76,7 +76,11 @@ def stations(c, s0, s1, coarse=False):
         if s1 - s < step * 0.3:
             s = s1
         ss.append(s)
-    return np.array(ss)
+    # The existing 2 m / 4 m grid can miss both ends of a driveway ramp.
+    # Insert its breakpoints into both meshes so the slope and kerb agree.
+    knots = [x for d in c.side.values() for mid, half, run in d.get("driveway_ramps", ())
+             for x in (mid - half - run, mid - half, mid + half, mid + half + run) if s0 < x < s1]
+    return np.union1d(ss, knots) if knots else np.array(ss)
 
 
 def lat_fracs(c, coarse=False):
@@ -327,8 +331,8 @@ def build_ribbon(buf: MeshBuf, net, c, coarse=False):
             buf.add("road", "curb_concrete", VV, VV[:, :2], tt, src=c.id + ":deadend")
 
 
-def _profile_rows(kind, h, w, depth, mat, coarse):
-    prof = side_profile(kind, h, w, depth, mat)
+def _profile_rows(kind, h, w, depth, mat, coarse, driveway):
+    prof = side_profile(kind, h, w, depth, mat, driveway)
     if coarse:
         prof = prof[:-1]          # no flange in collision
     return prof
@@ -336,6 +340,9 @@ def _profile_rows(kind, h, w, depth, mat, coarse):
 
 def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
     params = [side_params(c, side, s) for s in st]
+    driveway = np.zeros(len(st))
+    for mid, half, run in c.side[side].get("driveway_ramps", ()):
+        driveway = np.maximum(driveway, 1.0 - np.clip((np.abs(st - mid) - half) / run, 0.0, 1.0))
     _wl = c.meta.get("walled")      # ADR 0146: stations of the spans proper (coated cap), not of the walled ramps
     capm = np.asarray(br, bool) if br is not None else np.zeros(len(st), bool)
     if _wl is not None:
@@ -398,10 +405,10 @@ def build_side_strip(buf, c, st, side, sgn, P, N, hw, br, coarse):
                 uclip[0] = side_extent(*params[lo])
             _emit_strip(buf, G[sl], (N * sgn)[sl], zg[sl], prm, kap[sl], hw[sl], side == "R",
                         br[sl] if br is not None else None, coarse, f"{c.id}:{side}:{r}",
-                        noflange=None if nofl is None else nofl[sl], capm=capm[sl], uclip=uclip)
+                        noflange=None if nofl is None else nofl[sl], capm=capm[sl], uclip=uclip, driveway=driveway[sl])
         return
     _emit_strip(buf, G, N * sgn, zg, params, kap, hw, side == "R",
-                br, coarse, c.id + ":" + side, noflange=nofl, capm=capm)
+                br, coarse, c.id + ":" + side, noflange=nofl, capm=capm, driveway=driveway)
 
 
 def _emit_verge(buf, G, OUT, zg, H, VW, kap_toward, hw, flip, src, footprint=False):
@@ -564,7 +571,8 @@ def back_flange_batter(buf, hard_mask, hf):
     return rep
 
 
-def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None, capm=None, uclip=None):
+def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, noflange=None, capm=None, uclip=None,
+                driveway=None):
     """G: gutter points (n,2), OUT: unit outward vectors (n,2) (may be miter-scaled), zg gutter z,
     params: per-point side params, kap_toward: curvature toward this side (>0 = side is inside).
     uclip: per-point maximum lateral reach of the profile (inf = free); the skirt of a span next to a clipped point
@@ -579,7 +587,9 @@ def _emit_strip(buf, G, OUT, zg, params, kap_toward, hw, flip, br, coarse, src, 
         # and a rural arm rose to a 0.6 m concrete wall (j:n1847317049:corner0, kerb_rise.py)
         params = [(URBAN, p[1] if p[0] == URBAN else S.KERB_HEIGHT, (p[2] if p[0] == URBAN else 0.0), p[3],
                    p[4] if p[0] == URBAN else 0) for p in params]
-    profs = [_profile_rows(*p, coarse) for p in params]
+    if driveway is None:
+        driveway = np.zeros(n)
+    profs = [_profile_rows(*p, coarse, ramp) for p, ramp in zip(params, driveway)]
     nseg = len(profs[0])
     # fold protection
     umax = np.array([pr[-1][2] for pr in profs])

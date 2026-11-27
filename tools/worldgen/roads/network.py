@@ -1719,7 +1719,7 @@ def walk_mat(mat: int) -> str:
     return WALK_MATS[mat] if 0 <= mat < len(WALK_MATS) else WALK_MATS[0]
 
 
-def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
+def side_profile(kind: int, h: float, w: float, depth: float, mat: int, driveway=0.0):
     """Profile as list of (u0, dz0, u1, dz1, material) from the gutter outward (u >= 0).
 
     The topology (number of segments) depends only on `kind`, so stations of one family can be
@@ -1765,10 +1765,14 @@ def side_profile(kind: int, h: float, w: float, depth: float, mat: int):
         # ADR 0272: paved + ground widths from roads/xsec_rules.yaml, carried in `mat`; mat 0 = the legacy profile
         # (PAVED_SHOULDER 1.00 m + the 0.75 m ground part of PTB2022 § 23 ust. 10 pkt 2)
         ps, sw = X.decode(mat)
-        zp = -S.CROSSFALL * ps
-        z1 = zp - S.SHOULDER_CROSSFALL * sw
-        d = h if 0.05 < h < 1.5 else S.DITCH_DEPTH       # ditch depth per station (swale next to a path)
         u0 = ps + sw
+        z1 = -S.CROSSFALL * ps - S.SHOULDER_CROSSFALL * sw
+        # Use the existing asphalt and gravel rows. At the driveway, regrade up to
+        # 30 cm of the near shoulder and match the unchanged outer gravel edge.
+        # WORKING_VALUE: about 12% crossfall on the asphalt toe, vs 2% normally.
+        ps += driveway * min(max(0.30 - ps, 0.0), sw * 0.5)
+        zp = -S.CROSSFALL * ps - driveway * min(0.10 * ps, 0.035)
+        d = h if 0.05 < h < 1.5 else S.DITCH_DEPTH       # ditch depth per station (swale next to a path)
         u2 = u0 + d * S.DITCH_SLOPE
         u3 = u2 + S.DITCH_BOTTOM_W
         u4 = u3 + (d - z1) * S.DITCH_SLOPE      # back slope rises d - z1 (z1 < 0): 1:1.5, was (d + z1) = 1:1.2

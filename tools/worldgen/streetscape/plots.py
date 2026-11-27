@@ -87,7 +87,8 @@ GROUND_LAYER = "plot_ground"
 KIT_LAYER = "plots"
 KIT_LAYER_LOW = "plots_low"     # ADR 0132: the same kit without the parts marked High-only (Kit.low), Low / Medium chunk variant
 PATH_W_M = 1.1
-DROP_H_M = 0.03               # lowered kerb at a driveway, m above the gutter (WORKING_VALUE: 2-4 cm in practice)
+DROP_H_M = 0.03               # generic lowered kerb above the gutter (WORKING_VALUE)
+DRIVEWAY_KERB_H_M = 0.02       # lip retained at a house driveway (WORKING_VALUE)
 DROP_RAMP_M = 1.0             # kerb ramps down over this length on either side of the driveway
 DROP_REACH_M = 14.0           # a gate further than this from the carriageway gets no access
 DITCH_FILL_M = 0.06           # roadside ditch depth left over a driveway (culvert), m
@@ -928,7 +929,7 @@ def apply_house_kerbs(net, plots):
 
 def apply_drops(net, drops):
     """Lower the kerb (and with it the footway / verge behind: the profile hangs on the kerb height) over each driveway;
-    fill the roadside ditch of a rural profile. Edits chain.side[..]['h'] in place, before the ribbons are meshed
+    fill the rural ditch and mark the shoulder ramp. Edits chain.side before the ribbons are meshed
     (roads.pipeline.build(side_edit=...)). Returns the number of drops applied."""
     from roads import network as NW
     from roads import standards as S
@@ -942,7 +943,9 @@ def apply_drops(net, drops):
         s = np.asarray(c.line.s)
         # ADR 0237: a drop may carry its own kerb height `h` and ramp length `ramp` (pedestrian crossings:
         # streetscape.pavements.crossing_drops); `kerb_only` = a street kerb only, no ditch fill, no bridge cap
-        h_drop, ramp = float(dr.get("h", DROP_H_M)), float(dr.get("ramp", DROP_RAMP_M))
+        driveway = dr.get("plot") is not None
+        h_drop = float(dr.get("h", DRIVEWAY_KERB_H_M if driveway else DROP_H_M))
+        ramp = float(dr.get("ramp", DROP_RAMP_M))
         k = np.clip((np.abs(s - dr["s"]) - dr["half"]) / ramp, 0.0, 1.0)      # 0 on the driveway, 1 outside
         sel = k < 1.0
         if not sel.any():
@@ -956,6 +959,8 @@ def apply_drops(net, drops):
         rural = sel & (kind == NW.RURAL) & (not dr.get("kerb_only"))
         he = np.where((h > 0.05) & (h < 1.5), h, S.DITCH_DEPTH)
         h[rural] = np.minimum(he[rural], DITCH_FILL_M + (he[rural] - DITCH_FILL_M) * k[rural])
+        if driveway and (urban.any() or rural.any()):
+            d.setdefault("driveway_ramps", []).append((float(dr["s"]), float(dr["half"]), ramp))
         d["h"] = h
         done += int(bool(urban.any() or rural.any()))
     return done
@@ -1981,12 +1986,13 @@ INST_H_M = {"birch": (8.0, 19.0), "linden": (8.0, 18.0), "maple": (7.5, 16.0), "
 OVERGROWTH = {"old": (2, 4), "prl": (1, 3), "new": (0, 1)}      # shrubs through / over the fence per plot (min, max)
 
 
-def build(buf, rp, zf, surf_top, report, items=None):
+def build(buf, rp, zf, surf_top, report, items=None, driveway_carriage=None):
     """Mesh every plot of the region plan into buf (layer `furniture`, material `plot_kit`; collision quads of the
     fences and closed gates; a paved strip over a grass verge / shoulder where the driveway crosses one).
     zf(xy) -> ground height (lawn / driveway surface), surf_top: furniture.SurfaceTop of the road meshes,
     items: placed street furniture (the lamp poles carry the overhead line of the house streets)."""
     import shapely.ops                                       # noqa: F401
+    from roads.network import RURAL
     plots = rp["plots"]
     rep = {"plots": len(plots), "fence_m": {}, "gates": 0, "sliding_gates": 0, "wickets": 0, "drives": 0,
            "kerb_drops": sum(1 for d in rp["drops"] if not d.get("kerb_only")),          # driveways (ADR 0114)
@@ -2049,7 +2055,9 @@ def build(buf, rp, zf, surf_top, report, items=None):
         if plot.get("drive") is not None and lay["gate"] is not None:
             rep["drives"] += 1
             dcol = bool(rp.get("driveway_paving_color"))
-            vo = _verge_overlay(buf, plot, surf_top, src_id, zf, rp.get("roads_poly"), rp.get("carriage"), driveway_color=dcol)
+            acc = plot.get("access") or {}
+            edge = driveway_carriage if acc.get("kind") == RURAL and driveway_carriage is not None else carriage_all
+            vo = _verge_overlay(buf, plot, surf_top, src_id, zf, roads_poly, edge, driveway_color=dcol)
             rep["verge_overlays"] += vo
             if dcol and vo and plot.get("access") and plot["access"].get("walk") == "sidewalk_paving" and plot["access"].get("kind") == 0:
                 rep["driveway_crossings"] = rep.get("driveway_crossings", 0) + 1
@@ -2504,6 +2512,7 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
     so no paver lies on the asphalt, the lowered kerb stays a kerb, and the edge along the kerb is its true line
     instead of a staircase of grid cells. Draped 2 cm over the road-side surface, on the apron surface outside it."""
     from roads import standards as S
+    from roads.network import RURAL
     from . import paved as PV
     acc = plot.get("access")
     if acc is None or surf_top is None or roads_poly is None or carriage is None:
@@ -2512,7 +2521,9 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
     g = plot["lay"]["gate"]
     m, n = g["m"], g["n"]
     L = acc["d_cw"]
-    band = KERB_BAND_M if acc.get("kerbed") else 0.02
+    rural = acc.get("kind") == RURAL
+    # The final footprint is snapped to a 1 cm grid. Leave clearance for that error.
+    band = KERB_BAND_M if acc.get("kerbed") else (0.008 if rural else 0.02)
     # ADR 0349 (neon-paving-s24, uwaga lidera): kontrastowy zjazd tylko na ~DRIVE_CROSS_SHARE bram (reszta = ta sama szara
     # kostka chodnika, z lekko obnizonym krawieznikiem), szerokosc = brama 3-4,5 m (WORKING_VALUE), nie szerzej.
     cross_drive = bool(driveway_color and footway and hfloat(str(plot.get("key", src_id)), "drvcross") < DRIVE_CROSS_SHARE)
@@ -2537,7 +2548,13 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
     else:
         strip = LineString([m + n * 0.02, m + n * (L + 1.0)]).buffer(g["w"] / 2, cap_style="flat")
         zone = strip.intersection(roads_poly.buffer(0.35)).difference(carriage.buffer(band))
-    polys = [q for q in _polys(zone, 0.15, simplify=0.01) if q.distance(Point(*m)) < L + 0.5]
+    if rural:
+        # Keep the asphalt edge from the actual footprint as a constraint in
+        # triangulation. Rounding / simplification can cut across the asphalt toe.
+        polys = [q for q in shapely.get_parts(zone) if q.geom_type == "Polygon" and q.area > 0.15]
+    else:
+        polys = _polys(zone, 0.15, simplify=0.01)
+    polys = [q for q in polys if q.distance(Point(*m)) < L + 0.5]
     # ruled surface frame: origin + direction from the apron towards the carriageway
     o_ax, a_ax = (pe, u_) if (acc.get("cross") is not None and not cross_drive) else (m, n)
     dbg_at = os.environ.get("KAMION_DBG_DRIVE_AT")      # axis-driveway-s24: "e,n,r" - report the crossings near a point
@@ -2563,6 +2580,11 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
         T = inv.ravel().reshape(-1, 3)
         top = np.array([surf_top.top(float(x), float(y)) for x, y in P])
         inside = shapely.contains(roads_poly, shapely.points(P))
+        # The final asphalt toe is the inner boundary of the rural strip. Reduce its lift
+        # at that seam and keep the full lift where the paving covers the shoulder.
+        distance = shapely.distance(shapely.points(P), carriage) if rural else None
+        if rural:
+            inside |= distance <= 0.03
         on_road = np.isfinite(top) & inside
         if footway and not cross_drive:                      # the footway is paved already: only the part without it
             tri_ok = ~(on_road[T].all(1))
@@ -2574,6 +2596,8 @@ def _verge_overlay(buf, plot, surf_top, src_id, zf=None, roads_poly=None, carria
                           for i in range(len(P))])
         else:
             Z = np.array([top[i] if on_road[i] else zf(P[i]) for i in range(len(P))]) + 0.02
+            if rural:
+                Z[on_road] -= 0.017 * np.clip(1.0 - distance[on_road] / 0.20, 0.0, 1.0)
         # ADR 0124 r2 (r1: a wedge of grass between this strip and the apron on driveways oblique to the road,
         # `r16_kerb_0`): outside the road surfaces the strip lay 2 cm over the INTERPOLATED ground, and the terrain
         # mesh (1 m / 2 m grid, other triangle split) came through it on the batter of the footprint edge. There the

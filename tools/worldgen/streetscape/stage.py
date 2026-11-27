@@ -381,7 +381,7 @@ def run(w, road_z, rmask, deck, deck_mask, thick, log):
     if gardens_0163:
         PT.plan_house_greenery(plot_plan, rep)
     plots = PLT.build(w.buf, plot_plan, zplot, FU.SurfaceTop([p_ for p_ in w.buf.parts if p_.layer == "road"]), rep,
-                      items=pl.items)       # ADR 0124: the lamp poles of the house streets carry the overhead line
+                      items=pl.items, driveway_carriage=carriage)
     if gardens_0163:
         PT.front_gardens(w.buf, plot_plan, zplot, rep, half=float(w.region["bbox"]["width_m"]) / 2)
         log("garden fronts", {k: v for k, v in rep["garden_fronts"].items() if k != "list"})
