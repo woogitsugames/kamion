@@ -50,3 +50,5 @@
 - Następny krok to `& $py -m pytest -q tests/gis/test_buildings_r7.py tests/gis/test_embankment_pylons_s24.py tests/gis/test_far_field.py tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py`.
 - Krok 5. Po korekcie 82 PASS w trzech plikach, 62 PASS w czterech plikach budżetowych. Porównanie hashy potwierdziło cztery nieaktualne źródła fidelity C. Zapisano tabelę 12 przypadków w WYNIKI.md.
 - Następny krok to porównać pliki GLB z dwóch instancji `pytest -q tests/gis/test_world_roads.py` i uruchomić `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64`.
+- Krok 6. `test_world_roads.py`, seed 4, dał 14 PASS i 1 FAIL w 21:01. Świeży eksport `0_0` High ma hash a073376b…, kopia fali 13 ee87433a…. W 64 GLB High jest 43 różnic względem fali 13. Drugi proces z seedem 9 porówna te same wejścia.
+- Następny krok to `& $py artifacts/codex-gis-fix-s24/compare-exports.py artifacts/codex-gis-fix-s24/pytest/world-seed4/world0 artifacts/codex-gis-fix-s24/pytest/world-seed9/world0 Data/raw/derived/bialystok-industrial-c/world`.
