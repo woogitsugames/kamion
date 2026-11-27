@@ -7,6 +7,8 @@ try {
         throw 'Regeneracja już się zaczęła. Zachowaj istniejącą bazę visual-QA.'
     }
     if (-not (Test-Path -LiteralPath "$stateDir/before.done")) {
+        Invoke-WaveStep 'audyt WN przed' $python (@('tools/worldgen/qa/hv_wires_audit.py',
+            '--json', "$evidenceDir/hv_wires_before.json", '--regions') + $queue.tile) "$evidenceDir/logs/prepare.log"
         & "$waveDir/vqa.ps1" -Phase before
         Set-Content -LiteralPath "$stateDir/before.done" -Value (Get-Date -Format o)
     }

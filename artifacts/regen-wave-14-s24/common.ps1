@@ -128,7 +128,30 @@ function Invoke-WaveTile([string]$Tile, [switch]$Redo) {
         if (Test-Path -LiteralPath $done) { Write-Host "$Tile gotowy"; return }
         if (-not (Test-Path -LiteralPath $worldReady)) {
             Invoke-WithHeavySlot $owner $log {
-                Invoke-WaveStep 'build_world' $python @('tools/worldgen/roads/build_world.py', '--region', $Tile, '--context') $log
+                # Bojary exceeded the default 3 h slot TTL in wave 13.
+                $slotFile = "$mainRoot/artifacts/locks/heavy-slots/$owner.slot"
+                $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+                $buildLog = "$evidenceDir/logs/build-$Tile-$stamp"
+                Write-Host "[$(Get-Date -Format s)] build_world ($buildLog.out.log)"
+                Add-Content -LiteralPath $log -Value "[$(Get-Date -Format o)] BEGIN build_world ($buildLog.out.log / .err.log)"
+                $timer = [Diagnostics.Stopwatch]::StartNew()
+                $child = Start-Process -FilePath $python -ArgumentList @('-u', 'tools/worldgen/roads/build_world.py', '--region', $Tile, '--context') `
+                    -NoNewWindow -PassThru -RedirectStandardOutput "$buildLog.out.log" -RedirectStandardError "$buildLog.err.log"
+                $null = $child.Handle
+                try {
+                    while (-not $child.WaitForExit(60000)) {
+                        (Get-Item -LiteralPath $slotFile).LastWriteTime = Get-Date
+                    }
+                    $code = $child.ExitCode
+                }
+                finally {
+                    # Never release the heavy slot while the generator is still running.
+                    $child.WaitForExit()
+                    $child.Dispose()
+                }
+                Add-Content -LiteralPath $log -Value "[$(Get-Date -Format o)] END build_world exit=$code seconds=$([math]::Round($timer.Elapsed.TotalSeconds))"
+                if ($code -ne 0) { throw "build_world exit=$code. Log: $buildLog.err.log" }
+                (Get-Item -LiteralPath $slotFile).LastWriteTime = Get-Date
                 Invoke-WaveStep 'far_field' $python @('tools/worldgen/streetscape/far_field.py', '--region', $Tile) $log
                 Invoke-WaveStep 'export-route' $python @('scripts/export-route.py', '--region', $Tile) $log
                 Invoke-WaveStep 'fidelity' $python @('tools/worldgen/fidelity/run.py', '--region', $Tile, '--art', "$evidenceDir/fidelity/$Tile") $log

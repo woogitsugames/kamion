@@ -8,7 +8,7 @@ try {
     & "$waveDir/autocommit.ps1"
     $tiles = $queue.tile -join ','
     $log = "$evidenceDir/logs/final.log"
-    Invoke-WithHeavySlot "$waveName-final" $log {
+    $failed = @(Invoke-WithHeavySlot "$waveName-final" $log {
         $checks = [ordered]@{
             route_links = @('tools/worldgen/streaming/route_links.py')
             tile_graph = @('tools/worldgen/streaming/tile_graph.py')
@@ -24,13 +24,13 @@ try {
                 'tests/gis/test_world_v31.py', 'tests/gis/test_hero_bridge.py')
             pytest_gis = @('-m', 'pytest', 'tests/gis', '-q', '-p', 'no:cacheprovider')
         }
-        $failed = foreach ($name in $checks.Keys) {
+        foreach ($name in $checks.Keys) {
             try { Invoke-WaveStep $name $python $checks[$name] "$evidenceDir/logs/$name.log" }
             catch { Write-Warning $_.Exception.Message; $name }
         }
-        if ($failed) { throw "Kontrole z błędem: $($failed -join ', ')." }
-    }
+    })
     & "$waveDir/vqa.ps1" -Phase after
+    if ($failed.Count) { throw "Kontrole z błędem: $($failed -join ', ')." }
     Set-Content -LiteralPath "$stateDir/final.checked" -Value (Get-Date -Format o)
     & "$waveDir/commit.ps1" -Final
     Write-Host "Przejrzyj pary PNG oraz raporty szwów, trasy i WN w $evidenceDir."

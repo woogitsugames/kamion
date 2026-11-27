@@ -24,3 +24,6 @@
 
 - Dodano skrypty przygotowania, łańcuchów, powtórki, commitów i finału z Win64 High, progami GIS oraz porównaniem visual-QA. Artefakty wykonania mają oddzielne katalogi per kafel.
 - Następny krok: `pwsh -NoProfile -File artifacts/regen-wave-14-s24/chain.ps1 -Tile dk65-monki-03 -WhatIf`
+
+- Suchy przebieg `dk65-monki-03` (236 s wg logu fali 13) przeszedł i nie utworzył stanu wykonania. Shim potwierdzony przez `export-route.py --help`. Zapisano instrukcję, pomiary dysku i czas importów builda #10.
+- Następny krok (lider, po zakończeniu i integracji fali 13): `pwsh -NoProfile -File artifacts/regen-wave-14-s24/prepare.ps1`
