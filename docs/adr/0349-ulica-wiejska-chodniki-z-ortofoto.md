@@ -139,3 +139,15 @@ Odpowiedź na krytyka wave10-pre §3 (kostka sterylna, brak obniżonego krawęż
 - Dowody: `artifacts/axis-driveway-s24/{before,after,after-overcast,diag-before-material,diag-after-material,sbs}`.
 - Otwarte: ocena visual-critic (subagent nie może jej uruchomić — lider); apron skośnej bramy nadal skośny przez trawnik
   przed płotem (geometria działki z BDOT); obniżony krawężnik dotyczy tylko boków miejskich (wiejskie nie mają krawężnika).
+
+## Dopisek codex-patches-edges-s24 — profil styku zjazdu z asfaltem
+
+W przekroju wiejskim generator wydziela przy zjeździe krótki asfaltowy najazd z istniejącego pasa pobocza.
+Przy wąskim asfaltowym obrzeżu granica asfalt–żwir przesuwa się do 30 cm od krawędzi pasa ruchu, zależnie od
+dostępnej szerokości żwiru. Dodatkowy spadek na końcu asfaltu to 10% szerokości najazdu, ograniczony do 3,5 cm.
+Początek asfaltu i zewnętrzna krawędź żwiru zachowują dotychczasową rzędną. W mieście krawężnik przy bramie
+schodzi do 2 cm nad ściekiem. Progi i wymiary: WORKING_VALUE.
+
+Siatki renderu i kolizji dostają te same stacje początku i końca najazdu oraz metrowego przejścia. Zjazd na
+wiejskim poboczu jest docinany według obrysu asfaltu z finalnej siatki. Wzdłuż styku nakładka zachowuje kilka mm
+prześwitu nad poboczem, przechodząc do 2 cm dalej od asfaltu. Generator używa dotychczasowych warstw i materiałów.

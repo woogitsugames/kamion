@@ -25,3 +25,6 @@
 
 - [krok 2] Zjazdy: istniejące pasy asfaltu i żwiru tworzą profil rampy w siatce renderu i kolizji; zjazd w mieście obniżono do 2 cm. Test zjazdów po skorygowaniu wartości bazowego spadku: 7/7. Import bazowy trwa i generuje lokalne mapy PBR.
 - Następny krok: skończyć `pwsh artifacts/codex-patches-edges-s24/qa.ps1 -Stage before`, zapisać obraz przed, wdrożyć maskę łaty.
+
+- [krok 3] Pełny audyt kopii z main: 80/128 GLB różni się od manifestu. Uruchomiono bazową regenerację na kodzie przed zmianą. Przygotowano pomiar PNG i dopiski ADR.
+- Następny krok: dokończyć `pwsh artifacts/codex-patches-edges-s24/baseline.ps1`, potem sprawdzić PNG clear i overcast.
