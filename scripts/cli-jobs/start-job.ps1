@@ -1,7 +1,7 @@
 # Start a delegated CLI job in its own worktree. Usage:
-#   pwsh scripts/cli-jobs/start-job.ps1 -Name neon-x-s24 -Tool neon|mistral [-CopyDerived] [-Model gemini-4-neon-high] [-MaxPrice 3] [-TimeLimit 5400]
+#   pwsh scripts/cli-jobs/start-job.ps1 -Name neon-x-s24 -Tool neon|mistral|codex (codex: -Model gpt-6.2-sol) [-CopyDerived] [-Model gemini-4-neon-high] [-MaxPrice 3] [-TimeLimit 5400]
 # Prompt: artifacts/<Name>/task.md (RULES.md is prepended). Output: artifacts/<Name>/cli.log, cli.status (exit=...).
-param([Parameter(Mandatory)][string]$Name, [ValidateSet('neon','mistral')][string]$Tool = 'neon', [switch]$CopyDerived,
+param([Parameter(Mandatory)][string]$Name, [ValidateSet('neon','mistral','codex')][string]$Tool = 'neon', [switch]$CopyDerived,
       [string]$Model = 'gemini-4-neon-high', [double]$MaxPrice = 3, [int]$TimeLimit = 5400)
 $R = 'C:\Users\matma\Documents\Claude\kamion'; Set-Location $R
 $o = "$R\artifacts\$Name"; New-Item -ItemType Directory -Force $o | Out-Null
@@ -18,6 +18,13 @@ if ($Tool -eq 'neon') {
 Set-Location '$wt'
 `$p = Get-Content '$o\prompt.full.md' -Raw
 & 'C:\Users\matma\AppData\Local\agy\bin\agy.exe' -p `$p --model $Model --dangerously-skip-permissions --add-dir '$wt' *> '$o\cli.log'
+"exit=`$LASTEXITCODE `$(Get-Date -Format s)" | Out-File '$o\cli.status'
+Get-ChildItem '$R\artifacts\locks\heavy-slots' -Filter '$Name*.slot' -EA SilentlyContinue | Remove-Item -Force
+"@ | Set-Content $runner -Encoding utf8
+} elseif ($Tool -eq 'codex') {
+@"
+Set-Location '$wt'
+Get-Content '$o\prompt.full.md' -Raw | codex exec --skip-git-repo-check -m $Model --dangerously-bypass-approvals-and-sandbox -C '$wt' - *> '$o\cli.log'
 "exit=`$LASTEXITCODE `$(Get-Date -Format s)" | Out-File '$o\cli.status'
 Get-ChildItem '$R\artifacts\locks\heavy-slots' -Filter '$Name*.slot' -EA SilentlyContinue | Remove-Item -Force
 "@ | Set-Content $runner -Encoding utf8
