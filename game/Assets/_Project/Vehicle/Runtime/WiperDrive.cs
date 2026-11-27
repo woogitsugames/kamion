@@ -9,7 +9,9 @@ namespace Game.Vehicle.Runtime
     {
         // WORKING_VALUE, seconds per round trip and parked seconds between intermittent sweeps.
         public const float SlowSeconds = 1.2f, FastSeconds = 0.8f, IntermittentPause = 2.4f;
-        public const float SweepDegrees = 95f; // Imported TRAKT pivots sweep up around their local +Y.
+        // WORKING_VALUE, local +Y of the imported TRAKT pivots. The left blade
+        // stops short of the A-pillar; both reverse at the same instant.
+        public const float LeftSweepDegrees = 72f, RightSweepDegrees = 95f;
 
         public WiperMode Mode { get; private set; }
         public float CycleSeconds { get; private set; }
@@ -23,8 +25,8 @@ namespace Game.Vehicle.Runtime
 
         public void CycleMode() => Mode = (WiperMode)(((int)Mode + 1) % 4);
 
-        public static Quaternion Rotation(float phase) =>
-            Quaternion.AngleAxis(SweepDegrees * (0.5f - 0.5f * Mathf.Cos(2f * Mathf.PI * phase)), Vector3.up);
+        public static Quaternion Rotation(float phase, float sweepDegrees) =>
+            Quaternion.AngleAxis(sweepDegrees * (0.5f - 0.5f * Mathf.Cos(2f * Mathf.PI * phase)), Vector3.up);
 
         public void Step(float dt)
         {

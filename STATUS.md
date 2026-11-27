@@ -44,3 +44,6 @@ Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 
 
 Pierwsze PlayMode potwierdziło oba nowe testy. Jedyny błąd pełnego zestawu to brak mapy bialystok-krywlany.bytes. Generator odtworzył ją lokalnie. Pierwsze porównanie PNG wykazało ruch piór pod szybę, więc zmieniono znak kąta w osi riggu Unity.
 Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Lighting clear -WiperPhase 0.5
+
+Ujęcie overcast w punkcie nawrotu wykazało, że lewe pióro dochodziło do słupka A. Skrócono lewy łuk do 72° przy wspólnej fazie, a prawy zachował 95°.
+Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Lighting overcast -WiperPhase 0.5

@@ -238,9 +238,8 @@ namespace Game.Editor.VisualQA
                         found++;
                         savedSteer.Add((left, left.localRotation));
                         savedSteer.Add((right, right.localRotation));
-                        var wipe = WiperDrive.Rotation(phase);
-                        left.localRotation *= wipe;
-                        right.localRotation *= wipe;
+                        left.localRotation *= WiperDrive.Rotation(phase, WiperDrive.LeftSweepDegrees);
+                        right.localRotation *= WiperDrive.Rotation(phase, WiperDrive.RightSweepDegrees);
                     }
                     if (found == 0) throw new InvalidOperationException("Wiper pose requested, but no TRAKT wiper pivots were found");
                 }

@@ -27,6 +27,7 @@ namespace Game.Vehicle.Runtime
         Quaternion m_SteeringWheelRest = Quaternion.identity;
         Transform m_WiperLeft, m_WiperRight;
         Quaternion m_WiperLeftRest, m_WiperRightRest;
+        float m_LastWiperPhase;
         Quaternion m_CabRest = Quaternion.identity;
         Vector3 m_CabRestPos;
         float[] m_PrevS, m_CurS, m_SpinDeg, m_PrevSpinDeg;
@@ -108,9 +109,13 @@ namespace Game.Vehicle.Runtime
                 // Positive handwheel angle = right turn = clockwise as seen by the driver = negative about +Z.
                 steeringWheel.localRotation = m_SteeringWheelRest * Quaternion.AngleAxis(-(float)model.Steering.HandwheelDeg, Vector3.forward);
             }
-            Quaternion wipe = WiperDrive.Rotation(body.Wipers.Phase);
-            if (m_WiperLeft != null) m_WiperLeft.localRotation = m_WiperLeftRest * wipe;
-            if (m_WiperRight != null) m_WiperRight.localRotation = m_WiperRightRest * wipe;
+            float phase = body.Wipers.Phase;
+            if (phase == m_LastWiperPhase) return;
+            m_LastWiperPhase = phase;
+            if (m_WiperLeft != null)
+                m_WiperLeft.localRotation = m_WiperLeftRest * WiperDrive.Rotation(phase, WiperDrive.LeftSweepDegrees);
+            if (m_WiperRight != null)
+                m_WiperRight.localRotation = m_WiperRightRest * WiperDrive.Rotation(phase, WiperDrive.RightSweepDegrees);
         }
     }
 }

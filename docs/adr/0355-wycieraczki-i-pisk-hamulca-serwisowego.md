@@ -15,8 +15,9 @@ zdarzeniem względem pisku opon w poślizgu (ADR 0145).
   Akcję można przypisać w Ustawieniach sterowania także na padzie. Klikalna etykieta
   w HUD (**Panel → Zestaw…**) pokazuje tryb i wykonuje tę samą zmianę.
 - `WiperDrive` na pojeździe prowadzi fazę ruchu i liczniki startu oraz powrotu do
-  spoczynku. Ruch piór korzysta z kąta +95° wokół lokalnej osi +Y po imporcie
-  FBX do Unity. Kierunek zweryfikowano na ujęciu z przodu. Wspólny zegar
+  spoczynku. Pióra poruszają się wokół lokalnych osi +Y po imporcie FBX do
+  Unity. Maksymalny kąt od pozycji spoczynkowej to 72° po lewej i 95°
+  po prawej (`WORKING_VALUE`). Krótszy lewy łuk omija słupek A. Wspólny zegar
   uruchamia klip silnika i tarcia obu suwów na starcie, a osobny stuk przy końcu.
   Zmiana biegu obowiązuje od następnego cyklu. Wyłączenie pozwala dokończyć
   bieżący cykl. Czasy `WORKING_VALUE`: 1,20 s (przerywany i 1), 0,80 s (2),
