@@ -58,3 +58,5 @@
 - Następny krok to `& $py -m pytest -q tests/gis --junitxml artifacts/codex-gis-fix-s24/gis-full.xml` w slocie heavy i przegląd pozostałych błędów.
 - Krok 9. W pełnym GIS na ok. 40% widać nowy FAIL K1. Samo `dk65_k1_elements.py --check` potwierdziło dk65-01…05. Treść wszystkich bloków jest zgodna z tabelą, ale fala 13 dopisała po nich 11 niepustych linii weathering-s24 w każdym YAML. Dowód w logs/dk65-k1-diff.log.
 - Następny krok to `Get-Content artifacts/codex-gis-fix-s24/logs/gis-full.log -Tail 20` po zakończeniu procesu, a dla lidera `& $py tools/worldgen/qa/dk65_k1_elements.py` przed budową dk65-01…05 w fali 14.
+- Krok 10. Pełny GIS przekroczył 94%. Dziennik CodeIntegrity 3077 potwierdza zablokowanie wskazanego Pythona w podprocesie testu hashowania. Niezależny pomiar 8-spójnych komponentów atlasów sosen po rebake dał 37 → 403 na teksturach źródłowych, 255 po sprowadzeniu obecnych plików do poprzedniego rozmiaru.
+- Następny krok to `Get-Content artifacts/codex-gis-fix-s24/logs/gis-full.log -Tail 25` po zakończeniu pytest oraz porównanie z XML.
