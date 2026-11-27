@@ -117,6 +117,12 @@ namespace Game.World
         /// <summary>crown-lod-s24: alpha cutoff reduction of minified leaf cards / impostors (Kamion/Vegetation VegCutoffFill;
         /// WORKING_VALUE from the knyszyn-w spawn view; rq_leaffill A/B).</summary>
         public const float LeafMipFill = 0.3f;
+        /// <summary>impostor-rebake-s24 (critic day27 # 7, route-s0426 "spikes"): a square leaf card seen nearly edge-on maps
+        /// its whole texture onto a sliver - a thin stretched streak out of the crown. Kamion/Vegetation VegCardEdge raises
+        /// the card cutoff to above 1 where the screen-space UV anisotropy says the card is seen at cos < CardEdgeFade.x and
+        /// keeps it where cos > .y (smooth between). Global _KamionCardEdge; WORKING_VALUE (rq_cardedge A/B, 0 = off).</summary>
+        public static readonly Vector2 CardEdgeFade = new Vector2(0.12f, 0.3f);
+        static readonly int k_CardEdge = Shader.PropertyToID("_KamionCardEdge");
         float m_PoleCull;
 
         // Vegetation settings of the active tier (QualityProfile, ADR 0012 / device runs); the serialized fields below are
@@ -424,6 +430,8 @@ namespace Game.World
             float treeLs = Mathf.Min(scale, m_TreeCard) * RenderOverrides.AbTreeCardScale;
             bool fade = m_LodFade && m_FadeEnd != null && m_SimpleFoliage;
             Shader.SetGlobalVector(k_TreeFade, new Vector4(treeLs, TreeFadeBand, fade ? 1f : 0f, RenderOverrides.LeafFill ?? LeafMipFill));
+            float ce1 = RenderOverrides.CardEdge ?? CardEdgeFade.y;
+            Shader.SetGlobalVector(k_CardEdge, ce1 > 0f ? new Vector4(Mathf.Min(CardEdgeFade.x, ce1 * 0.5f), ce1, 1f, 0f) : Vector4.zero);
             // Power-line conductors (Kamion/World Wire) fade out with the cull distance of the poles that carry them
             // (REVIEW r4 W-H2: wires hung in the air over the DK8 forest on Low after the poles were culled).
             if (m_PoleCull > 0f)

@@ -213,6 +213,28 @@ Shader "Kamion/Vegetation"
         // crown with A2C, 0.9 % without). Where the texture is minified (mip level > 1) the cutoff is lowered by up to
         // _KamionTreeFade.w (global, WorldInstances; 0 = off): gaps narrower than a pixel close, larger ones stay.
         // Same derivative-based value in the depth and colour passes. Not on the faded-out cards (cutoff > 1).
+        // impostor-rebake-s24 (critic day27 # 7, route-s0426 "spikes"): a square leaf card (square UV cell) seen nearly
+        // edge-on maps its whole picture onto a sliver - a thin stretched streak out of the crown. The screen-space UV
+        // Jacobian tells how edge-on the card is: sqrt(lambda_min / lambda_max) of J^T J ~ |cos| of the view angle (1 face
+        // on, -> 0 edge-on; the cards are square with square cells, so no other anisotropy). Below _KamionCardEdge.x the
+        // card's cutoff rises to above 1 (gone), above .y it is untouched, smooth between. Global (WorldInstances; z = 1 on,
+        // 0 = off). Cards only; uv alone, so the depth and colour passes agree. Removes ~5 % of the projected card area.
+        float4 _KamionCardEdge;
+        half VegCardEdge(float2 uv, half cutoff)
+        {
+        #if defined(_IMPOSTOR) || defined(_HLOD_EDGE)
+            return cutoff;
+        #else
+            if (_KamionCardEdge.z < 0.5 || cutoff >= 1.0) return cutoff;
+            float2 dx = ddx(uv), dy = ddy(uv);
+            float s = 0.5 * (dot(dx, dx) + dot(dy, dy));
+            float d = abs(dx.x * dy.y - dx.y * dy.x);
+            float h = sqrt(max(s * s - d * d, 0.0));
+            float e = sqrt(max(s - h, 0.0) / max(s + h, 1e-20));
+            return lerp(1.02h, cutoff, (half)smoothstep(_KamionCardEdge.x, _KamionCardEdge.y, e));
+        #endif
+        }
+
         half VegCutoffFill(float2 uv, half cutoff)
         {
         #if defined(_HLOD_EDGE)
@@ -220,7 +242,7 @@ Shader "Kamion/Vegetation"
         #else
             float2 t = uv * _BaseMap_TexelSize.zw;
             float m = 0.5 * log2(max(max(dot(ddx(t), ddx(t)), dot(ddy(t), ddy(t))), 1e-8));
-            return cutoff >= 1.0 ? cutoff : cutoff - (half)(_KamionTreeFade.w * saturate(m - 1.0));
+            return VegCardEdge(uv, cutoff >= 1.0 ? cutoff : cutoff - (half)(_KamionTreeFade.w * saturate(m - 1.0)));
         #endif
         }
 
@@ -641,7 +663,7 @@ Shader "Kamion/Vegetation"
                 if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
                 i.uv = EdgeUV(i.uv);
             #endif
-                clip(VegAlpha(i.uv, i.t.x) - i.t.y);
+                clip(VegAlpha(i.uv, i.t.x) - VegCardEdge(i.uv.xy, i.t.y));   // impostor-rebake-s24: as the colour pass
                 return 0;
             }
             ENDHLSL

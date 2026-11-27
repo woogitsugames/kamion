@@ -43,6 +43,8 @@ namespace Game.Rendering
         public static bool? TreeLodFade;
         /// <summary>crown-lod-s24 A/B: rq_leaffill - cutoff reduction of minified leaf cards (WorldInstances.LeafMipFill; 0 = off).</summary>
         public static float? LeafFill;
+        /// <summary>impostor-rebake-s24 A/B: rq_cardedge - upper edge of the edge-on leaf card fade (WorldInstances.CardEdgeFade; 0 = off).</summary>
+        public static float? CardEdge;
         public static bool? Trees;
         public static int? TreeShadowMask;
         public static float? TreeCardScale;
@@ -106,7 +108,7 @@ namespace Game.Rendering
         public static bool AbClearCoatOff, AbGrimeOff;
 
         public static bool Any => Msaa.HasValue || RenderScale.HasValue || ShadowDistance.HasValue || Post.HasValue || Dither.HasValue || SkyDither.HasValue || GlassShadowBias.HasValue || Hdr.HasValue ||
-                                  LeafA2C.HasValue || TreeLodFade.HasValue || LeafFill.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||
+                                  LeafA2C.HasValue || TreeLodFade.HasValue || LeafFill.HasValue || CardEdge.HasValue || Trees.HasValue || TreeShadowMask.HasValue || TreeCardScale.HasValue ||
                                   TreeCull.HasValue || TreeThin.HasValue || SimpleFoliage.HasValue || ForestHlod.HasValue ||
                                   VehicleLook.HasValue || EnvCapture.HasValue || ScaleMin.HasValue || Upscale != null ||
                                   FsrSharpness.HasValue || Pacing.HasValue || LampPools.HasValue || LampPoolSpec.HasValue || GlareAb.HasValue || NightWindowsAb.HasValue || LampFloorAb.HasValue || EnvCaptureInterval.HasValue ||
@@ -122,7 +124,7 @@ namespace Game.Rendering
         public static string Parse(Func<string, string> arg)
         {
             Msaa = I(arg("rq_msaa")); RenderScale = F(arg("rq_scale")); ShadowDistance = F(arg("rq_shadow"));
-            Post = B(arg("rq_post")); Hdr = B(arg("rq_hdr")); LeafA2C = B(arg("rq_a2c")); TreeLodFade = B(arg("rq_lodfade")); LeafFill = F(arg("rq_leaffill")); Trees = B(arg("rq_trees"));
+            Post = B(arg("rq_post")); Hdr = B(arg("rq_hdr")); LeafA2C = B(arg("rq_a2c")); TreeLodFade = B(arg("rq_lodfade")); LeafFill = F(arg("rq_leaffill")); CardEdge = F(arg("rq_cardedge")); Trees = B(arg("rq_trees"));
             Dither = B(arg("rq_dither")); SkyDither = B(arg("rq_skydither"));
             GlassShadowBias = F(arg("rq_glassshadow"));
             TreeShadowMask = I(arg("rq_treeshadow")); TreeCardScale = F(arg("rq_card")); TreeCull = F(arg("rq_cull"));
@@ -185,7 +187,7 @@ namespace Game.Rendering
             Game.Core.MirrorOverrides.Suspended = B(arg("rq_mirror_off")) == true;
             string up = arg("rq_upscale");
             Upscale = string.IsNullOrEmpty(up) ? null : up.ToLowerInvariant();
-            return Any ? $"msaa={Msaa} scale={RenderScale} shadow={ShadowDistance} post={Post} dither={Dither} skydither={SkyDither} hdr={Hdr} a2c={LeafA2C} lodfade={TreeLodFade} leaffill={LeafFill} trees={Trees} " +
+            return Any ? $"msaa={Msaa} scale={RenderScale} shadow={ShadowDistance} post={Post} dither={Dither} skydither={SkyDither} hdr={Hdr} a2c={LeafA2C} lodfade={TreeLodFade} leaffill={LeafFill} cardedge={CardEdge} trees={Trees} " +
                          $"treeshadow={TreeShadowMask} card={TreeCardScale} cull={TreeCull} thin={TreeThin} vegshader={SimpleFoliage} hlod={ForestHlod} a8={VehicleLook} envcap={EnvCapture} " +
                          $"scalemin={ScaleMin} upscale={Upscale} fsrsharp={FsrSharpness} pacing={Pacing} lamppools={LampPools} lampspec={LampPoolSpec} glare={GlareAb} nightwin={NightWindowsAb} lampfloor={LampFloorAb} " +
                          $"envcap_iv={EnvCaptureInterval} envcap_lod={EnvCaptureLod} shadowcasc={ShadowCascades} shadowres={ShadowResolution} ab={Ab} ab_period={AbPeriod} " +
