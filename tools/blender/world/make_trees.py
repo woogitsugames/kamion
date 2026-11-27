@@ -1486,6 +1486,13 @@ def _components_min(mask, min_px):
         for dy, dx in N8:
             nb = np.minimum(nb, _shift(lab, dy, dx))
         nb = np.where(mask, nb, big)
+        # impostor-rebake-s24: pointer jumping (a label is a texel index of the same component, so its own label is at
+        # least as small): the 1024-row bake converged in ~path length sweeps (minutes per pine) - now in ~log of it.
+        # Same fixed point (component minimum index), so the result is unchanged.
+        flat = np.append(nb.ravel(), big)
+        for _ in range(8):
+            nb = np.where(mask, flat[np.minimum(nb, big)], big)
+            flat = np.append(nb.ravel(), big)
         if np.array_equal(nb, lab):
             break
         lab = nb
