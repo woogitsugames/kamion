@@ -23,3 +23,6 @@ Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 
 
 Synteza gotowa: 8 własnych WAV (48 kHz mono), w tym suche i mokre pióra, park i hamulce w dwóch perspektywach. Render bazowy Win64 importuje zasoby.
 Następny krok: pwsh scripts/build-lab.ps1 -SkipAudio -BuildTarget Win64 (jeśli bazowa scena wymaga odbudowy).
+
+Sterowanie, HUD i zegar piór spięte z audio. GIS Win64/Python: 62/62. DrivingLab odbudowany lokalnie, zrzuty bazowe High clear i overcast z TRAKT-em.
+Następny krok: pwsh scripts/test.ps1 -BuildTarget Win64

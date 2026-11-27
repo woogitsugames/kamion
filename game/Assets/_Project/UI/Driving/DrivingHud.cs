@@ -101,6 +101,8 @@ namespace Game.UI.Driving
         static readonly Color k_BrakeFill = new Color(0.72f, 0.30f, 0.26f, 0.85f);
 
         DrivingHudContext m_Ctx;
+        UnityEngine.UI.Text m_WiperModeLabel;
+        static readonly string[] k_WiperModes = { "Wycieraczki · wył.", "Wycieraczki · przerywane", "Wycieraczki · 1", "Wycieraczki · 2" };
         Font m_Font;
         RectTransform m_SafeArea;
         UiViewport m_View;
@@ -497,6 +499,9 @@ namespace Game.UI.Driving
             m_AbsFaultLabel = Button(lab, "AbsFault", Vector2.zero, new Vector2(pad, ly - pitchY), sz, 22, () => m_Ctx.ToggleAbsFault?.Invoke(), out _);
             Button(lab, "RevCam", Vector2.zero, new Vector2(pad + pitchX, ly - pitchY), sz, 22, () => m_Ctx.Touch?.RequestReverseCameraToggle(), out _).text = "Kamera cofania";
             m_MirrorInsetLabel = Button(lab, "MirrorInsets", Vector2.zero, new Vector2(pad, ly - 2 * pitchY), new Vector2(full, bh), 22, () => m_Ctx.ToggleMirrorInsets?.Invoke(), out _);
+            if (m_Ctx.Vehicle != null)
+                m_WiperModeLabel = Button(lab, "Wipers", Vector2.zero, new Vector2(pad, 78f), new Vector2(full, 36f), 22,
+                    () => m_Ctx.Vehicle.Wipers.CycleMode(), out _);
             Button(lab, "LabBack", Vector2.zero, new Vector2(pad, pad), new Vector2(full, bh), 24, () => SetLabOpen(false), out _).text = "Wróć";
             m_LabPanel = lab.gameObject;
             m_DevPanelRt.gameObject.SetActive(false);
@@ -963,6 +968,11 @@ namespace Game.UI.Driving
         {
             UpdateLayout();
             var v = m_Ctx.Vehicle;
+            if (m_WiperModeLabel != null && v != null)
+            {
+                string label = k_WiperModes[(int)v.Wipers.Mode];
+                if (!ReferenceEquals(m_WiperModeLabel.text, label)) m_WiperModeLabel.text = label;
+            }
             ReleaseHudSelection();
             bool gyro = m_Ctx.IsGyroMode != null && m_Ctx.IsGyroMode();
             bool touch = m_L.ShowTouchControls;

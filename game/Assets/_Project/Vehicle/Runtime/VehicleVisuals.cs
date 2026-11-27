@@ -25,6 +25,8 @@ namespace Game.Vehicle.Runtime
         public bool applyCabHeave;
 
         Quaternion m_SteeringWheelRest = Quaternion.identity;
+        Transform m_WiperLeft, m_WiperRight;
+        Quaternion m_WiperLeftRest, m_WiperRightRest;
         Quaternion m_CabRest = Quaternion.identity;
         Vector3 m_CabRestPos;
         float[] m_PrevS, m_CurS, m_SpinDeg, m_PrevSpinDeg;
@@ -47,7 +49,17 @@ namespace Game.Vehicle.Runtime
             }
             if (steeringWheel != null) m_SteeringWheelRest = steeringWheel.localRotation;
             if (cabPivot != null) { m_CabRest = cabPivot.localRotation; m_CabRestPos = cabPivot.localPosition; }
+            (m_WiperLeft, m_WiperRight) = FindWipers();
+            if (m_WiperLeft != null) m_WiperLeftRest = m_WiperLeft.localRotation;
+            if (m_WiperRight != null) m_WiperRightRest = m_WiperRight.localRotation;
             m_Ready = true;
+        }
+
+        // Generated TRAKT prefabs (including earlier ones) parent all moving LODs under these rig nodes.
+        public (Transform left, Transform right) FindWipers()
+        {
+            var shell = cabPivot != null ? cabPivot.Find("CabBody/CAB_Body_LOD0") : null;
+            return shell != null ? (shell.Find("WIPER_L_LOD0"), shell.Find("WIPER_R_LOD0")) : (null, null);
         }
 
         void FixedUpdate() => Capture(Time.fixedDeltaTime);
@@ -96,6 +108,9 @@ namespace Game.Vehicle.Runtime
                 // Positive handwheel angle = right turn = clockwise as seen by the driver = negative about +Z.
                 steeringWheel.localRotation = m_SteeringWheelRest * Quaternion.AngleAxis(-(float)model.Steering.HandwheelDeg, Vector3.forward);
             }
+            Quaternion wipe = WiperDrive.Rotation(body.Wipers.Phase);
+            if (m_WiperLeft != null) m_WiperLeft.localRotation = m_WiperLeftRest * wipe;
+            if (m_WiperRight != null) m_WiperRight.localRotation = m_WiperRightRest * wipe;
         }
     }
 }

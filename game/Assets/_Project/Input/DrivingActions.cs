@@ -7,6 +7,7 @@ namespace Game.Controls
     public sealed class DrivingActionSet
     {
         public readonly InputActionMap Map;
+        public readonly InputAction CycleWipers;
         public readonly InputAction Steer, Throttle, Brake, Clutch, ShiftUp, ShiftDown, SelectDrive, SelectNeutral, SelectReverse,
             ToggleManual, ParkingBrake, RetarderMore, RetarderLess, Couple, LandingGear, BrakeCruise, ReverseCamera,
             IndicatorLeft, IndicatorRight, Hazard, Horn, CycleCamera, MirrorInsets, HudDetail, Look;
@@ -27,6 +28,7 @@ namespace Game.Controls
             Hazard = A(DrivingActionCatalog.Hazard); Horn = A(DrivingActionCatalog.Horn);
             CycleCamera = A(DrivingActionCatalog.CycleCamera); MirrorInsets = A(DrivingActionCatalog.MirrorInsets); Look = A(DrivingActionCatalog.Look);
             HudDetail = A(DrivingActionCatalog.HudDetail);
+            CycleWipers = A(DrivingActionCatalog.CycleWipers);
         }
 
         /// <summary>One-shot commands common to every device (allocation-free; call once per rendered frame).</summary>
@@ -52,6 +54,7 @@ namespace Game.Controls
             view.CycleCamera |= CycleCamera.WasPressedThisFrame();
             view.ToggleMirrorInsets |= MirrorInsets.WasPressedThisFrame();
             view.ToggleHudDetail |= HudDetail.WasPressedThisFrame();
+            view.CycleWipers |= CycleWipers.WasPressedThisFrame();
         }
     }
 
