@@ -448,7 +448,7 @@ namespace Game.UI.Driving
                 float lens = Mathf.Clamp01(-d - bz + 0.5f);                // 1 on the lens
                 float depth = Mathf.Max(0f, -d - bz);                      // px into the lens from the bezel
                 // lens: backlit diffuser - hot middle, dimmer rim, recess shadow under the top bezel, light catch at the bottom
-                float rimT = Mathf.Clamp01(depth / 13f);
+                float rimT = Mathf.Clamp01(depth / 9f);
                 float l = 0.66f + 0.34f * rimT * rimT * (3f - 2f * rimT);
                 l *= 1f - 0.38f * Mathf.Max(0f, up) * Mathf.Clamp01(1f - depth / 4f);
                 l += 0.10f * Mathf.Max(0f, -up) * Mathf.Clamp01(1f - depth / 2.5f);
@@ -465,7 +465,7 @@ namespace Game.UI.Driving
             }
             tex.SetPixels32(px);
             tex.Apply(false, true);
-            float b = Mathf.Ceil(m + ro + 13f);
+            float b = Mathf.Ceil(m + ro + 9f);
             s_LensSprite = Sprite.Create(tex, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f), 100f * ppu, 0, SpriteMeshType.FullRect, new Vector4(b, b, b, b));
             s_LensSprite.hideFlags = HideFlags.HideAndDontSave;
             return s_LensSprite;
