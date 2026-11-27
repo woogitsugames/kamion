@@ -2161,22 +2161,36 @@ OSM_DUP_M = 25.0                 # an OSM HV line within this of a BDOT10k HV li
 OSM_DUP_SHARE = 0.7
 RULE_MERGE_M = 60.0              # a rule angle-point tower this close to a mapped neighbour merges into it (WORKING_VALUE)
 # MV lines (BDOT10k "... średniego napięcia", OSM power=line 1-60 kV): concrete poles + 3 conductors of the tile's
-# props.power_pole, High only, only up to MV_FAR_MAX_M outside the tile (a 12 m pole is < 1 px beyond it). The
-# critic's frame (dk65-07 owner02_seam_n_cab) looks along such a line of dk65-08 - it was drawn as 27 m towers.
-MV_FAR_MAX_M = 600.0
+# props.power_pole, High only, only up to MV_FAR_MAX_M outside the tile (beyond ~380 m a 12 m pole + 10 mm wires sit
+# 600-1200 m from the driver and only formed a grey cage over the forest edge; ADR 0351 addendum).
+MV_FAR_MAX_M = 380.0
 MV_RULE_MERGE_M = 25.0
+MV_MIN_EFF_SEP_M = 28.0
+HIGH_HV_MAX_D_M = 3400.0         # beyond 3.4 km radial compression < 2 % and haze hides steel silhouettes (WORKING_VALUE)
+FAR_HV_SILHOUETTE_D_M = 800.0    # High switches from open 3D A-frame to crisp open ribbon "A"/"Y" silhouette (WORKING_VALUE)
+FAR_HV_SIMPLE_ARMS_D_M = 1500.0  # beyond 1.5 km, 2-tier "Y" arms stay iconic without merging into a grey block (WORKING_VALUE)
+FAR_HV_WIRE_FULL_D_M = 450.0     # all 7 conductors near the tile seam; 3 main silhouette wires beyond (WORKING_VALUE)
+FAR_HV_WIRE_MAX_D_M = 1050.0     # no opaque HV wire ribbons past ~1.1 km outside border (<0.03 px; WORKING_VALUE)
+LOW_HV_WIRE_MAX_D_M = 900.0      # Low tier wire cutoff (WORKING_VALUE)
 COL_FAR_CONCRETE = (0.16, 0.158, 0.15)    # x plaster_white of far_field_buildings: 0.36 rendered white (VQA r1)
 # Galvanised steel (ADR 0351): the tile's pylon_steel is linear 0.115-0.12; COL_PYLON_STEEL 0.27-0.30 (x plaster_white
 # of far_field_buildings) rendered snow white in sun. Per-tower +-12 % brightness / +-3 % warm-cool shift (weathered vs
 # newer zinc), vertex colour only: no material, no draw call. WORKING_VALUE, judged on the visual-QA frames.
 COL_PYLON_GALV = (0.150, 0.155, 0.160)
-COL_FAR_WIRE = (0.050, 0.050, 0.048)   # sunlit ribbon of 0.11 read light grey against the sky (VQA r1); real conductors read dark
-# Far conductors are opaque ribbons in submesh 0 (the <= 2 submeshes per sector contract, no Kamion/World Wire there):
-# full width = FAR_WIRE_PX_FRAC px of a 1080 px / 60 deg view at (distance outside the tile + FAR_WIRE_VIEW_M), never
-# under 2 x the tile's WIRE_HALF_W. MSAA / coverage then draw a faint line instead of a shimmering dotted one.
+COL_FAR_WIRE = (0.055, 0.056, 0.055)   # dark weathered aluminium; WorldSurface.shader softens contrast with distance
+# Far conductors are thin opaque ribbons in submesh 0 (<= 2 submeshes/sector, +0 draw calls): ADR 0351 addendum cuts
+# width in half (0.30 px HV / 0.24 px MV, capped at 0.085 / 0.040 m half-width so distant wires never swell into 40 cm
+# horizontal bars) and encodes (fadeStart_100m, -(100 + fadeEnd_100m)) in TEXCOORD_1 for WorldSurface.shader distance
+# fade matching Kamion/World Wire (COLOR_0.a stays 0.0, TEXCOORD_1.x >= 0.0). WORKING_VALUE.
 FAR_WIRE_PX_M = 2.0 * math.tan(math.radians(30.0)) / 1080.0
-FAR_WIRE_PX_FRAC = 0.6
+FAR_WIRE_PX_FRAC = 0.30
+FAR_MV_WIRE_PX_FRAC = 0.24
 FAR_WIRE_VIEW_M = 60.0
+FAR_WIRE_MAX_HALF_W = 0.085
+FAR_MV_WIRE_MAX_HALF_W = 0.040
+FAR_HV_WIRE_FADE_M = (350.0, 1350.0)
+FAR_MV_WIRE_FADE_M = (180.0, 480.0)
+FAR_WIRE_UV1_SENTINEL = 100.0    # uv1.y = -(100 + fadeEnd_100m) <= -100: disjoint from building facades & skyline (-16)
 
 
 def galv_colour(key: str) -> tuple:
@@ -2197,32 +2211,177 @@ def _arm_len() -> float:
     return PR.PYLON_ARM_L
 
 
+def _pylon_scale(s_h: float) -> float:
+    """Proportional silhouette scale for far-field HV towers (ADR 0351 addendum: was max(s_h, 0.65) which made distant
+    2-3 km towers stubby and wide enough to overlap into a grey mesh band)."""
+    return max(float(s_h), 0.38)
+
+
+def _hv_min_eff_sep(d_raw: float, tier: str) -> float:
+    """Minimum foreshortened XY separation [m] between any two drawn far-field HV towers (ADR 0351 addendum).
+    Prevents radial foreshortening from crushing 2-4 km spans into 1.6-15 m overlapping grey mesh bands."""
+    if tier == "Low":
+        return min(45.0 + 0.060 * max(float(d_raw) - 350.0, 0.0), 170.0)
+    return min(45.0 + 0.045 * max(float(d_raw) - 450.0, 0.0), 140.0)
+
+
+def _select_far_hv(plan: dict, half: float, tier: str) -> tuple[list[dict], list[tuple[dict, dict]]]:
+    """Density LOD for far-field HV towers & spans in foreshortened render space (ADR 0351 addendum).
+    Walks connected line chains near-to-far (seam anchors first), enforces _hv_min_eff_sep globally across all chains
+    so neither receding spans nor parallel lines stack into a grey band, and re-links consecutive kept supports."""
+    max_d = LOW_HV_MAX_D_M if tier == "Low" else HIGH_HV_MAX_D_M
+    nodes: dict[int, dict] = {}
+    adj: dict[int, list[int]] = {}
+    for a, b in plan["spans"]:
+        ia, ib = id(a), id(b)
+        nodes[ia] = a
+        nodes[ib] = b
+        adj.setdefault(ia, []).append(ib)
+        adj.setdefault(ib, []).append(ia)
+    if not nodes:
+        return [], []
+
+    eff_cache: dict[int, tuple[float, float, float, float]] = {
+        k: foreshorten_point(float(n["e"]), float(n["n"]), half) for k, n in nodes.items()
+    }
+    visited_edges: set[tuple[int, int]] = set()
+    chains: list[list[int]] = []
+
+    def ekey(u: int, v: int) -> tuple[int, int]:
+        return (u, v) if u < v else (v, u)
+
+    starts = [k for k, nbs in adj.items() if len(nbs) != 2 or nodes[k].get("seam")]
+    starts.sort(key=lambda k: (0 if nodes[k].get("seam") else 1, eff_cache[k][2], float(nodes[k]["e"]), float(nodes[k]["n"])))
+    for s in starts:
+        for nb in adj[s]:
+            ek = ekey(s, nb)
+            if ek in visited_edges:
+                continue
+            chain = [s, nb]
+            visited_edges.add(ek)
+            cur = nb
+            while len(adj[cur]) == 2 and not nodes[cur].get("seam"):
+                nxt = adj[cur][0] if adj[cur][1] == chain[-2] else adj[cur][1]
+                ek2 = ekey(cur, nxt)
+                if ek2 in visited_edges:
+                    break
+                visited_edges.add(ek2)
+                chain.append(nxt)
+                cur = nxt
+            chains.append(chain)
+    # Any closed cycles without degree!=2 vertices
+    for u in sorted(adj, key=lambda k: (eff_cache[k][2], float(nodes[k]["e"]), float(nodes[k]["n"]))):
+        for v in adj[u]:
+            ek = ekey(u, v)
+            if ek in visited_edges:
+                continue
+            chain = [u, v]
+            visited_edges.add(ek)
+            cur = v
+            while True:
+                nxt = next((x for x in adj[cur] if ekey(cur, x) not in visited_edges), None)
+                if nxt is None:
+                    break
+                visited_edges.add(ekey(cur, nxt))
+                chain.append(nxt)
+                cur = nxt
+            chains.append(chain)
+
+    for ch in chains:
+        if eff_cache[ch[-1]][2] < eff_cache[ch[0]][2]:
+            ch.reverse()
+    chains.sort(key=lambda ch: (0 if nodes[ch[0]].get("seam") else 1, eff_cache[ch[0]][2]))
+
+    kept_ids: set[int] = set()
+    kept_eff: list[tuple[float, float]] = []
+    render_spans: list[tuple[dict, dict]] = []
+    for ch in chains:
+        chain_kept: list[int] = []
+        for k in ch:
+            n = nodes[k]
+            ce, cn, dr, _ = eff_cache[k]
+            if n.get("seam"):
+                kept_ids.add(k)
+                chain_kept.append(k)
+                continue
+            if dr > max_d:
+                continue
+            if k in kept_ids:
+                chain_kept.append(k)
+                continue
+            req = _hv_min_eff_sep(dr, tier)
+            if all(math.hypot(ce - oe, cn - on) >= req for oe, on in kept_eff):
+                kept_ids.add(k)
+                kept_eff.append((ce, cn))
+                chain_kept.append(k)
+        for u, v in zip(chain_kept, chain_kept[1:]):
+            render_spans.append((nodes[u], nodes[v]))
+
+    # Keep deterministic order matching plan["pylons"]
+    render_pylons = [p for p in plan["pylons"] if id(p) in kept_ids and not p.get("seam")]
+    return render_pylons, render_spans
+
+
+def _select_far_mv(plan: dict, half: float) -> tuple[list[dict], list[tuple[dict, dict]]]:
+    """Thin far-field MV poles in foreshortened space so dense rural MV lines don't pack into a fence over trees."""
+    kept_ids: set[int] = set()
+    kept_eff: list[tuple[float, float]] = []
+    all_nodes: dict[int, dict] = {}
+    for a, b in plan["mv_spans"]:
+        all_nodes[id(a)] = a
+        all_nodes[id(b)] = b
+    order = sorted(all_nodes, key=lambda k: (0 if all_nodes[k].get("seam") else 1,
+                                             outside_dist(float(all_nodes[k]["e"]), float(all_nodes[k]["n"]), half)[4]))
+    for k in order:
+        n = all_nodes[k]
+        if n.get("seam"):
+            kept_ids.add(k)
+            continue
+        ce, cn, dr, _ = foreshorten_point(float(n["e"]), float(n["n"]), half)
+        if dr > MV_FAR_MAX_M:
+            continue
+        if all(math.hypot(ce - oe, cn - on) >= MV_MIN_EFF_SEP_M for oe, on in kept_eff):
+            kept_ids.add(k)
+            kept_eff.append((ce, cn))
+    poles = [p for p in plan["mv_poles"] if id(p) in kept_ids]
+    spans = [(a, b) for a, b in plan["mv_spans"] if id(a) in kept_ids and id(b) in kept_ids]
+    return poles, spans
+
+
 def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevation, half: float, tier: str,
                yaw: float = 0.0, arms: bool = True):
-    """Lattice tower (arms=True: three cross-arm levels of streetscape.props.pylon, arms along local v = across the
-    line when yaw = line direction) or a plain lattice mast (arms=False: telecom mast, water tower)."""
+    """Far-field HV tower or plain lattice mast (ADR 0351 + addendum).
+    - Near High (<= FAR_HV_SILHOUETTE_D_M): open tapered 3D A-frame matching props.pylon (foot -> waist -> spire peak,
+      3 slender cross-arms, light lower X-diagonals, NO heavy horizontal ring bars that blurred into a grey mesh).
+    - Far High (> FAR_HV_SILHOUETTE_D_M) and Low: iconic open vertical "A"/"Y" silhouette (splayed legs closing to a
+      sharp peak, 1 open lower X-brace, 2-3 slender Y-braced cross-arms; ~22-28 tris vs 222 tris before)."""
     e_raw, n_raw = float(py["e"]), float(py["n"])
     h_raw = max(float(py.get("h") or 26.0), 22.0)
     ce, cn, d_raw, _ = foreshorten_point(e_raw, n_raw, half)
     if tier == "Low" and d_raw > LOW_HV_MAX_D_M:
         return
+    if tier == "High" and d_raw > HIGH_HV_MAX_D_M:
+        return
     _, s_h = foreshorten_scales(d_raw)
     sec = sectors[sector_of(ce, cn, half)]
     z_ref = elev.z_at_eff(ce, cn)
     z_bot = z_ref - 0.8
-    h_eff = max(h_raw * s_h, 14.0)
+    h_eff = max(h_raw * s_h, 11.5)
     z_top = z_ref + h_eff
 
     ca, sa = math.cos(yaw), math.sin(yaw)
     ux, uy = ca, sa
     vx, vy = -sa, ca
     col = (*galv_colour(str(py.get("id") or f"{e_raw:.1f},{n_raw:.1f}")), 0.0)
-    scale = max(s_h, 0.65)
+    scale = _pylon_scale(s_h)
     arm_l = _arm_len()
 
-    # Tapered 4-sided lattice mast
-    w_bot = 2.1 * scale
-    w_top = 0.55 * scale
+    # Tapered Polish "A"-frame profile matching streetscape.props.pylon_half_width (wide splayed foot -> narrow waist
+    # under the lowest cross-arm -> sharp lightning-rod spire peak instead of a blunt box top).
+    w_bot = 2.15 * scale
+    w_waist = 0.72 * scale
+    w_peak = 0.06 * scale
+    z_waist = z_ref + h_eff * 0.60
 
     def ring_pts(w: float, z: float):
         return [
@@ -2232,61 +2391,85 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
             [ce - ux * w + vx * w, cn - uy * w + vy * w, z],
         ]
 
-    def arm_members(link, first_only=False):
-        # wave 12 (Low budget 30k): at Low only the arm level that carries the (single) conductor pair is drawn
-        for frac, _ in (_arm_levels()[:1] if first_only else _arm_levels()):
-            za = z_ref + h_eff * frac
-            sp = arm_l * scale
-            left = [ce - vx * sp, cn - vy * sp, za]
-            right = [ce + vx * sp, cn + vy * sp, za]
-            top = [ce, cn, za + max(0.75 * s_h, 0.45)]
-            link(left, right, 0.13 * scale)
-            link(left, top, 0.09 * scale)
-            link(top, right, 0.09 * scale)
-
-    if tier == "Low":
-        # ADR 0318: open lattice remains visible at every distance. At Low's
-        # angular size, ribbons retain its holes without 3-sided member tubes.
-        # All ribbon normals face the owning tile; no new material/submesh.
+    # Far horizon (> 800 m on High) and Low: crisp open vertical "A"/"Y" ribbon silhouette facing the owning tile.
+    # Only 2 outer splayed A-legs + 1 delicate internal X + Y-braced cross-arms -> wide open sky gap inside the "A",
+    # zero horizontal grid rings, ~22-28 tris instead of 222.
+    if tier == "Low" or d_raw > FAR_HV_SILHOUETTE_D_M:
         view = np.array([-ce, -cn, 0.0])
-        view /= np.linalg.norm(view)
+        vlen = float(np.linalg.norm(view))
+        view = view / vlen if vlen > 1e-6 else np.array([0.0, -1.0, 0.0])
+        side = np.array([-view[1], view[0], 0.0])
 
         def ribbon(a, b, radius):
             a, b = np.asarray(a, float), np.asarray(b, float)
             axis = b - a
-            axis /= np.linalg.norm(axis)
+            alen = float(np.linalg.norm(axis))
+            if alen < 1e-6:
+                return
+            axis /= alen
             width = np.cross(axis, view)
-            if np.linalg.norm(width) < 1e-8:
+            wlen = float(np.linalg.norm(width))
+            if wlen < 1e-8:
                 width = np.cross(axis, np.array([0.0, 0.0, 1.0]))
-            width *= radius / np.linalg.norm(width)
+                wlen = float(np.linalg.norm(width))
+            width *= radius / max(wlen, 1e-8)
             sec.add_quad0(a - width, a + width, b + width, b - width, col)
 
-        rb, rt = ring_pts(w_bot, z_bot), ring_pts(w_top, z_top)
-        for a, b in zip(rb, rt):
-            ribbon(a, b, 0.13 * scale)
-        # Two adjoining mast faces show the lattice in both perpendicular
-        # views. The other faces coincide in the distant silhouette.
-        facing = sorted(range(4), key=lambda k: float(np.dot(
-            np.array([(rb[(k + 1) % 4][1] - rb[k][1]),
-                      -(rb[(k + 1) % 4][0] - rb[k][0]), 0.0]), view)), reverse=True)[:2]
-        rings = [ring_pts(w_bot + (w_top - w_bot) * f, z_bot + (z_top - z_bot) * f)
-                 for f in np.linspace(0.0, 1.0, 4)]
-        for panel, (lower, upper) in enumerate(zip(rings[:-1], rings[1:])):
-            for k in facing:
-                q = (k + 1) % 4
-                a, b = (k, q) if (panel + k) % 2 == 0 else (q, k)
-                ribbon(lower[a], upper[b], 0.075 * scale)
+        sx_v, sy_v = float(side[0]), float(side[1])
+        foot_l = [ce - sx_v * w_bot, cn - sy_v * w_bot, z_bot]
+        foot_r = [ce + sx_v * w_bot, cn + sy_v * w_bot, z_bot]
+        waist_l = [ce - sx_v * w_waist, cn - sy_v * w_waist, z_waist]
+        waist_r = [ce + sx_v * w_waist, cn + sy_v * w_waist, z_waist]
+        peak = [ce, cn, z_top]
+
+        # Open "A"-frame silhouette: splayed lower legs -> slender upper spire closing to sharp peak
+        r_leg = (0.16 if d_raw > 1400.0 else 0.14) * scale
+        ribbon(foot_l, waist_l, r_leg)
+        ribbon(foot_r, waist_r, r_leg)
+        ribbon(waist_l, peak, r_leg * 0.85)
+        ribbon(waist_r, peak, r_leg * 0.85)
+        # Single delicate internal X-brace in the lower "A" cavity (no horizontal grid bars)
+        mid_f = 0.08
+        ml = [foot_l[0] + (waist_l[0] - foot_l[0]) * mid_f, foot_l[1] + (waist_l[1] - foot_l[1]) * mid_f,
+              z_bot + (z_waist - z_bot) * mid_f]
+        mr = [foot_r[0] + (waist_r[0] - foot_r[0]) * mid_f, foot_r[1] + (waist_r[1] - foot_r[1]) * mid_f,
+              z_bot + (z_waist - z_bot) * mid_f]
+        ribbon(ml, waist_r, 0.065 * scale)
+        ribbon(mr, waist_l, 0.065 * scale)
+
         if arms:
-            arm_members(ribbon, first_only=True)
+            levels = _arm_levels()
+            # Keep true cross-arm azimuth while wired; beyond wire range ensure edge-on towers still show a "Y" head
+            ax, ay = vx, vy
+            arm_proj = abs(vx * sx_v + vy * sy_v)
+            if d_raw > FAR_HV_WIRE_MAX_D_M and arm_proj < 0.55:
+                ax, ay = sx_v, sy_v
+            if tier == "Low":
+                use_levels = [(levels[0][0], 1.0), (levels[2][0], 0.78)]
+            elif d_raw > FAR_HV_SIMPLE_ARMS_D_M:
+                use_levels = [(levels[0][0], 1.0), (levels[2][0], 0.78)]
+            else:
+                use_levels = [(levels[0][0], 1.0), (levels[1][0], 0.94), (levels[2][0], 0.82)]
+            for frac, w_mul in use_levels:
+                za = z_ref + h_eff * frac
+                sp = arm_l * scale * w_mul
+                left = [ce - ax * sp, cn - ay * sp, za]
+                right = [ce + ax * sp, cn + ay * sp, za]
+                top = [ce, cn, za + max(1.15 * s_h, 0.55)]
+                # Angled Y-ties + slender chord (thinner than vertical legs so arms never dominate as horizontal bars)
+                ribbon(left, right, 0.085 * scale)
+                ribbon(left, top, 0.065 * scale)
+                ribbon(top, right, 0.065 * scale)
         return
 
-    # Open lattice, including in Low: solid crossed fins read as grey cones
-    # against the sky (drive-review-s24 #15). Uncapped triangular members keep
-    # holes visible at any yaw, without textures or additional draw calls.
+    # Near-ring High (<= 800 m outside border): open 3D tapered A-frame matching props.pylon without horizontal rings.
     def member(a, b, radius):
         a, b = np.asarray(a, float), np.asarray(b, float)
         axis = b - a
-        axis /= np.linalg.norm(axis)
+        alen = float(np.linalg.norm(axis))
+        if alen < 1e-6:
+            return
+        axis /= alen
         ref = np.array([0., 0., 1.]) if abs(axis[2]) < 0.9 else np.array([1., 0., 0.])
         u = np.cross(axis, ref)
         u /= np.linalg.norm(u)
@@ -2298,22 +2481,29 @@ def _add_pylon(sectors: dict[str, SectorBuilder], py: dict, elev: BorderElevatio
             sec.add_quad0(a + offsets[k], a + offsets[q], b + offsets[q], b + offsets[k], col)
 
     rb = ring_pts(w_bot, z_bot)
-    rt = ring_pts(w_top, z_top)
-    for a, b in zip(rb, rt):
-        member(a, b, 0.13 * scale)
-    rings = [ring_pts(w_bot + (w_top - w_bot) * f, z_bot + (z_top - z_bot) * f)
-             for f in np.linspace(0.0, 1.0, 4)]
-    for panel, (lower, upper) in enumerate(zip(rings[:-1], rings[1:])):
+    rw = ring_pts(w_waist, z_waist)
+    rt = ring_pts(w_peak, z_top)
+    for a, b, c in zip(rb, rw, rt):
+        member(a, b, 0.115 * scale)
+        member(b, c, 0.095 * scale)
+    # Two light diagonal lacing panels on the lower A-shaft (no horizontal ring bars -> open lattice, never a grid)
+    z_mid = 0.5 * (z_bot + z_waist)
+    rm = ring_pts(0.5 * (w_bot + w_waist), z_mid)
+    for panel, (lower, upper) in enumerate(((rb, rm), (rm, rw))):
         for k in range(4):
             q = (k + 1) % 4
-            # Alternating lacing on opposite faces reads as X in projection;
-            # three panels keep the ring's hundreds of towers inexpensive.
             a, b = (k, q) if (panel + k) % 2 == 0 else (q, k)
-            member(lower[a], upper[b], 0.075 * scale)
-            member(upper[k], upper[q], 0.075 * scale)
-    # Three cross-arm levels of the tile's tower (streetscape.props.pylon): the conductors hang under their tips
+            member(lower[a], upper[b], 0.055 * scale)
     if arms:
-        arm_members(member)
+        for frac, _ in _arm_levels():
+            za = z_ref + h_eff * frac
+            sp = arm_l * scale
+            left = [ce - vx * sp, cn - vy * sp, za]
+            right = [ce + vx * sp, cn + vy * sp, za]
+            top = [ce, cn, za + max(1.05 * s_h, 0.50)]
+            member(left, right, 0.095 * scale)
+            member(left, top, 0.065 * scale)
+            member(top, right, 0.065 * scale)
 
 
 def _on_seam(p, half: float) -> bool:
@@ -2524,24 +2714,38 @@ def _add_pole(sectors: dict[str, SectorBuilder], s: dict, elev: BorderElevation,
 
 def _add_span(sectors: dict[str, SectorBuilder], a: dict, b: dict, elev: BorderElevation, half: float, tier: str,
               mv: bool = False):
-    """Conductors of one span between two supports (far towers / poles or the tile's seam support) as opaque ribbons
-    in submesh 0 (ADR 0351). HV: under the arm tips of both towers, six phases + earth wire on High, the lowest pair
-    on Low. MV (High only): three conductors on the cross-arm of props.power_pole (-0.8 / 0 / +0.8 m, H - 0.3)."""
+    """Conductors of one span between two supports (far towers / poles or the tile's seam support) as thin opaque
+    ribbons in submesh 0 (ADR 0351 + addendum).
+    - Distance LOD: HV High draws all 7 conductors up to FAR_HV_WIRE_FULL_D_M (seam continuity), 3 main conductors up
+      to FAR_HV_WIRE_MAX_D_M, and 0 beyond (a 24 mm cable at >1.4 km is <0.03 px; prevents horizon horizontal mesh).
+    - Width: thinner (0.30 px HV / 0.24 px MV, capped) and gently tapered with true distance.
+    - Shader fade: TEXCOORD_1 = (fadeStart/100, -(100 + fadeEnd/100)) with COLOR_0.a = 0.0; WorldSurface.shader
+      (_FAR_FACADE) softens contrast with coverage + true distance like Kamion/World Wire."""
     from streetscape import furniture as FU
     from roads import standards as S
     ends = []
+    d_raws = []
     for s in (a, b):
         ce, cn, d_raw, _ = foreshorten_point(float(s["e"]), float(s["n"]), half)
-        if tier == "Low" and (mv or d_raw > LOW_HV_MAX_D_M):
+        if tier == "Low" and (mv or d_raw > LOW_HV_WIRE_MAX_D_M):
             return
+        d_raws.append(d_raw)
         _, s_h = foreshorten_scales(d_raw)
         if mv:
             s_h = 1.0 if s.get("seam") else s_h
             ends.append((np.array([ce, cn]), elev.z_at_eff(ce, cn), S.GROUND_PROP_H["power_pole"] * s_h,
-                         1.0 if s.get("seam") else max(s_h, 0.65)))
+                         1.0 if s.get("seam") else _pylon_scale(s_h)))
             continue
-        h_eff = PYLON_H_M if s.get("seam") else max(float(s.get("h") or PYLON_H_M) * s_h, 14.0)
-        ends.append((np.array([ce, cn]), elev.z_at_eff(ce, cn), h_eff, 1.0 if s.get("seam") else max(s_h, 0.65)))
+        h_eff = PYLON_H_M if s.get("seam") else max(float(s.get("h") or PYLON_H_M) * s_h, 11.5)
+        ends.append((np.array([ce, cn]), elev.z_at_eff(ce, cn), h_eff, 1.0 if s.get("seam") else _pylon_scale(s_h)))
+    d_min, d_max = min(d_raws), max(d_raws)
+    d_mid = 0.5 * (d_min + d_max)
+    if mv:
+        if d_min > MV_FAR_MAX_M:
+            return
+    elif tier == "High":
+        if d_min > FAR_HV_WIRE_MAX_D_M or d_max > FAR_HV_WIRE_MAX_D_M + 350.0:
+            return
     (pa, za0, ha, ka), (pb, zb0, hb, kb) = ends
     L = float(np.hypot(*(pb - pa)))
     if L < 5.0:
@@ -2557,20 +2761,33 @@ def _add_span(sectors: dict[str, SectorBuilder], a: dict, b: dict, elev: BorderE
     if mv:
         hmv = S.GROUND_PROP_H["power_pole"]
         hang = [(o, (hmv - 0.3) / hmv) for o in (-0.8, 0.0, 0.8)]
-        nseg = min(max(int(math.ceil(L / 20.0)), 3), 5)
+        nseg = min(max(int(math.ceil(L / 22.0)), 3), 5)
+        px_frac, max_hw = FAR_MV_WIRE_PX_FRAC, FAR_MV_WIRE_MAX_HALF_W
+        f0, f1 = FAR_MV_WIRE_FADE_M
     elif tier == "Low":
         hang = [(sx * arm_l, levels[0][1]) for sx in (-1.0, 1.0)]
-        nseg = min(max(int(math.ceil(L / 90.0)), 3), 4)   # wave 12: Low budget 30k (was L/40, cap 8: C Low 32351 tris)
+        nseg = min(max(int(math.ceil(L / 90.0)), 3), 4)
+        px_frac, max_hw = FAR_WIRE_PX_FRAC, FAR_WIRE_MAX_HALF_W
+        f0, f1 = FAR_HV_WIRE_FADE_M
     else:
-        hang = [(sx * arm_l, zf) for _, zf in levels for sx in (-1.0, 1.0)] + [(0.0, 1.0)]
-        nseg = min(max(int(math.ceil(L / 15.0)), 6), 24)
+        if d_mid <= FAR_HV_WIRE_FULL_D_M:
+            hang = [(sx * arm_l, zf) for _, zf in levels for sx in (-1.0, 1.0)] + [(0.0, 1.0)]
+        else:
+            # Mid far-field (450..1050 m): 3 main silhouette lines (lowest outer pair + earth) instead of 7 stacked bars
+            hang = [(-arm_l, levels[0][1]), (arm_l, levels[0][1]), (0.0, 1.0)]
+        nseg = min(max(int(math.ceil(L / 18.0)), 5), 18)
+        px_frac, max_hw = FAR_WIRE_PX_FRAC, FAR_WIRE_MAX_HALF_W
+        f0, f1 = FAR_HV_WIRE_FADE_M
     col = (*COL_FAR_WIRE, 0.0)
+    wire_uv1 = np.full((4, 2), [f0 / 100.0, -(FAR_WIRE_UV1_SENTINEL + f1 / 100.0)], dtype=np.float64)
     for o, zf in hang:
         za, zb = za0 + ha * zf, zb0 + hb * zf
         t, Z, _ = FU.catenary_span(L, za, zb, step=L / nseg)
         Q = pa[None] + (pb - pa)[None] * t[:, None] + nn[None] * (o * (ka * (1.0 - t) + kb * t))[:, None]
         d_out = np.array([outside_dist(float(q[0]), float(q[1]), half)[4] for q in Q])
-        hw = np.maximum(0.5 * FAR_WIRE_PX_FRAC * FAR_WIRE_PX_M * (d_out + FAR_WIRE_VIEW_M), FU.WIRE_HALF_W)
+        d_true = unforeshorten_dist(d_out)
+        taper = np.clip(1.0 - 0.50 * np.maximum(d_true - f0, 0.0) / max(f1 - f0, 1.0), 0.45, 1.0)
+        hw = np.clip(0.5 * px_frac * FAR_WIRE_PX_M * (d_out + FAR_WIRE_VIEW_M) * taper, FU.WIRE_HALF_W, max_hw)
         for i in range(len(Q) - 1):
             b0 = [Q[i, 0], Q[i, 1], Z[i] - hw[i]]
             b1 = [Q[i + 1, 0], Q[i + 1, 1], Z[i + 1] - hw[i + 1]]
@@ -2578,9 +2795,9 @@ def _add_span(sectors: dict[str, SectorBuilder], a: dict, b: dict, elev: BorderE
             t0 = [Q[i, 0], Q[i, 1], Z[i] + hw[i]]
             f = np.cross(np.subtract(b1, b0), np.subtract(t0, b0))
             if float(np.dot(f, normal)) >= 0.0:
-                sec.add_quad0(b0, b1, t1, t0, col, normal=normal)
+                sec.add_quad0(b0, b1, t1, t0, col, uv1=wire_uv1, normal=normal)
             else:
-                sec.add_quad0(b1, b0, t0, t1, col, normal=normal)
+                sec.add_quad0(b1, b0, t0, t1, col, uv1=wire_uv1, normal=normal)
 
 
 def _corridor_treelines(half: float = 1024.0, region_id: str = "bialystok-industrial-c") -> list[dict]:
@@ -2700,16 +2917,18 @@ def build_far_field(region_id: str, out_root: Path | None = None) -> dict:
             _add_landmark_stack_proxy(skyline, st, elev, tier)
         skyline.sort_far_to_near()
 
-        for py in plan["pylons"]:
+        hv_pylons, hv_spans = _select_far_hv(plan, half, tier)
+        for py in hv_pylons:
             _add_pylon(sectors, py, elev, half, tier, yaw=float(py["yaw"]))
         for py in plan["masts"]:
             _add_pylon(sectors, py, elev, half, tier, yaw=float(py.get("yaw", 0.4)), arms=False)
-        for a, b in plan["spans"]:
+        for a, b in hv_spans:
             _add_span(sectors, a, b, elev, half, tier)
         if tier == "High":
-            for s in plan["mv_poles"]:
+            mv_poles, mv_spans = _select_far_mv(plan, half)
+            for s in mv_poles:
                 _add_pole(sectors, s, elev, half)
-            for a, b in plan["mv_spans"]:
+            for a, b in mv_spans:
                 _add_span(sectors, a, b, elev, half, tier, mv=True)
 
         glb = GLB(all_materials, compact=compact)

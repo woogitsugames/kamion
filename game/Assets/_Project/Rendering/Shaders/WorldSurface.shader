@@ -218,7 +218,28 @@ Shader "Kamion/World Surface"
                 o.positionWS = p.positionWS;
                 o.normalWS = TransformObjectToWorldNormal(v.normalOS);
             #if defined(_FAR_FACADE)
-                o.fogFactor = KamionFogTauExtra(p.positionWS, p.positionCS.w, KamionFarExtraDist(v.positionOS.xz, v.uv1.x));
+                float farExtra = KamionFarExtraDist(v.positionOS.xz, v.uv1.x);
+                half fogTau = KamionFogTauExtra(p.positionWS, p.positionCS.w, farExtra);
+                o.uv1 = v.uv1;
+                // ADR 0351 addendum: far-field conductor ribbons carry COLOR_0.a == 0 and
+                // TEXCOORD_1 = (fadeStart_100m, -(100 + fadeEnd_100m)). Attenuate contrast with
+                // physical pixel coverage + true distance fade into aerial perspective (matching
+                // Kamion/World Wire) without extra materials, submeshes or draw calls.
+                if (v.color.a < 0.05 && v.uv1.y <= -99.5)
+                {
+                    float trueDist = p.positionCS.w + farExtra;
+                    float fadeStart = v.uv1.x * 100.0;
+                    float fadeEnd = (-v.uv1.y - 100.0) * 100.0;
+                    float px = 2.0 * max(p.positionCS.w, 1.0) / (abs(UNITY_MATRIX_P._m11) * max(_ScaledScreenParams.y, 1.0));
+                    float physHalfW = (fadeEnd > 800.0) ? 0.012 : 0.008;
+                    float covVis = pow(saturate((physHalfW / max(px, 1e-4)) / 0.6), 0.5);
+                    float distVis = 1.0 - smoothstep(fadeStart, max(fadeEnd, fadeStart + 1.0), trueDist);
+                    float wireVis = saturate(covVis * distVis);
+                    float floorVis = (fadeEnd > 800.0) ? 0.10 : 0.28;
+                    fogTau += (half)(-log(max(lerp(floorVis, 1.0, wireVis), 0.05)));
+                    o.uv1.x = distVis;
+                }
+                o.fogFactor = fogTau;
             #else
                 o.fogFactor = KamionFogTau(p.positionWS, p.positionCS.w);
             #endif
@@ -227,7 +248,6 @@ Shader "Kamion/World Surface"
                 o.farOwner = KamionFarRingOwner();
             #endif
             #if defined(_FAR_FACADE)
-                o.uv1 = v.uv1;
                 if (v.uv1.x <= -15.5)   // ADR 0141 skyline flag: restore the window-grid coordinate, keep it in view
                 {
                     o.uv1.x = -v.uv1.x - (v.uv1.x <= -4000.0 ? 4096.0 : 16.0);
@@ -250,6 +270,9 @@ Shader "Kamion/World Surface"
                 UNITY_SETUP_INSTANCE_ID(i);
             #if defined(_FAR_RING_CLIP)
                 if (KamionFarRingHidden(i.positionWS.xz, i.farOwner)) discard;   // ADR 0354
+            #if defined(_FAR_FACADE)
+                if (i.masks.a < 0.05h && i.uv1.y <= -99.5 && i.uv1.x <= 0.005) discard;   // ADR 0351 addendum: wire faded out
+            #endif
             #endif
                 half3 n = normalize(i.normalWS);
                 float2 uvm = ProjectUV(i.positionWS, n);
@@ -471,6 +494,9 @@ Shader "Kamion/World Surface"
             #if defined(_FAR_RING_CLIP)
                 float2 positionWSxz : TEXCOORD0;
                 float3 farOwner : TEXCOORD1;   // ADR 0354: same clip as ForwardLit
+            #if defined(_FAR_FACADE)
+                float2 wireFade : TEXCOORD2;   // ADR 0351 addendum: match ForwardLit wire fade discard
+            #endif
             #endif
             };
             V DepthVert(A v)
@@ -479,6 +505,17 @@ Shader "Kamion/World Surface"
             #if defined(_FAR_RING_CLIP)
                 o.positionWSxz = TransformObjectToWorld(v.positionOS.xyz).xz;
                 o.farOwner = KamionFarRingOwner();
+            #if defined(_FAR_FACADE)
+                o.wireFade = float2(1.0, v.uv1.y);
+                if (v.uv1.y <= -99.5)
+                {
+                    float farExtra = KamionFarExtraDist(v.positionOS.xz, v.uv1.x);
+                    float trueDist = o.positionCS.w + farExtra;
+                    float fadeStart = v.uv1.x * 100.0;
+                    float fadeEnd = (-v.uv1.y - 100.0) * 100.0;
+                    o.wireFade.x = 1.0 - smoothstep(fadeStart, max(fadeEnd, fadeStart + 1.0), trueDist);
+                }
+            #endif
             #endif
             #if defined(_FAR_FACADE)
                 o.positionCS = KamionFarSkyline(o.positionCS, v.uv1.x);   // ADR 0141: same depth as ForwardLit
@@ -489,6 +526,9 @@ Shader "Kamion/World Surface"
             {
             #if defined(_FAR_RING_CLIP)
                 if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
+            #if defined(_FAR_FACADE)
+                if (i.wireFade.y <= -99.5 && i.wireFade.x <= 0.005) discard;
+            #endif
             #endif
                 return 0;
             }

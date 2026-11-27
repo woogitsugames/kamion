@@ -118,3 +118,81 @@ def test_far_field_mv_line_near_the_tile_gets_poles_and_three_conductors():
     lows = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
     FF._add_span(lows, a, b, elev, half, "Low", mv=True)
     assert not any(x.primitives() for x in lows.values())     # MV: High only
+
+
+def test_far_hv_density_lod_prevents_foreshortened_overlap():
+    """ADR 0351 addendum: foreshortening crushes 2-4 km spans into 1.6-15 m gaps; _select_far_hv enforces minimum
+    foreshortened spacing across receding and parallel lines so towers never merge into a grey band."""
+    half = 1024.0
+    # Two parallel receding HV lines (55 m apart) running 0..3800 m outside the north border
+    pts1 = [[738.0, half + d] for d in range(0, 3801, 250)]
+    pts2 = [[793.0, half + d] for d in range(0, 3801, 250)]
+    lines = [{"pts": pts1, "hv": True, "src": "bdot10k", "id": "hv1"},
+             {"pts": pts2, "hv": True, "src": "bdot10k", "id": "hv2"}]
+    plan = FF.power_plan(_gis(lines, []), half)
+    assert len(plan["pylons"]) >= 24
+    for tier in ("High", "Low"):
+        rp, rs = FF._select_far_hv(plan, half, tier)
+        assert len(rp) < len(plan["pylons"])
+        assert len(rp) >= 4
+        effs = [FF.foreshorten_point(p["e"], p["n"], half) for p in rp]
+        max_d = FF.LOW_HV_MAX_D_M if tier == "Low" else FF.HIGH_HV_MAX_D_M
+        assert all(dr <= max_d + 1e-6 for _, _, dr, _ in effs)
+        for i in range(len(effs)):
+            for j in range(i + 1, len(effs)):
+                sep = float(np.hypot(effs[i][0] - effs[j][0], effs[i][1] - effs[j][1]))
+                req = min(FF._hv_min_eff_sep(effs[i][2], tier), FF._hv_min_eff_sep(effs[j][2], tier))
+                assert sep >= req - 1e-6, f"{tier}: towers too close in eff space ({sep:.1f} < {req:.1f})"
+        # Near seam both parallel lines remain anchored to their seam supports
+        seam_spans = [ab for ab in rs if ab[0].get("seam") or ab[1].get("seam")]
+        assert len(seam_spans) == 2
+
+
+def test_far_pylon_silhouette_open_and_lightweight():
+    """ADR 0351 addendum: far-field towers drop heavy horizontal ring bars, close to a tapered A-frame spire peak,
+    and switch past FAR_HV_SILHOUETTE_D_M (and on Low) to a crisp open A/Y ribbon silhouette (<= 30 tris)."""
+    half = 1024.0
+    elev = FF.BorderElevation(half, [100.0] * 2, [100.0] * 2, [100.0] * 2, [100.0] * 2)
+    # Near High (300 m out): open 3D A-frame without horizontal rings (< old 222 tris)
+    sec_near = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+    FF._add_pylon(sec_near, {"id": "p_near", "e": 0.0, "n": half + 300.0, "h": 32.0}, elev, half, "High", yaw=0.0)
+    p_near = sec_near["far_north"].primitives()[0]
+    assert len(p_near["T"]) <= 160
+    assert p_near["mat"] == "far_field_buildings"
+    assert set(p_near["COL"][:, 3]) == {0.0}
+    assert p_near["UV1"][:, 0].min() >= 0.0
+    # Far High (1800 m out) & Low: crisp A/Y ribbon silhouette (<= 30 tris)
+    for tier, dist in (("High", 1100.0), ("High", 2200.0), ("Low", 400.0)):
+        sec = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+        FF._add_pylon(sec, {"id": "p_far", "e": 0.0, "n": half + dist, "h": 32.0}, elev, half, tier, yaw=0.0)
+        p = sec["far_north"].primitives()[0]
+        assert 12 <= len(p["T"]) <= 30, f"{tier}@{dist}: unexpected tri count {len(p['T'])}"
+        assert set(p["COL"][:, 3]) == {0.0}
+        assert p["UV1"][:, 0].min() >= 0.0
+
+
+def test_far_span_wire_lod_thinning_and_shader_fade_uv1():
+    """ADR 0351 addendum: far conductors use thinner capped widths, drop from 7 -> 3 -> 0 with distance, and carry
+    distance-fade metadata in TEXCOORD_1 (uv1.x >= 0, uv1.y <= -100, COLOR_0.a == 0) for WorldSurface.shader."""
+    half = 1024.0
+    elev = FF.BorderElevation(half, [100.0] * 2, [100.0] * 2, [100.0] * 2, [100.0] * 2)
+    # Near seam: 7 conductors + wire fade UV1
+    sec_near = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+    FF._add_span(sec_near, {"e": half, "n": 0.0, "h": 32.0, "seam": True},
+                 {"e": half + 200.0, "n": 0.0, "h": 32.0, "seam": False}, elev, half, "High")
+    p_near = sec_near["far_east"].primitives()[0]
+    assert set(p_near["COL"][:, 3]) == {0.0}
+    assert p_near["UV1"][:, 0].min() >= 0.0
+    assert p_near["UV1"][:, 1].max() <= -FF.FAR_WIRE_UV1_SENTINEL
+    # Mid distance (650..900 m): reduced to 3 silhouette conductors (< half the tris of near seam)
+    sec_mid = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+    FF._add_span(sec_mid, {"e": half + 650.0, "n": 0.0, "h": 32.0, "seam": False},
+                 {"e": half + 900.0, "n": 0.0, "h": 32.0, "seam": False}, elev, half, "High")
+    p_mid = sec_mid["far_east"].primitives()[0]
+    assert 0 < len(p_mid["T"]) < len(p_near["T"])
+    assert p_mid["UV1"][:, 1].max() <= -FF.FAR_WIRE_UV1_SENTINEL
+    # Far horizon (> 1400 m): 0 opaque wire ribbons
+    sec_far = {s: FF.SectorBuilder(s) for s in FF.SECTORS}
+    FF._add_span(sec_far, {"e": half + 1500.0, "n": 0.0, "h": 32.0, "seam": False},
+                 {"e": half + 1800.0, "n": 0.0, "h": 32.0, "seam": False}, elev, half, "High")
+    assert not sec_far["far_east"].primitives()
