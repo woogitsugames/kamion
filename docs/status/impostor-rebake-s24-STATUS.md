@@ -49,5 +49,5 @@
   (StartClearanceTests dk65-07 — stara scena z win-build, środowisko). ImpostorTrimTests 5/5 (w tym ShippedImpostorAtlases
   na 4096×1024), testy roślinności 24/24. Dowody skopiowane do main `artifacts/impostor-rebake-s24/`. KONIEC zadania.
 - NASTĘPNY KROK (lider): review + scalenie gałęzi `worktree-agent-af9193d9e837e4652`; reimport regionów
-  (`pwsh scripts/import-region.ps1 -Region <id> -SkipCopy -BuildTarget Win64`) żeby atlasy/trim weszły do _Generated;
+  (`pwsh scripts/import-region.ps1 -Region <id> -BuildTarget Win64`) żeby atlasy/trim weszły do _Generated;
   build knyszyn-w + oględziny w playerze (A2C) i visual-critic; decyzja o albedo 4096 na High/Ultra (grupa mipmap w QualitySettings).
