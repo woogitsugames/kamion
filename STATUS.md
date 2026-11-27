@@ -31,3 +31,5 @@
 - Następny krok po generatorze DrivingLab: przywrócić uboczne modyfikacje plików śledzonych przez Git, następnie `pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64`.
 - `build-lab.ps1 -SkipAudio -BuildTarget Win64` zwrócił `DRIVINGLAB_RESULT: OK`. Prefab TRAKT ma GUID oczekiwany przez scenę (`4cd4c98f4f348194ea87e419fbf570d6`). Przywrócono cztery śledzone pliki przepisane przez generator, zachowując lokalne wygenerowane prefaby.
 - Następny krok: `pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64`.
+- Powtórny PlayMode Win64 na scenie z gita i odtworzonych prefabach: 224 testy, 207 zaliczonych, 0 błędów, 17 pominiętych. XML: `tests/playmode-20261127-164429.xml`.
+- Następny krok: pod slotem heavy `& $python -m pytest -q tests/gis`.
