@@ -36,3 +36,5 @@
 - Następny krok: pwsh scripts/test.ps1 -Platform PlayMode -BuildTarget Win64 -Filter Game.Tests.PcHudGc0244Tests
 - Krok 9. PlayMode Win64 2/2. Test odświeżania HUD potwierdził aktywną rurę i zastrzał, wygaszoną stopę oraz 0 próbek GC.Alloc przy 500 odświeżeniach z ruchem prawego mocowania na 1920 × 1080 i 2560 × 1080.
 - Następny krok to `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` z wygenerowanym ciągnikiem.
+- Krok 10. Końcowy EditMode Win64 z prefabem TRAKT: 1524 zielone, 0 niepowodzeń, 122 pominięte. MirrorMount0340Tests 13/13. Zapisano XML, log i wyniki w dopisku 3. Slot zwolniony.
+- Następny krok dla lidera to `git diff c8ca07835..codex-mirror-right-s24` i przegląd zestawień `artifacts/codex-mirror-right-s24/comparison-*.png`.

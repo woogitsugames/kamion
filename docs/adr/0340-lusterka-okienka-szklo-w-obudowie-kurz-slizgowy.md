@@ -189,3 +189,5 @@ Visual QA DrivingLab, Win64 PC High, 1920 × 1080, clear i overcast. Przed zmian
 | 75° | 152 → 152 | 175 513 → 175 513 |
 
 Statystyki obu wariantów pogody pochodzą z `stats.txt` i opisują scenę 3D. Dowody w `artifacts/codex-mirror-right-s24/` obejmują `before/`, `after/`, zestawienia `comparison-{clear,overcast}.png` (960 × 870) i zbliżenia `right-detail-{clear,overcast}.png`.
+
+EditMode Win64 z pełnym prefabem TRAKT zakończył się wynikiem 1524 zielonych z 1646, 0 niepowodzeń i 122 pominięte. `MirrorMount0340Tests` przeszły 13/13, w tym pięć nowych przypadków. PlayMode `PcHudGc0244Tests` przeszedł 2/2, w tym 0 próbek `GC.Alloc` przy 500 odświeżeniach z poruszającym się rzutem prawego słupka dla każdej z rozdzielczości 1920 × 1080 i 2560 × 1080. Cztery bramki budżetowe GIS przeszły 62/62. XML i logi są w katalogu dowodów.
