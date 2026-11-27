@@ -483,3 +483,31 @@ Ocena `visual-critic` — do zlecenia przez lidera (subagent nie tworzy subagent
 - Łąka w dali (`dw671-03 edge-west`) — farK działa na pasy orne; łąki nie mają przejazdów, więc zostają gładkie.
 - Kamery `f3_*` z fields3 po warpie 610 m patrzą w inne miejsca układu (część w drzewa) — do odświeżenia `find_spots`.
 - Pomiar playera (czas GPU terenu z dodatkowymi szumami, pamięć atlasu) — `UNVERIFIED`.
+
+### r4b (2026-11-27, uwaga lidera po r4: gęstość łanu, węższa miedza, kamery f3_*)
+- **Gęstość: rzędy kart co 1,5 m zamiast kęp.** Kępy (krzyżowe karty ~1,2 m co 1,5 × 1,2 m) to ~22 tys. trójkątów / ha
+  wobec ~5,7 tys. dla rzędów co 1,5 m — poza budżetem; gęstsze rzędy zamykają oba objawy: korytarz 2,25 m z malowanymi
+  rzędami między kartami (labirynt z góry) i lico sąsiednich kart na jednej płaszczyźnie. `MAIZE_CARD_ROWS` 3 → 2
+  (karta co drugi rząd 0,75 m), każda karta rzędu obrócona o ±0,1 rad wokół środka (środek zostaje na rzędzie shadera),
+  karty poprzeczne 34 → 20 % (gęstsze rzędy same zamykają korytarze), `CHUNK_MIN_TRIS` 5 600 → 8 400 (×1,5 — ten sam
+  zbiór chunków z kartami).
+- **Miedza 0,4–1,2 m na krawędź pasa** (`KF_BAULK_MIN_M` 0,4, `KF_BAULK_SPAN_M` 0,8; lustro `vegetation.FIELD_BAULK_W`).
+  WORKING_VALUE: typowa podlaska miedza między dwoma gospodarstwami to wąski pas runi (rząd wielkości 0,3–1 m, oceniane na
+  zdjęciach CC, nie pomiar); r1–r4 1,0–2,6 m na krawędź = 2–5 m runi między dwoma łanami, z kabiny czytane jak droga.
+- Kamery `f3_*` odświeżone w układzie r4 (warp 610 m; `artifacts/fields4-s24/find_spots4.py`, `seat: file`), nowe
+  `f3_maize_inside` (oko 2,5 m w łanie, wzdłuż rzędów) i `f3_maize_air` (16 m nad łanem) na obu kaflach.
+
+| | r4 | r4b | źródło |
+|---|---|---|---|
+| dw671-03: trójkąty kart pól / rzędy / brzeg / przed linią | 158 528 / 24 126 / 29 476 / 3 806 | 221 774 / 37 959 / 44 815 / 5 695 | `world_manifest.json` |
+| knyszyn-w: jw. | 62 408 / 9 429 / 9 255 / 1 275 | 83 978 / 14 613 / 14 173 / 1 869 | jw. |
+| chunki z `banks` (dw671-03 / knyszyn-w) | 17 / 16 | 17 / 16 | jw. |
+| najgorsza kamera klatki High | 1 357 758 / 1 107 558 | 1 368 198 / 1 113 473 (limit lidera 1,9 mln) | `streetscape_qa.json` |
+| draw calle r4 → r4b, 42 kamery trasy + 48 polowych (te same derived bazowe) | — | +0 na wszystkich | `stats_before4b_after4b.txt` |
+| trójkąty na kamerę r4 → r4b | — | maks. +13,2 tys. (trasa), +12,1 tys. (pole) | jw. |
+
+Ocena wzrokowa (`grid_4b_dw.jpg`, `sbs_before4b/`): z wnętrza łanu (`f3_maize_inside`) lico ściany zniknęło, zostaje wąska
+ścieżka; `edge-north` — korytarz przy miedzy węższy (miedza ~1 m z runią), lica słabsze; z góry (`f3_maize_air`) łan gęstszy,
+zygzaki kart nadal czytelne, ale bez szerokich pasów gołej ziemi; z boku (`f3_maize_cross`) brzeg bez paneli z przerwami,
+pojedyncze rośliny przed linią. Otwarte: zygzak kart z góry przy stromym widoku (wzór „jodełki”), tekstura łanu z bliska.
+Testy: `test_fields_r4_0334` + r3 + 0334 zielone (budżet / ha 6 200, rzędy ≤ 1,5 m).

@@ -24,7 +24,11 @@
   (obiekty bez zmian, QA HEAD: tylko -1 chunk banks). ADR 0334 dopisek r4 wpisany. Dowody: main `artifacts/fields4-s24/`
   (`vqa/{before,after,after2,after3,final}`, `sbs/`, `stats_before_final.txt`, `work/` = skrypty i diagnostyka).
 - Otwarte: gestosc lanu (karty co 2,25 m: lica wzdluz rzedow, labirynt z gory), panele z przerwami na brzegu, laka w dali.
-- NASTEPNY KROK: review + visual-critic (lider); scalenie NIE przez agenta; po scaleniu przebudowa 42 kafli wiejskich + far_field.
+- [krok 7] r4b (polecenie lidera): rzedy kart co 1,5 m (obrot +-0,1 rad, poprzeczne 20 %, CHUNK_MIN_TRIS 8400), miedza
+  0,4-1,2 m (shader + lustro), kamery f3_* odswiezone (+ f3_maize_inside, f3_maize_air). Render before4b (= r4) | after4b:
+  DC +0 na 90 kamerach, najgorsza klatka 1 368 198 / 1 113 473. ADR 0334 r4b dopisany. Dowody: `vqa/{before4b,after4b}`,
+  `sbs_before4b/`, `stats_before4b_after4b.txt`, `grid_4b_dw.jpg`.
+- NASTEPNY KROK: review + visual-critic (lider); scalenie z fala 13 przez lidera; potem przebudowa 42 kafli wiejskich + far_field.
 
 # STATUS bank-smear-s24 (smuga na skarpie tykocin route_s0160, ADR 0311 dopisek)
 
