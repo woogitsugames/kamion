@@ -52,3 +52,5 @@
 - Następny krok to porównać pliki GLB z dwóch instancji `pytest -q tests/gis/test_world_roads.py` i uruchomić `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64`.
 - Krok 6. `test_world_roads.py`, seed 4, dał 14 PASS i 1 FAIL w 21:01. Świeży eksport `0_0` High ma hash a073376b…, kopia fali 13 ee87433a…. W 64 GLB High jest 43 różnic względem fali 13. Drugi proces z seedem 9 porówna te same wejścia.
 - Następny krok to `& $py artifacts/codex-gis-fix-s24/compare-exports.py artifacts/codex-gis-fix-s24/pytest/world-seed4/world0 artifacts/codex-gis-fix-s24/pytest/world-seed9/world0 Data/raw/derived/bialystok-industrial-c/world`.
+- Krok 7. Oba procesy eksportu C dały identyczne 197/197 plików z katalogu świata, w tym 128 GLB chunka, 64 instancje i 2 GLB dalekiego planu. Stary manifest jest do regeneracji w fali 14. Przywrócono uboczne zmiany atlasu i nawigacji.
+- Następny krok to `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` w slocie heavy, potem visual QA po zmianie testów w clear i overcast.
