@@ -35,3 +35,5 @@
 - Następny krok: po bazowym imporcie i renderach uruchomić `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`.
 - Bazowy import Win64 High i visual-QA clear/overcast zakończyły się sukcesem. Zapisano po 10 PNG, logi i statystyki kamer. GLB road High/Low: 192 589 tris i 120 prymitywów.
 - Następny krok: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`
+- W bazowym GLB pomierzono geometrię chodnika przy północnej pierzei. Chodnik nie należy do pasa OSM way 630270670, więc override ma obrys przestrzenny wokół pierzei i obejmuje istniejącą geometrię przy jej wschodnim wlocie.
+- Następny krok po `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`: `pwsh artifacts/codex-sidewalk-var-s24/compare.ps1`.

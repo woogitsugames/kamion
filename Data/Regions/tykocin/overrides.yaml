@@ -19,10 +19,11 @@ overrides:
   - id: tykocin-rynek-north-grey-blocks-s24
     kind: sidewalk_surface
     surface: paving_grey
-    target: {osm_way: [630270670]}
+    polygon_en: [[365, -66], [514, -34], [519, -58], [371, -90]]
     reason: >-
       Warm grey concrete block paving along the north frontage next to the granite roadway. Wikimedia Commons
       cs153250600 and cs202183436, Krzysztof Popławski, CC BY 4.0, reference only (ADR 0336).
+      The zone follows way 630270670 and reaches existing sidewalk geometry at its junction.
     confidence: medium
     verify: look_tykocin_rynek_n and look_tykocin_plaza_photo_0325
   # ADR 0336 (neon-tykocin-facades-s24, critic build #5 pkt 9): Podlasie small-town facades for Tykocin -
