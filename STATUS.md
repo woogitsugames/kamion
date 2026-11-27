@@ -33,3 +33,5 @@
 - Następny krok: `pwsh artifacts/codex-roofs-s24/run-after.ps1`.
 - Krok 6a. Pierwszy pytest dał 15 PASS i 1 błąd nowej asercji. Test rozróżnia teraz znaczniki połaci od domyślnych zer współdzielonego submesha i sprawdza pokrycie obu LOD-ów.
 - Następny krok: `pwsh artifacts/codex-roofs-s24/run-after.ps1`.
+- Krok 7. Prototyp r4 wyeksportowany w prywatnym dk65-07. Manifest i log są w katalogu after.
+- Następny krok w slocie heavy: `pwsh artifacts/codex-roofs-s24/run-vqa.ps1 -Phase after`.
