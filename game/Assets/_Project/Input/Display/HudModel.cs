@@ -118,6 +118,7 @@ namespace Game.Controls
         public const string Trailer = "Naczepa";
         public const string TrailerCoupled = "sprzężona", TrailerParked = "odpięta", TrailerNone = "brak";
         public const string DevToggle = "Panel", DevToggleOpen = "Zamknij";
+        public const string Horn = "Klakson";
         public const string ReverseCamera = "KAMERA COFANIA";
 
         /// <summary>Endurance-brake stalk positions: 0 off, engine brake, retarder stages.</summary>

@@ -91,7 +91,8 @@ namespace Game.Gameplay
         // ADR 0142
         bool m_El;
         PerspectiveLoop m_Horn, m_Beeper, m_GearWhine;
-        float m_HornGain, m_HornTap, m_BumpCooldown, m_SynthCabBed = 0.5f;
+        float m_HornGain, m_HornTap, m_HornMinHold, m_BumpCooldown, m_SynthCabBed = 0.5f;
+        bool m_PrevHornHeld;
         int m_PrevCouple = -1, m_PrevLever;
         bool m_PrevManual, m_PrevCruise;
         GearSelector m_PrevSelector;
@@ -125,6 +126,8 @@ namespace Game.Gameplay
         public int CoupleEvents { get; private set; }
         public AudioClip LastOneShot { get; private set; }
         public float HornLevel => m_HornGain;
+        public PerspectiveLoop HornLoop => m_Horn;
+        public const float HornMinBlastSeconds = 0.22f;
         public PerspectiveLoop TyreLoop(int surface) => m_Tyre[surface];
         public PerspectiveLoop WindLoop => m_Wind;
         public PerspectiveLoop CompressorLoop => m_Compressor;
@@ -215,7 +218,9 @@ namespace Game.Gameplay
                 m_Ambient.Configure(m_Lib);
                 m_SynthCabBed = m_Ambient.cabBedFactor;
             }
-            if (m_Lib.elHorn.IsValid) m_Horn = new PerspectiveLoop(t, "Horn", m_Lib.elHorn.ext, m_Lib.elHorn.cab, new Vector3(0f, 3.6f, wb + 0.8f), 50, 1f);
+            var hornExt = m_Lib.hornAir.IsValid ? m_Lib.hornAir.ext : m_Lib.elHorn.ext;
+            var hornCab = m_Lib.hornAir.IsValid ? m_Lib.hornAir.cab : m_Lib.elHorn.cab;
+            if (hornExt != null) m_Horn = new PerspectiveLoop(t, "Horn", hornExt, hornCab, new Vector3(0f, 3.6f, wb + 0.8f), 50, 1f);
             if (m_Lib.elReverseBeeper.IsValid)
                 m_Beeper = new PerspectiveLoop(t, "ReverseBeeper", m_Lib.elReverseBeeper.ext, m_Lib.elReverseBeeper.cab, new Vector3(0f, 0.8f, -1.0f), 90, 1f);
             if (m_Lib.elGearWhineCab != null)
@@ -268,6 +273,11 @@ namespace Game.Gameplay
             }
             m_Engine.CabEngineScale = m_El ? elCabEngineScale : 1f;
             m_CabBusGain = CabinLoudness.CabGainLinear(m_El);
+            if (m_Horn != null)
+            {
+                var horn = m_El && m_Lib.elHorn.IsValid ? m_Lib.elHorn : (m_Lib.hornAir.IsValid ? m_Lib.hornAir : m_Lib.elHorn);
+                if (horn.IsValid) m_Horn.SetClips(horn.ext, horn.cab, 1f);
+            }
             if (!m_El)
             {
                 m_Beeper?.Set(0f, 1f, m_Interior);
@@ -520,10 +530,16 @@ namespace Game.Gameplay
                 else if (cue == AudioCue.DoorOpen) OnDoor(true);
                 else if (cue == AudioCue.DoorClose) OnDoor(false);
             }
+            bool hornHeld = AudioCues.AnyHornHeld;
+            if (hornHeld && !m_PrevHornHeld) m_HornMinHold = HornMinBlastSeconds;
+            m_PrevHornHeld = hornHeld;
+            m_HornMinHold = Mathf.Max(0f, m_HornMinHold - dt);
             m_HornTap = Mathf.Max(0f, m_HornTap - dt);
-            float hornTarget = AudioCues.HornHeld || m_HornTap > 0f ? hornVolume : 0f;
+            bool hornActive = hornHeld || m_HornMinHold > 0f || m_HornTap > 0f;
+            float hornTarget = hornActive ? hornVolume : 0f;
             m_HornGain = LayerMath.ExponentialStep(m_HornGain, hornTarget, dt, 0.012f, 0.06f);
-            m_Horn?.Set(m_HornGain * Mathf.Lerp(1f, cabHornFactor, m_Interior), 1f, m_Interior);
+            float hornPitch = hornActive ? 1f : Mathf.Lerp(0.95f, 1f, m_HornGain / Mathf.Max(hornVolume, 1e-4f));
+            m_Horn?.Set(m_HornGain * Mathf.Lerp(1f, cabHornFactor, m_Interior), hornPitch, m_Interior);
 
             var input = vehicle.Input;
             int couple = vehicle.Combination != null ? vehicle.Combination.FifthWheel.CouplingEvents : 0;
@@ -662,6 +678,6 @@ namespace Game.Gameplay
         }
 
         /// <summary>Called after a respawn: avoids one-shots for the state jump.</summary>
-        public void ResetEvents() { m_Drive.Reset(); m_HasPrev = false; m_BrakePeak = 0f; m_BrakeHeld = 0f; m_PrevCouple = -1; m_BumpCooldown = 0.5f; m_BrakeSquealGate = default; }
+        public void ResetEvents() { m_Drive.Reset(); m_HasPrev = false; m_BrakePeak = 0f; m_BrakeHeld = 0f; m_PrevCouple = -1; m_BumpCooldown = 0.5f; m_BrakeSquealGate = default; m_TrailerRattleGate = default; m_PrevHornHeld = false; m_HornMinHold = 0f; }
     }
 }

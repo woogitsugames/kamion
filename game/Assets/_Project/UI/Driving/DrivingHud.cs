@@ -968,6 +968,11 @@ namespace Game.UI.Driving
             RefreshNow();
         }
 
+        void OnDestroy()
+        {
+            if (m_DesktopApplied) Game.Core.AudioCues.HornHudHeld = false;
+        }
+
         public void RefreshNow()
         {
             UpdateLayout();

@@ -25,10 +25,10 @@ namespace Game.UI.Driving
     /// </summary>
     public sealed partial class DrivingHud
     {
-        RectTransform m_DStrip, m_DTell, m_DExtRow, m_DMain;
-        Image m_DTellBg, m_DSlotBgL, m_DSlotBgR;
+        RectTransform m_DStrip, m_DTell, m_DExtRow, m_DMain, m_DHornRt;
+        Image m_DTellBg, m_DSlotBgL, m_DSlotBgR, m_DHornBg;
         GameObject m_DTellRule;
-        bool m_DBlockKnown, m_DBlockStrip, m_DBlockCompact;
+        bool m_DBlockKnown, m_DBlockStrip, m_DBlockCompact, m_DLastHorn;
         Text m_DSpeed, m_DGear, m_DAir1, m_DAir2, m_DRpm, m_DRet, m_DCruise;
         Image m_DAir1Bar, m_DAir2Bar, m_DRpmBar, m_DTurnL, m_DTurnR;
         GameObject m_DSlotL, m_DSlotR;
@@ -127,6 +127,15 @@ namespace Game.UI.Driving
             }
             m_DStrip.gameObject.SetActive(false);
             m_DTell.gameObject.SetActive(false);
+
+            // ---- horn button on the left of the bottom HUD block (pointer-only, press & hold)
+            m_DHornRt = Zone("DesktopHorn", DesktopHudLayout.HornSize);
+            m_DHornBg = m_DHornRt.gameObject.AddComponent<Image>();
+            m_DHornBg.color = P.HudPanel;
+            var hornBtn = m_DHornRt.gameObject.AddComponent<HornButtonWidget>();
+            hornBtn.onHeldChanged = held => Game.Core.AudioCues.HornHudHeld = held;
+            DLabel(m_DHornRt, "Label", HudTexts.Horn, strong, 20, TextAnchor.MiddleCenter, P.Ink, Vector2.zero, DesktopHudLayout.HornSize);
+            m_DHornRt.gameObject.SetActive(false);
         }
 
         Text AirRow(int circuit, float y, out Image bar)
@@ -244,11 +253,13 @@ namespace Game.UI.Driving
             LayoutMirrorHead(m_HeadR, m_D.MirrorRight, m_D.MirrorWideRight, m_D.ShowMirrorWide, d.MirrorOuterLimits.HasValue);
             SetRect(m_ReverseRt, m_D.ReverseView);
             SetRect(m_DevToggleRt, m_D.DevToggle);
+            SetRect(m_DHornRt, m_D.Horn);
             SetRect(m_DevPanelRt, m_D.DevPanel);
             SetRect(m_LabRt, m_D.DevPanel);
             if (d.Telemetry) SetRect(m_TelemetryRt, m_D.Telemetry);
             SetRect(m_DevTextRt, m_D.DevText);
             if (m_DevToggleRt.gameObject.activeSelf != m_D.ShowDevToggle) m_DevToggleRt.gameObject.SetActive(m_D.ShowDevToggle);
+            if (m_DHornRt.gameObject.activeSelf != m_D.ShowHorn) m_DHornRt.gameObject.SetActive(m_D.ShowHorn);
 
             // Keep the shared result meaningful for tests / captures written against HudLayoutResult.
             m_L = default;
@@ -302,6 +313,8 @@ namespace Game.UI.Driving
             }
             if (m_DStrip != null) m_DStrip.gameObject.SetActive(desktop && m_D.ShowStrip);
             if (m_DTell != null) m_DTell.gameObject.SetActive(desktop);
+            if (m_DHornRt != null) m_DHornRt.gameObject.SetActive(desktop && m_D.ShowHorn);
+            if (!desktop) Game.Core.AudioCues.HornHudHeld = false;
             if (!desktop && !m_DevToggleRt.gameObject.activeSelf) m_DevToggleRt.gameObject.SetActive(true);
             MirrorHousingStyle(m_HeadL, desktop);
             MirrorHousingStyle(m_HeadR, desktop);
@@ -325,6 +338,12 @@ namespace Game.UI.Driving
         /// <summary>Monitor strip values. Prebuilt strings, change detection, no allocation.</summary>
         void RefreshDesktop(VehicleBody v, int speed, string gear, float rpm, float rpmMax, bool park)
         {
+            bool hornActive = Game.Core.AudioCues.AnyHornHeld;
+            if (hornActive != m_DLastHorn)
+            {
+                m_DLastHorn = hornActive;
+                if (m_DHornBg != null) m_DHornBg.color = hornActive ? P.ButtonPressed : P.HudPanel;
+            }
             if (speed != m_DLastSpeed) { m_DLastSpeed = speed; m_DSpeed.text = HudTexts.Speed(speed); }
             if (!ReferenceEquals(gear, m_DLastGear)) { m_DLastGear = gear; m_DGear.text = gear; }
 

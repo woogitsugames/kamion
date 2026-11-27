@@ -12,8 +12,14 @@ namespace Game.Core
     {
         static AudioCue s_Pending;
 
-        /// <summary>Horn button held (any input source). Read by the vehicle audio every frame.</summary>
+        /// <summary>Horn button held (keyboard / pad / tests). Read by the vehicle audio every frame.</summary>
         public static bool HornHeld;
+
+        /// <summary>Horn button held on the PC HUD. Kept separate so input polling does not overwrite pointer holds.</summary>
+        public static bool HornHudHeld;
+
+        /// <summary>True when either a driving binding or the HUD horn button is held.</summary>
+        public static bool AnyHornHeld => HornHeld || HornHudHeld;
 
         public static void Request(AudioCue cue) => s_Pending = cue;
 

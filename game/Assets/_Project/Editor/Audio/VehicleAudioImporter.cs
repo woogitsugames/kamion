@@ -166,6 +166,7 @@ namespace Game.Editor.Audio
             lib.indicatorTick = Pair("indicator_tick", "indicator_tick_cab");
             lib.indicatorTock = Pair("indicator_tock", "indicator_tock_cab");
             WireCabMechanisms(lib);
+            WireHornRattle(lib);
             lib.birdSparrow = Sfx("bird_sparrow");
             lib.birdTit = Sfx("bird_tit");
             // ADR 0176 (tools/audio/synth0176.py)
@@ -296,6 +297,7 @@ namespace Game.Editor.Audio
             var lib = AssetDatabase.LoadAssetAtPath<VehicleAudioLibrary>(ResourcesDir + "/VehicleAudioLibrary.asset");
             if (lib == null) throw new InvalidOperationException("VehicleAudioLibrary missing; run ImportBatch first");
             WireCabMechanisms(lib);
+            WireHornRattle(lib);
             if (!lib.wiperDry.IsValid || !lib.wiperWet.IsValid || !lib.wiperPark.IsValid || !lib.brakeServiceSqueal.IsValid ||
                 lib.wiperDry.cab == null || lib.wiperWet.cab == null || lib.wiperPark.cab == null || lib.brakeServiceSqueal.cab == null)
                 throw new InvalidDataException("Missing procedural WAVs in " + ClipsDir + "/sfx");
@@ -312,6 +314,36 @@ namespace Game.Editor.Audio
             lib.wiperWet = Pair("wiper_wet");
             lib.wiperPark = Pair("wiper_park");
             lib.brakeServiceSqueal = Pair("brake_service_squeal");
+        }
+
+        /// <summary>Refresh the procedural horn and trailer-rattle clips without regenerating the rest of the bank.</summary>
+        public static void ImportHornRattleBatch()
+        {
+            var lib = AssetDatabase.LoadAssetAtPath<VehicleAudioLibrary>(ResourcesDir + "/VehicleAudioLibrary.asset");
+            if (lib == null) throw new InvalidOperationException("VehicleAudioLibrary missing; run ImportBatch first");
+            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+            WireHornRattle(lib);
+            if (!lib.hornAir.IsValid || lib.hornAir.cab == null ||
+                !lib.trailerRattleChainA.IsValid || lib.trailerRattleChainA.cab == null ||
+                !lib.trailerRattleChainB.IsValid || lib.trailerRattleChainB.cab == null ||
+                !lib.trailerRattleTarpA.IsValid || lib.trailerRattleTarpA.cab == null ||
+                !lib.trailerRattleKingpin.IsValid || lib.trailerRattleKingpin.cab == null)
+                throw new InvalidDataException("Missing procedural horn/rattle WAVs in " + ClipsDir + "/sfx");
+            EditorUtility.SetDirty(lib);
+            AssetDatabase.SaveAssets();
+            Debug.Log("[AUDIO] horn & trailer-rattle clips imported -> " + ResourcesDir);
+        }
+
+        static void WireHornRattle(VehicleAudioLibrary lib)
+        {
+            AudioClip LoadClip(string name) => AssetDatabase.LoadAssetAtPath<AudioClip>($"{ClipsDir}/sfx/{name}.wav");
+            VehicleAudioLibrary.PerspectivePair Pair(string name) =>
+                new VehicleAudioLibrary.PerspectivePair { ext = LoadClip(name), cab = LoadClip(name + "_cab") };
+            lib.hornAir = new VehicleAudioLibrary.PerspectivePair { ext = LoadClip("horn_air_loop"), cab = LoadClip("horn_air_cab_loop") };
+            lib.trailerRattleChainA = Pair("trailer_rattle_chain_a");
+            lib.trailerRattleChainB = Pair("trailer_rattle_chain_b");
+            lib.trailerRattleTarpA = Pair("trailer_rattle_tarp_a");
+            lib.trailerRattleKingpin = Pair("trailer_rattle_kingpin");
         }
 
         static T LoadOrCreate<T>(string path) where T : ScriptableObject
