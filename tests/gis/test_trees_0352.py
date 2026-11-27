@@ -138,3 +138,70 @@ def test_crown_cards_have_no_flat_shade_polygon():
         flat = opaque & (np.abs(card[..., :3].astype(int) - np.array([22, 34, 20])).max(axis=2) <= 2)
         assert opaque.mean() > 0.45
         assert flat.sum() / opaque.sum() < 0.02, (name, flat.sum() / opaque.sum())
+
+
+def test_avenue_rows_break_twin_clones_and_stay_within_library_and_clearance():
+    """ADR 0352 addendum (neon-avenue-s24, critic build #10 TOP #10): both default BDOT OT_OIPR_L rows and
+    tree_rows.yaml avenues vary age/scale (0.70-1.15), model variant (no consecutive twin), yaw (>= 60 deg apart),
+    along/across offsets, missing-tree gaps, young replacements / self-seeded saplings and species mix (with oak),
+    deterministically, using only existing library prototypes and respecting ADR 0347 clearance."""
+    from types import SimpleNamespace
+    from shapely.geometry import LineString, box
+    from streetscape import tree_rows as TR
+
+    tr_meta = json.loads((VEG / "trees_meta.json").read_text(encoding="utf-8"))["trees"]
+    line_coords = [[10.0, 60.0], [1990.0, 60.0]]
+    src = {"bdot10k": {"OT_PTLZ_A": [], "OT_PTRK_A": [], "OT_OIPR_P": [], "OT_PTNZ_A": [], "OT_PTTR_A": [],
+                       "OT_OIPR_L": [{"id": "PL.TEST.AVENUE.1", "props": {"rodzaj": "rząd drzew"},
+                                      "geometry": {"coordinates": line_coords}}]},
+           "osm": {"nodes": []}}
+    blocked = np.zeros((121, 2001), bool)
+    hf = SimpleNamespace(x0=0.0, y1=120.0)
+    zc = np.zeros(blocked.shape, np.float32)
+
+    # 1. Default BDOT OT_OIPR_L row path (used by dk65-monki-*, dw671-tykocin-*, non-corridor rows)
+    bdot_a, _ = VG.place(src, (0.0, 0.0), hf, zc, blocked, {}, overrides=[], tree_rows=None)
+    bdot_b, _ = VG.place(src, (0.0, 0.0), hf, zc, blocked, {}, overrides=[], tree_rows=None)
+    assert bdot_a == bdot_b and len(bdot_a) >= 90
+
+    # 2. Opted-in tree_rows.py path (used by knyszyn-w, dk65-01..11)
+    graph = {"edges": [{"id": "m", "from": "A", "to": "B", "geometry": [[0.0, 50.0], [2000.0, 50.0]],
+                        "osm_way": 1, "attrs": {"highway": {"v": "secondary"}, "width": {"v": 7.0}, "maxspeed": {"v": 90}}}]}
+    plan = TR.plan([("bdot:PL.TEST.AVENUE.1", LineString(line_coords), "bdot")],
+                   TR.roads_from_graph(graph, (0.0, 0.0)), {}, graph=graph)
+    for r in plan["rows"]:
+        r["key"] = f"treerow:{r['key']}"
+    plan["height_m"] = {r["key"]: r["height_m"] for r in plan["rows"]}
+    tr_a, _ = VG.place(src, (0.0, 0.0), hf, zc, blocked, {}, overrides=[], tree_rows=plan)
+    tr_b, _ = VG.place(src, (0.0, 0.0), hf, zc, blocked, {}, overrides=[], tree_rows=plan)
+    assert tr_a == tr_b and len(tr_a) >= 80 and plan["report"]["replants"] >= 1
+
+    carriage = box(0.0, 46.5, 2000.0, 53.5)
+    for label, row in (("bdot", bdot_a), ("tree_rows", tr_a)):
+        # Only existing library prototypes (zero new prototypes / zero DC growth)
+        assert all(f"{t['p']}_{t['v']}" in tr_meta for t in row), label
+        # Species admixture (including oak) and young replacements / self-seeded plants
+        species = {t["p"] for t in row}
+        assert len(species) >= 4 and "tree_oak" in species, (label, species)
+        young = [t for t in row if t["h"] < 8.5 or t["p"] in ("tree_birchyoung", "tree_shrub")]
+        assert len(young) >= 3, (label, len(young))
+        # Age/scale spread on mature trees
+        mature_h = [t["h"] for t in row if t["h"] >= 8.5 and t["p"] not in ("tree_birchyoung", "tree_shrub")]
+        assert max(mature_h) - min(mature_h) >= 5.0, (label, min(mature_h), max(mature_h))
+        # Lateral scatter (+-1-2.5 m) and real missing-tree gaps (> 22 m)
+        ns = np.array([t["n"] for t in row])
+        assert ns.max() - ns.min() >= 3.0 and np.max(np.abs(ns - 60.0)) <= 2.6, (label, ns.min(), ns.max())
+        es = np.sort([t["e"] for t in row])
+        gaps = np.diff(es)
+        assert gaps.std() > 3.0 and gaps.max() > 22.0, (label, gaps.std(), gaps.max())
+        # Anti-clone: no consecutive identical (species, variant) where NVAR > 1, and yaw separation >= 60 deg
+        for a, b in zip(row, row[1:]):
+            sp = a["p"][5:]
+            if a["p"] == b["p"] and VG.NVAR.get(sp, 3) > 1:
+                assert a["v"] != b["v"], (label, a, b)
+            da = abs((b["yaw"] - a["yaw"] + math.pi) % (2.0 * math.pi) - math.pi)
+            assert da >= VG.AVENUE_ROW_MIN_YAW_DIFF - 0.02, (label, a["yaw"], b["yaw"], da)
+        # ADR 0347 clearance: zero violations after road_clearance
+        rep = {}
+        cleared = VG.road_clearance(row, carriage, rep, free_fn=lambda P: np.ones(len(P), bool))
+        assert rep["road_clearance"]["violations_after"] == 0 and len(cleared) > 0, (label, rep)

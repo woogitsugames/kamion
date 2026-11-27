@@ -1,19 +1,18 @@
-# STATUS neon-outbuildings2-s24 (budynki gospodarcze r2: brama, rynny, blacha z żebrami, cokół i zacieki; dopisek ADR 0238 d. props-fix)
+# STATUS neon-avenue-s24 (szpalery drzew przy drodze — koniec „klonów bliźniaków”, dopisek ADR 0352)
 
-- Worktree `neon-outbuildings2-s24`, gałąź `neon-outbuildings2-s24`. Nie scalane ani nie pushowane (do przeglądu lidera).
-- Środowisko: prywatne kopie `Data/raw/derived/{dk65-07,knyszyn-w}` (bez zapisu do main), Win64 `game/Library` + `_Generated` lokalnie.
-- [krok 1] Rendery PRZED (`before`, Win64 High PC 1920×1080, clear + overcast): `dk65-07` (`drive-kozince`, `route-s0144`, `route-s0433`) i `knyszyn-w` (`dk65-goniadzka`).
-- [krok 2] Implementacja (+0 materiałów, DC ≤ +0):
-  - `tools/worldgen/streetscape/buildings_mesh.py`: (1) wrota stodoły z pionowych desek (`facade_atlas` wycinek `balf(2/5)`) + 16 tr. nadproża/ościeżnicy/4 zawiasów pasowych w `facade_atlas`, wiejskie `garage(0/1/5)` bez graffiti, także na długiej ścianie okapowej od drogi (`barn_edges`); (2) rynny L (4 tr./okap) i rury spustowe V (4 tr./rura) LOD0-only w `facade_atlas`; (3) `roof_weather` COLOR_0 na spadzistych dachach `rural_outbuildings`; (4) cokół 0,45–0,65 m (slope-safe) i ciemniejszy (`pl 0,38..0,54`) + zacieki pod okapem (`lod0_ro` → `_RUNOFF`).
-  - `game/Assets/_Project/World/Import/WorldPbrMaterials.cs` + `game/Assets/_Project/Environment/Shaders/WorldPBR.shader`: `_RoofWeather.w = 1` dla `roof_metal_*` / `roof_sheet_*` → żebra trapezowe T-18 / faliste w kierunku spadku (`tn.x` + antyaliasing `fwidth`), cieniowanie korytek, zakładki arkuszy co 1,05 m i subtelne przebarwienia/nalot rdzy.
-  - `tests/gis/test_rural_outbuildings_props_fix_s24.py`: +2 testy (wrota/rynny/COLOR_0/cokół/runoff + budżet ≤ +5 % `dk65-07`).
-- [krok 3] `build_world.py --context` (`dk65-07` 521,6 s, `knyszyn-w` 431,3 s):
-  - `dk65-07` `world_manifest.json`: `buildings` LOD0 104 376 → 107 204 (**+2 828 = +2,71 %** ≤ +5 %), `buildings_lod1` +0, 0 nowych materiałów (−1 w `7_1`).
-  - `knyszyn-w` `world_manifest.json`: `buildings` LOD0 140 061 → 142 241 (**+2 180 = +1,56 %**), `buildings_lod1` +0, 0 nowych materiałów (−1 w `0_6`, `2_4`, `3_2`).
-- [krok 4] Import Win64 (`IMPORT_RESULT: OK` oba regiony) + visual-QA PO (`after`, High PC 1920×1080 clear + overcast) + inspekcja PNG i cropów 1:1:
-  - `drive-kozince`: `drawsEst` 459 → 458 (−1), `trisExact` 1 160 324 → 1 160 644 (+320).
-  - `route-s0144`: `drawsEst` 504 → 503 (−1), `trisExact` 993 132 → 993 198 (+66).
-  - `route-s0433`: `drawsEst` 457 → 456 (−1), `trisExact` 1 166 669 → 1 166 989 (+320).
-  - `dk65-goniadzka`: `drawsEst` 328 → 328 (+0), `trisExact` 1 098 119 → 1 098 711 (+592).
-- [krok 5] Dopisek ADR 0238, kopia dowodów do `C:\Users\matma\Documents\Claude\kamion\artifacts\neon-outbuildings2-s24\`, pełny pytest (84/84 zielone), commit końcowy.
-- NASTĘPNY KROK (dla lidera): obejrzeć cropy w `artifacts/neon-outbuildings2-s24/sbs/`, scalić gałąź `neon-outbuildings2-s24` do `main`, a potem przebudować i zaimportować pozostałe kafle z `rural_outbuildings: true`: `pwsh scripts/import-region.ps1 -Region dk65-07 -Build -BuildTarget Win64` (oraz pozostałe kafle wg `artifacts/props-fix-s24/outbuildings-per-tile.txt`).
+- Worktree `neon-avenue-s24`, gałąź `neon-avenue-s24`. Nie scalane ani nie pushowane.
+- Środowisko: prywatne kopie `Data/raw/derived/{knyszyn-w,dk65-07}` (pozostałe kafle junction do main, bez zapisu do main), Win64 `game/Library` lokalnie.
+- [krok 1] Import bazowy Win64 (`knyszyn-w`, `dk65-07`) + rendery PRZED (`before`, High PC 1920×1080, `clear` + `overcast`, 10 kamer `knyszyn-w` + 6 kamer `dk65-07` = 32 PNG) w `artifacts/neon-avenue-s24/before/`.
+- [krok 2] Implementacja w `tools/worldgen/streetscape/tree_rows.py` i `tools/worldgen/streetscape/vegetation.py` (commit `fb6c4e06e`):
+  - Zmienność wieku/skali `0.70–1.15 × href_m`, brak powtarzania wariantu modelu (`v0/v1/v2`) na sąsiednich drzewach tego samego gatunku, separacja obrotu `yaw >= 1.05 rad` (~60°), pochylenie `0.005–0.065 rad`.
+  - Przesunięcia wzdłuż (`10–16 m` BDOT / `12–18 m` `tree_rows`) i w poprzek (`σ = 1.0–1.05 m`, clamp `±2.5 m`), przerwy (`missing_share` 0.16–0.18), pojedyncze młode nasadzenia/samosiejki w ~35% luk (`birchyoung`/`linden`/`maple`/`shrub` 2–8,2 m), domieszka gatunków z dębem (`linden`/`maple`/`oak`/`birch`/`alder`). Zero nowych prototypów.
+- [krok 3] Przebudowa `knyszyn-w` i `dk65-07` w prywatnej kopii `Data/raw/derived/`, import Win64, rendery PO (`after`, High PC 1920×1080, `clear` + `overcast`, 32 PNG) oraz porównania SBS ≤ 960 px (`artifacts/neon-avenue-s24/sbs/`), skopiowane do `C:\Users\matma\Documents\Claude\kamion\artifacts\neon-avenue-s24\`.
+  - `knyszyn-w`: `treerow` 85 → 88 (16 luk, 4 `replants`, 26 dębów, h `11.2–18.9` → `2.4–19.5 m`), `total_trees` 11 360 → 11 327 (−33), `violations_after: 0`; visual-QA High: `scene_draws` −1..+0, `scene_tris` −25 954..−5 216, `inst_draws` −1..+7 (dąb ADR 0352 względem derived main z 17.11), `inst_tris` −104..+2 986.
+  - `dk65-07`: `treerow` 18 → 17 (4 luki, 2 `replants`, 11 dębów, h `11.2–18.8` → `3.7–17.8 m`), `total_trees` 166 578 → 166 534 (−44), `violations_after: 0`; visual-QA High: `scene_draws` −1..+0, `scene_tris` −13 876..−10 860, `inst_draws` +0..+2, `inst_tris` −84..+728.
+- [krok 4] Testy:
+  - `test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py`: **62 passed**.
+  - `test_treerows_0222.py`, `test_trees_0308.py`, `test_trees_0352.py`, `test_trees_0347.py`: **73 passed, 1 failed** (`test_profile_table_matches_the_glb` — pre-existing różnica CRLF vs LF w hashu `trees_meta.json`, 29/29 prototypów identycznych; wszystkie 28 kafli korytarza ADR 0347 przeszły).
+- [krok 5] Dopisek do `docs/adr/0352-drzewa-gatunki-tint-per-drzewo-dab.md`, cofnięty efekt uboczny Unity (`game/Assets/Resources.meta`), commit końcowy na `neon-avenue-s24`.
+- GOTOWE DO SCALENIA PRZEZ LIDERA.
+- NASTĘPNY KROK (lider): przejrzeć diff na `neon-avenue-s24` i dowody w `artifacts/neon-avenue-s24/sbs/`, scalić gałąź, a następnie w kolejnej fali regeneracji przebudować kafle z szpalerami (`knyszyn-w`, `dk65-01..11`, `dw671-tykocin-*`, `dk65-monki-*`):
+  `git merge --no-ff neon-avenue-s24`

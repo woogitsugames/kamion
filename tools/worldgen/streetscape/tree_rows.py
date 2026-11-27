@@ -62,11 +62,18 @@ DEFAULTS = {
     "major_highways": ["primary", "secondary", "tertiary"],
     "corridor_m": 40.0,            # mean distance of a row line to a major centre line to take it over
     "spacing_m": [12.0, 18.0],     # K1-133: ~15 m (km 14.6); K1-132: 20-25 m (km 11.7) - per-row value in the data
-    "missing_share": 0.12,         # gaps of fallen / felled trees, orthophoto T_km11_7 / T_km14_6 (WORKING_VALUE)
-    "lateral_sd_m": 0.5,           # trunk scatter across the row line (WORKING_VALUE)
-    "species": {"maple": 0.35, "linden": 0.30, "birch": 0.20, "alder": 0.15},   # UNVERIFIED (K1: no source)
-    "dominant_share": 0.7,         # one species dominates a row (planted rows), the rest from the mix (WORKING_VALUE)
-    "height_m": [11.0, 19.0],      # crowns 6-9 m wide on the orthophoto, WORKING_VALUE
+    # ADR 0352 addendum (neon-avenue-s24, critic build #10 TOP #10 "klony-bliźniaki"): ~18 % felled/fallen stations,
+    # of which ~35 % carry a single young replacement / self-seeded sapling (leaving ~12 % open gaps), wider lateral
+    # scatter (+-1-2.5 m, legal setback & ADR 0347 clearance enforced after), oak admixture, 0.70-1.15 age scale.
+    "missing_share": 0.18,         # gaps of fallen / felled trees, orthophoto T_km11_7 / T_km14_6 (WORKING_VALUE)
+    "replant_share": 0.35,         # share of missing stations carrying a young replacement / self-seeded plant (WORKING_VALUE)
+    "lateral_sd_m": 1.05,          # trunk scatter across the row line, clamped to +-2.5 m (WORKING_VALUE)
+    "species": {"maple": 0.28, "linden": 0.28, "oak": 0.18, "birch": 0.16, "alder": 0.10},   # UNVERIFIED (K1: no source; ash -> linden per ADR 0308)
+    "dominant_share": 0.60,        # one species dominates a row (planted rows), ~30 % natural admixture (WORKING_VALUE)
+    "height_m": [9.5, 19.5],       # mature avenue envelope; per-tree age scale 0.70-1.15 x href_m (WORKING_VALUE)
+    "age_scale": [0.70, 1.15],     # per-tree age / scale variation for mature avenue trees (WORKING_VALUE)
+    "young_height_m": [4.0, 8.2],  # single young replacement plantings / self-seeded saplings in gaps (WORKING_VALUE)
+    "young_species": {"birchyoung": 0.35, "linden": 0.25, "maple": 0.25, "shrub": 0.15},     # WORKING_VALUE
     "min_edge_offset_m": MIN_TRUNK_EDGE_M,
     "sight_obs_m": SIGHT_OBS_M,
     "default_speed_kmh": 90,       # maxspeed missing on a major road outside built-up areas (WORKING_VALUE)
@@ -264,7 +271,7 @@ def layout_line(line: LineString, prm: dict, key: str):
     s = float(rng.uniform(0.0, hi))
     P, S, K = [], [], []
     while s < L:
-        lat = float(rng.normal(0.0, prm["lateral_sd_m"]))
+        lat = float(np.clip(rng.normal(0.0, prm["lateral_sd_m"]), -2.5, 2.5)) if prm["lateral_sd_m"] > 0.0 else 0.0
         miss = float(rng.uniform()) < prm["missing_share"]
         sp = dom if float(rng.uniform()) < prm["dominant_share"] else names[int(rng.choice(len(names), p=w))]
         a = np.array(line.interpolate(max(s - 0.5, 0.0)).coords[0])
@@ -363,9 +370,9 @@ def plan(lines, roads: list[Road], prm: dict, *, tracks=(), culverts=(), crossin
     majors = set(prm["major_highways"])
     mroads = [r for r in roads if r.highway in majors]
     rep = {"lines_total": len(lines), "lines_taken": 0, "length_taken_m": 0.0, "stations": 0, "missing": 0,
-           "cut_sight": 0, "cut_track_mouth": 0, "cut_culvert": 0, "cut_level_crossing": 0, "moved_to_min_offset": 0,
-           "dropped_too_close": 0, "trees": 0, "in_lsbp0_existing": 0, "junctions": 0, "accesses": 0,
-           "sight_fields": 0, "by_source": {}}
+           "replants": 0, "cut_sight": 0, "cut_track_mouth": 0, "cut_culvert": 0, "cut_level_crossing": 0,
+           "moved_to_min_offset": 0, "dropped_too_close": 0, "trees": 0, "in_lsbp0_existing": 0, "junctions": 0,
+           "accesses": 0, "sight_fields": 0, "by_source": {}}
     if not mroads:
         return {"rows": [], "handled": set(), "fallback": {}, "taken": set(), "cuts": [], "report": rep}
     J = junctions(graph, roads, majors) if graph is not None else []
@@ -402,18 +409,31 @@ def plan(lines, roads: list[Road], prm: dict, *, tracks=(), culverts=(), crossin
         taken.add(key)
         rep["lines_taken"] += 1
         rep["length_taken_m"] += line.length
-        P, S, K = layout_line(line, {**prm, **lprm}, f"treerow:{key}")
+        rprm = {**prm, **lprm}
+        P, S, K = layout_line(line, rprm, f"treerow:{key}")
         rep["stations"] += len(P)
         rep["missing"] += int((~K).sum())
         if not len(P):
             continue
-        P, ok, moved = _push_out(P, roads, float(prm["min_edge_offset_m"]))
+        # ADR 0352 addendum (neon-avenue-s24): single young replacements / self-seeded saplings in a share of
+        # missing-tree gaps; all draws made per station before any cut (ADR 0173 determinism).
+        yrng = np.random.default_rng(_seed(f"treerow_young:{key}"))
+        ynames = list(rprm["young_species"])
+        yw = np.array([rprm["young_species"][k_] for k_ in ynames], float)
+        yw /= yw.sum()
+        ylo, yhi = (float(v) for v in rprm["young_height_m"])
+        replant_u = yrng.uniform(0.0, 1.0, len(P))
+        replant_sp = [ynames[int(i)] for i in yrng.choice(len(ynames), size=len(P), p=yw)]
+        replant_h = yrng.uniform(ylo, yhi, len(P))
+        replant = (~K) & (replant_u < float(rprm["replant_share"]))
+        P, ok, moved = _push_out(P, roads, float(rprm["min_edge_offset_m"]))
         c_s = shapely.contains_xy(sight_u, P[:, 0], P[:, 1]) if not sight_u.is_empty else np.zeros(len(P), bool)
         c_m = shapely.contains_xy(mouth, P[:, 0], P[:, 1]) if not mouth.is_empty else np.zeros(len(P), bool)
         c_c = shapely.contains_xy(culv_u, P[:, 0], P[:, 1]) if not culv_u.is_empty else np.zeros(len(P), bool)
         c_l = shapely.contains_xy(lc_u, P[:, 0], P[:, 1]) if not lc_u.is_empty else np.zeros(len(P), bool)
-        live = K & ok
-        rep["dropped_too_close"] += int((K & ~ok).sum())
+        present = K | replant
+        live = present & ok
+        rep["dropped_too_close"] += int((present & ~ok).sum())
         rep["moved_to_min_offset"] += int((live & moved).sum())
         for name, c in (("cut_sight", c_s), ("cut_track_mouth", c_m), ("cut_culvert", c_c), ("cut_level_crossing", c_l)):
             rep[name] += int((live & c).sum())
@@ -421,8 +441,13 @@ def plan(lines, roads: list[Road], prm: dict, *, tracks=(), culverts=(), crossin
         d, ix = edge_distance(roads, P)
         lz = np.array([lsbp0_existing(roads[i].vmax, prm["sdrr_class"]) if roads[i].highway in majors else 0.0 for i in ix])
         rep["in_lsbp0_existing"] += int((live & (d < lz)).sum())
-        rows.append({"key": key, "source": source, "P": P[live], "species": [s for s, k in zip(S, live) if k],
-                     "height_m": tuple(float(v) for v in {**prm, **lprm}["height_m"])})
+        live_replant = live & replant
+        rep["replants"] += int(live_replant.sum())
+        sp_out = [replant_sp[i] if replant[i] else S[i] for i in range(len(P)) if live[i]]
+        yh_out = [round(float(replant_h[i]), 1) if replant[i] else None for i in range(len(P)) if live[i]]
+        rows.append({"key": key, "source": source, "P": P[live], "species": sp_out,
+                     "young_h": yh_out, "age_scale": tuple(float(v) for v in rprm["age_scale"]),
+                     "height_m": tuple(float(v) for v in rprm["height_m"])})
         rep["trees"] += int(live.sum())
         rep["by_source"][source] = rep["by_source"].get(source, 0) + int(live.sum())
     rep["length_taken_m"] = round(rep["length_taken_m"], 1)
