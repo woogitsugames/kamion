@@ -108,6 +108,12 @@ namespace Game.World
 
         static readonly int k_WireFade = Shader.PropertyToID("_KamionWireFade");
         static readonly int k_ImpostorBlend = Shader.PropertyToID("_KamionImpostorBlend");
+        // crown-lod-s24: LOD1 cards -> impostor cross-fade (Kamion/Vegetation VegCutoff). Global per camera: x = tree card LOD
+        // scale, y = band (share of the LOD1 end), z = 1 on; per material _LodFadeEndM = LOD1 end at scale 1 (0 = no fade).
+        static readonly int k_TreeFade = Shader.PropertyToID("_KamionTreeFade");
+        static readonly int k_LodFadeEnd = Shader.PropertyToID("_LodFadeEndM");
+        /// <summary>crown-lod-s24: cross-fade band = last 25 % of the LOD1 distance (WORKING_VALUE; High 67.5-90 m).</summary>
+        public const float TreeFadeBand = 0.25f;
         float m_PoleCull;
 
         // Vegetation settings of the active tier (QualityProfile, ADR 0012 / device runs); the serialized fields below are
@@ -119,6 +125,8 @@ namespace Game.World
         bool m_Trees = true;
         bool m_HighOnly = true;
         bool m_LeafA2C = true;
+        bool m_LodFade;
+        float[] m_FadeEnd;
         bool m_TierRead;
 
         void ReadTier()
@@ -141,29 +149,32 @@ namespace Game.World
             // Impostor view cross-fade (Kamion/Vegetation _IMPOSTOR): 2 views on Medium and up, the nearest view on Low
             // (half the texture fetches; ADR 0023 cost table). Tier = LOD bias (Low 0.5).
             Shader.SetGlobalFloat(k_ImpostorBlend, TierLodBias >= 0.75f ? 1f : 0f);
+            m_LodFade = ok && t.treeLodFade && !RenderOverrides.AbImpostorOff;
             bool a2c = !ok || t.leafAlphaToCoverage;
             bool simple = ok && t.simpleFoliage;
             // Hero LOD0 can also be selected close to the site on Low. Gate thin-leaf lighting by the actual
             // active quality profile, never by LOD distance (including temporary mirror/extra-view bias).
             bool heroLeafHigh = QualityProfileApplier.HasCurrent && (t.name == "High" || t.name == "Ultra");   // review s10-0087-0090: Ultra too
+            // crown-lod-s24: the tier's A2C before the runtime copies are built (they copy m_LeafA2C; rq_a2c 0 was ignored in
+            // edit-mode visual QA, where SetLeafAlphaToCoverage leaves the assets alone).
+            bool a2cChanged = a2c != m_LeafA2C;
+            m_LeafA2C = a2c;
             if (m_Mats == null || simple != m_SimpleFoliage || heroLeafHigh != m_HeroLeafHigh) BuildMaterials(simple);
-            if (a2c != m_LeafA2C || !Mathf.Approximately(cull, m_TreeCull))
-            {
-                m_LeafA2C = a2c;
-                SetLeafAlphaToCoverage(a2c);
-            }
+            if (a2cChanged || !Mathf.Approximately(cull, m_TreeCull)) SetLeafAlphaToCoverage(a2c);
             if (!Mathf.Approximately(cull, m_TreeCull)) { m_TreeCull = cull; m_Batch = null; }   // re-cap impostor distances
         }
 
         /// <summary>Alpha-to-coverage on the alpha-clipped vegetation materials (URP Lit / Kamion/Vegetation _AlphaToMask render state).</summary>
         void SetLeafAlphaToCoverage(bool on)
         {
-            if (set == null || set.materials == null || !Application.isPlaying) return;   // never edit the assets in the editor
-            foreach (var m in set.materials)
-                if (m != null && m.HasProperty("_AlphaToMask") && m.IsKeywordEnabled("_ALPHATEST_ON")) m.SetFloat("_AlphaToMask", on ? 1f : 0f);
+            if (set == null || set.materials == null) return;
+            if (Application.isPlaying)   // never edit the assets in the editor (the runtime copies below are safe)
+                foreach (var m in set.materials)
+                    if (m != null && m.HasProperty("_AlphaToMask") && m.IsKeywordEnabled("_ALPHATEST_ON")) m.SetFloat("_AlphaToMask", on ? 1f : 0f);
             if (m_Mats != null)
                 foreach (var m in m_Mats)
-                    if (m != null && m.shader == m_FoliageShader) m.SetFloat("_AlphaToMask", on ? 1f : 0f);
+                    if (m != null && m.shader == m_FoliageShader && (Application.isPlaying || Array.IndexOf(set.materials, m) < 0))
+                        m.SetFloat("_AlphaToMask", on ? 1f : 0f);
         }
 
         // Materials actually drawn (set.materials, or runtime copies on Kamion/Vegetation for leaf cards / impostors on
@@ -239,6 +250,44 @@ namespace Game.World
                 }
                 Game.Rendering.ForestFastPath.Register(c);   // ADR 0113: HLOD edge one-pass state, A/B
                 m_Mats[i] = c;
+            }
+            SetFadeEnds();
+        }
+
+        /// <summary>crown-lod-s24: LOD1 end (m at scale 1) of a tree prototype whose last LOD is an impostor, else 0.</summary>
+        public static float FadeEndOf(string name, float[] lodEndM, int lodCount, string lastMaterialName)
+        {
+            if (name == null || !name.StartsWith("tree_") || lodCount < 3 || lodEndM == null || lodEndM.Length < lodCount) return 0f;
+            return lastMaterialName != null && lastMaterialName.StartsWith("M_impostor_") ? lodEndM[lodCount - 2] : 0f;
+        }
+
+        void SetFadeEnds()
+        {
+            var protos = set.prototypes;
+            m_FadeEnd = new float[protos.Length];
+            for (int p = 0; p < protos.Length; p++)
+            {
+                var pr = protos[p];
+                int n = pr.lods.Length;
+                if (n < 3 || pr.lods[n - 1] == null || pr.lods[n - 2] == null) continue;
+                var last = set.materials[pr.materialStart[n - 1]];
+                float e = FadeEndOf(pr.name, pr.lodEndM, n, last != null ? last.name : null);
+                if (e <= 0f) continue;
+                bool ok = true;   // both LODs' foliage must be runtime Kamion/Vegetation copies (never edit the generated assets)
+                for (int l = n - 2; l < n && ok; l++)
+                    for (int sm = 0; sm < pr.lods[l].subMeshCount; sm++)
+                    {
+                        var m = m_Mats[pr.materialStart[l] + sm];
+                        if (m != null && m.shader == m_FoliageShader && Array.IndexOf(set.materials, m) >= 0) ok = false;
+                    }
+                if (!ok) continue;
+                for (int l = n - 2; l < n; l++)
+                    for (int sm = 0; sm < pr.lods[l].subMeshCount; sm++)
+                    {
+                        var m = m_Mats[pr.materialStart[l] + sm];
+                        if (m != null && m.shader == m_FoliageShader) m.SetFloat(k_LodFadeEnd, e);
+                    }
+                m_FadeEnd[p] = e;
             }
         }
 
@@ -369,6 +418,9 @@ namespace Game.World
             // the order of the beginCameraRendering handlers.
             float scale = Mathf.Max(0.05f, ExtraViewLod.EffectiveLodBias(cam) * distanceScale);
             float far = cam.farClipPlane, far2 = far;   // far2: the chunk-merge loop runs before cells (same limit)
+            float treeLs = Mathf.Min(scale, m_TreeCard) * RenderOverrides.AbTreeCardScale;
+            bool fade = m_LodFade && m_FadeEnd != null && m_SimpleFoliage;
+            Shader.SetGlobalVector(k_TreeFade, new Vector4(treeLs, TreeFadeBand, fade ? 1f : 0f, 0f));
             // Power-line conductors (Kamion/World Wire) fade out with the cull distance of the poles that carry them
             // (REVIEW r4 W-H2: wires hung in the air over the DK8 forest on Low after the poles were culled).
             if (m_PoleCull > 0f)
@@ -440,7 +492,11 @@ namespace Game.World
                     int ln = LodAt(ends, dNear, ls, cs, l0), lf = LodAt(ends, dFar, ls, cs, l0);
                     bool thinnable = m_Thin[run.prototype];
                     int stride = thinnable ? ThinStride(dNear, scale) : 1;
-                    if (ln == lf && (stride == ThinStride(dFar, scale) || !thinnable))
+                    // crown-lod-s24: inside the LOD1 -> impostor band both LODs are drawn (per instance).
+                    float fe = fade && run.prototype < m_FadeEnd.Length ? m_FadeEnd[run.prototype] * ls : 0f, fs = fe * (1f - TreeFadeBand);
+                    bool band = fe > 0f && dFar > fs && dNear < fe;
+                    int lastLod = p.lods.Length - 1;
+                    if (!band && ln == lf && (stride == ThinStride(dFar, scale) || !thinnable))
                     {
                         if (ln < 0) continue;
                         if (stride == 1) Append(run.prototype, ln, mats, run.start, run.count, b);
@@ -456,6 +512,7 @@ namespace Game.World
                         if (thinnable && (i & (ThinStride(d, scale) - 1)) != 0) continue;
                         int l = LodAt(ends, d, ls, cs, l0);
                         if (l >= 0) Append(run.prototype, l, mats, i, 1, b);
+                        if (band && l == lastLod - 1 && d > fs) Append(run.prototype, lastLod, mats, i, 1, b);
                     }
                 }
             }

@@ -68,6 +68,8 @@ namespace Game.Rendering
         public bool ssao;
         // Vegetation (WorldInstances via QualityProfile.Tier)
         public float treeCardLodScale;
+        /// <summary>crown-lod-s24: LOD1 cards -> impostor cross-fade (QualityProfile.Tier.treeLodFade).</summary>
+        public bool treeLodFade;
         public float treeThinStartM;
         public float treeCullM;
         /// <summary>Tree LODs that cast (bit 0 LOD0, bit 1 LOD1 cards; impostors never). PC: 3 on every tier - with
@@ -207,7 +209,7 @@ namespace Game.Rendering
                 softShadows = false, softShadowQuality = 1, shadowDepthBias = 0.4f, shadowNormalBias = 0.3f,
                 lodBias = 1.0f, maximumLodLevel = 0, textureMipmapLimit = 1, anisotropicFiltering = 1, worldTextureAniso = 4,
                 cameraFarClip = 1500f, additionalLightsPerObject = 4, ssao = false,
-                treeCardLodScale = 0.5f, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, forestHlodM = 70f, forestHlodCullM = 1500f,
+                treeCardLodScale = 0.5f, treeLodFade = false, treeThinStartM = 90f, treeCullM = 600f, treeShadowLodMask = 3, forestHlodM = 70f, forestHlodCullM = 1500f,
                 vehicleCullM = 200f, simpleFoliage = true, forestFast = true, glassFast = true,
                 envCaptureSize = 64, envCaptureInterval = 6, streetLights = 0, lampPools = 6, cloudQuality = 1, mirrorResolutionScale = 1f, mirrorMsaa = 1, mirrorShadows = false, mirrorWindowTexelsPerPixel = 0f,
                 targetFps = 30, status = "WORKING_VALUE (D74 minimum: GTX 660 2 GB / i5-6400 / 8 GB, 1080p 30 fps) - UNMEASURED",
@@ -221,7 +223,7 @@ namespace Game.Rendering
                 softShadows = true, softShadowQuality = 1, shadowDepthBias = 0.4f, shadowNormalBias = 0.3f,
                 lodBias = 1.25f, maximumLodLevel = 0, textureMipmapLimit = 0, anisotropicFiltering = 1, worldTextureAniso = 8,
                 cameraFarClip = 2000f, additionalLightsPerObject = 4, ssao = false,
-                treeCardLodScale = 0.5f, treeThinStartM = 120f, treeCullM = 800f, treeShadowLodMask = 3, forestHlodM = 90f, forestHlodCullM = 0f,
+                treeCardLodScale = 0.5f, treeLodFade = true, treeThinStartM = 120f, treeCullM = 800f, treeShadowLodMask = 3, forestHlodM = 90f, forestHlodCullM = 0f,
                 vehicleCullM = 300f, simpleFoliage = true, forestFast = false, glassFast = false,
                 envCaptureSize = 128, envCaptureInterval = 4, streetLights = 2, lampPools = 8, cloudQuality = 1, mirrorResolutionScale = 1f, mirrorMsaa = 1, mirrorShadows = false, mirrorWindowTexelsPerPixel = 0f,
                 targetFps = 60, status = "WORKING_VALUE (between D74 classes, 4 GB VRAM) - UNMEASURED",
@@ -235,7 +237,7 @@ namespace Game.Rendering
                 softShadows = true, softShadowQuality = 3, shadowDepthBias = 0.6f, shadowNormalBias = 0.6f,
                 lodBias = 1.5f, maximumLodLevel = 0, textureMipmapLimit = 0, anisotropicFiltering = 2, worldTextureAniso = 16,
                 cameraFarClip = 3000f, additionalLightsPerObject = 8, ssao = false,
-                treeCardLodScale = 1.0f, treeThinStartM = 150f, treeCullM = 1000f, treeShadowLodMask = 3, forestHlodM = 150f, forestHlodCullM = 0f,
+                treeCardLodScale = 1.5f, treeLodFade = true, treeThinStartM = 150f, treeCullM = 1000f, treeShadowLodMask = 3, forestHlodM = 150f, forestHlodCullM = 0f,
                 vehicleCullM = 400f, simpleFoliage = true, forestFast = false, glassFast = false,
                 envCaptureSize = 256, envCaptureInterval = 1, streetLights = 6, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f, mirrorMsaa = 4, mirrorShadows = false, mirrorWindowTexelsPerPixel = 1f,
                 targetFps = 60, status = "WORKING_VALUE (D74 recommended: GTX 1660 / i5-9600 / 12 GB, 1080p 60 fps) - UNMEASURED",
@@ -249,7 +251,7 @@ namespace Game.Rendering
                 softShadows = true, softShadowQuality = 3, shadowDepthBias = 0.6f, shadowNormalBias = 0.6f,
                 lodBias = 2.0f, maximumLodLevel = 0, textureMipmapLimit = 0, anisotropicFiltering = 2, worldTextureAniso = 16,
                 cameraFarClip = 4000f, additionalLightsPerObject = 8, ssao = false,
-                treeCardLodScale = 1.5f, treeThinStartM = 200f, treeCullM = 1500f, treeShadowLodMask = 3, forestHlodM = 200f, forestHlodCullM = 0f,
+                treeCardLodScale = 2.0f, treeLodFade = true, treeThinStartM = 200f, treeCullM = 1500f, treeShadowLodMask = 3, forestHlodM = 200f, forestHlodCullM = 0f,
                 vehicleCullM = 600f, simpleFoliage = true, forestFast = false, glassFast = false,
                 envCaptureSize = 256, envCaptureInterval = 1, streetLights = 8, lampPools = 8, cloudQuality = 2, mirrorResolutionScale = 1f, mirrorMsaa = 4, mirrorShadows = false, mirrorWindowTexelsPerPixel = 1.5f,
                 targetFps = 60, status = "WORKING_VALUE (above D74 recommended; opt-in, never auto-selected) - UNMEASURED",

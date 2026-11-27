@@ -208,6 +208,7 @@ namespace Game.Rendering
             t.vehicleCullM = s.vehicleCullM;
             t.simpleFoliage = s.simpleFoliage;
             t.leafAlphaToCoverage = s.msaa > 1;
+            t.treeLodFade = s.treeLodFade;
             t.forestFast = s.forestFast;
             t.glassFast = s.glassFast;
             t.windscreenLayersOff = s.windscreenLayersOff;   // ADR 0341

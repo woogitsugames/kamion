@@ -41,6 +41,8 @@ Shader "Kamion/Vegetation"
         _CrownShade ("Leaf cards: sky occlusion of the lower crown (ambient; ADR 0088)", Range(0, 1)) = 0.5
         // ADR 0352: per-tree variation of instanced tree foliage (0 = off: hedges, Fab plants, HLOD walls).
         _TreeVar ("Tree variation: x brightness +-, y hue +-, z crown clump shading, w clump frequency (rad / m)", Vector) = (0, 0, 0, 1.5)
+        // crown-lod-s24: LOD1 end distance of the tree (m at LOD scale 1; WorldInstances sets it on the runtime copies). 0 = no fade.
+        [HideInInspector] _LodFadeEndM ("LOD1 -> impostor fade end (m at scale 1)", Float) = 0
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Float) = 0
         [Toggle] _AlphaToMask ("Alpha to coverage", Float) = 0
         // ADR 0113: colour-pass depth state. Defaults = two-pass path (depth pass + ZWrite Off / pulled-in colour pass);
@@ -66,6 +68,7 @@ Shader "Kamion/Vegetation"
             float4 _Impostor;
             half _CrownShade;
             float4 _TreeVar;
+            half _LodFadeEndM;
         CBUFFER_END
         TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
         TEXTURE2D(_NormalOcc); SAMPLER(sampler_NormalOcc);
@@ -94,7 +97,10 @@ Shader "Kamion/Vegetation"
             f = f < 0.0 ? f + n : f;
             float i0 = floor(f);
             float i1 = i0 + 1.0 >= n ? 0.0 : i0 + 1.0;
-            o.t = (half)(f - i0);
+            // crown-lod-s24: the two views are 60 deg apart - a linear blend over the whole sector laid two different crowns
+            // over each other (a soft, "melting" double image at 50 %). One view for most azimuths, a cross-fade only over
+            // the middle +-0.2 of the sector (24 deg); WORKING_VALUE from the knyszyn-w spawn view of build #10.
+            o.t = (half)smoothstep(0.3, 0.7, f - i0);
             float2 u = TRANSFORM_TEX(uv, _BaseMap);
             o.uv = float4((i0 + u.x) / n, u.y, (i1 + u.x) / n, u.y);
             o.rightWS = normalize(mul((float3x3)UNITY_MATRIX_M, rightL));
@@ -168,9 +174,38 @@ Shader "Kamion/Vegetation"
         }
 
         // Alpha-to-coverage edge: alpha sharpened to ~1 pixel around the cutoff (as URP Lit's SharpenAlpha).
-        half CoverageAlpha(half a)
+        // crown-lod-s24 (critic build #10 TOP 3): the GPU dithers a fractional coverage alpha into a screen-space sample
+        // pattern (NVIDIA ordered dither) - a minified crown, all partial coverage, read as fixed stipple. Snapped to whole
+        // samples of the target (global _KamionVegMsaa, Game.Rendering.VegetationCoverage; 0 = off) there is nothing left
+        // to dither; 1 sample (mirrors without MSAA) = a plain 0.5 alpha test.
+        half _KamionVegMsaa;
+        half CoverageAlpha(half a, half cutoff)
         {
-            return saturate((a - _Cutoff) / max(fwidth(a), 0.0001) + 0.5);
+            half c = saturate((a - cutoff) / max(fwidth(a), 0.0001) + 0.5);
+            return _KamionVegMsaa > 0.5 ? round(c * _KamionVegMsaa) / _KamionVegMsaa : c;
+        }
+
+        // crown-lod-s24: LOD1 leaf cards -> impostor cross-fade. Inside the last _KamionTreeFade.y of the LOD1 distance
+        // WorldInstances draws both LODs of a tree; the cards' alpha cutoff rises to above 1 and the impostor's falls from
+        // above 1 to its own, so the crown changes by leaf / texel shape (a dissolve in the texture) instead of a hard pop
+        // or a screen-space dither pattern. Per instance from the camera distance to the tree origin (vertex stage, same
+        // value on both passes). Global per camera (WorldInstances): x = tree card LOD scale, y = band share, z = 1 on.
+        float4 _KamionTreeFade;
+        half VegCutoff()
+        {
+        #if defined(_HLOD_EDGE)
+            return _Cutoff;
+        #else
+            float e = _LodFadeEndM * _KamionTreeFade.x;
+            if (_KamionTreeFade.z < 0.5 || e <= 0.0) return _Cutoff;
+            float band = max(e * _KamionTreeFade.y, 0.001);
+            half f = (half)saturate((distance(_WorldSpaceCameraPos, UNITY_MATRIX_M._m03_m13_m23) - (e - band)) / band);
+        #if defined(_IMPOSTOR)
+            return lerp(1.02h, _Cutoff, f);
+        #else
+            return lerp(_Cutoff, 1.02h, f);
+        #endif
+        #endif
         }
 
         // far-forest-look-s24 (ADR 0330 addendum 3): far-field curtains carry the column height H [m] in TEXCOORD1.y
@@ -211,7 +246,7 @@ Shader "Kamion/Vegetation"
             };
             struct V
             {
-                float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half t : TEXCOORD1;
+                float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half2 t : TEXCOORD1;   /* x view blend, y alpha cutoff (crown-lod-s24) */
             #if defined(_HLOD_EDGE)
                 float2 positionWSxz : TEXCOORD2; float3 farOwner : TEXCOORD3;   // ADR 0354 far-field ring clip
             #endif
@@ -224,7 +259,7 @@ Shader "Kamion/Vegetation"
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
                 o.positionCS = VegClipPos(v.positionOS.xyz, v.uv);
                 o.uv = VegUV(v.uv);
-                o.t = VegBlend(v.uv);
+                o.t = half2(VegBlend(v.uv), VegCutoff());
             #if defined(_HLOD_EDGE)
                 o.positionWSxz = TransformObjectToWorld(v.positionOS.xyz).xz;
                 o.farOwner = KamionFarRingOwner();
@@ -238,11 +273,11 @@ Shader "Kamion/Vegetation"
                 if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
                 i.uv = EdgeUV(i.uv);
             #endif
-                half a = VegAlpha(i.uv, i.t);
+                half a = VegAlpha(i.uv, i.t.x);
                 // Alpha-to-coverage path still discards the fully uncovered texels (as URP Lit): the coverage mask alone
                 // is not applied on every target (A16 Vulkan: cards rendered as opaque quads without this clip).
-                if (_AlphaToMask > 0.5) { half c = CoverageAlpha(a); clip(c - 0.0001); return half4(0, 0, 0, c); }
-                clip(a - _Cutoff);
+                if (_AlphaToMask > 0.5) { half c = CoverageAlpha(a, i.t.y); clip(c - 0.0001); return half4(0, 0, 0, c); }
+                clip(a - i.t.y);
                 return 0;
             }
             ENDHLSL
@@ -324,7 +359,7 @@ Shader "Kamion/Vegetation"
                 float4 uv : TEXCOORD0;
                 float3 positionWS : TEXCOORD1;
                 half3 normalWS : TEXCOORD2;
-                half fogFactor : TEXCOORD3;
+                half2 fogFactor : TEXCOORD3;     // x fog, y alpha cutoff (crown-lod-s24 LOD fade)
                 half3 ambient : TEXCOORD4;
             #if defined(_IMPOSTOR)
                 half3 rightWS : TEXCOORD5;
@@ -381,11 +416,11 @@ Shader "Kamion/Vegetation"
                 o.positionWS = TransformObjectToWorld(pOS);
                 o.positionCS = TransformWorldToHClip(o.positionWS);
             #if defined(_HLOD_EDGE)
-                o.fogFactor = KamionFogTauExtra(o.positionWS, o.positionCS.w, max(v.uv1.x, 0.0));
+                o.fogFactor = half2(KamionFogTauExtra(o.positionWS, o.positionCS.w, max(v.uv1.x, 0.0)), _Cutoff);
                 o.farOwner = KamionFarRingOwner();
                 o.uv = EdgeUVQ(o.uv, v.uv1.y);
             #else
-                o.fogFactor = KamionFogTau(o.positionWS, o.positionCS.w);
+                o.fogFactor = half2(KamionFogTau(o.positionWS, o.positionCS.w), VegCutoff());
             #endif
                 return o;
             }
@@ -416,8 +451,8 @@ Shader "Kamion/Vegetation"
                 // Same coverage as the depth pass: fragments outside the leaf would otherwise paint over samples whose
                 // depth is still the background's.
                 half alpha = 1.0;
-                if (_AlphaToMask > 0.5) { alpha = CoverageAlpha(tex.a); clip(alpha - 0.0001); }
-                else clip(tex.a - _Cutoff);
+                if (_AlphaToMask > 0.5) { alpha = CoverageAlpha(tex.a, i.fogFactor.y); clip(alpha - 0.0001); }
+                else clip(tex.a - i.fogFactor.y);
             #if !defined(_HLOD_EDGE)
                 half3 albedo = tex.rgb * i.treeVar.rgb;
             #else
@@ -477,7 +512,7 @@ Shader "Kamion/Vegetation"
                 // grey-green of foliage under an overcast sky); dark needles (albedo 0.035) were black under the toe.
                 half3 color = albedo * (L.color * (sun * L.shadowAttenuation * L.distanceAttenuation * occS))
                             + (albedo + _KamionLeafAmbient.y * step(_Cull, 0.5h)) * (ambient * occA);
-                color = KamionMixFog(color, i.fogFactor);
+                color = KamionMixFog(color, i.fogFactor.x);
                 return half4(color, alpha);
             }
             ENDHLSL
@@ -505,7 +540,7 @@ Shader "Kamion/Vegetation"
             #endif
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
-            struct V { float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half t : TEXCOORD1; };
+            struct V { float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half2 t : TEXCOORD1;   /* x view blend, y alpha cutoff (crown-lod-s24) */ };
             V vert(A v)
             {
                 UNITY_SETUP_INSTANCE_ID(v);
@@ -528,7 +563,7 @@ Shader "Kamion/Vegetation"
             #if defined(_HLOD_EDGE)
                 o.uv = EdgeUVQ(o.uv, v.uv1.y);
             #endif
-                o.t = VegBlend(v.uv);
+                o.t = half2(VegBlend(v.uv), VegCutoff());
                 return o;
             }
             half4 frag(V i) : SV_Target
@@ -536,7 +571,7 @@ Shader "Kamion/Vegetation"
             #if defined(_HLOD_EDGE)
                 i.uv = EdgeUV(i.uv);
             #endif
-                clip(VegAlpha(i.uv, i.t) - _Cutoff);
+                clip(VegAlpha(i.uv, i.t.x) - i.t.y);
                 return 0;
             }
             ENDHLSL
@@ -562,7 +597,7 @@ Shader "Kamion/Vegetation"
             };
             struct V
             {
-                float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half t : TEXCOORD1;
+                float4 positionCS : SV_POSITION; float4 uv : TEXCOORD0; half2 t : TEXCOORD1;   /* x view blend, y alpha cutoff (crown-lod-s24) */
             #if defined(_HLOD_EDGE)
                 float2 positionWSxz : TEXCOORD2; float3 farOwner : TEXCOORD3;   // ADR 0354 far-field ring clip
             #endif
@@ -573,7 +608,7 @@ Shader "Kamion/Vegetation"
                 V o;
                 o.positionCS = VegClipPos(v.positionOS.xyz, v.uv);
                 o.uv = VegUV(v.uv);
-                o.t = VegBlend(v.uv);
+                o.t = half2(VegBlend(v.uv), VegCutoff());
             #if defined(_HLOD_EDGE)
                 o.positionWSxz = TransformObjectToWorld(v.positionOS.xyz).xz;
                 o.farOwner = KamionFarRingOwner();
@@ -587,7 +622,7 @@ Shader "Kamion/Vegetation"
                 if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
                 i.uv = EdgeUV(i.uv);
             #endif
-                clip(VegAlpha(i.uv, i.t) - _Cutoff);
+                clip(VegAlpha(i.uv, i.t.x) - i.t.y);
                 return 0;
             }
             ENDHLSL
