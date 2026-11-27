@@ -155,3 +155,25 @@ Kamery kontrolne (authored): `knyszyn_szkolna_junction` (oko kierowcy na Połudn
 rzeczywistej (`ortho_readings.json`, niepoprawiona); żółte barierki na narożnikach SW i NE widoczne z góry —
 UNVERIFIED, niemodelowane; sklep / zakład pogrzebowy / blok z muralem (bez marek, nazw i herbu) — poza zakresem;
 `roadgraph.py` bez tagów `sidewalk*`; wpis w `knyszyn-w`; pętla wizualna (render, `visual-critic`) po stronie lidera.
+
+## Dopisek s24 — nawierzchnie i krawężniki małych miast
+
+`pavement_rules.mixed_sidewalks` włącza wspólny materiał chodnika. Kolejność wyboru to
+override, OSM, BDOT10k, typologia i domyślna szara kostka. Gdy brakuje danych, klasy lokalne
+dostają wariant według stabilnego skrótu identyfikatora OSM way. Obie strony i wszystkie chunki
+odcinka dostają to samo rozstrzygnięcie. Odcinki z płytami 35 × 35 cm i asfaltem są dopuszczone
+w tym fallbacku przez `older_sidewalks`. Udziały fallbacku oraz pigment czerwieni są
+`WORKING_VALUE`. W Knyszynie fallback zachowuje kostkę zgodnie z uwagą właściciela.
+Wpisy `sidewalk_surface` pozostają sposobem na wprowadzenie potwierdzonych miejscowych różnic.
+
+Eksport zachowuje identyfikator `sidewalk_paving` i koduje wybór w COLOR_0. Na granicy typów
+wierzchołki zachowują osobne wartości koloru i wspólną normalną geometryczną. World PBR
+barwi szary skan kostki na czerwono albo pobiera istniejący skan płyt lub asfaltu.
+Płytę i kostkę różnicują też dotychczasowe maski wymian nawierzchni z ADR 0349. Asfalt
+ma własną maskę ciemniejszego uzupełnienia. Każdy wariant korzysta z tego samego prymitywu
+w obrębie warstwy i chunka. Eksport nawierzchni nie kontaktuje się z siecią.
+
+Krawężnik używa UV1 wzdłuż prefabrykatów i ziarna z identyfikatora pasa. Ton betonu zmienia się
+między prefabrykatami, a miejscowe ubytki na górnej krawędzi od strony jezdni są symulowane
+kolorem i chropowatością. Rozmiar i częstość ubytków są `WORKING_VALUE`. Obniżenia oznakowanych
+przejść używają istniejącej reguły tego ADR (2 cm, rampy 1 m, poza płytami skrzyżowań i mostami).

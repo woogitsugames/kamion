@@ -22,3 +22,5 @@
 - Następny krok: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 before`
 - Mechanizm gotowy za flagą regionu. COLOR_0 wybiera skan/pigment, spoiny i naprawy są w shaderze, krawężniki używają UV1 i koloru. Dodano test stabilności i zachowania granicy w jednym prymitywie.
 - Następny krok: dokończyć `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 before`, następnie włączyć flagi w overrides obu miast.
+- Dopisano kontrakt wariantów do ADR 0237. Przygotowano testy pod slotem heavy oraz lokalne kopie instancji regionu C potrzebne do bramek.
+- Następny krok po renderach: `pwsh artifacts/codex-sidewalk-var-s24/test.ps1`

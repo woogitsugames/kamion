@@ -4,12 +4,8 @@ Scope: rules and data only. The kerbs and the roadside footway strips are meshed
   * lowers kerbs at marked pedestrian crossings (`crossing_drops`): entries for streetscape.plots.apply_drops, added
     to the driveway drops of ADR 0114 by streetscape.stage.plan_plots, so they reach the `side_edit` of pass 2 of
     build_world without a change there. Heights of existing stations only - the number of triangles cannot grow;
-  * renames the material of footway triangles at export (`retype_sidewalks` sets `Part.export_mat`) - the parts keep
-    `sidewalk_paving` for every QA / fidelity / cull rule keyed on it, and no triangle is added or removed.
-    NOT WIRED YET: it needs three small hunks in roads/build_world.py (assemble reads `export_mat` like the
-    `bridge_kerb` rename of ADR 0123, WELD, one call before the export), a file owned by budget-fix-s21 (ADR 0221)
-    while this was written. The patch is docs/adr/0237-build-world-hook.patch; until the lead applies it, `run` is
-    never called and every roadside footway stays grey 20 x 10 blocks.
+  * assigns footway types for export (`retype_sidewalks`). The legacy route sets `Part.export_mat`. Town rules
+    encode the type into COLOR_0 and keep the same material. Both keep `sidewalk_paving` for QA / fidelity / cull.
 
 Both are opt-in per region: an `overrides.yaml` entry `kind: pavement_rules` switches them on (bialystok-industrial-c,
 bialystok-dojlidy). A region without it is built exactly as before.
@@ -27,6 +23,8 @@ Override schema (Data/Regions/<id>/overrides.yaml):
     kind: pavement_rules
     sidewalk_bdot: true              # rule 3
     estate_slabs: false              # rule 4
+    mixed_sidewalks: true            # shared material and local-street fallback
+    older_sidewalks: true            # allow slabs/asphalt in the local-street fallback
     crossing_kerb_drops: true        # kerbs lowered at marked pedestrian crossings
     cycle_paver_material: cycle_red  # material of a BDOT10k cycle path laid in blocks (cycle_red | sidewalk_paving)
   - id: ...
@@ -485,9 +483,9 @@ def surface_types(cen, way, zones: Zones, layer="road"):
 def retype_sidewalks(parts: list, zones: Zones | None) -> dict:
     """Give the footway triangles of `parts` (a MeshBuf.parts list, edited in place) their surface type.
 
-    A part of material `sidewalk_paving` whose triangles get another type is split: the triangles of each type move
-    to a new part that shares the vertex arrays and carries `export_mat` (the material written to the GLB). `mat`
-    stays `sidewalk_paving` on every part. Triangles are neither added nor removed (report: tris_in == tris_out)."""
+    A part with multiple types is split into groups of triangles with the same type. Each group retains the
+    original geometry and gets either `export_mat` or a constant COLOR_0 surface code (mixed town mode).
+    `mat` stays `sidewalk_paving`. In mixed mode the existing kerb strips also receive a tone/spall seed."""
     from roads.meshing import Part
     rep = {"enabled": zones is not None, "tris_in": 0, "tris_out": 0, "tris_by_material": {}, "m2_by_material": {},
            "tris_by_provenance": {}, "overrides_applied": [], "overrides_stale": []}
@@ -496,6 +494,7 @@ def retype_sidewalks(parts: list, zones: Zones | None) -> dict:
     mixed = zones.rules.get("mixed_sidewalks", False)
     if mixed:
         rep["mixed_sidewalks"] = True
+        rep["kerb_tris_with_detail"] = 0
     new, hits_all = [], {}
     for p in parts:
         if mixed and p.layer == "road" and p.mat == "curb_concrete" and p.UV1 is not None:
@@ -503,6 +502,7 @@ def retype_sidewalks(parts: list, zones: Zones | None) -> dict:
             # Flanges at the back of the sidewalk and unparameterized meshes retain their old finish.
             if np.min(np.abs(p.UV1[p.T, 1])) < 0.30:
                 p.COL = np.tile([_seed(p.src), 0., 0., 1.], (len(p.V), 1))
+                rep["kerb_tris_with_detail"] += len(p.T)
         if p.mat != SOURCE_MAT or p.layer not in LAYERS_OVERRIDE or getattr(p, "export_mat", None):
             continue
         tri = p.V[p.T]
