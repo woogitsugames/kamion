@@ -25,3 +25,5 @@
 - Następny krok: wdrożyć wygaszanie krycia i wybór z pozycji kafla, następnie `pwsh scripts/visual-qa.ps1 -Scene World_dk65-07_High -Tier High -Pc -BuildTarget Win64 -Lighting clear -Cameras cab-driver`.
 - Krok 3. Clear ma zakres wygaszania `0..0,24` w istniejącym smoothstep. Wybór deterministyczny z kotwicy kafla działa wspólnie dla startu, streamingu i QA, a test grafu obejmuje 96 styków. Zmiana w trasie wygasza starą mapę przed odsłonięciem nowej.
 - Następny krok: `pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner codex-clouds-horizon-s24`, potem `pwsh scripts/visual-qa.ps1 -Scene World_knyszyn-w_High -Tier High -Pc -BuildTarget Win64 -Lighting clear -Cameras cab-driver` i pozostałe kadry A/B.
+- Krok 4. Obejrzano porównania PNG przed i po w obu pogodach oraz Clear z przypiętą mapą. Względem kadru bez chmur średnie odchylenie RGB w oknie niskiego nieba spadło o 47,8% i 52,1%. Overcast różni się o najwyżej 1 poziom na 1 i 4 pikselach.
+- Następny krok: `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64` pod slotem heavy i unity, następnie cztery testy budżetowe GIS.
