@@ -151,3 +151,16 @@ schodzi do 2 cm nad ściekiem. Progi i wymiary: WORKING_VALUE.
 Siatki renderu i kolizji dostają te same stacje początku i końca najazdu oraz metrowego przejścia. Zjazd na
 wiejskim poboczu jest docinany według obrysu asfaltu z finalnej siatki. Wzdłuż styku nakładka zachowuje kilka mm
 prześwitu nad poboczem, przechodząc do 2 cm dalej od asfaltu. Generator używa dotychczasowych warstw i materiałów.
+
+### Pomiary w knyszyn-w
+
+Win64 `IMPORT_RESULT: OK`, 64 kafle w Low i High, zgodność SHA-256 z manifestami w obu stanach. Porównano 26 par
+High PC (13 kamer × clear i overcast). Podejście `drv_close_0` pokazuje klin asfaltu przy nieprzerwanym styku
+z poboczem. Dalej w kostce widać miejscowe przebicia podłoża obecne także w stanie wyjściowym.
+Kontrole geometrii obejmują zbieżne wierzchołki asfaltu i żwiru, profil kolizji oraz docinanie zjazdu z dodatnim
+prześwitem przy styku.
+
+Liczba prymitywów High + Low (łącznie z kolizją) 2418 → 2418, te same grupy materiałów per kafel.
+Estymaty wywołań renderowania, cieni i instancji bez zmiany na 26 porównaniach. Najcięższa kamera w budżecie
+generatora High `route-s0426`: 1 113 412 → 1 119 979 trójkątów. W kadrach edytora `drv_close_0`: 874 251 → 881 712
+trójkątów i 341 → 341 estymowanych wywołań siatek. Dowody w `artifacts/codex-patches-edges-s24/`.

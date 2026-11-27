@@ -243,3 +243,17 @@ Obrys korzysta z szumu o skali 9,5 cm i 72 cm w przestrzeni obiektu, z tłumieni
 Wąska zalewka zmienia krycie odcinkami. Frezowanie zachowuje kierunek cięcia poprzecznego. Wykopy i naprawy na
 gorąco mogą przykryć znakowanie zgodnie z P2. Geometria, UV, materiał i kolejka renderowania pozostają wspólne
 z dotychczasowym mechanizmem. Rodzaj 0 zachowuje dotychczasowy wygląd.
+
+### Pomiary w knyszyn-w
+
+High PC, Win64, 1920 × 1080. Dwa pola wnętrza łaty w `dk65-goniadzka` porównano z polami asfaltu obok.
+Mediana Y′ z pikseli sRGB bez dekodowania do liniowego RGB. Wynik względny `100 × (Y′ łaty / Y′ jezdni − 1)`.
+
+| Próbka | Clear przed → po | Overcast przed → po |
+|---|---:|---:|
+| Lewa, bliższa | −14,10% → +3,42% | −18,10% → +4,11% |
+| Prawa, dalsza | −15,05% → +1,05% | −18,09% → +2,12% |
+
+W przeglądzie kadrów jaśniejsza partia łaty jest czytelna po fakturze i poszarpanym brzegu. Zalewka przestała
+rysować ciemny kontur całej naprawy. Pola pomiarowe, arkusze, pełne PNG i logi są w
+`artifacts/codex-patches-edges-s24/`. Pomiar obejmuje dwie wskazane łaty.

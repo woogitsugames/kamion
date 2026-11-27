@@ -37,3 +37,7 @@
 
 - [krok 6] Prywatny wariant po zmianach wyeksportowany w 559,7 s po ekstrakcji. GLB High+Low: 2418 → 2418 prymitywów, te same grupy per kafel. Kamery bazowe mają identyczny SHA-256. Budżet generatora (najcięższa kamera High) 1 113 412 → 1 119 979 trójkątów.
 - Następny krok: dokończyć import i rendery `qa.ps1 -Stage after`, a następnie uruchomić `compare.py` i wymagane testy GIS.
+
+- [krok 7] Importy Win64, 52 PNG High PC i przegląd 26 par. Clear: kontrast łaty −14,10% → +3,42% oraz −15,05% → +1,05%. Estymaty wywołań identyczne we wszystkich kadrach. Na styku widać nowy klin. Dalej w kostce pozostały wcześniejsze prześwity.
+- Weryfikacja GIS: 94/94, w tym testy budżetowe. Dane instancji regionu C skopiowane tylko do prywatnego derived. Dowody skopiowane do `C:/Users/matma/Documents/Claude/kamion/artifacts/codex-patches-edges-s24/`.
+- Następny krok dla lidera: `git log --oneline 0e9424aaa..codex-patches-edges-s24`, ocena arkuszy i po integracji `& $py tools/worldgen/roads/build_world.py --region knyszyn-w --context` pod slotem heavy.
