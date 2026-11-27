@@ -31,3 +31,5 @@
 - Bazowy generator wyeksportował 64 chunki High i Low, kopia metryk jest w `artifacts/codex-sidewalk-var-s24/before/`. Bazowy import czeka na slot Unity i czyta zachowany manifest.
 - Włączono warianty w danych Tykocina i wpis szarej kostki dla północnej pierzei, na podstawie dwóch zdjęć Commons.
 - Następna komenda po bazowym visual-QA: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`
+- Testy z portfela budżetowego, chodników ADR 0237 i Knyszyna D38: 123 passed, 234,44 s. Log w `artifacts/codex-sidewalk-var-s24/pytest.log`.
+- Następny krok: po bazowym imporcie i renderach uruchomić `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`.
