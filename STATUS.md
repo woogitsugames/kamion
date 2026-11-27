@@ -20,3 +20,6 @@
 ## codex-props-low-perf-s24 — ADR 0136
 - [krok 1] Przeczytano zasady i ustalono punkt odniesienia 98bbb8724. PC Low/Medium używają dziś cull 200/300 m dla wszystkich zaparkowanych pojazdów. Brak scen pomiarowych w worktree.
 - Następny krok: `pwsh -File artifacts/codex-props-low-perf-s24/qa.ps1 -Phase before -Import` (prywatne dane dwóch kafli, baseline z PC visual-QA).
+
+- [krok 2] Skopiowano dane knyszyn-w i tykocina do prywatnego katalogu derived. Przygotowano pomiar Win64 PC 1920×1080 na sześciu kamerach każdego kafla i osobne przebiegi High w clear i overcast.
+- Następny krok: `pwsh -File artifacts/codex-props-low-perf-s24/qa.ps1 -Phase before -Import`.
