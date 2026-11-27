@@ -39,3 +39,5 @@
 - Następny krok pod slotem heavy: `& $python tools/worldgen/roads/build_world.py --region knyszyn-w --no-route-graph`.
 - Lokalny `build_world` Knyszyn-W zakończony w 386,0 s. Powstały 64 chunki High i 64 Low. Daleki plan ma 46 753 trójkąty w High i 5746 w Low. Zachowano manifest QA w artefaktach.
 - Następny krok pod slotem heavy: `& $python art-source/world/materials/_src/build_all.py --tier Medium`, potem import High i visual-qa.
+- PBR Medium wygenerowany w 1170 s. Kontrola świeżości: 241 plików, 0 brakujących i 0 nieaktualnych, 2 oczekiwane pominięcia dla brakującego zdjęcia asfaltu. SHA-256 danych kafla: 144 → 0 niezgodności na 192 wejścia.
+- Następny krok pod slotem heavy: `. ./scripts/env.ps1`, następnie `Invoke-UnityBatch -LogFile artifacts/codex-main-verify-s24/logs/import-knyszyn-w-high.log -BuildTarget Win64 -Arguments @('-executeMethod','Game.World.Import.RegionImporter.ImportBatch','-region','knyszyn-w','-tiers','High','-materialTier','Medium')`.
