@@ -11,6 +11,7 @@ tile, period LATTICE_M (2.255 m measured, residuals < 0.10 m). Band width, sett 
                          (red border band of the plaza, grey walks around the lawns)
   granite_honed_tint     honed grey granite of a monument plinth (Knyszyn), neutral modulation map
   bronze_cast_tint       weathered cast bronze of the figure, neutral modulation map + metal mask
+  sandstone_weathered_tint  weathered sandstone of the Czarniecki monument (Tykocin), neutral modulation map
 """
 from __future__ import annotations
 
@@ -210,6 +211,31 @@ def bronze_cast(n=1024):
                       detail_mask=(1 - oxide).astype(np.float32), metal=metal, ao_scales=(0.004, 0.015, 0.05), ao_k=0.5)
 
 
+def sandstone_weathered(n=1024):
+    """Weathered fine-grained sandstone of an 18th-century monument (Czarniecki, Tykocin): sand grain, faint bedding
+    planes, pits and spalls where the surface scaled off, thin rain tails running down (v = up) and pale mineral
+    crusts. Neutral modulation map (mean 0.5), tile 1.6 m; the large stains, the crust in the hollows and the lichen
+    are baked per vertex in the asset (COLOR_0, `facade_tint`), this set only carries what is smaller than a hand."""
+    L = 1.6
+    c = Ctx(n, n, L, L, seed=1762)
+    grain = noise(c, 1, c.px * 2, 0.006, beta=0.3)
+    cloud = noise(c, 2, 0.05, 0.5, beta=1.4)
+    bed = noise(c, 3, 0.012, 0.4, beta=1.0, aniso=18.0)                       # bedding laminae, horizontal
+    pit_n = noise(c, 4, 0.004, 0.035, beta=0.8)
+    pits = sstep(1.55, 2.3, pit_n)                                            # scattered pits 4-20 mm
+    spall = sstep(1.1, 1.5, noise(c, 5, 0.04, 0.22, beta=1.6)) * sstep(-0.2, 0.6, noise(c, 6, 0.01, 0.05))   # scaled patches
+    tails = sstep(0.7, 2.0, noise(c, 7, 0.006, 0.5, beta=1.1, aniso=22.0).T)  # run-off tails along v
+    crust = sstep(1.3, 2.1, noise(c, 8, 0.01, 0.09, beta=0.9))                # pale gypsum / lime bloom
+    h = (0.00025 * grain + 0.0006 * bed * 0.3 - 0.0022 * pits - 0.0012 * spall + 0.0004 * cloud).astype(np.float32)
+    tone = 0.56 * (1 + 0.06 * grain + 0.07 * cloud + 0.035 * bed) * (1 - 0.30 * pits) * (1 + 0.10 * spall)         * (1 - 0.24 * tails) + 0.10 * crust
+    alb = np.repeat(tone[..., None], 3, -1).astype(np.float32)
+    alb, _ = calibrate(alb, 0.5)
+    rough = np.clip(0.90 + 0.04 * grain - 0.06 * crust + 0.03 * pits, 0.7, 0.98).astype(np.float32)
+    dark = np.clip(pits + 0.6 * tails, 0, 1).astype(np.float32)
+    return SurfaceSet("sandstone_weathered_tint", c, alb, h, rough, hash01((cloud * 4).astype(np.int64), 9).astype(np.float32),
+                      dark, detail_mask=(1 - dark).astype(np.float32), ao_scales=(0.003, 0.010, 0.04), ao_k=0.6)
+
+
 PLAZA_SETS = {
     "sett_lattice_tykocin": dict(
         fn=sett_lattice, tile_m=[round(TILE_M, 4), round(TILE_M, 4)], target=None, kind="tiling_set",
@@ -229,6 +255,12 @@ PLAZA_SETS = {
         slots=["monument_granite"],
         note="ADR 0325: honed grey granite (feldspar / quartz / biotite grains 3-11 mm), neutral modulation map "
              "(mean 0.5); colour from the manifest. Plinth of the king's monument in Knyszyn."),
+    "sandstone_weathered_tint": dict(
+        fn=sandstone_weathered, tile_m=[1.6, 1.6], target=0.5, kind="modulation_set",
+        uv="mesh_uv0_metres (u around, v up)", slots=["monument_sandstone_aged"],
+        note="ADR 0320 dopisek (tykocin-plaza-s24): weathered sandstone of the Czarniecki monument in Tykocin (grain, "
+             "bedding, pits, scaled patches, thin rain tails along v), neutral modulation map (mean 0.5); colour from "
+             "the manifest, large-scale weathering from the asset's COLOR_0."),
     "bronze_cast_tint": dict(
         fn=bronze_cast, tile_m=[1.2, 1.2], target=0.5, kind="modulation_set", uv="mesh_uv0_metres (u around, v up)",
         slots=["monument_bronze", "monument_bronze_patina", "monument_bronze_rubbed"],

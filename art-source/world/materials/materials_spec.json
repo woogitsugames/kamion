@@ -5273,6 +5273,107 @@
       "hf_ratio_albedo": 0.0423,
       "ao_mean": 0.924
     },
+    "sandstone_weathered_tint": {
+      "tile_m": [
+        1.6,
+        1.6
+      ],
+      "target": 0.5,
+      "kind": "modulation_set",
+      "uv": "mesh_uv0_metres (u around, v up)",
+      "slots": [
+        "monument_sandstone_aged"
+      ],
+      "note": "ADR 0320 dopisek (tykocin-plaza-s24): weathered sandstone of the Czarniecki monument in Tykocin (grain, bedding, pits, scaled patches, thin rain tails along v), neutral modulation map (mean 0.5); colour from the manifest, large-scale weathering from the asset's COLOR_0.",
+      "albedo_target_mean_lum_linear": 0.5,
+      "files": {
+        "High": {
+          "res": [
+            1024,
+            1024
+          ],
+          "texel_mm": 1.56,
+          "dir": "sandstone_weathered_tint/High",
+          "png_bytes": 7217257,
+          "files": [
+            "T_sandstone_weathered_tint_BaseColor.png",
+            "T_sandstone_weathered_tint_MaskMap.png",
+            "T_sandstone_weathered_tint_Normal.png",
+            "T_sandstone_weathered_tint_Var.png"
+          ],
+          "smoothness_mean": 0.102,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "5x5",
+            "MaskMap": "6x6",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 2488620
+        },
+        "Medium": {
+          "res": [
+            512,
+            512
+          ],
+          "texel_mm": 3.12,
+          "dir": "sandstone_weathered_tint/Medium",
+          "png_bytes": 1827055,
+          "files": [
+            "T_sandstone_weathered_tint_BaseColor.png",
+            "T_sandstone_weathered_tint_MaskMap.png",
+            "T_sandstone_weathered_tint_Normal.png",
+            "T_sandstone_weathered_tint_Var.png"
+          ],
+          "smoothness_mean": 0.093,
+          "astc": {
+            "BaseColor": "6x6",
+            "Normal": "6x6",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 485840
+        },
+        "Low": {
+          "res": [
+            256,
+            256
+          ],
+          "texel_mm": 6.25,
+          "dir": "sandstone_weathered_tint/Low",
+          "png_bytes": 454587,
+          "files": [
+            "T_sandstone_weathered_tint_BaseColor.png",
+            "T_sandstone_weathered_tint_MaskMap.png",
+            "T_sandstone_weathered_tint_Normal.png",
+            "T_sandstone_weathered_tint_Var.png"
+          ],
+          "smoothness_mean": 0.086,
+          "astc": {
+            "BaseColor": "8x8",
+            "Normal": "8x8",
+            "MaskMap": "8x8",
+            "Var": "8x8"
+          },
+          "gpu_bytes_astc_mips": 87381
+        }
+      },
+      "height_range_m": [
+        -0.00388,
+        0.00205
+      ],
+      "albedo": {
+        "mean_lum_linear": 0.5,
+        "p05": 0.3964,
+        "p95": 0.5909,
+        "mean_rgb_linear": [
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "hf_ratio_albedo": 0.0725,
+      "ao_mean": 0.975
+    },
     "sandwich_ribbed": {
       "tile_m": [
         6.0,

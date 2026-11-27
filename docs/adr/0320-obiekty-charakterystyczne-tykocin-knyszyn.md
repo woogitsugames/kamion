@@ -105,3 +105,99 @@ LOD1 pomników używa materiałów już obecnych w kaflu. Pomiaru FPS w playerze
 Rundy render → SBS → poprawka: 2 (r1: czerwona farba z `viaduct_concrete` na filarach i chodniku → `truss_concrete`;
 bruk `park_flush` przebijany przez teren → zwykły `paved_area`; korona króla zbyt „kolczasta”, szyja za cienka →
 szersza głowa, niska korona). Arkusze: `artifacts/landmarks-s24/sbs/r2-*.jpg`.
+
+## Dopisek (tykocin-plaza-s24, 2026-11-27): pomnik Czarnieckiego jako hero asset, ławki i mała architektura Rynku
+
+Powód: `artifacts/critic-s24-wave11/CRITIC.md` pkt 10 — „posąg niskopoligonowy, gładki cokół bez zacieków; ławki
+identyczne, ustawione równo” (kadr `look-tykocin-plaza-cab-0325`). Zamyka §4.4 dla pomnika w Tykocinie i częściowo §4.2
+(donice); latarnie nadal otwarte.
+
+### Rozbieżność z treścią zadania
+Zadanie mówiło o „patynie brązu”. Pomnik Czarnieckiego w Tykocinie jest **z piaskowca** (1762; wszystkie zdjęcia Commons
+z `Data/raw/refs/tykocin-rynek-commons`), z metalu są tylko złocona buława i ciemnozielony karwasz na prawym
+przedramieniu. Zrobiono więc wietrzenie kamienia (ciemna skorupa we wnękach i pod gzymsami, zacieki, porosty, jaśniejszy
+odnowiony cokół), a patyna (ścieżka `_BRONZE_PATINA` z ADR 0331) trafiła tylko na karwasz i rękawicę. Zasada „nie
+zmyślaj” ma pierwszeństwo przed opisem zadania.
+
+### Decyzja
+1. **Hero asset z Blendera** (skill `blender-hero-asset`): `tools/blender/world/landmarks/make_czarniecki.py` →
+   `art-source/world/landmarks/tykocin_czarniecki/{tykocin_czarniecki.npz, _meta.json}` z `dims.json` (wymiary i źródła,
+   wszystko `WORKING_VALUE`). Wynik w zwykłym gicie (npz ~0,34 MB, nie LFS — budowa świata nie może zależeć od LFS);
+   test pilnuje, że sha256 generatora i `dims.json` w `_meta.json` zgadza się z repo.
+   - high poly: postać złożona z zamkniętych brył (toczony żupan i delia z fałdami, kończyny, części głowy, wałki
+     futra, hełm u stopy) i **zespolona remeshem wokselowym 6 mm** w jeden „wykuty” blok (775 k trójkątów); loki
+     futra i pasma brody jako przemieszczenie na zespolonej powierzchni. Głowa (4,5 mm, 74 k) i cztery kartusze gzymsu
+     (9 mm, 94 k) to osobne bloki z własnym budżetem;
+   - low poly: decymacja kwadrykowa do budżetu (sylwetka zostaje, płaskie tkaniny dostają mało trójkątów);
+   - architektura (platforma, stopnie, cokół prosty, cokół „wazowy” z wgłębionymi polami inskrypcyjnymi, gzyms) jako
+     jawne siatki ciągnięte po profilu wokół kwadratu, twarde krawędzie tam, gdzie profil je ma;
+   - **wypiek do `COLOR_0` względem high poly** (promienie BVH): AO, brud we wnękach (AO krótkiego zasięgu), osłonięcie
+     od deszczu, zacieki pod każdym gzymsem, porosty od północy, wilgoć u podstawy, jaśniejszy odnowiony cokół. Shader
+     bez zmian: ścieżka `facade_tint` (ADR 0348: `albedo *= 2 * rgb`). Zero zmian w C# i shaderach;
+   - nowy zestaw modulacyjny `sandstone_weathered_tint` (`sets_plaza.py`: ziarno, uławicenie, wżery, łuszczenie, cienkie
+     zacieki wzdłuż v; kafel 1,6 m) — niesie to, co mniejsze od dłoni; duże plamy są w wierzchołkach.
+2. **Poza** odczytana z Commons 01 / 08 / „1762 01”: prawa ręka wyciągnięta w przód–bok mniej więcej poziomo z buławą
+   trzymaną pionowo (na zdjęciu z dołu wygląda na uniesioną — perspektywa), głowa zwrócona ku buławie, lewa dłoń na
+   rękojeści szabli, żupan do połowy łydki z pasem i pętlicami, delia podbita futrem odrzucona na prawe ramię, długa
+   rozdwojona broda, głowa odkryta (ADR 0320 miał czapkę — na zdjęciach jej nie ma), hełm przy lewej stopie.
+   Kartusze na czterech ścianach gzymsu (dwa widać na zdjęciach, dwa ESTIMATED). Bez napisów i herbów.
+3. **`tykocin_rynek_0320.py`** wstawia asset (LOD0 → `buildings`, LOD1 → `buildings_low`) i dokłada to, co cienkie lub
+   stoi obok: ogrodzenie na platformie (słupki narożne, dwie poprzeczki, płaskie szczeble z grotami), cztery puste
+   tablice na froncie, cztery kamienne słupki z łańcuchem, 8 donic z begoniami wokół pomnika (ESTIMATED ze zdjęć).
+4. **Ławki i donice**: 10 ciemnych znaków z ortofoto (tożsamość ESTIMATED) = 6 ławek + 4 skrzynie z kwiatami (na
+   zdjęciu we mgle wzdłuż krawędzi stoją skrzynie). Ławki z żeliwnymi bokami w **3 wariantach**: z podłokietnikami
+   1,8 m, prosta 1,5 m (4 szersze deski), bez oparcia 1,8 m. Każda obrócona o 2–9° w losową stronę i przesunięta do
+   ±0,25 m w poprzek / ±0,3 m wzdłuż rzędu (ziarno = indeks znaku, więc wynik jest powtarzalny). Zużycie w `COLOR_0`:
+   własny ton każdej deski (od świeżej bejcy do wyszarzałej), wymieniona jasna deska, wytarta przednia krawędź
+   siedziska, ciemne czoła desek, ugięcie środkowych desek, w ~1/5 ławek z oparciem brak jednej deski.
+   Materiały: `wood_planks_bench` (zestaw `wood_siding`), `planter_flowers` (zestaw `hedge_foliage`, kolor kwiatów /
+   liści per wierzchołek), żeliwo = `fence_anthracite`. Kosze na śmieci pominięte (nie ma ich na żadnym zdjęciu).
+5. LOD1 kamienia, drewna i kwiatów **zachowuje własny materiał z `COLOR_0`** (3 dodatkowe wywołania w warstwie low
+   jednego kafla), żeby pomnik nie zmieniał barwy przy przełączeniu LOD; reszta LOD1 jak dotąd na materiałach kafla.
+6. Kamery kontrolne `czarniecki_figure_0320b`, `czarniecki_34_0320b`, `czarniecki_pedestal_0320b`,
+   `plaza_furniture_0320b` (authored, przeżywają regenerację).
+
+### Budżet i uzasadnienie
+
+| Pozycja | ADR 0320 | Teraz | Uwagi |
+|---|---|---|---|
+| asset pomnika LOD0 | — | 26 476 | figura 10 500, głowa 2 600, kartusze 1 300, architektura 11 240 + 448 (kostka platformy), buława 420 |
+| asset pomnika LOD1 | — | 1 914 | figura 540, głowa 110, kartusze 96, architektura 1 064, buława 120 |
+| cały Rynek (`tykocin_rynek_0320`) LOD0 | 2 870 | 35 446 | + ogrodzenie, łańcuchy i żeliwo ławek 3 036, deski ławek i skrzyń 2 592, kwiaty 3 072 |
+| cały Rynek LOD1 | 1 562 | 3 164 | 9 % LOD0 |
+| materiały | 4 | +3 (`monument_sandstone_aged`, `wood_planks_bench`, `planter_flowers`) | `monument_sandstone` (ADR 0320) nieużywany |
+| tekstury | — | +1 zestaw 1024² (`sandstone_weathered_tint`) | reszta to zestawy już w buildzie |
+
+Dlaczego tyle: pomnik jest jedynym obiektem charakterystycznym Rynku i celem kadru z kabiny; 26,5 k to tyle, co most
+kratownicowy z tego samego ADR (26 154) i ok. 0,8 % budżetu klatki knyszyn-w (3,17 M p95, ADR 0327). LOD0 jest tylko
+w warstwie `buildings` (blisko); z daleka zostaje 1,9 k. Architektura ma gęstą siatkę (11 k) celowo — zacieki i plamy
+żyją w wierzchołkach, więc krok siatki 8,5 cm jest rozdzielczością wietrzenia; tańsza wersja wymagałaby własnej
+tekstury 2K dla jednego obiektu. Testy: `tests/gis/test_truss_bridge_0320.py` (asset ≤ 27 k / LOD1 ≤ 2 k, Rynek ≤ 36 k,
+LOD1 ≤ 10 % LOD0, kolory wierzchołków w obu LOD, warianty i obrót ławek). **FPS w playerze nie mierzony.**
+
+### Pętla wizualna
+Look-dev Blender (Cycles, LOD0 z wypieczonym kolorem) r1–r4, `artifacts/tykocin-plaza-s24/lookdev/`: r1 futro jak
+„stos naleśników”, ręka za krótka, kartusze jak kraby → r2 próba ważonej decymacji zniszczyła korpus (odrzucona) →
+r3 głowa jako osobny blok, nieregularne loki, kartusz z ramą → r4 broda wyłożona na pierś.
+
+Unity (High / clear, Win64; kafel `tykocin` przebudowany w prywatnej kopii derived worktree, `build_world` exit 0,
+630 s): przed `artifacts/tykocin-plaza-s24/vqa-before/` (import stanu main), po `vqa-after1/` → `vqa-r2/` → `vqa-after/`.
+r1: skrzynie jasne jak surowa sosna, kwiaty jak złożone kartki w paski (kępki za duże, UV zdegenerowane), tablice
+za duże i białe, kamień oliwkowy → r2: drewno ×0,6, tablice −30 %, kamień jaśniejszy i mniej zielony → r3: futro
+ciemniejsze od żupana (jak na „1762 01”), masa kwiatów zielona z drobnymi kępkami kwiatów. Arkusze zdjęcie | przed | po:
+`artifacts/tykocin-plaza-s24/sbs/`.
+
+**Znalezisko przy okazji:** figura z ADR 0320 stała **tyłem do DW671** — kadr `czarniecki_figure_0320b` „przed” (z
+południa) pokazuje plecy i pelerynę, choć `MONUMENT_FORWARD` mówił „południe” (bryły toczone miały przód po stronie −y).
+Nowy asset ma przód = +y w swoim układzie i w kadrze z południa widać twarz, pętlice i buławę po lewej jak na Commons 01.
+Sam zwrot pomnika (południe) pozostaje ESTIMATED.
+
+### Otwarte
+- Ocena `visual-critic` (subagent nie tworzy subagentów — do zlecenia przez lidera); pomiar FPS w playerze.
+- Inskrypcje pól cokołu (na zdjęciach czytelne jako poziome wiersze) i herb kartusza pominięte — bez liternictwa w świecie.
+- Latarnie Rynku: na zdjęciach stoją stylizowane dwuramienne latarnie, w grze zostały słupy uliczne z reguły dróg
+  (pozycji latarni nie ma w danych; ADR 0320 §4.2 bez zmian).
+- Twarz z bliska jest uproszczona (2,6 k trójkątów na głowę); z ziemi (≥ 8 m, głowa 7 m nad brukiem) czyta się broda,
+  wąsy, łuk brwiowy i łysina. Bez mapy normalnych — całe wietrzenie jest w wierzchołkach i w zestawie kafelkowym.
+- Pozycje donic i podział 6 ławek / 4 skrzynie są ESTIMATED; zdjęcie właściciela z Rynku rozstrzygnie.
+

@@ -1,0 +1,51 @@
+{
+ "asset": "tykocin_czarniecki",
+ "generator": "tools/blender/world/landmarks/make_czarniecki.py",
+ "generator_sha256": "e0f36058740c71c5647652f0f54649b6bcfc4ff17e136283ce8a7287b21a9b84",
+ "dims_sha256": "ac0faf43bd6f5d97c58c9ac7de9b69feefddd212d479031ca61958f690d66af8",
+ "blender": "4.2.16 LTS",
+ "voxel_m": 0.006,
+ "tris": {
+  "high_tris": {
+   "figure": 774680,
+   "head": 74060,
+   "cartouches": 93724
+  },
+  "lod0": {
+   "figure": 10500,
+   "head": 2600,
+   "cartouches": 1300,
+   "architecture:plaza_sett_grey": 448,
+   "architecture:monument_sandstone_aged": 11240,
+   "mace": 420,
+   "total": 26476
+  },
+  "lod1": {
+   "figure": 540,
+   "head": 110,
+   "cartouches": 96,
+   "architecture:plaza_sett_grey": 32,
+   "architecture:monument_sandstone_aged": 1032,
+   "mace": 120,
+   "total": 1914
+  }
+ },
+ "bbox_min": [
+  -2.45,
+  -2.45,
+  -0.25
+ ],
+ "bbox_max": [
+  2.45,
+  2.45,
+  7.462
+ ],
+ "figure_base_z": 4.9,
+ "height_m": 7.462,
+ "materials": [
+  "monument_bronze_patina",
+  "monument_gilt",
+  "monument_sandstone_aged",
+  "plaza_sett_grey"
+ ]
+}
