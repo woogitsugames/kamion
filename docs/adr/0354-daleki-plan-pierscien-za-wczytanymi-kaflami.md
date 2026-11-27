@@ -102,13 +102,14 @@ ujawnił pusty horyzont).
 
 ## Weryfikacja w buildzie #10 (nie wykonano tutaj)
 1. Build Windows z tą gałęzią; przejazd autopilota Białystok → Tykocin z `-Scene knyszyn-w` lub `dw671-tykocin-03`
-   (`pwsh scripts/build-windows.ps1 -SkipBuild -Run -Scene knyszyn-w -Tier High -Autopilot route -Speed 50
-   -RunSeconds 240 -ShotSeconds 120`), drugi przebieg z `$env:KAMION_FAR_RING='off'` w tej samej sesji PowerShell
+   (`& ./scripts/build-windows.ps1 -SkipBuild -Run -Scene knyszyn-w -Tier High -Autopilot route -Speed 50
+   -RunSeconds 240 -ShotSeconds 120 -ExtraPlayerArgs '-stream','1'`), drugi przebieg z `$env:KAMION_FAR_RING='off'` w tej samej sesji PowerShell
    (zmienna dziedziczona przez player; równoważnie argument playera `-farRing off`) — A/B w tym samym buildzie.
 2. W logu: `[STREAM] ready …` bez ostrzeżenia `far ring: more than 16`; brak błędów shadera.
 3. Zrzuty z boku trasy (pola dw671): las/WN na horyzoncie w `on`, mgła w `off`; brak ścian lasu na drodze sąsiada przy
    szwie (wjazd w kafel ~400 m po Ready).
-4. `pwsh scripts/pc-metrics.ps1 … -Class zalecany` on vs off: p95 klatki w budżecie; spodziewany koszt GPU niewielki
+4. `pwsh scripts/pc-metrics.ps1 … -Class zalecany -Extra 'stream=1,farRing=on'` vs `'stream=1,farRing=off'`:
+   p95 klatki w budżecie; spodziewany koszt GPU niewielki
    (wierzchołki dalekiego planu, pętla ≤ 16 w jego pikselach).
 
 ## Otwarte

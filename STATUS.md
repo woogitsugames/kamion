@@ -24,3 +24,5 @@
 - Następny krok: `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1` (High, clear/overcast, A/B, colorby:renderer).
 - [krok 3] Archiwalny #10: przejazdy Knyszyn Zachód–Mońki mają aktywny streamer i podobny horyzont z kabiny, ale różne pozycje pojazdu. Archiwalne pomiary PC obu startów nie uruchomiły streamera. Obejrzano 3 pary PNG z przejazdu.
 - Następny krok: dokończyć `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1` po przydziale FIFO, następnie `pwsh artifacts/codex-farring-diag-s24/run-player.ps1` z jawnym `-stream 1`.
+- [krok 4] Skorygowano polecenia weryfikacji ADR 0354: porównanie wymaga jawnego `-stream 1` w obu wariantach. Zapisano tymczasowe WYNIKI.md i skrypty odtworzenia w katalogu artefaktów.
+- Następny krok: dokończyć czekający `pwsh artifacts/codex-farring-diag-s24/run-editor.ps1`; polecenie jest pierwsze w kolejce heavy.
