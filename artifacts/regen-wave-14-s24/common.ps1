@@ -77,10 +77,12 @@ function Invoke-WaveUnity([string]$Owner, [string]$Log, [scriptblock]$Work) {
         if (git status --porcelain -- game/ProjectSettings game/Packages ':(glob)**/*.asmdef' @restore) {
             throw 'Zabezpiecz istniejące zmiany Unity przed importem lub renderem.'
         }
+        # s25: osobna nazwa — w zasięgu Invoke-WithHeavySlot `$Work` to ten blok (dynamiczny zasięg) → nieskończona rekurencja.
+        $unityWork = $Work
         Invoke-WithHeavySlot $Owner $Log {
             # Slot heavy nie obsługuje blokady telefonu.
             while (Test-Path -LiteralPath "$mainRoot/artifacts/locks/PHONE_RUN") { Start-Sleep -Seconds 60 }
-            try { & $Work }
+            try { & $unityWork }
             finally {
                 foreach ($path in $restore) {
                     git diff --quiet -- $path
