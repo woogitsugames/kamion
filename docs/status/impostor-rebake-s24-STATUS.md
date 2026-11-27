@@ -20,3 +20,8 @@
 - [krok 3] VQA `edge1` (knyszyn-w clear, 4 kamery): kolce w koronie klonu route-s0426 znikają (`view/z1.png` przed|po,
   200 %); zmienione piksele (fuzz 6 %) 0,02-0,05 % kadru, gęstość korony bez widocznej zmiany.
 - NASTĘPNY KROK: czas quick bake maple_0 (trwa), potem pełny rebake (komenda wyżej).
+- [krok 4] Quick bake maple_0: 146 s/drzewo (render GPU ~1 s/przebieg, reszta = pakowanie numpy). Opening r=3 (skalowany)
+  ciął brzeg korony w kwadratowe bloki -> r=1 bez skalowania (min_island skalowane powierzchnią). Wynik: 4096×1024 + _n
+  2048×512, brzegi liściaste, wyraźnie ostrzejsze (`view/crop3.png`). Pełny rebake 28 drzew wystartował 16:3x (~70 min).
+- NASTĘPNY KROK: po `logs/blender-full.status`: skopiować impostor_tree_*.png do `game/Assets/_Generated/World/{knyszyn-w,dk65-07}/Textures`,
+  ImpostorTrimBake.RunBatch -region <id>, audit + VQA `after` (`vqa.ps1 -Label after -Audit`).
