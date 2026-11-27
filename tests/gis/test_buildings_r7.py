@@ -171,11 +171,12 @@ def test_kerb_drop_lowers_the_kerb_only_at_the_driveway():
     n = PL.apply_drops(net, [{"chain": "c1", "side": "L", "s": 30.0, "half": 2.15, "plot": "p"}])
     assert n == 1
     h = c.side["L"]["h"]
-    assert np.all(h[np.abs(s - 30.0) <= 2.15] == pytest.approx(PL.DROP_H_M))    # 2-4 cm lip
-    assert 0.02 <= PL.DROP_H_M <= 0.04
+    # ADR 0349 (codex-patches-edges): a driveway retains a 2 cm lip above the gutter.
+    driveway_height = 0.02
+    assert np.all(h[np.abs(s - 30.0) <= 2.15] == pytest.approx(driveway_height))
     assert np.all(h[np.abs(s - 30.0) >= 2.15 + PL.DROP_RAMP_M] == pytest.approx(0.13))
     ramp = h[(np.abs(s - 30.0) > 2.15) & (np.abs(s - 30.0) < 2.15 + PL.DROP_RAMP_M)]
-    assert len(ramp) and np.all((ramp > PL.DROP_H_M) & (ramp < 0.13))
+    assert len(ramp) and np.all((ramp > driveway_height) & (ramp < 0.13))
     assert np.all(c.side["R"]["h"] == pytest.approx(0.13))                      # the other side keeps its kerb
 
 

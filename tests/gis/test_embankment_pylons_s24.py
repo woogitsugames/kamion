@@ -111,12 +111,15 @@ def test_pylon_has_open_lattice_and_crossarms_in_every_tier(tier, yaw):
     v, t = p["V"], p["T"]
     assert np.isfinite(v).all()
     assert t.max() < len(v) < 65536
-    assert len(t) == (26 if tier == "Low" else 222)  # ribbons on Low (wave 12: 3 lacing panels + only the arm level carrying the conductors), triangular members on High (ADR 0351: 3 arm levels)
+    # ADR 0351 (neon-hvfar): Low uses an open A/Y silhouette with two arm levels.
+    # This near High pylon uses the tapered 3D frame with three arm levels and no rings.
+    assert len(t) == (24 if tier == "Low" else 150)
     assert set(p["COL"][:, 3]) == {0.0}
     assert p["mat"] == "far_field_buildings"
-    # Look from both cardinal directions: solid fins filled the whole shaft;
-    # lattice must have multiple sky holes in its lower 60% at every yaw.
-    for horizontal in (0, 1):
+    # The 3D frame is visible from both axes. The Low ribbons face the owning
+    # tile to the west of this pylon, so its visible horizontal axis is north.
+    horizontal_axes = (1,) if tier == "Low" else (0, 1)
+    for horizontal in horizontal_axes:
         xy = v[:, [horizontal, 2]]
         tri = xy[t]
         a, b = tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0]
