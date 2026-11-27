@@ -21,3 +21,5 @@
 ## codex-clouds-horizon-s24
 - Krok 1. Przeczytano zasady, ADR 0332 z trzema dopiskami, D100 i krytyka. Bazowy wybór chmur używa sceny oświetlenia startowego, również podczas streamingu.
 - Następny krok: pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner codex-clouds-horizon-s24; przygotować lokalne sceny i uruchomić pwsh scripts/visual-qa.ps1 -Scene World_knyszyn-w_High -Tier High -Pc -BuildTarget Win64 -Lighting clear -Cameras cab-driver.
+- Krok 2. Zaimportowano po 64 fragmenty High i obejrzano 4 bazowe PNG `cab-driver` w PC High 1920×1080. Skupisko niskich chmur jest najsilniejsze na `dk65-07`. Porównanie używa tych samych scen po obu stronach. Lokalne GLB dały 80 ostrzeżeń SHA dla `knyszyn-w` i 98 dla `dk65-07`.
+- Następny krok: wdrożyć wygaszanie krycia i wybór z pozycji kafla, następnie `pwsh scripts/visual-qa.ps1 -Scene World_dk65-07_High -Tier High -Pc -BuildTarget Win64 -Lighting clear -Cameras cab-driver`.
