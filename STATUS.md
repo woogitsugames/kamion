@@ -26,3 +26,5 @@
 - Następny krok po renderach: `pwsh artifacts/codex-sidewalk-var-s24/test.ps1`
 - Dopasowano skalę tekstury krawężnika do istniejącego zestawu z prefabrykatami metrowymi. Ubytek moduluje też normalną. Obejrzano referencje Commons cs153250600 i cs202183436.
 - Następna komenda po zakończeniu kolejki i bazowego przebiegu: `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`
+- Włączono odmiany kostki i krawężników dla knyszyn, knyszyn-w i knyszyn-s. W tych kaflach fallback zachowuje kostkę zgodnie z uwagą właściciela.
+- Następny krok: zakończyć `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 before`; potem aktywować Tykocin i uruchomić `pwsh artifacts/codex-sidewalk-var-s24/qa.ps1 after`.
