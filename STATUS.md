@@ -47,3 +47,6 @@ Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 
 
 Ujęcie overcast w punkcie nawrotu wykazało, że lewe pióro dochodziło do słupka A. Skrócono lewy łuk do 72° przy wspólnej fazie, a prawy zachował 95°.
 Następny krok: pwsh scripts/visual-qa.ps1 -Scene DrivingLab -BuildTarget Win64 -Pc -Tier High -Lighting overcast -WiperPhase 0.5
+
+Visual QA High w clear i overcast oraz dodatkowy kadr połowy suwu przeszły własną i niezależną ocenę. Pióra w obrysie szyby, z odstępem od słupka A. Estymaty draw calli 236/106 przed i po.
+Następny krok: pwsh scripts/test.ps1 -Platform All -BuildTarget Win64, z lokalnie wygenerowaną mapą Krywlany do pełnego PlayMode.

@@ -20,15 +20,17 @@ zdarzeniem względem pisku opon w poślizgu (ADR 0145).
   po prawej (`WORKING_VALUE`). Krótszy lewy łuk omija słupek A. Wspólny zegar
   uruchamia klip silnika i tarcia obu suwów na starcie, a osobny stuk przy końcu.
   Zmiana biegu obowiązuje od następnego cyklu. Wyłączenie pozwala dokończyć
-  bieżący cykl. Czasy `WORKING_VALUE`: 1,20 s (przerywany i 1), 0,80 s (2),
-  2,40 s przerwy po zaparkowaniu w trybie przerywanym.
+  bieżący cykl. Czasy robocze (`WORKING_VALUE`) wynoszą 1,20 s dla trybu
+  przerywanego i 1, 0,80 s dla trybu 2 oraz 2,40 s przerwy po zaparkowaniu
+  w trybie przerywanym.
 - Presety oświetlenia nie symulują deszczu. Przy rozpoczęciu cyklu silnik audio
   wybiera mokrą wersję, gdy istniejąca globalna wilgotność `_KamionWet.x` wynosi
   co najmniej 0,25 (`WORKING_VALUE`). Obydwa standardowe presety clear
   i overcast są suche. Scenariusz mokry można uruchomić przez `-rq_wet 1`.
-- Pisk hamulca serwisowego może wystąpić po 0,10 s ciągłego spełnienia warunków:
-  moduł prędkości w przedziale [1, 15) km/h, maksymalne ciśnienie komory koła
-  ciągnika z kontaktem 22–65% maksimum i żądanie hamulca serwisowego 12–75%.
+- Pisk hamulca serwisowego może wystąpić, gdy przez 0,10 s moduł prędkości
+  mieści się w przedziale [1, 15) km/h, maksymalne ciśnienie komory koła
+  ciągnika z kontaktem wynosi 22–65% maksimum, a żądanie hamulca serwisowego
+  wynosi 12–75%.
   Postojowy i Hill Hold blokują zdarzenie. Jedna próba losowania (28%) na
   aplikację, ponowne uzbrojenie po spadku żądania poniżej 8%, odstęp co najmniej
   3 s pomiędzy zdarzeniami. Progi, czasy i poziomy miksu są `WORKING_VALUE`.
@@ -39,7 +41,7 @@ zdarzeniem względem pisku opon w poślizgu (ADR 0145).
 ## Odtworzenie
 
 `tools/audio/render_all.py --no-previews` uwzględnia nowe pary w pełnym banku.
-Samodzielna regeneracja przy użyciu interpretera z NumPy i SciPy:
+Klipy można wygenerować osobno przy użyciu interpretera z NumPy i SciPy.
 
 ```powershell
 & $python tools/audio/cab_mechanisms.py game/Assets/_Project/Audio/Generated/Clips/sfx
@@ -65,8 +67,8 @@ aktualizacjach wycieraczek i w 8320 aktualizacjach audio ze scenariuszy
 hamowania. Własny bank obejmuje 8 WAV mono 48 kHz o łącznym rozmiarze
 543 712 B. Najwyższy zmierzony szczyt próbki to −3,10 dBFS przed miksem.
 
-Źródła pomiaru: `artifacts/codex-audio-wipers-s24/drivinglab-events.log`
-i `wav-measurements.txt`.
+Wyniki są w `artifacts/codex-audio-wipers-s24/drivinglab-events.log`
+oraz `wav-measurements.txt`.
 
 Pełny PlayMode na tej bazie wymagał lokalnej regeneracji brakującej mapy
 `bialystok-krywlany` poleceniem
