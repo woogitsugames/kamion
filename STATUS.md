@@ -147,3 +147,7 @@
 ### codex-csharp-review-fixes-s25 — r3, diagnoza EditMode
 - XML lidera 52/53. `Clear` niszczy pierwszy z trzech śledzonych klonów. Dwa pozostałe przeżywają usunięcie ręcznie zainicjalizowanego komponentu w EditMode. Test wywołuje teraz bezpośrednio produkcyjne `OnDestroy` i wskazuje ID kafla przy błędzie.
 - Następny krok po zajęciu slotu heavy: `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 -Filter 'Game\.Tests\.(Vegetation.*Tests|WorldStreamer.*|TileSceneSourceContractTests)'`.
+
+### codex-csharp-review-fixes-s25 — r3, format wyjątku w Unity
+- Przebieg 52/53 dotarł do `OnDestroy` i `Release(t1)`. XML pokazał wewnętrzny wyjątek jako komunikat, a kontekst streamera w stosie wywołań. `LogAssert` sprawdza teraz dokładny komunikat Unity.
+- Następny krok pod slotem heavy: `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 -Filter 'Game\.Tests\.(Vegetation.*Tests|WorldStreamer.*|TileSceneSourceContractTests)'`.

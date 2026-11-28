@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using Game.Core;
 using Game.World;
 using Game.World.Streaming;
@@ -165,7 +164,8 @@ namespace Game.Tests
                 Assert.That(Array.FindAll(clones, m => m != null).Length, Is.EqualTo(2));
                 Assert.That(source.ReleaseAttempts, Is.Empty);
 
-                LogAssert.Expect(LogType.Exception, new Regex(@"\[STREAM\].*failed to release tile lease"));
+                // Unity reports the inner exception as the message and the wrapper in the stack trace.
+                LogAssert.Expect(LogType.Exception, "InvalidOperationException: Synthetic t1 release failure");
                 // The streamer is initialized by hand in EditMode, so invoke its runtime callback explicitly.
                 typeof(WorldStreamer).GetMethod("OnDestroy", BindingFlags.Instance | BindingFlags.NonPublic)
                     .Invoke(streamer, null);
