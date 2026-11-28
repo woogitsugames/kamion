@@ -1,13 +1,15 @@
 """City-tile triangle budget analysis for wave 14 (task codex-city-budget-s25).
 
 Reads generated QA JSONs and manifests directly from git (default ref: `regen-wave-14-s25`)
-without touching `Data/Regions/*/generated` or `Data/raw/derived`.
+without modifying `Data/Regions/*/generated` or `Data/raw/derived`.
 """
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import math
+import re
 import statistics
 import subprocess
 from dataclasses import dataclass
@@ -15,6 +17,7 @@ from pathlib import Path
 from typing import Any
 
 REPO = Path(__file__).resolve().parents[3]
+MAIN_REPO = Path(r"C:\Users\matma\Documents\Claude\kamion")
 TREES_META_PATH = REPO / "art-source" / "world" / "vegetation" / "trees_meta.json"
 
 CHUNK_M = 256.0
@@ -89,7 +92,7 @@ class RuntimeProfile:
     hlod_m: float
     hlod_cull_m: float
     high_only_trees: bool
-    low_prop_cull_factor: float  # approximate WorldPropTierPolicy reduction on PC Low
+    low_prop_cull_factor: float
 
 
 PROFILES = {
@@ -129,7 +132,7 @@ PROFILES = {
         lod_bias=0.5,
         far_clip=900.0,
         aspect=1920 / 1080,
-        band_fine=0.30,  # WORKING_VALUE: TerrainBandLowM=10 m (vs 15 m + dilation on High -> 0.407)
+        band_fine=0.30,
         tree_card_scale=0.5,
         tree_ends_base=(20.0, 60.0, 1000.0),
         tree_cull_cap=600.0,
@@ -151,7 +154,7 @@ PROFILES = {
         hlod_m=70.0,
         hlod_cull_m=1500.0,
         high_only_trees=False,
-        low_prop_cull_factor=0.75,  # WORKING_VALUE: WorldPropTierPolicy car/van 150 m vs 200 m vehicleCullM, fab 50 m
+        low_prop_cull_factor=0.75,
     ),
 }
 
@@ -180,7 +183,7 @@ def git_read_blobs(ref: str, paths: list[str]) -> dict[str, bytes]:
             continue
         size = int(header.split()[2])
         out[p] = raw[pos:pos + size]
-        pos += size + 1  # skip trailing LF
+        pos += size + 1
     return out
 
 
@@ -312,9 +315,8 @@ def legacy_subbreakdown(
 
         if t.get("water"):
             sub["water_surface"] += t["water"]
-        if t.get("banks"):
-            if d < 500.0:
-                sub["water_banks"] += t["banks"] if tier == "High" else t.get("banks_low", 0)
+        if t.get("banks") and d < 500.0:
+            sub["water_banks"] += t["banks"] if tier == "High" else t.get("banks_low", 0)
 
         if d < pol["furn"]:
             sub["furn_furniture"] += t.get("furniture", 0)
@@ -331,8 +333,7 @@ def legacy_subbreakdown(
             if pol["forest_hlod_m"] < dfc < pol["forest_hlod_cull_m"]:
                 sub["forest_hlod"] += fc["tris"]
 
-    # Verify exact match with streetscape_qa.json
-    assert sub["buildings_lod0"] + sub["buildings_lod1"] == qa_cat.get("buildings", 0), (tier, cam["id"], sub, qa_cat)
+    assert sub["buildings_lod0"] + sub["buildings_lod1"] == qa_cat.get("buildings", 0), (tier, cam["id"])
     assert (
         sub["terrain_lod0"] + sub["terrain_lod1"] + sub["terrain_lod2"] + sub["terrain_lod3"]
         == qa_cat.get("terrain", 0)
@@ -353,7 +354,6 @@ def legacy_subbreakdown(
 
 
 def far_field_in_view(manifest: dict[str, Any], ff_qa: dict[str, Any], cam: dict[str, Any], tier: str, aspect: float) -> tuple[int, int]:
-    """Returns (far_field_in_view_tris, far_field_total_tris) for High or Low."""
     ff_man = (manifest.get("far_field") or {}).get(tier) or {}
     ff_t = (ff_qa.get("tiers") or {}).get(tier) or {}
     total = int(ff_t.get("total_triangles", 0))
@@ -383,6 +383,20 @@ def runtime_estimate(
     qa_cat_low: dict[str, int],
     prof: RuntimeProfile,
     means: dict[str, float],
+    *,
+    bld_lod0_m: float | None = None,
+    bld_lod0b_ratio: float = 1.0,
+    bld_hlod_from_m: float | None = None,
+    bld_hlod_ratio: float = 0.30,
+    plots_cull_m: float | None = None,
+    furn_cull_m: float | None = None,
+    markings_cull_m: float | None = None,
+    paved_cull_m: float | None = None,
+    terrain_lod0_m: float | None = None,
+    terrain_lod1_m: float | None = None,
+    tree_scale: float = 1.0,
+    props_scale: float = 1.0,
+    hlod_m_override: float | None = None,
 ) -> dict[str, int]:
     """Runtime triangle estimate matching WorldSceneBuilder + RegionImporter + WorldInstances."""
     vfov = cam.get("fov_deg", 60.0)
@@ -402,6 +416,7 @@ def runtime_estimate(
         "props": 0.0,
         "far_field": 0.0,
     }
+    hlod_m = prof.hlod_m if hlod_m_override is None else hlod_m_override
     for ch in manifest["chunks"]:
         b = ch["bounds_local_m"]
         if not _chunk_in_frustum(b, cam, hfov, prof.far_clip):
@@ -416,47 +431,62 @@ def runtime_estimate(
             c = NODE_CATEGORY[node]
             if node == "terrain_band":
                 if prof.tier == "High":
-                    n = t.get("terrain_lod0", 0) * (prof.band_fine + (1.0 - prof.band_fine) / 4.0)
+                    if terrain_lod0_m is not None and d >= terrain_lod0_m + MARGIN_M:
+                        n = t.get("terrain_lod1", 0)
+                    else:
+                        n = t.get("terrain_lod0", 0) * (prof.band_fine + (1.0 - prof.band_fine) / 4.0)
                 else:
-                    n = t.get("terrain_lod1", 0) * (prof.band_fine + (1.0 - prof.band_fine) / 4.0)
+                    if terrain_lod1_m is not None and d >= terrain_lod1_m + MARGIN_M:
+                        n = t.get("terrain_lod2", 0)
+                    else:
+                        n = t.get("terrain_lod1", 0) * (prof.band_fine + (1.0 - prof.band_fine) / 4.0)
+            elif node == "terrain_lod1" and prof.tier == "Low" and terrain_lod1_m is not None and d >= terrain_lod1_m + MARGIN_M:
+                n = t.get("terrain_lod2", 0)
             elif node == "buildings":
-                n = t.get("buildings", 0) or t.get("buildings_lod1", 0)
+                if bld_lod0_m is not None and d >= bld_lod0_m + MARGIN_M:
+                    n = t.get("buildings_lod1", 0)
+                else:
+                    n = t.get("buildings", 0) or t.get("buildings_lod1", 0)
+                    if bld_lod0b_ratio < 1.0 and d >= 100.0 + MARGIN_M and t.get("buildings"):
+                        n *= bld_lod0b_ratio
+            elif node == "buildings_lod1":
+                n = t.get("buildings_lod1", 0)
+                if bld_hlod_from_m is not None and d >= bld_hlod_from_m + MARGIN_M:
+                    n *= bld_hlod_ratio
+            elif node == "markings" and markings_cull_m is not None and d >= markings_cull_m + MARGIN_M:
+                n = 0.0
+            elif node == "paved" and paved_cull_m is not None and d >= paved_cull_m + MARGIN_M:
+                n = 0.0
+            elif node == "furniture" and furn_cull_m is not None and d >= furn_cull_m + MARGIN_M:
+                n = 0.0
+            elif node in ("plots", "plots_low") and plots_cull_m is not None and d >= plots_cull_m + MARGIN_M:
+                n = 0.0
             else:
                 n = t.get(node, 0)
             cat[c] += n
         for fc in ch.get("forest_cells", []):
             dfc = _bbox_dist(fc["bbox_local_m"], (px, py))
-            if prof.hlod_m < dfc < prof.hlod_cull_m and dfc <= prof.far_clip:
+            if hlod_m < dfc < prof.hlod_cull_m and dfc <= prof.far_clip:
                 cat["forest_hlod"] += fc["tris"]
 
-    # Rescale instanced props & trees from legacy frame_estimate
     f_frustum = hfov / 360.0
-    # Legacy High trees_lod0 covers disc r=35 m in all directions (on High trees_lod0 exists)
     n0 = qa_cat_high.get("trees_lod0", 0) / max(means["tris_lod0"], 1e-9)
     rho = n0 / (math.pi * 35.0 ** 2)
     if not prof.high_only_trees:
-        # Rough share on Low: highOnly garden trees skipped (~20-35% in cities); approximate via Low/High trees_lod1+lod2 ratio
-        hi_12 = max(qa_cat_high.get("trees_lod1", 0) + qa_cat_high.get("trees_lod2", 0), 1)
-        lo_12 = qa_cat_low.get("trees_lod1", 0) + qa_cat_low.get("trees_lod2", 0)
-        # Note: legacy Low trees_lod1 goes 0-35m (vs High 35-80m), so use simple tree_scale 0.75 WORKING_VALUE for garden skip
         rho *= 0.75
-        _ = hi_12, lo_12
     e0 = prof.tree_ends_base[0] * min(prof.lod_bias, prof.tree_card_scale)
     e1 = prof.tree_ends_base[1] * min(prof.lod_bias, prof.tree_card_scale)
     e2 = min(prof.tree_ends_base[2] * prof.lod_bias, prof.tree_cull_cap * prof.lod_bias, prof.far_clip)
     trees_near = f_frustum * rho * math.pi * (e0 ** 2 * means["tris_lod0"] + max(0.0, e1 ** 2 - e0 ** 2) * means["tris_lod1"])
-    # Legacy trees_lod2 extends 80..1500 (High) or 35..400 (Low) in 120 deg wedge (1/3 circle) + 200 m disc
-    # Scale by frustum ratio and cull range ratio
     if prof.tier == "High":
         trees_lod2 = qa_cat_high.get("trees_lod2", 0) * (hfov / 120.0) * min(1.0, (e2 / 1500.0))
         props_base = qa_cat_high.get("props", 0) * f_frustum
     else:
-        # In legacy Low, trees_lod2 is 35..400 m; if runtime tree_cull_cap * lod_bias > 400 m, scale proportionally (capped)
         trees_lod2 = qa_cat_low.get("trees_lod2", 0) * (hfov / 120.0) * (min(e2, 900.0) / 400.0)
         props_base = qa_cat_low.get("props", 0) * f_frustum * prof.low_prop_cull_factor
 
-    cat["trees"] = trees_near + trees_lod2
-    cat["props"] = props_base
+    cat["trees"] = (trees_near + trees_lod2) * tree_scale
+    cat["props"] = props_base * props_scale
     ff_vis, _ = far_field_in_view(manifest, ff_qa, cam, prof.tier, prof.aspect)
     cat["far_field"] = ff_vis
     out = {k: round(v) for k, v in cat.items()}
@@ -464,7 +494,6 @@ def runtime_estimate(
     return out
 
 
-# ---------------------------------------------------------------------------- Variant B simulations
 def simulate_variant_legacy(
     manifest: dict[str, Any],
     cam: dict[str, Any],
@@ -487,7 +516,6 @@ def simulate_variant_legacy(
     props_scale: float = 1.0,
     means: dict[str, float] | None = None,
 ) -> dict[str, int]:
-    """Simulate Variant B reductions on build_world.mesh_budget (legacy frame_estimate)."""
     pol = LEGACY_POLICY[tier]
     px, py = cam["pos"][0], cam["pos"][1]
     lx, ly = _look(cam)
@@ -500,7 +528,6 @@ def simulate_variant_legacy(
         if d > 1600.0 or (d > 200.0 and ((cx - px) * lx + (cy - py) * ly) / d < 0.5):
             continue
         t = ch["triangles"]
-        # Terrain
         lod = next(lv for lim, lv in pol["terrain"] if d < lim)
         if tier == "High" and terrain_lod0_m is not None and lod == 0 and d >= terrain_lod0_m + MARGIN_M:
             lod = 1
@@ -508,25 +535,21 @@ def simulate_variant_legacy(
             lod = 2
         res["terrain"] += t.get(f"terrain_lod{lod}", 0)
 
-        # Roads
         mk = 0 if (markings_cull_m is not None and d >= markings_cull_m + MARGIN_M) else t.get("markings", 0)
         pv = 0 if (paved_cull_m is not None and d >= paved_cull_m + MARGIN_M) else t.get("paved", 0)
         res["roads"] += t.get("road", 0) + t.get("bridge", 0) + mk + pv
 
-        # Water
         if t.get("water"):
             res["water"] += t["water"]
         if t.get("banks") and d < 500.0:
             res["water"] += t["banks"] if tier == "High" else t.get("banks_low", 0)
 
-        # Furniture & plots
         if d < pol["furn"]:
             fu = 0 if (furn_cull_m is not None and d >= furn_cull_m + MARGIN_M) else t.get("furniture", 0)
             pl_raw = t.get("plots", 0) if tier == "High" else t.get("plots_low", t.get("plots", 0))
             pl = 0 if (plots_cull_m is not None and d >= plots_cull_m + MARGIN_M) else pl_raw
             res["furniture"] += fu + pl + t.get("wires", 0)
 
-        # Buildings
         bld_end = pol["bld"] if bld_lod0_m is None else min(pol["bld"], bld_lod0_m + MARGIN_M)
         if d < bld_end:
             nb = t.get("buildings", 0)
@@ -539,17 +562,14 @@ def simulate_variant_legacy(
                 nl1 *= bld_hlod_ratio
             res["buildings"] += nl1
 
-        # Forest HLOD
         hlod_m = pol["forest_hlod_m"] if forest_hlod_m is None else forest_hlod_m
         for fc in ch.get("forest_cells", []):
             dfc = _bbox_dist(fc["bbox_local_m"], (px, py))
             if hlod_m < dfc < pol["forest_hlod_cull_m"]:
                 res["forest_hlod"] += fc["tris"]
 
-    # Trees
     t_legacy = qa_cat.get("trees_lod0", 0) + qa_cat.get("trees_lod1", 0) + qa_cat.get("trees_lod2", 0)
     if tree_card_scale is not None and tier == "High" and means is not None:
-        # Replace legacy 35/80m disc with treeCardLodScale (e.g. 0.5 -> 10/30m in all directions for legacy model, or 20/60 * 0.5)
         n0 = qa_cat.get("trees_lod0", 0) / max(means["tris_lod0"], 1e-9)
         rho = n0 / (math.pi * 35.0 ** 2)
         e0, e1 = 20.0 * tree_card_scale, 60.0 * tree_card_scale
@@ -572,11 +592,69 @@ def classify_tile(region_id: str, total_buildings: int) -> str:
     return "rural_corridor"
 
 
+def parse_vqa_stats(path: Path) -> dict[str, dict[str, int]]:
+    txt = path.read_text(encoding="utf-8")
+    rx = re.compile(r"^([a-z0-9-]+): objects=\d+ drawsEst=(\d+) shadowDrawsEst=(\d+) trisK=\d+ trisExact=(\d+)", re.M)
+    rxi = re.compile(r"^\s+([a-z0-9-]+) instanced \(props\+trees\): draws (\d+), instances (\d+), .*trianglesExact (\d+)", re.M)
+    out = {m.group(1): {"draws": int(m.group(2)), "shadow_draws": int(m.group(3)), "mesh": int(m.group(4)), "inst": 0, "inst_draws": 0, "instances": 0} for m in rx.finditer(txt)}
+    for m in rxi.finditer(txt):
+        if m.group(1) in out:
+            out[m.group(1)]["inst_draws"] = int(m.group(2))
+            out[m.group(1)]["instances"] = int(m.group(3))
+            out[m.group(1)]["inst"] = int(m.group(4))
+    return out
+
+
+def analyze_prop_families(region: str, cam: dict[str, Any], tier: str) -> dict[str, Any] | None:
+    """Read-only inspection of Data/raw/derived/<region>/world/instances_*.json to measure WorldPropTierPolicy impact."""
+    wdir = REPO / "Data" / "raw" / "derived" / region / "world"
+    if not wdir.exists():
+        return None
+    files = sorted(wdir.glob("instances_*.json"))
+    if not files:
+        return None
+    import sys
+    sys.path.insert(0, str(REPO / "tools" / "worldgen"))
+    from roads import build_world as BW
+    pm_path = BW.props_meta_path(region, wdir)
+    if not pm_path.exists():
+        return None
+    pm = {**json.loads(pm_path.read_text(encoding="utf-8"))["prototypes"], **BW.FD.prototype_stats()}
+    px, py = cam["pos"][0], cam["pos"][1]
+    lx, ly = _look(cam)
+    bias = 1.5 if tier == "High" else 0.5
+    families: dict[str, dict[str, int]] = {}
+    for f in files:
+        for it in json.loads(f.read_text(encoding="utf-8"))["instances"]:
+            p = it["p"]
+            if p.startswith("tree_"):
+                continue
+            d = math.hypot(it["e"] - px, it["n"] - py)
+            if d > 1600.0 or (d > 200.0 and ((it["e"] - px) * lx + (it["n"] - py) * ly) / max(d, 1e-9) < 0.5):
+                continue
+            meta = pm.get(p) or {}
+            rule = BW.instance_rule(p, 3 if "tris_lod2" in meta else 2, bias)
+            key = next((k for lim, k in rule if d < lim), None)
+            if not key:
+                continue
+            tris = int(meta.get(key, meta.get("tris_lod1", 0)))
+            fam = p.split("_", 1)[0]
+            slot = families.setdefault(fam, {"count": 0, "tris": 0, "tris_pc_low_cull": 0})
+            slot["count"] += 1
+            slot["tris"] += tris
+            if p.startswith(("car_", "van_", "tractor_", "trailer_", "contact_")) and d >= 150.0:
+                slot["tris_pc_low_cull"] += tris
+            elif p.startswith("fab_") and d >= 50.0:
+                slot["tris_pc_low_cull"] += tris
+    return families
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--ref", default="regen-wave-14-s25", help="Git ref with Data/Regions/*/generated")
-    ap.add_argument("--base-ref", default="main", help="Base git ref to detect wave-14 rebuilt tiles")
-    ap.add_argument("--json", type=Path, help="Optional output JSON path")
+    ap.add_argument("--ref", default="regen-wave-14-s25")
+    ap.add_argument("--base-ref", default="main")
+    ap.add_argument("--json", type=Path)
+    ap.add_argument("--extra-report", action="store_true", help="Print calibration, build#10, prop families, variants B & C")
     args = ap.parse_args()
 
     ref_sha = subprocess.check_output(["git", "rev-parse", "--short", args.ref], cwd=REPO, text=True).strip()
@@ -584,7 +662,6 @@ def main() -> None:
     rebuilt = changed_regions(args.base_ref, args.ref)
     means = tree_means()
 
-    # Batch-load all required files from git
     paths: list[str] = []
     for r in regions:
         paths.extend([
@@ -596,6 +673,7 @@ def main() -> None:
     blobs = git_read_blobs(args.ref, paths)
 
     records = []
+    by_region: dict[str, Any] = {}
     for r in regions:
         sq_b = blobs.get(f"Data/Regions/{r}/generated/streetscape_qa.json")
         wm_b = blobs.get(f"Data/Regions/{r}/generated/world_manifest.json")
@@ -619,13 +697,11 @@ def main() -> None:
         ff_vis_h, ff_tot_h = far_field_in_view(wm, ff, cam_h, "High", 1920 / 1080)
         ff_vis_l, ff_tot_l = far_field_in_view(wm, ff, cam_l, "Low", 1920 / 1080)
 
-        # Runtime estimates on worst legacy High & Low cameras
         rt_vqa_h = runtime_estimate(wm, ff, cam_h, worst_h["by_category_high"], worst_h["by_category_low"], PROFILES["vqa_high"], means)
         rt_pc_h = runtime_estimate(wm, ff, cam_h, worst_h["by_category_high"], worst_h["by_category_low"], PROFILES["pc_high"], means)
         rt_vqa_l = runtime_estimate(wm, ff, cam_l, worst_l["by_category_high"], worst_l["by_category_low"], PROFILES["vqa_low"], means)
         rt_pc_l = runtime_estimate(wm, ff, cam_l, worst_l["by_category_high"], worst_l["by_category_low"], PROFILES["pc_low"], means)
 
-        # Also find max runtime across all persp cameras for PC High & PC Low
         all_rt_pc_h = [
             (f["camera"], runtime_estimate(wm, ff, cams[f["camera"]], f["by_category_high"], f["by_category_low"], PROFILES["pc_high"], means)["total"])
             for f in fe_list if f["camera"] in cams
@@ -640,7 +716,7 @@ def main() -> None:
         bld_count = sum(sq["buildings"].get("subtypes", {}).values())
         ttype = classify_tile(r, bld_count)
 
-        # Variant B simulations on worst High and worst Low cameras
+        # Legacy Variant B
         var_b = {
             "base_high": worst_h["tris_high"],
             "base_low": worst_l["tris_low"],
@@ -673,9 +749,24 @@ def main() -> None:
                 markings_cull_m=200.0, paved_cull_m=400.0,
                 terrain_lod1_m=150.0, tree_scale=0.75, props_scale=0.75,
             )["total"],
+            # Runtime PC High & Low combined reductions
+            "rt_pc_high_base": rt_pc_h["total"],
+            "rt_pc_high_B": runtime_estimate(
+                wm, ff, cam_h, worst_h["by_category_high"], worst_h["by_category_low"], PROFILES["pc_high"], means,
+                bld_lod0_m=200.0, bld_lod0b_ratio=0.60, bld_hlod_from_m=700.0, bld_hlod_ratio=0.30,
+                plots_cull_m=200.0, furn_cull_m=300.0, markings_cull_m=300.0, terrain_lod0_m=150.0,
+                tree_scale=0.70, props_scale=0.85, hlod_m_override=80.0,
+            )["total"],
+            "rt_pc_low_base": rt_pc_l["total"],
+            "rt_pc_low_B": runtime_estimate(
+                wm, ff, cam_l, worst_l["by_category_high"], worst_l["by_category_low"], PROFILES["pc_low"], means,
+                bld_hlod_from_m=500.0, bld_hlod_ratio=0.30,
+                plots_cull_m=120.0, furn_cull_m=200.0, markings_cull_m=200.0, paved_cull_m=400.0,
+                terrain_lod1_m=150.0, tree_scale=0.75, props_scale=0.75,
+            )["total"],
         }
 
-        records.append({
+        rec = {
             "region": r,
             "rebuilt_w14": r in rebuilt,
             "type": ttype,
@@ -705,54 +796,107 @@ def main() -> None:
             "max_rt_pc_high": {"camera": max_rt_pc_h[0], "tris": max_rt_pc_h[1]},
             "max_rt_pc_low": {"camera": max_rt_pc_l[0], "tris": max_rt_pc_l[1]},
             "variant_b": var_b,
-        })
+        }
+        records.append(rec)
+        by_region[r] = (rec, wm, cc, ff, sq)
 
     over_h = sorted([x for x in records if x["worst_high"]["tris"] > 2_000_000], key=lambda x: -x["worst_high"]["tris"])
     over_l = sorted([x for x in records if x["worst_low"]["tris"] > 600_000], key=lambda x: -x["worst_low"]["tris"])
+    c_rec = by_region["bialystok-industrial-c"][0]
 
-    print(f"Ref: {args.ref} ({ref_sha}) | total regions with QA: {len(records)} | rebuilt vs {args.base_ref}: {sum(1 for x in records if x['rebuilt_w14'])}")
-    print(f"High > 2.0M: {len(over_h)} | Low > 600k: {len(over_l)}")
-    print("\n--- HIGH > 2.0M (+ bialystok-industrial-c) ---")
-    c_rec = next(x for x in records if x["region"] == "bialystok-industrial-c")
-    for x in [*over_h, c_rec]:
-        w = x["worst_high"]
-        s = w["sub"]
-        trees = s["trees_lod0"] + s["trees_lod1"] + s["trees_lod2"] + s["forest_hlod"]
-        print(
-            f"{x['region']:24s} {w['camera']:24s} tot={w['tris']:9,d} | "
-            f"bld={s['buildings_lod0']+s['buildings_lod1']:7,d}({s['buildings_lod0']:,d}+{s['buildings_lod1']:,d}) "
-            f"furn={s['furn_furniture']+s['furn_plots']+s['furn_wires']:7,d}({s['furn_furniture']:,d}/{s['furn_plots']:,d}/{s['furn_wires']:,d}) "
-            f"trn={w['by_category']['terrain']:7,d} rds={w['by_category']['roads']:7,d} "
-            f"tre={trees:7,d} prp={s['props']:6,d} ff={w['far_field_in_view']:6,d} | "
-            f"rt_pc={w['rt_pc']['total']:9,d} rt_vqa={w['rt_vqa']['total']:9,d}"
-        )
+    if args.extra_report:
+        print(f"=== WAVE 14 REF {args.ref} ({ref_sha}) | {len(records)} regions ===")
 
-    print("\n--- LOW > 600k (top 14) ---")
-    for x in over_l:
-        w = x["worst_low"]
-        s = w["sub"]
-        trees = s["trees_lod0"] + s["trees_lod1"] + s["trees_lod2"] + s["forest_hlod"]
-        print(
-            f"{x['region']:24s} {w['camera']:24s} tot={w['tris']:9,d} | "
-            f"rds={w['by_category']['roads']:7,d}({s['roads_road']:,d}/{s['roads_paved']:,d}/{s['roads_markings']:,d}) "
-            f"bld1={s['buildings_lod1']:7,d} trn={w['by_category']['terrain']:7,d} "
-            f"furn={w['by_category']['furniture']:7,d} tre={trees:6,d} prp={s['props']:6,d} ff={w['far_field_in_view']:5,d} | "
-            f"rt_pc={w['rt_pc']['total']:9,d} rt_vqa={w['rt_vqa']['total']:9,d}"
-        )
+        print("\n--- 1. VARIANT B (LEGACY & RUNTIME PC) ON 8 HIGH > 2M + C ---")
+        for x in [*over_h, c_rec]:
+            v = x["variant_b"]
+            print(
+                f"{x['region']:22s} base={v['base_high']:9,d} | "
+                f"B0(tc0.5)={v['B0_tree_card_05_high']:9,d} B1(bld)={v['B1_bld200_lod0b_hlod_high']:9,d} "
+                f"B2(tre)={v['B2_trees_minus30_high']:9,d} B3(plt+frn)={v['B3_plots200_furn300_high']:9,d} "
+                f"B4(mrk)={v['B4_markings300_high']:9,d} B5(trn)={v['B5_terrain150_high']:9,d} | "
+                f"ALL={v['B_all_content_high']:9,d} ALL+tc0.5={v['B_all_plus_treecard05_high']:9,d} | "
+                f"rtPC={v['rt_pc_high_base']:9,d}->{v['rt_pc_high_B']:9,d}"
+            )
 
-    print("\n--- BY TILE TYPE ---")
-    for tt in ("city_dense", "city_outer", "town", "rural_corridor"):
-        grp = [x for x in records if x["type"] == tt]
-        hs = sorted(x["worst_high"]["tris"] for x in grp)
-        ls = sorted(x["worst_low"]["tris"] for x in grp)
-        rths = sorted(x["max_rt_pc_high"]["tris"] for x in grp)
-        rtls = sorted(x["max_rt_pc_low"]["tris"] for x in grp)
-        print(
-            f"{tt:15s} n={len(grp):2d} | "
-            f"leg_H med={statistics.median(hs):,.0f} max={hs[-1]:,.0f} | "
-            f"leg_L med={statistics.median(ls):,.0f} max={ls[-1]:,.0f} | "
-            f"rt_pc_H max={rths[-1]:,.0f} | rt_pc_L max={rtls[-1]:,.0f}"
-        )
+        print("\n--- 2. VARIANT B ON TOP 5 LOW (+ C) ---")
+        for x in [*over_l[:5], c_rec]:
+            v = x["variant_b"]
+            print(
+                f"{x['region']:22s} baseL={v['base_low']:9,d} | "
+                f"B1(hlod)={v['B1_bld_hlod500_low']:9,d} B3(plt+frn)={v['B3_plots120_furn200_low']:9,d} "
+                f"B4(mrk+pvd)={v['B4_mark200_paved400_low']:9,d} B5(trn)={v['B5_terrain_lod2_150_low']:9,d} | "
+                f"ALL_L={v['B_all_low']:9,d} | rtPCL={v['rt_pc_low_base']:9,d}->{v['rt_pc_low_B']:9,d}"
+            )
+
+        print("\n--- 3. CALIBRATION: C WAVE14 VQA BEFORE STATS.TXT ---")
+        c_st_path = MAIN_REPO / "artifacts/regen-wave-14-s24/vqa/before/bialystok-industrial-c/High-clear/stats.txt"
+        if c_st_path.exists():
+            st = parse_vqa_stats(c_st_path)
+            _, wm, cc, ff, sq = by_region["bialystok-industrial-c"]
+            cams = {c["id"]: c for c in cc["cameras"] if c["type"] == "persp"}
+            for f in sq["mesh_budget"]["frame_estimate"]:
+                cid = f["camera"]
+                u = st.get(cid.replace("_", "-"))
+                if not u or cid not in cams:
+                    continue
+                rt_v = runtime_estimate(wm, ff, cams[cid], f["by_category_high"], f["by_category_low"], PROFILES["vqa_high"], means)
+                utot = u["mesh"] + u["inst"]
+                print(
+                    f"  {cid:28s} leg={f['tris_high']:9,d} rt_vqa={rt_v['total']:9,d} "
+                    f"unity={utot:9,d} (mesh={u['mesh']:,d} inst={u['inst']:,d}) "
+                    f"U/leg={utot/f['tris_high']:.2f} U/rt={utot/rt_v['total']:.2f} drawsEst={u['draws']+u['inst_draws']}"
+                )
+
+        print("\n--- 4. BUILD #10 PC-METRICS & SWEEP D83 ---")
+        for p in sorted((MAIN_REPO / "artifacts/full-build-10-s24/evidence").glob("pc-*/pc-report.json")):
+            d = json.loads(p.read_text(encoding="utf-8"))
+            m = d["metrics"]
+            print(
+                f"  {p.parent.name:18s} build={d['run']['buildLabel']:18s} tier={d['display']['qualityName']:5s} "
+                f"gpu={d['system']['gpu']} f_p95={m['frame_ms']['p95']:.2f}ms "
+                f"cpu_p95={m['cpu_main_ms']['p95']:.2f}ms gpu_p95={m['gpu_ms']['p95']:.2f}ms "
+                f"dc_p95={m['draw_calls']['p95']:.0f} tris_p95={m['tris']['p95']:,.0f}"
+            )
+        # Also knyszyn-w and dk65-07 in wave 14 frame_estimate / rt_pc
+        for rn in ("knyszyn-w", "dk65-07"):
+            rx = by_region[rn][0]
+            print(
+                f"  wave14 {rn:14s} max_leg_H={rx['worst_high']['tris']:,d} ({rx['worst_high']['camera']}) "
+                f"max_rt_pc_H={rx['max_rt_pc_high']['tris']:,d} ({rx['max_rt_pc_high']['camera']})"
+            )
+
+        print("\n--- 5. PROPS FAMILY BREAKDOWN (Data/raw/derived read-only, worst High cam) ---")
+        for x in [*over_h[:4], c_rec]:
+            cam_h = {c["id"]: c for c in by_region[x["region"]][2]["cameras"]}[x["worst_high"]["camera"]]
+            fams = analyze_prop_families(x["region"], cam_h, "High")
+            if fams:
+                tot_p = sum(v["tris"] for v in fams.values())
+                top_f = sorted(fams.items(), key=lambda kv: -kv[1]["tris"])[:6]
+                summary = ", ".join(f"{k}:{v['tris']:,d}({v['count']})" for k, v in top_f)
+                print(f"  {x['region']:22s} sum={tot_p:7,d} (qa={x['worst_high']['by_category']['props']:7,d}) | {summary}")
+            # Also Low cull check
+            cam_l = {c["id"]: c for c in by_region[x["region"]][2]["cameras"]}[x["worst_low"]["camera"]]
+            fams_l = analyze_prop_families(x["region"], cam_l, "Low")
+            if fams_l:
+                tot_pl = sum(v["tris"] for v in fams_l.values())
+                cull_pl = sum(v["tris_pc_low_cull"] for v in fams_l.values())
+                print(f"    Low props sum={tot_pl:6,d} (qa={x['worst_low']['by_category']['props']:6,d}) | WorldPropTierPolicy cull={cull_pl:6,d} ({100*cull_pl/max(tot_pl,1):.1f}%)")
+
+        print("\n--- 6. TILE TYPE DISTRIBUTION (ALL 54 WAVE14 TILES) ---")
+        for tt in ("city_dense", "city_outer", "town", "rural_corridor"):
+            grp = sorted([x for x in records if x["type"] == tt], key=lambda z: -z["worst_high"]["tris"])
+            hs = [z["worst_high"]["tris"] for z in grp]
+            ls = [z["worst_low"]["tris"] for z in grp]
+            rths = [z["max_rt_pc_high"]["tris"] for z in grp]
+            rtls = [z["max_rt_pc_low"]["tris"] for z in grp]
+            print(
+                f"  {tt:15s} n={len(grp):2d} blds={min(z['buildings_count'] for z in grp)}..{max(z['buildings_count'] for z in grp)} | "
+                f"legH {min(hs):,d}..{max(hs):,d} (med {statistics.median(hs):,.0f}) | "
+                f"legL {min(ls):,d}..{max(ls):,d} (med {statistics.median(ls):,.0f}) | "
+                f"rtPCH max {max(rths):,d} | rtPCL max {max(rtls):,d}"
+            )
+            print("    tiles:", ", ".join(f"{z['region']}({z['worst_high']['tris']//1000}k/{z['worst_low']['tris']//1000}k)" for z in grp))
 
     if args.json:
         payload = {
@@ -764,7 +908,6 @@ def main() -> None:
         }
         args.json.parent.mkdir(parents=True, exist_ok=True)
         args.json.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
-        print(f"\nWrote {args.json}")
 
 
 if __name__ == "__main__":

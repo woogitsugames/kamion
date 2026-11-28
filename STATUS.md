@@ -183,3 +183,8 @@
 - Dodano `tools/worldgen/qa/city_budget_analysis.py` i policzono dokładne rozbicie `frame_estimate` + `far_field` + model runtime (`QualityProfile` i `PcTierTable`) na `regen-wave-14-s25` (`bb3e5eccc`, wszystkie 54 kafle fali 14 przebudowane vs `main`).
 - Wynik: 8 kafli > 2,0 M High (`bialystok-wygoda` 3,45 M, `bialystok-bojary` 3,28 M, `bialystok-maczka` 3,25 M, `bialystok-mickiewicza` 3,19 M, `bialystok-kleeberga` 2,64 M, `knyszyn` 2,30 M, `bialystok-krywlany` 2,30 M, `monki` 2,11 M) i 14 kafli > 600 k Low (max `bialystok-bojary` 1,46 M); zapis w `artifacts/codex-city-budget-s25/city_budget_w14.json`.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd tools/worldgen/qa/city_budget_analysis.py --ref regen-wave-14-s25` i kalibracja z `stats.txt` oraz `artifacts/full-build-10-s24/`.
+
+### codex-city-budget-s25 — porównanie z runtime, buildem #10 i warianty A/B/C (gotowe)
+- Skalibrowano `frame_estimate` względem `runtime` (`QualityProfile` vs `PcTierTable`), `vqa/before/bialystok-industrial-c/High-clear/stats.txt`, `pc-metrics` buildu #10 (`knyszyn-w`, `dk65-07`) oraz sweepu D83; zweryfikowano `WorldPropTierPolicy` odczytem `Data/raw/derived`.
+- Opracowano warianty A, B, C z pełnymi tabelami w `artifacts/codex-city-budget-s25/WYNIKI.md` (skopiowano do `C:\Users\matma\Documents\Claude\kamion\artifacts\codex-city-budget-s25\WYNIKI.md`). Testy budżetowe `test_budget_0221.py`, `test_typology_0238.py`, `test_world_v31.py`, `test_hero_bridge.py`, `test_dense_lod_0282.py`: **81 passed**.
+- Następny krok lidera: `Get-Content artifacts/codex-city-budget-s25/WYNIKI.md` i wybór wariantu (zalecany: Wariant C na 54 kafle + pomiar `pc-metrics` na `bialystok-wygoda` i `bialystok-bojary`).
