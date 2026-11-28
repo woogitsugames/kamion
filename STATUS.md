@@ -125,3 +125,17 @@
 - 2026-11-28 codex-wave15-prep-s25 — README i WYNIKI gotowe, z kolejnością integracji i zakresem 5/54. Unity i generatory odłożone do końca fali 14. Następny krok lidera: `git log --oneline main..codex-wave15-prep-s25`.
 
 - 2026-11-28 codex-wave15-prep-s25 — potwierdzono stronę szwu z bbox, zgodność kopii dowodów i czyste drzewo. Następny krok lidera po fali 14: `git log --oneline main..codex-wave15-prep-s25`.
+
+### codex-review-s25 — zakres recenzji
+- Przeczytano zasady i wzór raportu. Ustalono 9 scaleń oraz migawki gałęzi oczekujących: 7a255eb45, 28a5288c0 i 46c5fd32a.
+- Następny krok: git diff main...agy-poles-wires-s25 -- tools/worldgen oraz odtworzenie przypadków przez wgpy.cmd.
+
+### codex-review-s25 — reprodukcje i przegląd statyczny
+- Odtworzono dublowanie 3 przewodów na wspólnym przęśle OSM/BDOT, rozjazd audytu WN i eksportu oraz przyjęcie linii z niepełnego PBF. Na grafie Sadowej gałąź przywraca odcinek 0,04884 m. Obejrzano archiwalne PNG clear/overcast.
+- Następny krok: Get-Content artifacts/codex-review-s25/probe.txt i zakończenie przebiegu pytest przed zapisem REVIEW.md.
+
+### codex-review-s25 — zakończone
+- Raport zawiera 4 ważne i 5 drobnych znalezisk z 9 scaleń i 3 gałęzi oczekujących. GIS 231/231, w tym budżety 62/62. Przypadki gałęzi 7/7 w pamięci. Dowody i archiwalne PNG w artifacts/codex-review-s25. Bez Unity i zmian kodu.
+- Następny krok lidera: `git show codex-review-s25:artifacts/codex-review-s25/REVIEW.md`.
+- Potwierdzono bazę testów `ec66c2df9` i brak różnic kodu względem recenzowanego `main` `590851327`.
+- Następny krok lidera: `git show codex-review-s25:artifacts/codex-review-s25/REVIEW.md`.
