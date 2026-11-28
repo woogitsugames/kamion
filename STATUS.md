@@ -164,3 +164,7 @@
 ### codex-wave15-scope-s25 — sprawdzenie bazy fali 14
 - 8 811/8 811 nominalnych przekrojów zgodnych z roads QA po trymach. Stary generator przewodów i nowy na źródłach BDOT-only dają zgodne siatki we wszystkich 54 kaflach. Z OSM zmieniają się dwa kafle.
 - Następny krok: `Get-Content artifacts/codex-wave15-scope-s25/sides-after.log -Tail 10`, potem ponownie plan.py.
+
+### codex-wave15-scope-s25 — gotowe
+- Potwierdzono 17 kafli ze zmianą i 2 kafle kontrolne w kolejce minimum. Pełna kolejka zawiera 54. Zachowano wyłącznie pliki planu i raport; GIS 164/164, budżety 62/62.
+- Następny krok lidera po fali 14: `git show codex-wave15-scope-s25:artifacts/regen-wave-15-s25/README.md`.

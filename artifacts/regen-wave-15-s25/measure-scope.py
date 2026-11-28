@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 import numpy as np
 import yaml
@@ -120,8 +121,36 @@ def replay(args):
                          "roads_qa_markings": qa["summary"].get("markings", {})}
     pairs = seams.adjacent_pairs(tiles)
     print(f"{len(tiles)} tiles, {len(pairs)} seams; baseline={args.baseline}, sides={args.sides}", flush=True)
+    output_tiles = {tile.id for tile in tiles}
     if args.sides:
-        nets = seams.build_nets(tiles, pairs, trims=True)
+        from streetscape import pavements
+
+        sidewalk_tiles = {tile.id for tile in tiles if pavements.implied_rules(tile.overrides) is not None}
+
+        def with_neighbours(region_ids):
+            return region_ids | {
+                other.id for a, b, _ in pairs for own, other in ((a, b), (b, a)) if own.id in region_ids
+            }
+
+        if args.sidewalk_area_check:
+            output_tiles = with_neighbours(sidewalk_tiles)
+            dependencies = with_neighbours(output_tiles)
+            tiles = [tile for tile in tiles if tile.id in dependencies]
+            pairs = [(a, b, edge) for a, b, edge in pairs if {a.id, b.id} <= dependencies]
+            reports = {tile: report for tile, report in reports.items() if tile in output_tiles}
+            print(f"Sidewalk check: {len(output_tiles)} results, {len(tiles)} including dependencies", flush=True)
+        areas = {tile.id: pavements.built_up_area(tile.streetscape, tile.origin)
+                 for tile in tiles if tile.id in sidewalk_tiles}
+        implied_plan = pavements.implied_plan
+
+        def snapshot_implied_plan(net):
+            # The archived generator is outside the worktree. Give both versions the same BDOT mask.
+            if getattr(net, "region_id", None) in areas:
+                net.built_up_area = areas[net.region_id]
+            return implied_plan(net)
+
+        with patch.object(pavements, "implied_plan", snapshot_implied_plan):
+            nets = seams.build_nets(tiles, pairs, trims=True)
     else:
         nets = {tile.id: seams.build_plain(tile) for tile in tiles}
         ends = {tile: seam_taper.ends(net) for tile, net in nets.items()}
@@ -134,6 +163,8 @@ def replay(args):
             seam_taper.apply_widths(net, net.seam_tapers)
 
     for tile in tiles:
+        if tile.id not in output_tiles:
+            continue
         net = nets[tile.id]
         qa_chains = {row["id"]: row for row in tile.roads_qa["chains"]}
         result = reports[tile.id]
@@ -180,9 +211,13 @@ if __name__ == "__main__":
     parser.add_argument("--code", type=Path, default=ROOT / "tools/worldgen")
     parser.add_argument("--baseline", action="store_true")
     parser.add_argument("--sides", action="store_true", help="also run second-pass shoulders and junction trims")
+    parser.add_argument("--sidewalk-area-check", action="store_true",
+                        help="limit --sides to tiles with implied sidewalks and their neighbours")
     parser.add_argument("--power", action="store_true", help="compare wire meshes with refreshed OSM")
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
+    if args.sidewalk_area_check and not args.sides:
+        parser.error("--sidewalk-area-check requires --sides")
     if args.power:
         power(args)
     else:

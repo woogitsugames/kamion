@@ -2,7 +2,7 @@
 
 ## Zakres
 
-[Kolejka podstawowa](queue.csv) zawiera 19 pełnych przebiegów. [Inwentarz 54 kafli](scope.csv) wskazuje powód przebudowy, zmianę profili lub oznakowania, pochodzenie roads QA i liczbę nowych części OSM. Porównanie przypięto do `regen-wave-14-s25` `4499ff9de`. Na tym commicie 41 manifestów pochodzi z fali 14, a 13 z fali 13. Ostatnia zmiana treści `roads_qa.json` pochodzi z fali 14 dla 41 kafli, z fali 12 dla 12 kafli oraz z wcześniejszego eksportu prototypu `knyszyn-w`. Fala 13 zmieniła manifesty tych 13 kafli przy identycznej treści `roads_qa.json`.
+[Kolejka podstawowa](queue.csv) zawiera 19 pełnych przebiegów. Pomiar wykazał zmianę w 17 kaflach, a `dk65-04` i `dk65-monki-01` ujęto jako drugie strony kontroli szwów. [Inwentarz 54 kafli](scope.csv) wskazuje powód przebudowy, zmianę profili lub oznakowania, pochodzenie roads QA i liczbę nowych części OSM. Porównanie przypięto do `regen-wave-14-s25` `4499ff9de`. Na tym commicie 41 manifestów pochodzi z fali 14, a 13 z fali 13. Ostatnia zmiana treści `roads_qa.json` pochodzi z fali 14 dla 41 kafli, z fali 12 dla 12 kafli oraz z wcześniejszego eksportu prototypu `knyszyn-w`. Fala 13 zmieniła manifesty tych 13 kafli przy identycznej treści `roads_qa.json`.
 
 - **DK19 i S8** obejmują Bojary, Mickiewicza, `dk65-01`, Jeroniki oraz `s8-02`, `s8-04` i `s8-05`. D94, uzgodnienie osi i wygładzanie zmieniają profile. Na `s8-02` różnica przekroju ma ok. 0,918 mm.
 - **DK65 do Moniek** obejmuje `dk65-monki-02…07` i `monki` po zmianie P‑7b. `dk65-monki-01` jest drugą stroną obowiązkowej kontroli szwu.
