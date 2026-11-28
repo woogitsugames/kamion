@@ -55,3 +55,23 @@ w granicy 5 m. Na szwie dk65-04 / dk65-05 koniec Sadowej (`w176274699`) mógł w
 Szkolnej (`w244403508`) po stronie dk65-05. Po rozdzieleniu dróg Szkolna ma zgodny przekrój, a audyt osobno zgłasza
 brak końca Sadowej w sieci. W jej grafie po stronie dk65-05 jest fragment 0,048 m, poniżej filtra 0,05 m w `network.load`.
 Ocena przejezdności tego połączenia wymaga kontroli siatki i kolizji skrzyżowania.
+
+## Uzupełnienie dla fali 15 — krótkie cięcia na granicy
+
+Próg długości `network.load` wynosi nadal 0,05 m. Krótszy fragment zostaje w sieci, gdy graf zawiera
+jego przyciętą geometrię z dodatnią długością i syntetyczny koniec na granicy kafla. Dzięki temu
+oba końce Sadowej zachowują współrzędne cięcia
+`E 768247,661 m, N 601343,000 m` (EPSG:2180), a węzeł po stronie dk65-05 nadal łączy się ze Szkolną.
+Przy tak krótkim ramieniu trym skrzyżowania zostaje na jego początku, a siatka nawierzchni i kolizji
+używa obu stacji odcinka.
+
+Audyt pomija wewnętrzny koniec zachowanego cięcia, który również wpadałby w pas ±0,05 m od
+granicy. Raport porównuje położenie wygenerowanej osi z dotychczasowymi tolerancjami.
+Istniejąca reguła oceny krótkich ramion obejmuje przekrój tuż przy węźle.
+
+Jeżeli koniec leży do 5 cm od dwóch krawędzi, generator wybiera kierunek ścinania wzdłuż tej, która
+zgadza się ze współrzędną grafu w granicach błędu zaokrąglenia do 1 mm. Cięcie w samym narożniku
+pozostaje w sieci i zachowuje domyślny przekrój bez ścinania.
+
+Audyt dobiera w każdej grupie `osm_way` maksymalną liczbę par w odległości do 5 m. Gdy istnieje kilka
+takich dopasowań, wybiera minimalną sumę odległości. Następnie paruje pozostałe końce według odległości.

@@ -118,6 +118,7 @@
 - Pomiary (`measure.py`): Rynek LOD0 `35 834 → 35 872` tris (zapas 128 do 36 000), LOD1 `3 334` tris; Pomnik LOD0 `26 672 → 26 710` tris, LOD1 `1 964` tris. Obejrzano wszystkie 10 par `sbs/` LOD0 (clear/overcast), 2 pary LOD1 oraz `reference-head.png`; testy GIS: `91/91 PASS` przez `wgpy.cmd`. Dowody i raport w `artifacts/agy-monument-cloak-s25/WYNIKI.md`.
 - Następny krok lidera po akceptacji: `git merge --no-ff agy-monument-cloak-s25`, a w fali 15 po zajęciu slotu heavy: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd tools/worldgen/roads/build_world.py --region tykocin`, następnie import Win64 High i visual QA clear/overcast.
 
+
 - 2026-11-28 codex-wave15-prep-s25 — odczyt 54 źródeł i lokalnego PBF: 27 kafli dostaje 100 części linii OSM, wszystkie 54 zmieniają schemat. Szew ograniczony do dk65-04/05, test fidelity czyta raport C. Następny krok: `git show main:artifacts/regen-wave-14-s24/common.ps1`.
 
 - 2026-11-28 codex-wave15-prep-s25 — skrypty i kolejki 5/54 gotowe. Dry-run dk65-04, parser PowerShell i podstawiony blok Unity OK. Budżety 62/62 PASS. Następny krok: `git diff --check HEAD^`.
@@ -144,3 +145,52 @@
 - Ustalono dokładny powód rozbieżności między `seams_wave13.md` (0 FAIL / 4 UWAGA na 20 szwach z 21 domyślnych `seams.TILES`) a pełnym audytem `r2` (9 FAIL / 9 UWAGA / 96 PRZEJŚCIE na 57 szwach z 54 kafli): to nie kwestia 2. przebiegu `assign_sides` ani `Data/raw/derived`, lecz zakresu `--tiles` — wszystkie 9 FAIL i 9 UWAGA leżą na 37 szwach spoza `seams.TILES` (po zawężeniu `r2-after.json` do 21 `TILES`: 0 FAIL / 0 UWAGA / 31 PRZEJŚCIE).
 - Wszystkie 9 FAIL są realnymi problemami na 3 szwach: (1) `bialystok-bojary / bialystok-mickiewicza` `w1329465432` (3 FAIL, trasa: `14.5` vs `14.717 m`, D94 +0.5/+1.0 m rozlane przez `smooth_1d` na `1.35 m` odcinku + `seam_taper` pominięty przez `width_profile`), (2) `dk65-monki-01 / dk65-monki-02` `w98070954` (1 FAIL, trasa: `7.3` vs `7.6 m`, brak `dk65-edge-line-spacing-0304` w `dk65-monki-02`), (3) `s8-04 / s8-05` `w251431118` (5 FAIL: `9.95` vs `10.45 m`, w `s8-04` D94 zablokowane przez `w623772956` o `gap=11.927 < 12.0 m` vs pełne `+0.5 m` w `s8-05`, `seam_taper` pominięty przez `lane_edges` z ADR 0288; ten sam błąd widnieje jako UWAGA na `dk65-01 / dk8-s8-jeroniki` `w305447699`). Raport zapisany w `artifacts/agy-seams-9fail-s25/WYNIKI.md`.
 - Następny krok lidera: przeczytać `artifacts/agy-seams-9fail-s25/WYNIKI.md` i zaplanować poprawki do fali 15 (`dk65-monki-02/overrides.yaml`, `w1329465432`, `seam_taper` dla `lane_edges`/S8).
+
+### codex-sadowa-seam-s25 — diagnoza
+- Przyczynę potwierdza graf dk65-05: zachował cięcie Sadowej, ale `network.load` odrzuca odcinek 0,048 m. Zachowanie jego oryginalnych końców pozwala utrzymać położenie przecięcia Szkolnej.
+- Następny krok: `git diff -- tools/worldgen/roads/network.py tools/worldgen/roads/meshing.py tests/gis/test_seams_0224.py` po próbie zachowania krótkiego odcinka przy szwie.
+
+### codex-sadowa-seam-s25 — poprawka generatora i test syntetyczny
+- Zachowano krótkie cięcie w sieci, zarezerwowano odcinek do siatkowania i odróżniono w audycie rzeczywisty koniec cięcia od węzła wewnętrznego. Test 0,04 m potwierdza położenie końców oraz trójkąty nawierzchni i kolizji.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd artifacts/codex-sadowa-seam-s25/compare.py`
+
+### codex-sadowa-seam-s25 — zakres audytu
+- Rozpoznawanie końców zmienia się tylko przy wewnętrznym węźle zachowanego cięcia. Zapisano decyzję w ADR 0224. Przegląd objął archiwalne High clear/overcast i ortofoto GUGiK.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-sadowa-seam-s25/local_collision.py` po porównaniu szwów.
+
+### codex-sadowa-seam-s25 — pomiar szwów
+- Sprawdzono 11 380 krawędzi z 54 grafów i 57 wspólnych granic. Pełny audyt 4 szwów zależnych od dk65-05 wskazał jedną zmianę: dk65-04 / dk65-05 przechodzi z 1 FAIL do 0, pozostałe 56 szwów bez zmiany wyniku.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-sadowa-seam-s25/local_collision.py`.
+
+### codex-sadowa-seam-s25 — kolizja w pamięci
+- ΔZ na osi po lokalnym złożeniu siatki spadła z 0,00670 m do 0,00012 m. Pokrycie z obu stron pozostało 37/51, maksimum ΔZ na tych próbkach spadło z 0,03654 m do 0,03598 m. Krótki odcinek po dk65-05 ma trymy 0/0 i 0,93% spadku.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -ra -p no:cacheprovider tests/gis/test_seams_0224.py tests/gis/test_unit_crs_geom.py tests/gis/test_unit_junctions.py tests/gis/test_seam_shear_knw.py tests/gis/test_seam_sides_s24.py tests/gis/test_seam_taper_0275.py tests/gis/test_seams_fix_s23.py tests/gis/test_seam_axis_w10.py tests/gis/test_effective_graph_readers.py tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py`.
+
+### codex-sadowa-seam-s25 — weryfikacja i przekazanie
+- GIS: 177 PASS, w tym 31 testów audytu i 62 testy budżetowe. Niezależne przypadki `test_world_roads.py`: 4 PASS, 10 pominiętych z powodu zakazu pełnego builda, determinizm wyłączony zgodnie ze zleceniem. Raport i dowody w `artifacts/codex-sadowa-seam-s25/WYNIKI.md`.
+- Następny krok lidera po fali 14: `git diff --stat 2df09cefd..codex-sadowa-seam-s25`. Po zajęciu slotu heavy użyć `pwsh scripts/visual-qa.ps1 -Scene World_dk65-04_High -Tier High -Pc -BuildTarget Win64 -Neighbours dk65-05 -Cameras top_szkolna -Lighting clear -OutputDir artifacts/codex-sadowa-seam-s25/vqa/before/clear`, powtórzyć w overcast oraz po imporcie obu kafli fali 15.
+
+### codex-sadowa-seam-s25 — r2, diagnoza
+- Punkty 6 i 7 recenzji opisują dwie niezależne przyczyny: filtr krótkiego cięcia zależy od kierunku ścinania, a zachłanne parowanie może zająć jedyny dostępny koniec.
+- Następny krok po zmianie filtra: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -p no:cacheprovider tests/gis/test_seam_shear_knw.py tests/gis/test_seams_0224.py -k "cut or seam_dir"`.
+
+### codex-sadowa-seam-s25 — r2, cięcie przy narożniku
+- Oddzielono rozpoznanie końca cięcia w granicach błędu zaokrąglenia grafu od wyznaczania kierunku ścinania. Pięć testów cięć i kierunku przeszło, w tym 0,04 m przy narożniku, cięcie w samym narożniku i odcinek wewnętrzny.
+- Następny krok po zmianie parowania: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -p no:cacheprovider tests/gis/test_seams_0224.py -k "same_way"`.
+
+### codex-sadowa-seam-s25 — r2, optymalne parowanie
+- Audyt priorytetowo znajduje maksymalną liczbę par tego samego osm_way i minimalizuje ich łączną odległość. Trzy testy priorytetu, liczby par i kosztu przeszły. Dopisano reguły do ADR 0224.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-sadowa-seam-s25/audit_r2.py`.
+
+### codex-sadowa-seam-s25 — r2, audyt 54 kafli
+- Dwa pełne przebiegi na tych samych wczytanych danych dały identyczny raport: 57 szwów, 363 drogi, 9 FAIL, 9 UWAGA i 96 PRZEJŚCIE. Brak nowych FAIL. Para Sadowej i cięcie 0,04883646 m zachowane.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -ra -p no:cacheprovider tests/gis/test_seams_0224.py tests/gis/test_unit_crs_geom.py tests/gis/test_unit_junctions.py tests/gis/test_seam_shear_knw.py tests/gis/test_seam_sides_s24.py tests/gis/test_seam_taper_0275.py tests/gis/test_seams_fix_s23.py tests/gis/test_seam_axis_w10.py tests/gis/test_dk8_seam_cli.py tests/gis/test_effective_graph_readers.py tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py` oraz cztery niezależne przypadki test_world_roads.py.
+
+### codex-sadowa-seam-s25 — r2, testy i przekazanie
+- 192/192 PASS, w tym 36/36 testów audytu i 62/62 testy budżetowe. Raport r2 i dowody zapisano w artifacts/codex-sadowa-seam-s25/WYNIKI.md. Unity i pełna regeneracja poza zakresem.
+- Następny krok lidera: `git diff 28a5288c0..codex-sadowa-seam-s25`. Po integracji i po fali 14 wykonać visual QA przed/po dla dk65-04 z sąsiadem dk65-05, zgodnie z poleceniami w raporcie.
+
+
+### codex-seam-steps-s25 — integracja
+- Scalono bazę Sadowej na gałęzi zadania. Zachowano oba zestawy wpisów STATUS.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-seam-steps-s25/audit.py before`.

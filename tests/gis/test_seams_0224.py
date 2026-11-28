@@ -11,6 +11,7 @@ import copy
 import sys
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -86,6 +87,70 @@ def test_oblique_non_boundary_end_is_not_invented_as_a_crossing():
     assert rows["droga po drugiej stronie"]["status"] == "FAIL"
 
 
+def test_cut_four_centimetres_from_junction_keeps_seam_ribbon():
+    from roads import meshing as M
+
+    a, b = _tile("a", 0.0), _tile("b", 100.0)
+    b.graph["bbox"] = b.bbox
+    inner = dict(b.graph["nodes"][0], id="junction", x=100.04, boundary=False)
+    branch_end = dict(inner, id="branch", x=105.0, y=90.0)
+    b.graph["nodes"] += [inner, branch_end]
+    edge = b.graph["edges"][0]
+    stub = dict(edge, id="w7:cut-junction", to=inner["id"], length_m=0.04, clipped=True,
+                geometry=[[100.0, 50.0], [100.04, 50.0]])
+    edge["from"] = inner["id"]
+    edge["geometry"][0] = [100.04, 50.0]
+    branch = dict(edge, id="w8:junction-branch", osm_way=8, to=branch_end["id"],
+                  geometry=[[100.04, 50.0], [105.0, 90.0]])
+    b.graph["edges"] += [stub, branch]
+    pairs = SM.adjacent_pairs([a, b])
+    nets = SM.build_nets([a, b], pairs, taper=False, trims=True)
+    seam = pairs[0][2]
+    left, = SM.crossings(a, seam, nets[a.id])
+    right, = SM.crossings(b, seam, nets[b.id])
+    assert left.osm_way == right.osm_way == 7
+    assert left.xy == right.xy == (100.0, 50.0)
+
+    chain = next(c for c in nets[b.id].chains if c.id == right.chain)
+    assert chain.length == pytest.approx(0.04)
+    assert chain.t_a == chain.t_b == 0.0
+    chain.z = np.zeros_like(chain.line.s)
+    chain.e = np.zeros_like(chain.line.s)
+    for coarse, layer in ((False, "road"), (True, "collision")):
+        buf = M.MeshBuf()
+        M.build_ribbon(buf, nets[b.id], chain, coarse=coarse)
+        asphalt = next(p for p in buf.parts if p.layer == layer and p.mat.endswith("asphalt"))
+        assert len(asphalt.T) >= 2
+        assert np.unique(asphalt.V[:, 0] + b.origin[0]) == pytest.approx([100.0, 100.04])
+
+
+@pytest.mark.parametrize(("start", "boundary", "expected_u"), [
+    ((100.0, 0.01), True, (0.0, 1.0)),
+    ((100.0, 0.0), True, None),
+    ((100.01, 0.01), False, None),
+])
+def test_short_cut_near_bbox_corner(start, boundary, expected_u):
+    tile = _tile("b", 100.0)
+    tile.graph["bbox"] = tile.bbox
+    end = (start[0] + 0.04, start[1] if start[1] else 0.01)
+    a, b = tile.graph["nodes"]
+    a.update(x=start[0], y=start[1], boundary=boundary)
+    b.update(x=end[0], y=end[1], boundary=False)
+    edge = tile.graph["edges"][0]
+    edge.update(geometry=[start, end], length_m=round(float(np.hypot(*np.subtract(end, start))), 3),
+                clipped=boundary)
+
+    net = SM.build_plain(tile)
+    assert len(net.chains) == int(boundary)
+    if boundary:
+        assert net.chains[0].meta["seam_stub"]
+    seam_u = net.nodes[a["id"]]["seam_u"]
+    if expected_u is None:
+        assert seam_u is None
+    else:
+        assert tuple(seam_u) == expected_u
+
+
 def _pair_0p2():
     return [_tile("a", 0.0), _tile("b", 100.0, set_={"lanes": 2, "lane_width": 3.2, "edge_strip": 0.2,
                                                      "edge_lines": "both"})]
@@ -156,6 +221,19 @@ def test_nearby_unpaired_branch_leaves_same_way_continuation_available():
     through_b = SM.Crossing("b", "through-b", 8, "tertiary", (100.0, 50.584), False, {})
     assert SM.match([branch, through_a], [through_b]) == [(branch, None), (through_a, through_b)]
     assert SM.match([through_b], [through_a, branch]) == [(through_b, through_a), (None, branch)]
+
+
+@pytest.mark.parametrize(("left_y", "right_y"), [
+    ((1.0, 4.0), (-4.0, 2.0)),  # The nearest pair would leave both other ends unmatched.
+    ((1.0, 4.0), (-1.0, 2.0)),  # Both complete assignments fit, but one costs 4 m and the other 6 m.
+])
+def test_same_way_pairs_maximize_count_then_minimize_distance(left_y, right_y):
+    left = [SM.Crossing("a", f"a{i}", 7, "residential", (100.0, y), False, {})
+            for i, y in enumerate(left_y)]
+    right = [SM.Crossing("b", f"b{i}", 7, "residential", (100.0, y), False, {})
+             for i, y in enumerate(right_y)]
+    assert SM.match(left[::-1], right[::-1]) == list(zip(left, right))
+    assert SM.match(right, left) == list(zip(right, left))
 
 
 def test_synthetic_edge_line_spacing_rule_adr0220():
