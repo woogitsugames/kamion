@@ -157,3 +157,7 @@
 ### codex-sadowa-seam-s25 — r2, audyt 54 kafli
 - Dwa pełne przebiegi na tych samych wczytanych danych dały identyczny raport: 57 szwów, 363 drogi, 9 FAIL, 9 UWAGA i 96 PRZEJŚCIE. Brak nowych FAIL. Para Sadowej i cięcie 0,04883646 m zachowane.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -ra -p no:cacheprovider tests/gis/test_seams_0224.py tests/gis/test_unit_crs_geom.py tests/gis/test_unit_junctions.py tests/gis/test_seam_shear_knw.py tests/gis/test_seam_sides_s24.py tests/gis/test_seam_taper_0275.py tests/gis/test_seams_fix_s23.py tests/gis/test_seam_axis_w10.py tests/gis/test_dk8_seam_cli.py tests/gis/test_effective_graph_readers.py tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py` oraz cztery niezależne przypadki test_world_roads.py.
+
+### codex-sadowa-seam-s25 — r2, testy i przekazanie
+- 192/192 PASS, w tym 36/36 testów audytu i 62/62 testy budżetowe. Raport r2 i dowody zapisano w artifacts/codex-sadowa-seam-s25/WYNIKI.md. Unity i pełna regeneracja poza zakresem.
+- Następny krok lidera: `git diff 28a5288c0..codex-sadowa-seam-s25`. Po integracji i po fali 14 wykonać visual QA przed/po dla dk65-04 z sąsiadem dk65-05, zgodnie z poleceniami w raporcie.
