@@ -155,3 +155,7 @@
 ### codex-csharp-review-fixes-s25 — r3, EditMode zaliczony
 - EditMode Win64 53/53, Unity exit 0, slot heavy zwolniony. Test potwierdza 3 → 2 → 0 klonów, próby zwolnienia t0/t1/t2 i zachowanie materiału bazowego.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py`.
+
+### codex-csharp-review-fixes-s25 — r3, raport i przekazanie
+- Cztery bramki GIS 62/62 w 63,23 s. Raport r3, XML lidera, XML i pełny log końcowego EditMode skopiowane do katalogu dowodów. Osiem wcześniejszych zmian audio `.meta` poza commitami.
+- Następny krok lidera to `git diff bdb2b459d..codex-csharp-review-fixes-s25 -- game/Assets/_Project/Tests/EditMode/WorldStreamerHook0273Tests.cs`.

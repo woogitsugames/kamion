@@ -45,3 +45,19 @@ finally {
     pwsh scripts/unity-slot.ps1 -Release -Pool heavy -Owner codex-csharp-review-fixes-s25
 }
 ```
+
+## R3 — regresja EditMode po r2
+
+**EditMode Win64 52/53 → 53/53**, Unity 6000.3.28f1, kod wyjścia 0. Cztery bramki GIS **62/62 w 63,23 s**. Oba przebiegi Unity wykonano z podanym filtrem pod slotem heavy. Slot zwolniono.
+
+- Błąd był w teście `DestroyStreamer_CleansAllTilesAfterClearAndLeaseReleaseFailure`. Liczył on referencje do trzech konkretnych klonów. `Clear(t0)` niszczył pierwszy klon natychmiast. `DestroyImmediate(streamer.gameObject)` w EditMode nie wywołał `OnDestroy` ręcznie zainicjalizowanego komponentu, więc dwa pozostałe klony przeżyły. [XML lidera](editmode-r2-leader.xml) · [Dokumentacja callbacków Unity](https://docs.unity.com/en-us/engine/6000.3/script-reference/unityengine/executealways)
+- W `WorldStreamerHook0273Tests.cs` test wywołuje produkcyjne `OnDestroy` jawnie i wskazuje ID kafla przy błędzie asercji. Pierwszy przebieg po tej zmianie ujawnił format logu Unity. `LogAssert` oczekuje teraz dokładnego komunikatu wewnętrznego wyjątku `Release(t1)`. Stos wywołań zawiera też kontekst streamera. [XML przebiegu pośredniego](editmode-r3-first.xml)
+- Liczba żywych klonów po utworzeniu, `Clear` i sprzątaniu zmieniła się z **3 → 2 → 2** na **3 → 2 → 0**. Test potwierdził próby zwolnienia `t0`, `t1`, `t2` w tej kolejności, jedną pozostałą dzierżawę `t1` po jego wyjątku oraz zachowanie materiału bazowego. [XML końcowy](editmode-r3.xml) · [Log Unity](unity-editmode-r3.log) · [Log GIS](gis-tests-r3.txt)
+
+W r3 zmieniono test i `STATUS.md` oraz dopisano raport i podsumowania przebiegów. Osiem zmian `.wav.meta` obecnych przed r3 pozostaje poza commitami. Weryfikacja Unity objęła wyłącznie wskazany EditMode. PlayMode, build, regeneracja oraz rendery High przed i po dla clear i overcast wraz z inspekcją PNG pozostały poza tym przebiegiem.
+
+Następny krok lidera to przegląd zmian r3 przed integracją.
+
+```powershell
+git diff bdb2b459d..codex-csharp-review-fixes-s25 -- game/Assets/_Project/Tests/EditMode/WorldStreamerHook0273Tests.cs
+```
