@@ -224,3 +224,6 @@
 
 - Kontrola pierścienia po uzupełnieniu reguły kafla objęła też dwa sąsiednie wpisy `sidewalk_surface`. Test uwzględnia rzeczywisty schemat ADR 0237, a prototyp Bernardyńskiej dostał `verify`.
 - Następny krok: `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd -m pytest -q tests/gis/test_ring_0231.py tests/gis/test_pavements_0237.py`.
+
+- Kontrola instancji pasa w Dojlidach jest osobnym testem i pomija tylko środowiska bez eksportu `instances_*.json`. Walidacja YAML i raportu działa także w samym checkoucie.
+- Następny krok: `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd -m pytest -q tests/gis/test_dojgreen_0186.py`.

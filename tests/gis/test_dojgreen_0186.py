@@ -18,6 +18,7 @@ sys.path.insert(0, str(REPO / "tools" / "worldgen"))
 
 DOJ = REPO / "Data" / "Regions" / "bialystok-dojlidy"
 C = REPO / "Data" / "Regions" / "bialystok-industrial-c"
+SHRUB_STRIP = "mickiewicza-kuronia-shrub-strip-no-rule-trees"
 
 
 def _ov(d):
@@ -115,7 +116,7 @@ def test_dojlidy_data_and_report():
     assert sum(1 for p in trees["points_en"] if p[2] <= 5.5) >= 3                                     # low/mid shrubs on left
     skyline = ov["kuronia-north-park-skyline-trees"]
     assert skyline["form"] == "kit" and len(skyline["points_en"]) >= 2
-    strip = ov["mickiewicza-kuronia-shrub-strip-no-rule-trees"]
+    strip = ov[SHRUB_STRIP]
     assert strip["kind"] == "open_ground"
     assert ov["mickiewicza-u-turn-not-signalised"]["set"] == {"signalized": False}
     for o in ov.values():
@@ -133,7 +134,15 @@ def test_dojlidy_data_and_report():
     assert strip_report["trees_removed"] >= 0
     man = json.loads((DOJ / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
     assert not man.get("overrides_stale")
+
+
+def test_dojlidy_shrub_strip_has_no_rule_tree_instances():
     world = REPO / "Data" / "raw" / "derived" / DOJ.name / "world"
+    if not any(world.glob("instances_*.json")):
+        pytest.skip("Dojlidy world instances are not built")
+    strip = next(o for o in _ov(DOJ) if o["id"] == SHRUB_STRIP)
+    footprint = union_all([Polygon(ring) for ring in strip["polygons_en"]])
+    man = json.loads((DOJ / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
     chunks = []
     for chunk in man["chunks"]:
         b = chunk["bounds_local_m"]
