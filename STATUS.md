@@ -152,3 +152,7 @@
 ### codex-wave15-scope-s25 — pomiary i kamery
 - Porównano 54 grafy i siatki przewodów. Geometria przewodów zmienia się w dwóch kaflach. Dodano istniejące kamery na czterech szwach do planu High clear i overcast.
 - Następny krok: `Get-Content artifacts/codex-wave15-scope-s25/sides-after.log -Tail 10` i weryfikacja kolejki.
+
+### codex-wave15-scope-s25 — kolejki i plan uruchomienia
+- Zapisano czasy historyczne i pochodzenie raportów. Kolejka podstawowa obejmuje 19 kafli, pełna wszystkie 54. Sprawdzono składnię dziewięciu skryptów PowerShell, kamery i plan WhatIf.
+- Następny krok: `Get-Content artifacts/codex-wave15-scope-s25/pytest.log -Tail 12` oraz kontrola różnic drugiego przebiegu poboczy.
