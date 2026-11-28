@@ -1,11 +1,14 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Game.Core;
 using Game.World;
 using Game.World.Streaming;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace Game.Tests
 {
@@ -54,11 +57,12 @@ namespace Game.Tests
 
         GameObject Make(string name) { var go = new GameObject(name); m_Objects.Add(go); return go; }
 
-        /// <summary>Start root of tile t0 as imported (W = its anchor) with a drivable rectangle 100 m inside the tile.</summary>
-        WorldRegionRoot StartRoot(TileGraph g)
+        /// <summary>Tile root as imported (W = its anchor) with a drivable rectangle 100 m inside the tile.</summary>
+        WorldRegionRoot StartRoot(TileGraph g) => TileRoot(g.Tiles[0]);
+
+        WorldRegionRoot TileRoot(TileData t)
         {
-            var t = g.Tiles[0];
-            var root = Make("Region_t0").AddComponent<WorldRegionRoot>();
+            var root = Make("Region_" + t.id).AddComponent<WorldRegionRoot>();
             root.regionId = t.id; root.anchorX = t.anchorX; root.anchorY = t.anchorY; root.anchorZ = t.anchorZ;
             var b = root.gameObject.AddComponent<WorldBoundary>();
             b.minEN = new Vector2(-924f, -924f); b.maxEN = new Vector2(924f, 924f);
@@ -79,28 +83,42 @@ namespace Game.Tests
 
         // ------------------------------------------------------------------ the hook
 
+        sealed class ThrowingTileSource : ITileSceneSource
+        {
+            public readonly HashSet<string> HeldLeases = new HashSet<string>();
+            public readonly List<string> ReleaseAttempts = new List<string>();
+
+            public bool IsAvailable(string region, string tier) => true;
+            public bool FromPack(string region, string tier) => true;
+
+            public IEnumerator Acquire(string region, string tier, Action<bool> done)
+            {
+                done(HeldLeases.Add(region));
+                yield break;
+            }
+
+            public void Release(string region, string tier)
+            {
+                ReleaseAttempts.Add(region);
+                if (region == "t1") throw new InvalidOperationException("Synthetic t1 release failure");
+                HeldLeases.Remove(region);
+            }
+        }
+
         [Test]
-        public void DestroyStreamer_ReleasesFarRingClonesOfStartAndNeighbour()
+        public void DestroyStreamer_CleansAllTilesAfterClearAndLeaseReleaseFailure()
         {
             var shader = Shader.Find("Kamion/World Surface");
             Assert.That(shader, Is.Not.Null);
             var original = new Material(shader);
             bool farRingWasEnabled = FarRing.Enabled;
-            var clones = new Material[2];
+            var clones = new Material[3];
             try
             {
                 FarRing.Enabled = true;
                 original.EnableKeyword("_FAR_FACADE");
                 var graph = Row3();
-                var start = StartRoot(graph);
-                var neighbour = Make("Region_t1").AddComponent<WorldRegionRoot>();
-                neighbour.regionId = graph.Tiles[1].id;
-                neighbour.anchorX = graph.Tiles[1].anchorX;
-                neighbour.anchorY = graph.Tiles[1].anchorY;
-                neighbour.anchorZ = graph.Tiles[1].anchorZ;
-                var boundary = neighbour.gameObject.AddComponent<WorldBoundary>();
-                boundary.minEN = new Vector2(-924f, -924f);
-                boundary.maxEN = new Vector2(924f, 924f);
+                var roots = new[] { StartRoot(graph), TileRoot(graph.Tiles[1]), TileRoot(graph.Tiles[2]) };
 
                 MeshRenderer AddFarSector(WorldRegionRoot root)
                 {
@@ -114,21 +132,45 @@ namespace Game.Tests
                     return sector;
                 }
 
-                var startSector = AddFarSector(start);
-                var neighbourSector = AddFarSector(neighbour);
-                var streamer = HandBuilt(graph, start, _ => false, out _);
-                clones[0] = startSector.sharedMaterial;
-                streamer.AdoptVisualQaTile(neighbour);
-                clones[1] = neighbourSector.sharedMaterial;
+                var sectors = Array.ConvertAll<WorldRegionRoot, MeshRenderer>(roots, AddFarSector);
+                var streamer = HandBuilt(graph, roots[0], _ => true, out _);
+                streamer.AdoptVisualQaTile(roots[1]);
+                streamer.AdoptVisualQaTile(roots[2]);
+                for (int i = 0; i < clones.Length; i++) clones[i] = sectors[i].sharedMaterial;
 
-                Assert.That(Array.FindAll(clones, m => m != null && m != original).Length, Is.EqualTo(2));
-                Assert.That(clones[0], Is.Not.SameAs(clones[1]));
+                Assert.That(Array.FindAll(clones, m => m != null && m != original).Length, Is.EqualTo(3));
+                CollectionAssert.AllItemsAreUnique(clones);
                 foreach (var clone in clones)
                     Assert.That(clone.IsKeywordEnabled(FarRing.ClipKeyword), Is.True);
 
+                // The synthetic scenes were adopted without loading. Set up post-Acquire lease state explicitly.
+                var source = new ThrowingTileSource();
+                var tiles = (Array)typeof(WorldStreamer).GetField("m_Tiles", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .GetValue(streamer);
+                var leased = tiles.GetValue(0).GetType().GetField("leased");
+                for (int i = 0; i < tiles.Length; i++)
+                {
+                    bool acquired = false;
+                    var acquire = source.Acquire(graph.Tiles[i].id, streamer.contentTier, ok => acquired = ok);
+                    Assert.That(acquire.MoveNext(), Is.False);
+                    Assert.That(acquired, Is.True);
+                    leased.SetValue(tiles.GetValue(i), true);
+                }
+                streamer.source = source;
+
+                // Reproduce Clear during unload, before the lease is returned by scene unload completion.
+                typeof(WorldStreamer).GetMethod("Clear", BindingFlags.Static | BindingFlags.NonPublic)
+                    .Invoke(null, new[] { tiles.GetValue(0) });
+                Assert.That(clones[0] == null, Is.True);
+                Assert.That(Array.FindAll(clones, m => m != null).Length, Is.EqualTo(2));
+                Assert.That(source.ReleaseAttempts, Is.Empty);
+
+                LogAssert.Expect(LogType.Exception, new Regex(@"\[STREAM\].*failed to release tile lease"));
                 UnityEngine.Object.DestroyImmediate(streamer.gameObject);
 
                 Assert.That(Array.FindAll(clones, m => m != null).Length, Is.Zero);
+                CollectionAssert.AreEqual(new[] { "t0", "t1", "t2" }, source.ReleaseAttempts);
+                CollectionAssert.AreEquivalent(new[] { "t1" }, source.HeldLeases);
                 Assert.That(original != null, Is.True);
             }
             finally

@@ -1285,8 +1285,25 @@ namespace Game.World.Streaming
             if (m_Tiles == null) return;
             foreach (var tile in m_Tiles)
             {
-                ReleaseFarClones(tile);
-                ReleaseLease(tile);
+                try
+                {
+                    ReleaseFarClones(tile);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogException(new System.InvalidOperationException(
+                        $"[STREAM] {tile.sceneName}: failed to release far-ring materials", ex), this);
+                }
+
+                try
+                {
+                    ReleaseLease(tile);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogException(new System.InvalidOperationException(
+                        $"[STREAM] {tile.sceneName}: failed to release tile lease", ex), this);
+                }
             }
         }
     }
