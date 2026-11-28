@@ -77,10 +77,10 @@
     "lines_hv_osm": 0,
     "lines_not_hv": 105,
     "masts": 3,
-    "mv_lines_near": 13,
-    "mv_poles": 82,
+    "mv_lines_near": 8,
+    "mv_poles": 49,
     "mv_seam_supports": 7,
-    "mv_spans": 80,
+    "mv_spans": 50,
     "osm_hv_duplicates_of_bdot": 0,
     "osm_untagged_dropped": 0,
     "pylons": 39,
@@ -162,47 +162,52 @@
   },
   "tiers": {
     "High": {
-      "bytes": 7993976,
+      "bytes": 6535968,
       "file": "Data/raw/derived/dk65-10/world/far_field.glb",
+      "power_lod": {
+        "pylons": 25,
+        "spans": 23,
+        "unwired_power_pylons": 0
+      },
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 11595,
+            "far_field_buildings": 4507,
             "forest_edge_mixed_far_atlas": 26106
           },
           "submeshes": 2,
-          "triangles": 37701,
-          "vertices": 61523
+          "triangles": 30613,
+          "vertices": 47347
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 9102,
+            "far_field_buildings": 2214,
             "forest_edge_mixed_far_atlas": 26864
           },
           "submeshes": 2,
-          "triangles": 35966,
-          "vertices": 55512
+          "triangles": 29078,
+          "vertices": 41736
         },
         "far_south": {
           "by_material": {
-            "far_field_buildings": 1003,
+            "far_field_buildings": 841,
             "forest_edge_mixed_far_atlas": 26164
           },
           "submeshes": 2,
-          "triangles": 27167,
-          "vertices": 38257
+          "triangles": 27005,
+          "vertices": 37933
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 723,
+            "far_field_buildings": 567,
             "forest_edge_mixed_far_atlas": 11722
           },
           "submeshes": 2,
-          "triangles": 12445,
-          "vertices": 18149
+          "triangles": 12289,
+          "vertices": 17837
         }
       },
-      "sha256": "5a9caf2c0a6c8759672f294d7d2a72cc6dd580aaebab445d53f1c3f92ece011c",
+      "sha256": "79304a7166d4a16916b0a045d738d17c5af02b1a969239e0084e2b499e04e297",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -211,30 +216,35 @@
         "submeshes": 0,
         "triangles": 0
       },
-      "total_triangles": 113279,
-      "total_vertices": 173441
+      "total_triangles": 98985,
+      "total_vertices": 144853
     },
     "Low": {
-      "bytes": 627384,
+      "bytes": 594300,
       "file": "Data/raw/derived/dk65-10/world/far_field.low.glb",
+      "power_lod": {
+        "pylons": 20,
+        "spans": 18,
+        "unwired_power_pylons": 0
+      },
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 924,
+            "far_field_buildings": 666,
             "forest_edge_mixed_far_atlas": 3236
           },
           "submeshes": 2,
-          "triangles": 4160,
-          "vertices": 6006
+          "triangles": 3902,
+          "vertices": 5490
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 777,
+            "far_field_buildings": 611,
             "forest_edge_mixed_far_atlas": 2856
           },
           "submeshes": 2,
-          "triangles": 3633,
-          "vertices": 5159
+          "triangles": 3467,
+          "vertices": 4827
         },
         "far_south": {
           "by_material": {
@@ -255,7 +265,7 @@
           "vertices": 1536
         }
       },
-      "sha256": "416c54cdc16a04b3f481f7fc8616da015df51bb3a3c0698f9b9bf7b44742b63a",
+      "sha256": "77cbc17182466e80b90c8640844e47a88fc2ceba6e197456d106586399cb1fa7",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -264,8 +274,8 @@
         "submeshes": 0,
         "triangles": 0
       },
-      "total_triangles": 11802,
-      "total_vertices": 16488
+      "total_triangles": 11378,
+      "total_vertices": 15640
     }
   }
 }
