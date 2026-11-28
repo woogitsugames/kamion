@@ -113,3 +113,37 @@ def test_osm_signs_places_all_16_wave14_codes():
     assert placed.get("B-18_10") == 1
     assert rep["osm_signs"]["unknown"] == {"B-16": 1}
     assert rep["osm_signs"]["needs_value"] == [{"osm_node": 999, "code": "B-16", "tag": "maxheight"}]
+
+
+def test_verified_sign_face_geometry_dz_u_2019_2310():
+    """Regression checks against Dz.U. 2019 poz. 2310 / 2311 patterns for D-51, D-52, B-21, A-11, A-11a."""
+    # B-21: diagonal red slash runs top-right -> bottom-left (/), NOT top-left -> bottom-right (\)
+    b21 = np.asarray(SG.face("B-21")[1])
+    s = b21.shape[0]
+    p_tr = b21[int(s * 0.25), int(s * 0.75), :3]          # on slash (top-right inside white disc)
+    p_tl = b21[int(s * 0.25), int(s * 0.25), :3]          # off slash (top-left inside white disc)
+    assert p_tr[0] > 150 and p_tr[1] < 60                 # red
+    assert p_tl[0] > 200 and p_tl[1] > 200                # white
+
+    # A-11 (2 humps) vs A-11a (1 hump): at peak height center x is yellow in A-11 and black in A-11a
+    a11 = np.asarray(SG.face("A-11")[1])
+    a11a = np.asarray(SG.face("A-11a")[1])
+    y_peak = int(s * 0.72)
+    assert a11[y_peak, s // 2, 0] > 200                   # yellow valley in A-11
+    assert a11a[y_peak, s // 2, 0] < 60                   # black central hump in A-11a
+    assert a11[y_peak, int(s * 0.36), 0] < 60             # left hump peak in A-11
+
+    # D-51: retains upper/lower white text zones ("Kontrola prędkości" / "Fotoradar") and radar waves
+    d51 = np.asarray(SG.face("D-51")[1])
+    w51, h51 = d51.shape[1], d51.shape[0]
+    assert np.any(d51[:int(h51 * 0.28), :, 0] > 200)      # top text present
+    assert np.any(d51[int(h51 * 0.80):, :, 0] > 200)      # bottom text present
+    # Top-center above camera body is blue (small shutter button is on the left, no central prism)
+    assert d51[int(h51 * 0.44), int(w51 * 0.30), 2] > 120
+
+    # D-52: compact top car (sides white at top) and bottom text spanning wide
+    d52 = np.asarray(SG.face("D-52")[1])
+    w52, h52 = d52.shape[1], d52.shape[0]
+    assert d52[int(h52 * 0.30), int(w52 * 0.25), 0] > 200 # white beside compact car
+    assert np.any(d52[int(h52 * 0.65):int(h52 * 0.80), int(w52 * 0.12), 0] < 60)  # wide "Strefa ruchu" text
+

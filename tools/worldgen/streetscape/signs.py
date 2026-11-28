@@ -646,15 +646,48 @@ def b36():
 
 
 def b21():
-    """B-21 "zakaz skręcania w lewo": black left-turn arrow crossed by a red diagonal slash."""
+    """B-21 "zakaz skręcania w lewo" (rys. 9.2.29 [ZNAKI-Z1]): curved left-turn arrow and 45-deg slash (top-right to bottom-left)."""
     im, d = disc(WHITE, RED)
-    w = int(S * 0.075)
-    x0, y0, y_turn, x_tip = S * 0.58, S * 0.74, S * 0.42, S * 0.24
-    x_head = x_tip + S * 0.12
-    d.line([(x0, y0), (x0, y_turn), (x_head, y_turn)], fill=BLACK, width=w, joint="curve")
-    hw = S * 0.095
-    d.polygon([(x_tip, y_turn), (x_head, y_turn - hw), (x_head, y_turn + hw)], fill=BLACK)
-    _slash(d, RED, both=False)
+    # 10a x 10a construction grid mapped onto the outer disc [4, S - 4]
+    a = (S - 8) / 10.0
+    p = lambda gx, gy: (4.0 + gx * a, 4.0 + gy * a)
+    cx, cy = p(5.5, 5.5)
+    # Outer arc R = 1.5a (from (7a, 5.5a) CCW in screen coords to (5.5a, 4a))
+    outer_arc = [
+        (cx + 1.5 * a * math.cos(t), cy - 1.5 * a * math.sin(t))
+        for t in (0.5 * math.pi * k / 24 for k in range(25))
+    ]
+    # Inner arc R = 0.5a (from (5.5a, 5a) back down to (6a, 5.5a))
+    inner_arc = [
+        (cx + 0.5 * a * math.cos(t), cy - 0.5 * a * math.sin(t))
+        for t in (0.5 * math.pi * (1.0 - k / 24) for k in range(25))
+    ]
+    arrow_poly = [
+        p(7.0, 8.0),
+        *outer_arc,
+        p(3.0, 4.0),
+        p(3.0, 3.5),
+        p(1.55, 4.5),
+        p(3.0, 5.5),
+        p(3.0, 5.0),
+        *inner_arc,
+        p(6.0, 8.0),
+    ]
+    d.polygon(arrow_poly, fill=BLACK)
+    # Rys. 9.2.29: diagonal red band (width 3/4 a) from top-right to bottom-left
+    r_len = S * 0.44
+    hw = 0.375 * a
+    inv_sqrt2 = 1.0 / math.sqrt(2.0)
+    ux, uy = inv_sqrt2, -inv_sqrt2
+    nx, ny = inv_sqrt2, inv_sqrt2
+    c = S / 2.0
+    slash_poly = [
+        (c - r_len * ux - hw * nx, c - r_len * uy - hw * ny),
+        (c + r_len * ux - hw * nx, c + r_len * uy - hw * ny),
+        (c + r_len * ux + hw * nx, c + r_len * uy + hw * ny),
+        (c - r_len * ux + hw * nx, c - r_len * uy + hw * ny),
+    ]
+    d.polygon(slash_poly, fill=RED)
     return im
 
 
@@ -950,21 +983,57 @@ def a5():
     return im
 
 
-def _humps(n):
-    """A-11 (2 humps) / A-11a (1 hump): black baseline with n smooth rounded bumps."""
+def _sample_arc(cx, cy, r, a0, a1, n=24):
+    """Sample points along a circular arc in screen coordinates (angle 0 = +X, +pi/2 = -Y)."""
+    return [(cx + r * math.cos(a0 + (a1 - a0) * k / n), cy - r * math.sin(a0 + (a1 - a0) * k / n)) for k in range(n + 1)]
+
+
+def a11():
+    """A-11 "nierówna droga" (rys. 9.1.11 [ZNAKI-Z1]): baseline with two smooth circular-arc humps (R = 3/4 a)."""
     im, d = _tri_up()
-    yb = S * 0.785
-    d.rectangle([S * 0.25, S * 0.745, S * 0.75, yb], fill=BLACK)
-    spans = ((0.29, 0.48), (0.52, 0.71)) if n == 2 else ((0.365, 0.635),)
-    amp = S * 0.115
-    for x0, x1 in spans:
-        pts = []
-        for k in range(25):
-            t = k / 24.0
-            x = S * (x0 + (x1 - x0) * t)
-            y = S * 0.755 - amp * 0.5 * (1.0 - math.cos(2.0 * math.pi * t))
-            pts.append((x, y))
-        d.polygon(pts + [(S * x1, yb), (S * x0, yb)], fill=BLACK)
+    a = (S - 16) / 10.0
+    cx = S / 2.0
+    y_flat = S * 0.765
+    y_bot = y_flat + 0.50 * a
+    r = 0.75 * a
+    dx = math.sqrt(2.0) * a                              # horizontal peak offset: sqrt((2R)^2 - (0.5a)^2)
+    ang = math.asin(0.25 / 0.75)                         # tangent slope angle (~19.47 deg)
+    # Profile from left to right along y_flat: concave -> left peak -> center valley -> right peak -> concave
+    pts = [
+        (cx - 3.05 * a, y_bot),
+        (cx - 3.05 * a, y_flat),
+        *_sample_arc(cx - 2.0 * dx, y_flat - r, r, -math.pi / 2, -ang, 14),
+        *_sample_arc(cx - dx, y_flat - 0.25 * a, r, math.pi - ang, ang, 20),
+        *_sample_arc(cx, y_flat - r, r, math.pi + ang, 2 * math.pi - ang, 16),
+        *_sample_arc(cx + dx, y_flat - 0.25 * a, r, math.pi - ang, ang, 20),
+        *_sample_arc(cx + 2.0 * dx, y_flat - r, r, math.pi + ang, 1.5 * math.pi, 14),
+        (cx + 3.05 * a, y_flat),
+        (cx + 3.05 * a, y_bot),
+    ]
+    d.polygon(pts, fill=BLACK)
+    return im
+
+
+def a11a():
+    """A-11a "próg zwalniający" (rys. 9.1.12 [ZNAKI-Z1]): baseline with a single wide bump (R1 = a, R2 = 5/2 a)."""
+    im, d = _tri_up()
+    a = (S - 16) / 10.0
+    cx = S / 2.0
+    y_flat = S * 0.765
+    y_bot = y_flat + 0.50 * a
+    r1, r2 = 1.0 * a, 2.5 * a
+    dx = math.sqrt((r1 + r2) ** 2 - r2 ** 2)             # sqrt(3.5^2 - 2.5^2) * a = sqrt(6) * a
+    ang = math.atan2(r2, dx)                             # tangent angle from horizontal
+    pts = [
+        (cx - 3.05 * a, y_bot),
+        (cx - 3.05 * a, y_flat),
+        *_sample_arc(cx - dx, y_flat - r2, r2, -math.pi / 2, -ang, 18),
+        *_sample_arc(cx, y_flat, r1, math.pi - ang, ang, 24),
+        *_sample_arc(cx + dx, y_flat - r2, r2, math.pi + ang, 1.5 * math.pi, 18),
+        (cx + 3.05 * a, y_flat),
+        (cx + 3.05 * a, y_bot),
+    ]
+    d.polygon(pts, fill=BLACK)
     return im
 
 
@@ -1000,55 +1069,82 @@ def a17():
 
 
 def d51():
-    """D-51 "automatyczna kontrola prędkości" (600 x 750 mm, Tabela 5.1 [ZNAKI-Z1]): blue plate, white text & radar."""
+    """D-51 "automatyczna kontrola prędkości" (600 x 750 mm, rys. 9.4.77 [ZNAKI-Z1]): blue plate, white text & radar."""
     w, h = 410, S
+    a = w / 10.0                                         # 10a = 600 mm; h = 12.5a = 750 mm
     im = _img(w, h)
     d = ImageDraw.Draw(im)
-    d.rounded_rectangle([0, 0, w - 1, h - 1], radius=16, fill=BLUE)
-    d.rounded_rectangle([8, 8, w - 9, h - 9], radius=12, outline=WHITE, width=6)
-    for txt, yc in (("Kontrola", h * 0.115), ("prędkości", h * 0.215), ("Fotoradar", h * 0.845)):
-        f = _font(44)
-        bb = d.textbbox((0, 0), txt, font=f)
-        d.text(((w - (bb[2] - bb[0])) / 2 - bb[0], yc - (bb[3] - bb[1]) / 2 - bb[1]), txt, font=f, fill=WHITE)
-    cx0, cy0, cw, ch = w * 0.15, h * 0.44, w * 0.30, h * 0.17
-    d.rounded_rectangle([cx0, cy0, cx0 + cw, cy0 + ch], radius=8, fill=WHITE)
-    d.polygon([(cx0 + cw * 0.22, cy0), (cx0 + cw * 0.34, cy0 - ch * 0.16),
-               (cx0 + cw * 0.66, cy0 - ch * 0.16), (cx0 + cw * 0.78, cy0)], fill=WHITE)
-    lcx, lcy, lr = cx0 + cw * 0.50, cy0 + ch * 0.52, cw * 0.24
-    d.ellipse([lcx - lr, lcy - lr, lcx + lr, lcy + lr], fill=BLUE)
-    ir = lr * 0.62
-    d.ellipse([lcx - ir, lcy - ir, lcx + ir, lcy + ir], fill=WHITE)
-    ax, ay = cx0 + cw * 0.88, lcy
-    for k in range(4):
-        rr = w * (0.068 + 0.044 * k)
-        d.arc([ax - rr, ay - rr, ax + rr, ay + rr], start=-42, end=42, fill=WHITE, width=7)
+    d.rounded_rectangle([0, 0, w - 1, h - 1], radius=int(round(0.5 * a)), fill=BLUE)
+    d.rounded_rectangle([5, 5, w - 6, h - 6], radius=int(round(0.38 * a)), outline=WHITE, width=5)
+    # Rys. 9.4.77: all three lines left-aligned at x = 6/5 a; baselines at ~1.9a, 3.5a, 11.75a
+    f = _font(54)
+    x_txt = 1.2 * a
+    for txt, y_base in (("Kontrola", 1.9 * a), ("prędkości", 3.5 * a), ("Fotoradar", 11.75 * a)):
+        d.text((x_txt, y_base), txt, font=f, fill=WHITE, anchor="ls")
+    # Camera body (rows 5.95..8.1a, cols 1.2..4.9a) with small top-left button (rows 5.3..5.75a, cols 1.45..1.80a)
+    d.rectangle([1.20 * a, 5.95 * a, 4.90 * a, 8.10 * a], fill=WHITE)
+    d.rectangle([1.45 * a, 5.30 * a, 1.80 * a, 5.75 * a], fill=WHITE)
+    # Lens protruding slightly above/below body, separated by a blue ring
+    lcx, lcy = 3.05 * a, 7.02 * a
+    for rad, col in ((1.15 * a, WHITE), (0.95 * a, BLUE), (0.68 * a, WHITE)):
+        d.ellipse([lcx - rad, lcy - rad, lcx + rad, lcy + rad], fill=col)
+    # Six radar arcs spanning total height 4a (rows 5..9a) from apex (5.6a, 7.0a)
+    ax, ay = 5.60 * a, 7.00 * a
+    half_ang = math.atan2(2.0, 3.6)
+    band = 0.22 * a
+    for k in range(6):
+        r_in = (0.72 + 0.54 * k) * a
+        r_out = r_in + band
+        outer = _sample_arc(ax, ay, r_out, -half_ang, half_ang, 18)
+        inner = _sample_arc(ax, ay, r_in, half_ang, -half_ang, 18)
+        d.polygon(outer + inner, fill=WHITE)
     return im
 
 
 def d52():
     """D-52 "strefa ruchu" (900 x 420 mm, rys. 9.4.78 [ZNAKI-Z1]): white plate, black border, car silhouette & text."""
     w, h = S, int(round(S * 420 / 900))
+    px_mm = w / 900.0
     im = _img(w, h)
     d = ImageDraw.Draw(im)
-    d.rounded_rectangle([0, 0, w - 1, h - 1], radius=14, fill=WHITE)
-    d.rounded_rectangle([9, 9, w - 10, h - 10], radius=10, outline=BLACK, width=7)
-    cx, yb = w * 0.50, h * 0.45
-    d.polygon([(cx - 46, yb - 32), (cx - 34, yb - 60), (cx + 34, yb - 60), (cx + 46, yb - 32)], fill=BLACK)
-    d.polygon([(cx - 38, yb - 34), (cx - 28, yb - 53), (cx + 28, yb - 53), (cx + 38, yb - 34)], fill=WHITE)
-    d.rounded_rectangle([cx - 56, yb - 34, cx + 56, yb], radius=6, fill=BLACK)
+    d.rounded_rectangle([0, 0, w - 1, h - 1], radius=int(round(30 * px_mm)), fill=WHITE)
+    m = int(round(9 * px_mm))
+    d.rounded_rectangle([m, m, w - 1 - m, h - 1 - m], radius=int(round(21 * px_mm)), outline=BLACK, width=m)
+    # Compact front car silhouette centred horizontally; headlight axis near 125 mm from top (rys. 9.4.78)
+    cx = w * 0.50
+    y_hl = 125.0 * px_mm
+    u = 24.0 * px_mm                                     # ~100 mm tall car (~4.2u high, ~5.1u wide)
+    d.polygon([(cx - 2.1 * u, y_hl - 0.8 * u), (cx - 1.7 * u, y_hl - 2.3 * u),
+               (cx + 1.7 * u, y_hl - 2.3 * u), (cx + 2.1 * u, y_hl - 0.8 * u)], fill=BLACK)
+    d.polygon([(cx - 1.75 * u, y_hl - 0.9 * u), (cx - 1.45 * u, y_hl - 1.95 * u),
+               (cx + 1.45 * u, y_hl - 1.95 * u), (cx + 1.75 * u, y_hl - 0.9 * u)], fill=WHITE)
+    d.rounded_rectangle([cx - 2.55 * u, y_hl - 0.9 * u, cx + 2.55 * u, y_hl + 1.25 * u],
+                        radius=max(2, int(round(0.25 * u))), fill=BLACK)
+    hr = 0.36 * u
     for sx in (-1, 1):
-        d.rectangle([cx + sx * 34 - 9, yb - 24, cx + sx * 34 + 9, yb - 12], fill=WHITE)
-        d.rectangle([cx + sx * 38 - 9, yb, cx + sx * 38 + 9, yb + 12], fill=BLACK)
+        hx = cx + sx * 1.75 * u
+        d.ellipse([hx - hr, y_hl - hr, hx + hr, y_hl + hr], fill=WHITE)
+        d.rectangle([cx + sx * 1.65 * u - 0.55 * u, y_hl + 1.2 * u,
+                     cx + sx * 1.65 * u + 0.55 * u, y_hl + 1.85 * u], fill=BLACK)
+    d.rectangle([cx - 2.2 * u, y_hl + 0.62 * u, cx + 2.2 * u, y_hl + 0.85 * u], fill=WHITE)
+    # "Strefa ruchu" (cap height 102 mm, 50 mm side margin, bottom at 129 + 110 + 102 = 341 mm)
     txt = "Strefa ruchu"
-    f = _font(62)
-    bb = d.textbbox((0, 0), txt, font=f)
-    d.text(((w - (bb[2] - bb[0])) / 2 - bb[0], h * 0.72 - (bb[3] - bb[1]) / 2 - bb[1]), txt, font=f, fill=BLACK)
+    f = _font(80)
+    tmp = _img(900, 140)
+    td = ImageDraw.Draw(tmp)
+    td.text((10, 10), txt, font=f, fill=BLACK)
+    bb = tmp.getbbox()
+    glyph = tmp.crop(bb)
+    target_w = int(round(800 * px_mm))
+    target_h = int(round(102 * px_mm))
+    glyph = glyph.resize((target_w, target_h), Image.Resampling.LANCZOS)
+    im.paste(glyph, ((w - target_w) // 2, int(round(239 * px_mm))), glyph.split()[3])
     return im
 
 
 RECT.update({"D-42": (SN.D42_MM[0] / 1000.0, SN.D42_MM[1] / 1000.0),
              "D-43": (SN.D42_MM[0] / 1000.0, SN.D42_MM[1] / 1000.0),
-             # D-51: Tabela 5.1 [ZNAKI-Z1] l = 600, h = 600 + 150*1 = 750 mm (S/M); D-52: 900 x 420 mm (WORKING_VALUE, rys. 9.4.78)
+             # D-51: Tabela 5.1 [ZNAKI-Z1] l = 600, h = 600 + 150*1 = 750 mm (S/M); D-52: 900 x 420 mm (rys. 9.4.78)
              "D-51": (0.60, 0.75), "D-52": (0.90, 0.42)})
 
 
@@ -1063,8 +1159,8 @@ FACES = {"A-7": ("triangle", a7), "B-20": ("octagon", b20), "C-12": ("disc", c12
          "A-8": ("triangle_up", a8), "B-5": ("disc", b5), "D-42": ("rect", d42), "D-43": ("rect", lambda: d42(True)),
          # Wave 14 unknown OSM sign codes (Dz.U. 2019 poz. 2310 / 2311)
          "A-3": ("triangle_up", lambda: _a3_a4(True)), "A-4": ("triangle_up", lambda: _a3_a4(False)),
-         "A-5": ("triangle_up", a5), "A-11": ("triangle_up", lambda: _humps(2)),
-         "A-11a": ("triangle_up", lambda: _humps(1)), "A-12a": ("triangle_up", a12a),
+         "A-5": ("triangle_up", a5), "A-11": ("triangle_up", a11),
+         "A-11a": ("triangle_up", a11a), "A-12a": ("triangle_up", a12a),
          "A-17": ("triangle_up", a17), "B-21": ("disc", b21), "B-31": ("disc", b31), "B-35": ("disc", b35),
          "D-4a": ("square", lambda: square("D-4a")), "D-5": ("square", lambda: square("D-5")),
          "D-51": ("rect", d51), "D-52": ("rect", d52)}
