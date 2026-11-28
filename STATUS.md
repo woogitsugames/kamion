@@ -129,3 +129,7 @@
 ### codex-review-s25 — zakres recenzji
 - Przeczytano zasady i wzór raportu. Ustalono 9 scaleń oraz migawki gałęzi oczekujących: 7a255eb45, 28a5288c0 i 46c5fd32a.
 - Następny krok: git diff main...agy-poles-wires-s25 -- tools/worldgen oraz odtworzenie przypadków przez wgpy.cmd.
+
+### codex-review-s25 — reprodukcje i przegląd statyczny
+- Odtworzono dublowanie 3 przewodów na wspólnym przęśle OSM/BDOT, rozjazd audytu WN i eksportu oraz przyjęcie linii z niepełnego PBF. Na grafie Sadowej gałąź przywraca odcinek 0,04884 m. Obejrzano archiwalne PNG clear/overcast.
+- Następny krok: Get-Content artifacts/codex-review-s25/probe.txt i zakończenie przebiegu pytest przed zapisem REVIEW.md.
