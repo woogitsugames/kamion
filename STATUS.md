@@ -221,3 +221,6 @@
 
 - Dojlidy: lokalne odtworzenie rzeczywistego wiersza BDOT i nasadzeń daje `trees_removed` 1 → 0 po ADR 0352, przy pustym pasie w obu wariantach. Test sprawdza wpis w raporcie i brak drzew regułowych w wyeksportowanym poligonie.
 - Następny krok: `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd -m pytest -q tests/gis/test_dojgreen_0186.py tests/gis/test_props_grounding_0337.py tests/gis/test_ring_0231.py tests/gis/test_budget_0221.py`.
+
+- Kontrola pierścienia po uzupełnieniu reguły kafla objęła też dwa sąsiednie wpisy `sidewalk_surface`. Test uwzględnia rzeczywisty schemat ADR 0237, a prototyp Bernardyńskiej dostał `verify`.
+- Następny krok: `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd -m pytest -q tests/gis/test_ring_0231.py tests/gis/test_pavements_0237.py`.

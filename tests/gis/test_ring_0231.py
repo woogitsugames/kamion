@@ -224,6 +224,10 @@ def test_authored_files_present_and_consistent(rid):
         if o.get("kind") in region_rule_kinds:
             assert {"id", "kind", "reason", "confidence", "verify"} <= set(o), (rid, o.get("id"))
             assert set(o) - meta_keys, (rid, o.get("id"))
+        elif o.get("kind") == "sidewalk_surface":
+            # ADR 0237: an explicit surface applies to a polygon or to the sidewalks of selected OSM ways.
+            assert {"id", "surface", "reason", "confidence", "verify"} <= set(o), (rid, o.get("id"))
+            assert o.get("polygon_en") or o.get("polygon_epsg2180") or (o.get("target") or {}).get("osm_way"), o["id"]
         else:
             assert {"id", "target", "reason", "confidence", "verify", "set"} <= set(o), (rid, o.get("id"))
         if o["id"] in SEED_OVERRIDE_IDS and not built:
