@@ -1,18 +1,18 @@
 tile,manifest_wave,manifest_commit,roads_qa_origin,roads_qa_commit,road_chain_delta,road_section_or_paint_changes,side_profile_changes,junction_trim_changes,osm_new_parts,wire_mesh_changed,minimum_reason
-bialystok-bojary,14,7e31efe27,14,7e31efe27,0,1,0,0,5,false,D94 i geometria szwu
+bialystok-bojary,14,7e31efe27,14,7e31efe27,0,1,0,0,5,false,D94 i geometria szwu / clear_carriageway (5 propsów)
 bialystok-dojlidy,14,2d992e984,14,2d992e984,0,0,0,0,0,false,
-bialystok-industrial-c,14,01ad0bd25,14,01ad0bd25,0,0,0,0,22,true,siatka przewodów / snapshot fidelity C
-bialystok-kleeberga,14,a970779c5,14,a970779c5,0,0,0,0,9,false,
-bialystok-knyszynska,14,23469bc17,14,23469bc17,0,0,0,0,8,false,
-bialystok-krywlany,14,b83f795df,14,b83f795df,0,0,0,0,0,false,
-bialystok-maczka,14,aa3fb3ccb,14,aa3fb3ccb,0,0,0,0,11,false,
-bialystok-mickiewicza,14,bb6f12bc3,14,bb6f12bc3,0,1,0,0,7,true,D94 i geometria szwu / siatka przewodów
+bialystok-industrial-c,14,01ad0bd25,14,01ad0bd25,0,0,0,0,22,true,siatka przewodów / snapshot fidelity C / clear_carriageway (1 prop) i kolizja wysepki bramowej
+bialystok-kleeberga,14,a970779c5,14,a970779c5,0,0,0,0,9,false,clear_carriageway (1 prop)
+bialystok-knyszynska,14,23469bc17,14,23469bc17,0,0,0,0,8,false,clear_carriageway (1 prop)
+bialystok-krywlany,14,b83f795df,14,b83f795df,0,0,0,0,0,false,clear_carriageway (1 prop)
+bialystok-maczka,14,aa3fb3ccb,14,aa3fb3ccb,0,0,0,0,11,false,clear_carriageway (2 propsy)
+bialystok-mickiewicza,14,bb6f12bc3,14,bb6f12bc3,0,1,0,0,7,true,D94 i geometria szwu / siatka przewodów / clear_carriageway (3 propsy)
 bialystok-porosly,14,4adc72f38,14,4adc72f38,0,0,0,0,2,false,
-bialystok-wygoda,14,dab8d06e0,14,dab8d06e0,0,0,0,0,7,false,
+bialystok-wygoda,14,dab8d06e0,14,dab8d06e0,0,0,0,0,7,false,clear_carriageway (2 propsy)
 dk65-01,14,de123b2f1,14,de123b2f1,0,1,2,0,1,false,D94 i geometria szwu
-dk65-02,13,a61f0e9f8,12,c01964c14,0,0,0,0,0,false,
+dk65-02,13,a61f0e9f8,12,c01964c14,0,0,0,0,0,false,clear_carriageway i signal_rail (2 propsy)
 dk65-03,14,53805c68b,14,53805c68b,0,0,0,0,0,false,
-dk65-04,14,22d15e6e1,14,22d15e6e1,0,0,0,0,0,false,druga strona Sadowej i kadr top_szkolna
+dk65-04,14,22d15e6e1,14,22d15e6e1,0,0,0,0,0,false,druga strona Sadowej i kadr top_szkolna / clear_carriageway i signal_rail (1 prop)
 dk65-05,14,ba4da1a5c,14,ba4da1a5c,2,3,1,3,0,false,Sadowa i trym na granicy / profil pobocza
 dk65-06,14,750ab9913,14,750ab9913,0,0,0,0,0,false,
 dk65-07,14,7db3b2387,14,7db3b2387,0,0,0,0,0,false,
@@ -49,7 +49,7 @@ monki,14,2f4788996,14,2f4788996,0,2,0,0,1,false,rozstaw P-7b DK65
 monki-e,14,3720e0014,14,3720e0014,0,0,0,0,2,false,
 s8-01,14,62239b67a,14,62239b67a,0,0,0,0,1,false,
 s8-02,13,b991b74e1,12,d346539d1,0,1,2,0,1,false,D94 i geometria szwu
-s8-03,14,852aa866f,14,852aa866f,0,0,0,0,1,false,
+s8-03,14,852aa866f,14,852aa866f,0,0,0,0,1,false,clear_carriageway (1 prop)
 s8-04,13,b991b74e1,12,d346539d1,0,1,0,0,1,false,D94 i geometria szwu
 s8-05,14,588aa501f,14,588aa501f,0,1,0,0,1,false,D94 i geometria szwu
 tykocin,14,9ca860971,14,9ca860971,0,0,0,0,0,false,pomnik r4
