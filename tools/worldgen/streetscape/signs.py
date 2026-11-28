@@ -125,11 +125,34 @@ def d1():
     return im
 
 
+def _v_arrow(d, cx, y_top, y_bot, shaft_w, head_w, head_h, col, up=True):
+    """Vertical arrow centred at cx between y_top and y_bot."""
+    hw_s, hw_h = shaft_w / 2, head_w / 2
+    if up:
+        yb = y_top + head_h
+        pts = [(cx, y_top), (cx + hw_h, yb), (cx + hw_s, yb), (cx + hw_s, y_bot),
+               (cx - hw_s, y_bot), (cx - hw_s, yb), (cx - hw_h, yb)]
+    else:
+        yb = y_bot - head_h
+        pts = [(cx, y_bot), (cx - hw_h, yb), (cx - hw_s, yb), (cx - hw_s, y_top),
+               (cx + hw_s, y_top), (cx + hw_s, yb), (cx + hw_h, yb)]
+    d.polygon(pts, fill=col)
+
+
 def square(sym):
     im = _img()
     d = ImageDraw.Draw(im)
     d.rounded_rectangle([4, 4, S - 4, S - 4], radius=24, fill=BLUE)
-    if sym == "D-6":
+    if sym == "D-4a":
+        # D-4a "droga bez przejazdu": white vertical stem topped by a red horizontal bar in a thin white frame
+        d.rectangle([S * 0.43, S * 0.28, S * 0.57, S * 0.85], fill=WHITE)
+        d.rectangle([S * 0.22, S * 0.13, S * 0.78, S * 0.30], fill=WHITE)
+        d.rectangle([S * 0.24, S * 0.15, S * 0.76, S * 0.28], fill=RED)
+    elif sym == "D-5":
+        # D-5 "pierwszeństwo na zwężonym odcinku jezdni": red down arrow left, white up arrow right
+        _v_arrow(d, S * 0.34, S * 0.25, S * 0.77, S * 0.085, S * 0.22, S * 0.18, RED, up=False)
+        _v_arrow(d, S * 0.66, S * 0.20, S * 0.80, S * 0.105, S * 0.25, S * 0.20, WHITE, up=True)
+    elif sym == "D-6":
         d.polygon([(S / 2, S * 0.14), (S * 0.86, S * 0.84), (S * 0.14, S * 0.84)], fill=WHITE)
         # zebra + walking figure (simplified)
         for k in range(4):
@@ -600,12 +623,46 @@ def b2():
     return im
 
 
-def b36():
-    im, d = disc(BLUE, RED)
+def _slash(d, col, both=False):
+    """Diagonal 45-deg band(s) across a disc from top-left to bottom-right (and opposite when both=True)."""
     w = int(S * 0.085)
     c, r = S / 2, S * 0.40
-    for a in (math.pi / 4, -math.pi / 4):
-        d.line([(c - r * math.cos(a), c - r * math.sin(a)), (c + r * math.cos(a), c + r * math.sin(a))], fill=RED, width=w)
+    angs = (math.pi / 4, -math.pi / 4) if both else (math.pi / 4,)
+    for a in angs:
+        d.line([(c - r * math.cos(a), c - r * math.sin(a)), (c + r * math.cos(a), c + r * math.sin(a))], fill=col, width=w)
+
+
+def b35():
+    """B-35 "zakaz postoju": blue disc, red ring, single diagonal red slash from top-left to bottom-right."""
+    im, d = disc(BLUE, RED)
+    _slash(d, RED, both=False)
+    return im
+
+
+def b36():
+    im, d = disc(BLUE, RED)
+    _slash(d, RED, both=True)
+    return im
+
+
+def b21():
+    """B-21 "zakaz skręcania w lewo": black left-turn arrow crossed by a red diagonal slash."""
+    im, d = disc(WHITE, RED)
+    w = int(S * 0.075)
+    x0, y0, y_turn, x_tip = S * 0.58, S * 0.74, S * 0.42, S * 0.24
+    x_head = x_tip + S * 0.12
+    d.line([(x0, y0), (x0, y_turn), (x_head, y_turn)], fill=BLACK, width=w, joint="curve")
+    hw = S * 0.095
+    d.polygon([(x_tip, y_turn), (x_head, y_turn - hw), (x_head, y_turn + hw)], fill=BLACK)
+    _slash(d, RED, both=False)
+    return im
+
+
+def b31():
+    """B-31 "pierwszeństwo dla nadjeżdżających z przeciwka": black down arrow left, red up arrow right."""
+    im, d = disc(WHITE, RED)
+    _v_arrow(d, S * 0.35, S * 0.29, S * 0.73, S * 0.08, S * 0.20, S * 0.16, BLACK, up=False)
+    _v_arrow(d, S * 0.65, S * 0.27, S * 0.71, S * 0.08, S * 0.20, S * 0.16, RED, up=True)
     return im
 
 
@@ -869,8 +926,130 @@ def rect_size(code):
     return RECT[code]
 
 
+def _a3_a4(first_right=True):
+    """A-3 / A-4 "niebezpieczne zakręty": double-bend arrow curving right-then-left (A-3) or mirrored (A-4)."""
+    im, d = _tri_up()
+    mx = (lambda x: x) if first_right else (lambda x: S - x)
+    w = int(S * 0.056)
+    x_in, x_out = mx(S * 0.42), mx(S * 0.58)
+    pts = [(x_in, S * 0.80), (x_in, S * 0.62), (x_out, S * 0.67), (x_out, S * 0.51)]
+    d.line(pts, fill=BLACK, width=w, joint="curve")
+    for px, py in pts[1:-1]:
+        d.ellipse([px - w / 2, py - w / 2, px + w / 2, py + w / 2], fill=BLACK)
+    tip_y, base_y, hw = S * 0.42, S * 0.52, S * 0.052
+    d.polygon([(x_out, tip_y), (x_out - hw, base_y), (x_out + hw, base_y)], fill=BLACK)
+    return im
+
+
+def a5():
+    """A-5 "skrzyżowanie dróg": black diagonal X inside the warning triangle."""
+    im, d = _tri_up()
+    cx, cy, r, w = S * 0.50, S * 0.64, S * 0.115, int(S * 0.062)
+    d.line([(cx - r, cy - r), (cx + r, cy + r)], fill=BLACK, width=w)
+    d.line([(cx - r, cy + r), (cx + r, cy - r)], fill=BLACK, width=w)
+    return im
+
+
+def _humps(n):
+    """A-11 (2 humps) / A-11a (1 hump): black baseline with n smooth rounded bumps."""
+    im, d = _tri_up()
+    yb = S * 0.785
+    d.rectangle([S * 0.25, S * 0.745, S * 0.75, yb], fill=BLACK)
+    spans = ((0.29, 0.48), (0.52, 0.71)) if n == 2 else ((0.365, 0.635),)
+    amp = S * 0.115
+    for x0, x1 in spans:
+        pts = []
+        for k in range(25):
+            t = k / 24.0
+            x = S * (x0 + (x1 - x0) * t)
+            y = S * 0.755 - amp * 0.5 * (1.0 - math.cos(2.0 * math.pi * t))
+            pts.append((x, y))
+        d.polygon(pts + [(S * x1, yb), (S * x0, yb)], fill=BLACK)
+    return im
+
+
+def a12a():
+    """A-12a "zwężenie jezdni - dwustronne": two symmetric road-edge lines narrowing upward."""
+    im, d = _tri_up()
+    w = int(S * 0.048)
+    for sgn in (-1, 1):
+        pts = [(S * (0.50 + sgn * 0.125), S * 0.80), (S * (0.50 + sgn * 0.125), S * 0.65),
+               (S * (0.50 + sgn * 0.062), S * 0.54), (S * (0.50 + sgn * 0.062), S * 0.43)]
+        d.line(pts, fill=BLACK, width=w, joint="curve")
+    return im
+
+
+def a17():
+    """A-17 "dzieci": simplified silhouettes of two running children facing right."""
+    im, d = _tri_up()
+    for cx, head_y, scale in ((0.585, 0.49, 1.0), (0.415, 0.56, 0.82)):
+        hr = S * 0.036 * scale
+        d.ellipse([S * cx - hr, S * head_y - hr, S * cx + hr, S * head_y + hr], fill=BLACK)
+        tx, ty0, ty1 = S * cx, S * (head_y + 0.045 * scale), S * (head_y + 0.17 * scale)
+        d.line([(tx, ty0), (tx - S * 0.014 * scale, ty1)], fill=BLACK, width=max(4, int(S * 0.044 * scale)))
+        arm_y = ty0 + S * 0.025 * scale
+        d.line([(tx - S * 0.052 * scale, arm_y + S * 0.045 * scale), (tx, arm_y),
+                (tx + S * 0.052 * scale, arm_y + S * 0.032 * scale)],
+               fill=BLACK, width=max(3, int(S * 0.024 * scale)), joint="curve")
+        hip = (tx - S * 0.014 * scale, ty1)
+        foot_y = S * 0.80
+        d.line([hip, (hip[0] - S * 0.050 * scale, foot_y)], fill=BLACK, width=max(3, int(S * 0.028 * scale)))
+        d.line([hip, (hip[0] + S * 0.035 * scale, (hip[1] + foot_y) * 0.48),
+                (hip[0] + S * 0.060 * scale, foot_y)], fill=BLACK, width=max(3, int(S * 0.028 * scale)), joint="curve")
+    return im
+
+
+def d51():
+    """D-51 "automatyczna kontrola prędkości" (600 x 750 mm, Tabela 5.1 [ZNAKI-Z1]): blue plate, white text & radar."""
+    w, h = 410, S
+    im = _img(w, h)
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([0, 0, w - 1, h - 1], radius=16, fill=BLUE)
+    d.rounded_rectangle([8, 8, w - 9, h - 9], radius=12, outline=WHITE, width=6)
+    for txt, yc in (("Kontrola", h * 0.115), ("prędkości", h * 0.215), ("Fotoradar", h * 0.845)):
+        f = _font(44)
+        bb = d.textbbox((0, 0), txt, font=f)
+        d.text(((w - (bb[2] - bb[0])) / 2 - bb[0], yc - (bb[3] - bb[1]) / 2 - bb[1]), txt, font=f, fill=WHITE)
+    cx0, cy0, cw, ch = w * 0.15, h * 0.44, w * 0.30, h * 0.17
+    d.rounded_rectangle([cx0, cy0, cx0 + cw, cy0 + ch], radius=8, fill=WHITE)
+    d.polygon([(cx0 + cw * 0.22, cy0), (cx0 + cw * 0.34, cy0 - ch * 0.16),
+               (cx0 + cw * 0.66, cy0 - ch * 0.16), (cx0 + cw * 0.78, cy0)], fill=WHITE)
+    lcx, lcy, lr = cx0 + cw * 0.50, cy0 + ch * 0.52, cw * 0.24
+    d.ellipse([lcx - lr, lcy - lr, lcx + lr, lcy + lr], fill=BLUE)
+    ir = lr * 0.62
+    d.ellipse([lcx - ir, lcy - ir, lcx + ir, lcy + ir], fill=WHITE)
+    ax, ay = cx0 + cw * 0.88, lcy
+    for k in range(4):
+        rr = w * (0.068 + 0.044 * k)
+        d.arc([ax - rr, ay - rr, ax + rr, ay + rr], start=-42, end=42, fill=WHITE, width=7)
+    return im
+
+
+def d52():
+    """D-52 "strefa ruchu" (900 x 420 mm, rys. 9.4.78 [ZNAKI-Z1]): white plate, black border, car silhouette & text."""
+    w, h = S, int(round(S * 420 / 900))
+    im = _img(w, h)
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([0, 0, w - 1, h - 1], radius=14, fill=WHITE)
+    d.rounded_rectangle([9, 9, w - 10, h - 10], radius=10, outline=BLACK, width=7)
+    cx, yb = w * 0.50, h * 0.45
+    d.polygon([(cx - 46, yb - 32), (cx - 34, yb - 60), (cx + 34, yb - 60), (cx + 46, yb - 32)], fill=BLACK)
+    d.polygon([(cx - 38, yb - 34), (cx - 28, yb - 53), (cx + 28, yb - 53), (cx + 38, yb - 34)], fill=WHITE)
+    d.rounded_rectangle([cx - 56, yb - 34, cx + 56, yb], radius=6, fill=BLACK)
+    for sx in (-1, 1):
+        d.rectangle([cx + sx * 34 - 9, yb - 24, cx + sx * 34 + 9, yb - 12], fill=WHITE)
+        d.rectangle([cx + sx * 38 - 9, yb, cx + sx * 38 + 9, yb + 12], fill=BLACK)
+    txt = "Strefa ruchu"
+    f = _font(62)
+    bb = d.textbbox((0, 0), txt, font=f)
+    d.text(((w - (bb[2] - bb[0])) / 2 - bb[0], h * 0.72 - (bb[3] - bb[1]) / 2 - bb[1]), txt, font=f, fill=BLACK)
+    return im
+
+
 RECT.update({"D-42": (SN.D42_MM[0] / 1000.0, SN.D42_MM[1] / 1000.0),
-             "D-43": (SN.D42_MM[0] / 1000.0, SN.D42_MM[1] / 1000.0)})
+             "D-43": (SN.D42_MM[0] / 1000.0, SN.D42_MM[1] / 1000.0),
+             # D-51: Tabela 5.1 [ZNAKI-Z1] l = 600, h = 600 + 150*1 = 750 mm (S/M); D-52: 900 x 420 mm (WORKING_VALUE, rys. 9.4.78)
+             "D-51": (0.60, 0.75), "D-52": (0.90, 0.42)})
 
 
 FACES = {"A-7": ("triangle", a7), "B-20": ("octagon", b20), "C-12": ("disc", c12), "D-1": ("diamond", d1),
@@ -881,7 +1060,14 @@ FACES = {"A-7": ("triangle", a7), "B-20": ("octagon", b20), "C-12": ("disc", c12
          "A-9": ("triangle_up", a9), "A-10": ("triangle_up", a10), "G-2": ("rect", g2), "T-SA": ("rect", t_sa),
          **{f"G-1{k}": ("rect", (lambda k=k: g1(f"G-1{k}"))) for k in "abcdef"},
          # ADR 0279 P1: OSM-mapped / rule signs that were reported as `unknown` or not generated
-         "A-8": ("triangle_up", a8), "B-5": ("disc", b5), "D-42": ("rect", d42), "D-43": ("rect", lambda: d42(True))}
+         "A-8": ("triangle_up", a8), "B-5": ("disc", b5), "D-42": ("rect", d42), "D-43": ("rect", lambda: d42(True)),
+         # Wave 14 unknown OSM sign codes (Dz.U. 2019 poz. 2310 / 2311)
+         "A-3": ("triangle_up", lambda: _a3_a4(True)), "A-4": ("triangle_up", lambda: _a3_a4(False)),
+         "A-5": ("triangle_up", a5), "A-11": ("triangle_up", lambda: _humps(2)),
+         "A-11a": ("triangle_up", lambda: _humps(1)), "A-12a": ("triangle_up", a12a),
+         "A-17": ("triangle_up", a17), "B-21": ("disc", b21), "B-31": ("disc", b31), "B-35": ("disc", b35),
+         "D-4a": ("square", lambda: square("D-4a")), "D-5": ("square", lambda: square("D-5")),
+         "D-51": ("rect", d51), "D-52": ("rect", d52)}
 KNOWN = set(FACES)
 # parametric faces: B-33_<km/h>, B-18_<t>, T-1_<m>, T-1S_<m> ("Stop <m>")
 PARAMETRIC = ("B-33_", "B-18_", "B-16_", "T-1_", "T-1S_")
