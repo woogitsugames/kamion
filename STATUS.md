@@ -148,3 +148,7 @@
 ### codex-wave15-scope-s25 — lokalna integracja
 - Nałożono seam-steps i poles-wires bez commitów scalających. Jedyny konflikt STATUS.md rozstrzygnięto ours.
 - Następny krok: `git show regen-wave-14-s25:Data/Regions/dk65-04/generated/roads_qa.json` oraz porównanie profili i oznakowania 54 kafli.
+
+### codex-wave15-scope-s25 — pomiary i kamery
+- Porównano 54 grafy i siatki przewodów. Geometria przewodów zmienia się w dwóch kaflach. Dodano istniejące kamery na czterech szwach do planu High clear i overcast.
+- Następny krok: `Get-Content artifacts/codex-wave15-scope-s25/sides-after.log -Tail 10` i weryfikacja kolejki.
