@@ -218,3 +218,6 @@
 
 - Uzupełniono `confidence`, `sources` i `verify` we wpisie `tykocin-pavement-rules-s24` zgodnie z ADR 0237 i 0231. `medium` dotyczy reguły, a wariant zastępczy pozostaje `WORKING_VALUE`.
 - Następny krok: `rg -n 'trees_removed|avenue_row_candidates' tools/worldgen/streetscape/vegetation.py`.
+
+- Dojlidy: lokalne odtworzenie rzeczywistego wiersza BDOT i nasadzeń daje `trees_removed` 1 → 0 po ADR 0352, przy pustym pasie w obu wariantach. Test sprawdza wpis w raporcie i brak drzew regułowych w wyeksportowanym poligonie.
+- Następny krok: `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd -m pytest -q tests/gis/test_dojgreen_0186.py tests/gis/test_props_grounding_0337.py tests/gis/test_ring_0231.py tests/gis/test_budget_0221.py`.
