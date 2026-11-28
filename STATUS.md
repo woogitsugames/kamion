@@ -227,3 +227,6 @@
 
 - Kontrola instancji pasa w Dojlidach jest osobnym testem i pomija tylko środowiska bez eksportu `instances_*.json`. Walidacja YAML i raportu działa także w samym checkoucie.
 - Następny krok: `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd -m pytest -q tests/gis/test_dojgreen_0186.py`.
+
+- Weryfikacja: 167 testów rozszerzonych z czterema zestawami budżetowymi, potem 65 na końcowej wersji dotkniętych plików i `test_budget_0221.py`. Obejrzano archiwalne PNG Tykocina High clear i overcast. Raport `artifacts/codex-gis-3fail-s25/WYNIKI.md` skopiowano do głównego katalogu dowodów.
+- Następny krok lidera z jego worktree: `git merge --no-ff codex-gis-3fail-s25`. Następnie fala 15 dla `tykocin` już wpisanego do kolejki. Dojlidy nie wymagają dodatkowej regeneracji.
