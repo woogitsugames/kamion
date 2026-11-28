@@ -1,5 +1,8 @@
 # STATUS codex-csharp-review-fixes-s25
 
+- R2 krok 1. W lokalnym URP `_AlphaToMaskAvailable` jest ustawiane w `DrawObjectsPass`. `VegetationDepth` i `ForwardLit` używają wspólnego celu renderowania obiektów nieprzezroczystych. `DepthOnly` ma twarde odcięcie ze wspólnego progu i zaktualizowany test źródła.
+- Następny krok: `git diff -- game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs game/Assets/_Project/Tests/EditMode/WorldStreamerHook0273Tests.cs`
+
 - Krok 1. Przeczytano recenzję day27 i ADR 0013, 0023, 0308, 0352, 0354. Potwierdzono rozbieżność progu i brak zwalniania klonów w `OnDestroy`. W `win-build/game` brak wygenerowanych `.csproj`.
 - Następny krok: `git diff -- game/Assets/_Project/Rendering/Shaders/Vegetation.shader game/Assets/_Project/Tests/EditMode/VegetationCrownLodTests.cs`
 - Krok 2. Przebiegi kamery używają jednego progu i wyjściowej alfy. ShadowCaster wywołuje ten sam helper z dotychczasowym twardym progiem. Dodano test źródła HLSL.

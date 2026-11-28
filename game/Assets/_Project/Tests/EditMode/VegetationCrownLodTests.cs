@@ -72,9 +72,9 @@ namespace Game.Tests
             var coverage = Regex.Match(src, @"\bhalf\s+VegClipCoverage\s*\([^)]*\)\s*\{[\s\S]*?^ {8}\}",
                 RegexOptions.Multiline);
             Assert.That(coverage.Success, Is.True);
-            StringAssert.Contains("VegCutoffFill(", coverage.Value);
-            StringAssert.Contains("CoverageAlpha(", coverage.Value);
-            Assert.That(coverage.Value, Does.Match(clip));
+            Assert.That(coverage.Value, Does.Match(@"if\s*\(cameraPass\)\s*cutoff\s*=\s*VegCutoffFill\(uv, cutoff\)"));
+            Assert.That(coverage.Value, Does.Match(
+                @"if\s*\(allowAlphaToCoverage\s*&&\s*_AlphaToMask\s*>\s*0\.5\s*&&\s*_AlphaToMaskAvailable\s*!=\s*0\.0\)\s*\{\s*half coverage = CoverageAlpha\(alpha, cutoff\);\s*clip\(coverage - 0\.0001\);\s*return coverage;\s*\}\s*clip\(alpha - cutoff\);"));
             Assert.That(Regex.Matches(src, clip).Count, Is.EqualTo(Regex.Matches(coverage.Value, clip).Count));
 
             var checkedPasses = new List<string>();
@@ -85,13 +85,18 @@ namespace Game.Tests
                 Assert.That(program, Does.Not.Match(clip), name);
                 if (!Regex.IsMatch(program, sharedClip)) continue;
 
-                bool shadow = name == "ShadowCaster";
-                Assert.That(program, Does.Match(sharedClip + @"[^;]+,\s*" + (shadow ? "false" : "true") + @"\s*\)"), name);
-                if (!shadow)
+                string cameraPass = name == "ShadowCaster" ? "false" : "true";
+                bool usesOpaqueTarget = name == "VegetationDepth" || name == "ForwardLit";
+                string allowAlphaToCoverage = usesOpaqueTarget ? "true" : "false";
+                Assert.That(program, Does.Match(sharedClip + @"[^;]+,\s*" + cameraPass + @",\s*" +
+                    allowAlphaToCoverage + @"\s*\)"), name);
+                if (usesOpaqueTarget)
                 {
                     Assert.That(pass.Groups[2].Value, Does.Match(@"AlphaToMask\s+\[_AlphaToMask\]"), name);
                     Assert.That(program, Does.Match(@"return\s+half4\s*\([^;]+,\s*alpha\s*\)"), name);
                 }
+                else
+                    Assert.That(pass.Groups[2].Value, Does.Not.Match(@"\bAlphaToMask\b"), name);
                 checkedPasses.Add(name);
             }
             foreach (string name in new[] { "VegetationDepth", "ForwardLit", "ShadowCaster", "DepthOnly" })

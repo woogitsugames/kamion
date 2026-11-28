@@ -246,21 +246,15 @@ Shader "Kamion/Vegetation"
         #endif
         }
 
-        half VegClipCoverage(float2 uv, half alpha, half cutoff, bool cameraPass)
+        half VegClipCoverage(float2 uv, half alpha, half cutoff, bool cameraPass, bool allowAlphaToCoverage)
         {
             // Shadow maps keep their hard cutoff in light space.
-            if (cameraPass)
+            if (cameraPass) cutoff = VegCutoffFill(uv, cutoff);
+            if (allowAlphaToCoverage && _AlphaToMask > 0.5 && _AlphaToMaskAvailable != 0.0)
             {
-                cutoff = VegCutoffFill(uv, cutoff);
-                if (_AlphaToMask > 0.5)
-                {
-                    half coverage = CoverageAlpha(alpha, cutoff);
-                    // MSAA targets convert the returned alpha to their sample mask. Single-sample targets
-                    // (such as the URP depth texture) keep any pixel with nonzero coverage.
-                    // Keep the explicit clip for targets where the hardware coverage mask is unavailable.
-                    clip(coverage - 0.0001);
-                    return coverage;
-                }
+                half coverage = CoverageAlpha(alpha, cutoff);
+                clip(coverage - 0.0001);
+                return coverage;
             }
             clip(alpha - cutoff);
             return 1.0;
@@ -331,7 +325,8 @@ Shader "Kamion/Vegetation"
                 if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
                 i.uv = EdgeUV(i.uv);
             #endif
-                half alpha = VegClipCoverage(i.uv.xy, VegAlpha(i.uv, i.t.x), i.t.y, true);
+                // SRPDefaultUnlit shares the opaque draw target and its A2C flag with ForwardLit.
+                half alpha = VegClipCoverage(i.uv.xy, VegAlpha(i.uv, i.t.x), i.t.y, true, true);
                 return half4(0, 0, 0, alpha);
             }
             ENDHLSL
@@ -505,7 +500,7 @@ Shader "Kamion/Vegetation"
             #endif
                 // Same coverage as the depth pass: fragments outside the leaf would otherwise paint over samples whose
                 // depth is still the background's.
-                half alpha = VegClipCoverage(i.uv.xy, tex.a, i.fogFactor.y, true);
+                half alpha = VegClipCoverage(i.uv.xy, tex.a, i.fogFactor.y, true, true);
             #if !defined(_HLOD_EDGE)
                 half3 albedo = tex.rgb * i.treeVar.rgb;
             #else
@@ -624,7 +619,7 @@ Shader "Kamion/Vegetation"
             #if defined(_HLOD_EDGE)
                 i.uv = EdgeUV(i.uv);
             #endif
-                VegClipCoverage(i.uv.xy, VegAlpha(i.uv, i.t.x), i.t.y, false);
+                VegClipCoverage(i.uv.xy, VegAlpha(i.uv, i.t.x), i.t.y, false, false);
                 return 0;
             }
             ENDHLSL
@@ -635,7 +630,6 @@ Shader "Kamion/Vegetation"
             Name "DepthOnly"
             Tags { "LightMode" = "DepthOnly" }
             ZWrite On ColorMask R Cull [_Cull]
-            AlphaToMask [_AlphaToMask]
             HLSLPROGRAM
             #pragma target 3.0
             #pragma vertex vert
@@ -676,8 +670,9 @@ Shader "Kamion/Vegetation"
                 if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
                 i.uv = EdgeUV(i.uv);
             #endif
-                half alpha = VegClipCoverage(i.uv.xy, VegAlpha(i.uv, i.t.x), i.t.y, true);
-                return half4(0, 0, 0, alpha);
+                // URP can bind a single-sample depth texture even when the opaque target uses MSAA.
+                VegClipCoverage(i.uv.xy, VegAlpha(i.uv, i.t.x), i.t.y, true, false);
+                return 0;
             }
             ENDHLSL
         }
