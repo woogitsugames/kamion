@@ -809,15 +809,46 @@ namespace Game.World.Import
             AssetDatabase.DeleteAsset(path);
             var host = new Mesh { name = ch.Id + "_collision" };
             AssetDatabase.CreateAsset(host, path);
+            long bytes = BuildCollisionMeshes(r, ch, low);
+            foreach (var (m, _) in ch.Collision)
+                AssetDatabase.AddObjectToAsset(m, host);
+            if (ch.TerrainCollision != null)
+                AssetDatabase.AddObjectToAsset(ch.TerrainCollision, host);
+            r.MemoryBytes.TryGetValue("collision", out long v);
+            r.MemoryBytes["collision"] = v + bytes;
+        }
+
+        /// <summary>
+        /// Builds the collision meshes of one chunk in memory (splitting road_collision asphalt triangles that match the
+        /// chunk's paved node into <c>yard_asphalt</c> so parking lots / yards keep prop colliders while carriageways stay
+        /// <c>asphalt</c>). Returns source mesh byte count.
+        /// </summary>
+        public static long BuildCollisionMeshes(Result r, Chunk ch, GlbReader low)
+        {
             long bytes = 0;
             var nd = low.Find("road_collision");
             if (nd != null)
             {
                 // Merge primitives of the same surface (several collision_* materials map to one surface kind).
                 var bySurface = new Dictionary<string, (List<Vector3> p, List<int> t)>();
+                PavedTriangleIndex pavedIndex = null;
+                bool pavedBuilt = false;
                 foreach (var prim in nd.Primitives)
                 {
                     string surface = prim.Material != null && r.MaterialSurface.TryGetValue(prim.Material, out var sf) && sf != null ? sf : "asphalt";
+                    if (surface == "asphalt")
+                    {
+                        if (!pavedBuilt)
+                        {
+                            pavedIndex = PavedTriangleIndex.TryBuild(low.Find("paved"));
+                            pavedBuilt = true;
+                        }
+                        if (pavedIndex != null)
+                        {
+                            SplitAsphaltPrimitive(prim, pavedIndex, bySurface);
+                            continue;
+                        }
+                    }
                     if (!bySurface.TryGetValue(surface, out var acc)) bySurface[surface] = acc = (new List<Vector3>(), new List<int>());
                     var (pos, tris) = WorldMeshBake.Compacted(prim.Positions, prim.Indices);
                     int b0 = acc.p.Count;
@@ -827,7 +858,6 @@ namespace Game.World.Import
                 foreach (var kv in bySurface)
                 {
                     var m = WorldMeshBake.PositionsOnly($"{ch.Id}_{kv.Key}", kv.Value.p.ToArray(), kv.Value.t.ToArray());
-                    AssetDatabase.AddObjectToAsset(m, host);
                     ch.Collision.Add((m, kv.Key));
                     bytes += kv.Value.p.Count * 12L + kv.Value.t.Count * 4L;
                 }
@@ -853,18 +883,127 @@ namespace Game.World.Import
             if (tp != null)
             {
                 ch.TerrainCollision = WorldMeshBake.PositionsOnly($"{ch.Id}_terrain", tp, tt);
-                AssetDatabase.AddObjectToAsset(ch.TerrainCollision, host);
                 bytes += tp.Length * 12L + tt.Length * 4L;
             }
-            r.MemoryBytes.TryGetValue("collision", out long v);
-            r.MemoryBytes["collision"] = v + bytes;
+            return bytes;
+        }
+
+        static void SplitAsphaltPrimitive(GlbReader.Primitive prim, PavedTriangleIndex pavedIndex,
+            Dictionary<string, (List<Vector3> p, List<int> t)> bySurface)
+        {
+            var remapRoad = new Dictionary<int, int>();
+            var remapYard = new Dictionary<int, int>();
+            for (int i = 0; i + 2 < prim.Indices.Length; i += 3)
+            {
+                int i0 = prim.Indices[i], i1 = prim.Indices[i + 1], i2 = prim.Indices[i + 2];
+                bool isPaved = pavedIndex.ContainsTriangle(prim.Positions[i0], prim.Positions[i1], prim.Positions[i2]);
+                string target = isPaved ? "yard_asphalt" : "asphalt";
+                var remap = isPaved ? remapYard : remapRoad;
+                if (!bySurface.TryGetValue(target, out var acc))
+                    bySurface[target] = acc = (new List<Vector3>(), new List<int>());
+                acc.t.Add(RemapVertex(prim.Positions, i0, remap, acc.p));
+                acc.t.Add(RemapVertex(prim.Positions, i1, remap, acc.p));
+                acc.t.Add(RemapVertex(prim.Positions, i2, remap, acc.p));
+            }
+        }
+
+        static int RemapVertex(Vector3[] positions, int srcIndex, Dictionary<int, int> remap, List<Vector3> dst)
+        {
+            if (!remap.TryGetValue(srcIndex, out int dstIndex))
+            {
+                dstIndex = dst.Count;
+                remap[srcIndex] = dstIndex;
+                dst.Add(positions[srcIndex]);
+            }
+            return dstIndex;
+        }
+
+        sealed class PavedTriangleIndex
+        {
+            const float k_InvCell = 50f;          // 2 cm spatial hash cells
+            const float k_CentroidTolSq = 0.01f * 0.01f;
+            const float k_VertexTolSq = 0.02f * 0.02f;
+
+            struct TriRef
+            {
+                public Vector3 C, A, B, D;
+                public int Next;
+            }
+
+            readonly Dictionary<(int x, int y, int z), int> m_Head;
+            readonly List<TriRef> m_Tris;
+
+            PavedTriangleIndex(int capacity)
+            {
+                m_Head = new Dictionary<(int x, int y, int z), int>(capacity);
+                m_Tris = new List<TriRef>(capacity);
+            }
+
+            public static PavedTriangleIndex TryBuild(GlbReader.MeshNode paved)
+            {
+                if (paved == null || paved.Primitives.Count == 0) return null;
+                int totalTris = 0;
+                foreach (var pr in paved.Primitives)
+                    if (pr.Material != "curb_concrete" && pr.Indices != null)
+                        totalTris += pr.Indices.Length / 3;
+                if (totalTris == 0) return null;
+                var idx = new PavedTriangleIndex(totalTris);
+                foreach (var pr in paved.Primitives)
+                {
+                    if (pr.Material == "curb_concrete" || pr.Indices == null || pr.Positions == null) continue;
+                    for (int i = 0; i + 2 < pr.Indices.Length; i += 3)
+                        idx.Add(pr.Positions[pr.Indices[i]], pr.Positions[pr.Indices[i + 1]], pr.Positions[pr.Indices[i + 2]]);
+                }
+                return idx.m_Tris.Count > 0 ? idx : null;
+            }
+
+            static (int x, int y, int z) Cell(Vector3 p) =>
+                (Mathf.FloorToInt(p.x * k_InvCell), Mathf.FloorToInt(p.y * k_InvCell), Mathf.FloorToInt(p.z * k_InvCell));
+
+            void Add(Vector3 a, Vector3 b, Vector3 d)
+            {
+                Vector3 c = (a + b + d) * (1f / 3f);
+                var cell = Cell(c);
+                int ti = m_Tris.Count;
+                if (!m_Head.TryGetValue(cell, out int prev)) prev = -1;
+                m_Tris.Add(new TriRef { C = c, A = a, B = b, D = d, Next = prev });
+                m_Head[cell] = ti;
+            }
+
+            static bool VertexNear(Vector3 p, in TriRef tr) =>
+                (p - tr.A).sqrMagnitude <= k_VertexTolSq ||
+                (p - tr.B).sqrMagnitude <= k_VertexTolSq ||
+                (p - tr.D).sqrMagnitude <= k_VertexTolSq;
+
+            public bool ContainsTriangle(Vector3 p0, Vector3 p1, Vector3 p2)
+            {
+                Vector3 c = (p0 + p1 + p2) * (1f / 3f);
+                var (cx, cy, cz) = Cell(c);
+                for (int dx = -1; dx <= 1; dx++)
+                for (int dy = -1; dy <= 1; dy++)
+                for (int dz = -1; dz <= 1; dz++)
+                {
+                    if (!m_Head.TryGetValue((cx + dx, cy + dy, cz + dz), out int ti)) continue;
+                    while (ti >= 0)
+                    {
+                        var tr = m_Tris[ti];
+                        if ((c - tr.C).sqrMagnitude <= k_CentroidTolSq &&
+                            VertexNear(p0, tr) && VertexNear(p1, tr) && VertexNear(p2, tr))
+                            return true;
+                        ti = tr.Next;
+                    }
+                }
+                return false;
+            }
         }
 
         public static SurfaceKind SurfaceKindOf(string surface)
         {
             switch (surface)
             {
-                case "asphalt": return SurfaceKind.DryAsphalt;
+                case "asphalt":
+                case "yard_asphalt":
+                    return SurfaceKind.DryAsphalt;
                 case "concrete": case "concrete_kerb": return SurfaceKind.Concrete;
                 case "paving_stones": case "sett": return SurfaceKind.Cobbles;
                 case "gravel": return SurfaceKind.Gravel;

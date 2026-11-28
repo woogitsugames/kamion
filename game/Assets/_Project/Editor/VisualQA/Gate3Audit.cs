@@ -120,7 +120,7 @@ namespace Game.Editor.VisualQA
             {
                 string n = col.gameObject.name;
                 // kerb tops / raised island tops are ground a pole stands on (C-9 posts on splitter islands, lamps behind a kerb)
-                if (n == "col_terrain" || n == "col_asphalt" || n == "col_paving_stones" || n == "col_grass" || n == "col_concrete" || n == "col_concrete_kerb") ground.Add(col);
+                if (n == "col_terrain" || n == "col_asphalt" || n == "col_yard_asphalt" || n == "col_paving_stones" || n == "col_grass" || n == "col_concrete" || n == "col_concrete_kerb") ground.Add(col);
             }
             var groundSet = new HashSet<Collider>(ground);
             Physics.queriesHitBackfaces = true;   // the cooked collision meshes may be wound for the road normal; accept either side
