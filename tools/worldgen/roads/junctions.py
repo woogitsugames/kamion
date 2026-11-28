@@ -168,6 +168,10 @@ def compute_corners(net, j: Junction, max_trim: dict, r_override=None):
     n = len(arms)
     max_trim = dict(max_trim)
     for i, arm in enumerate(arms):
+        if arm.chain.meta.get("seam_stub") and arm.L <= 0.05:
+            # The arm meets the ribbon at its graph node. Leave its entire
+            # ribbon available to reach the cut on the tile boundary.
+            max_trim[i] = 0.0
         if arm.cls(net.sec_list) != "D":
             continue
         # A service-road loop's distant bend belongs to the ribbon, not the intersection mouth. Do not find a

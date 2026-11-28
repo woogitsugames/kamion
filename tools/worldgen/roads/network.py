@@ -89,6 +89,8 @@ class EdgeSection:
     # left edge strip / gutter; lanes need not be equal. In the override a last interval narrower than 2 m is the
     # right edge strip (shoulder beyond the right edge line): it sets `width`, not a lane.
     lane_edges: list | None = None
+    lane_edges_follow_width: bool = False  # taper the D94 increment at a measured tile cut
+    gameplay_lane_base: tuple | None = None
     center_offset_end: float | None = None   # authored: offset at the END of the edge (linear from center_offset)
     center_offset_profile: list | None = None  # authored: [[t, offset], ...], t = 0..1 along the edge (ADR 0095)
     width_profile: list | None = None          # authored: [[t, width], ...] along the edge (ADR 0095); `width` = max
@@ -123,9 +125,21 @@ class EdgeSection:
     def lane_w_at(self, hw):
         """Lane width at half-width hw (scalar or array): `lane_w`, or the local share of the carriageway where the
         section is authored with `lanes_follow_width` (ADR 0233)."""
+        if self.lane_edges_follow_width:
+            return self.lane_w + self._lane_edge_delta(hw)
         if not self.lane_follow or self.lanes < 1 or self.lane_edges:
             return self.lane_w
         return np.maximum((2.0 * np.asarray(hw, float) - 2.0 * self.edge_strip) / self.lanes, 2.0)
+
+    def _lane_edge_delta(self, hw):
+        # Remove only the gameplay growth. The measured opaski and unequal lane widths are preserved.
+        return np.clip(2.0 * np.asarray(hw, float) - self.width, -self.provenance["gameplay_widen_m"], 0.0) / self.lanes
+
+    def lane_edges_at(self, hw):
+        if not self.lane_edges_follow_width:
+            return self.lane_edges
+        delta = self._lane_edge_delta(hw)
+        return [edge + i * delta for i, edge in enumerate(self.lane_edges)]
 
     def lane_coord(self, lat, hw, dirn=1):
         """Lane coordinate across the carriageway (0 = first lane boundary, +1 per lane) for wheel-path weathering
@@ -133,6 +147,9 @@ class EdgeSection:
         lat = np.asarray(lat, float)
         if self.lane_edges and self.oneway:
             x = np.asarray(hw, float) - (float(dirn) or 1.0) * lat
+            if self.lane_edges_follow_width:
+                edges = self.lane_edges_at(hw)
+                return sum(np.clip((x - a) / (b - a), 0.0, 1.0) for a, b in zip(edges, edges[1:]))
             le = np.asarray(self.lane_edges, float)
             return np.interp(x, le, np.arange(len(le), dtype=float))
         return (lat + np.asarray(hw, float) - self.edge_strip) / np.maximum(self.lane_w_at(hw), 2.0)
@@ -252,6 +269,10 @@ class Chain:
     def hw_at(self, s):
         return self.interp(self.hw, s)
 
+    def edge_line_spacing_delta_at(self, s):
+        delta = self.meta.get("edge_line_spacing_delta")
+        return self.interp(delta, s) if delta is not None else 0.0
+
     def zc(self, s):
         return self.interp(self.z, s)
 
@@ -306,18 +327,25 @@ class Network:
 
 
 SEAM_DIR_EPS_M = 0.05      # seam-knw-s24: a boundary node lies on a bbox edge within this distance
+BBOX_CUT_EPS_M = 0.0005 + 1e-9  # half of the graph's 1 mm coordinate step, plus float noise
+MIN_EDGE_M = 0.05          # ordinary graph fragments shorter than this are discarded
+MIN_SEAM_EDGE_M = 1e-6     # exclude coincident cut points (graph coordinates are stored to 1 mm)
+
+
+def _bbox_edge_distances(n: dict, bbox) -> tuple[float, float]:
+    if not n.get("boundary") or not bbox:
+        return math.inf, math.inf
+    x, y = float(n["x"]), float(n["y"])
+    return min(abs(x - bbox[0]), abs(x - bbox[2])), min(abs(y - bbox[1]), abs(y - bbox[3]))
 
 
 def _seam_dir(n: dict, bbox) -> np.ndarray | None:
-    """seam-knw-s24: unit vector along the tile edge a boundary node lies on (graph bbox [xmin, ymin, xmax, ymax],
-    EPSG:2180; same direction in local coordinates), None for an inner node / no bbox / a bbox corner. The mesher
-    lays the end cross-section of a chain cut at the seam along this line instead of square to the axis, so both
-    tiles end their asphalt / kerb / footway exactly on the shared edge (meshing.seam_shear)."""
-    if not n.get("boundary") or not bbox:
-        return None
-    x, y = float(n["x"]), float(n["y"])
-    on_v = min(abs(x - bbox[0]), abs(x - bbox[2])) <= SEAM_DIR_EPS_M
-    on_h = min(abs(y - bbox[1]), abs(y - bbox[3])) <= SEAM_DIR_EPS_M
+    """Direction of an unambiguous bbox edge for the mesher's end cross-section."""
+    d_v, d_h = _bbox_edge_distances(n, bbox)
+    on_v, on_h = d_v <= SEAM_DIR_EPS_M, d_h <= SEAM_DIR_EPS_M
+    if on_v and on_h:
+        # Close to a corner, only trust an edge within the graph's rounding error.
+        on_v, on_h = d_v <= BBOX_CUT_EPS_M, d_h <= BBOX_CUT_EPS_M
     if on_v == on_h:
         return None
     return np.array([0.0, 1.0]) if on_v else np.array([1.0, 0.0])
@@ -328,13 +356,18 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
     from . import carriageway_split as CS            # ADR 0274: authored split of a two-way road before a node
     cs_applied, cs_stale = [], []
     graph = CS.apply(graph, overrides, cs_applied, cs_stale)
+    bbox = graph.get("bbox")
     nodes = {}
+    cut_nodes = set()
     for n in graph["nodes"]:
+        if min(_bbox_edge_distances(n, bbox)) <= BBOX_CUT_EPS_M:
+            cut_nodes.add(n["id"])
         nodes[n["id"]] = {"id": n["id"], "xy": np.array([n["x"] - ox, n["y"] - oy]), "deg": 0,
                           "feature": n.get("feature"), "signals": bool(n.get("signals_nearby")),
                           "boundary": bool(n.get("boundary")), "z_terrain": n.get("z_terrain"),
-                          "seam_u": _seam_dir(n, graph.get("bbox"))}
+                          "seam_u": _seam_dir(n, bbox)}
     edges = {}
+    seam_stubs = set()
     for e in sorted(graph["edges"], key=lambda e: e["id"]):
         g = np.array(e["geometry"], float) - np.array([ox, oy])
         a, b = e["from"], e["to"]
@@ -343,8 +376,18 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
             e = dict(e)
             e["attrs"] = dict(e["attrs"])
             e["attrs"]["oneway"] = {"v": "yes", "src": "derived", "conf": "high"}
-        if len(g) < 2 or cumlen(g)[-1] < 0.05:
+        if len(g) < 2:
             continue
+        length = cumlen(g)[-1]
+        seam_stub = (e.get("clipped") and length <= MIN_EDGE_M
+                     and (a in cut_nodes or b in cut_nodes))
+        if length < (MIN_SEAM_EDGE_M if seam_stub else MIN_EDGE_M):
+            continue
+        if seam_stub:
+            seam_stubs.add(e["id"])
+            for node in (nodes[a], nodes[b]):
+                if not node["boundary"]:
+                    node["inside_seam_stub"] = True
         edges[e["id"]] = (e, g, a, b)
         nodes[a]["deg"] += 1
         nodes[b]["deg"] += 1
@@ -358,6 +401,8 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
     sec_index = {s.edge_id: i for i, s in enumerate(net.sec_list)}
     net.chains = build_chains(nodes, edges)
     for c in net.chains:
+        if any(eid in seam_stubs for eid, _ in c.edges):
+            c.meta["seam_stub"] = True
         prepare_chain(c, net, sec_index)
     from . import compact_roundabout as CR_          # ADR 0274: designed lanes of kerb-mode compact roundabouts
     CR_.lay_lanes(net)
@@ -504,6 +549,7 @@ def gameplay_widen(net: Network, d: float, edges: dict | None = None) -> None:
             sec.provenance["gameplay_widen_limited_m"] = round(n * d - add, 3)
         if sec.lane_edges:
             le = [float(v) for v in sec.lane_edges]
+            sec.gameplay_lane_base = (sec.width, *le)
             sec.lane_edges = [round(le[0] + (v - le[0]) + i * dl, 3) for i, v in enumerate(le)]
             sec.lane_w = round((sec.lane_edges[-1] - sec.lane_edges[0]) / n, 3)
         else:
@@ -822,7 +868,23 @@ def prepare_chain(c: Chain, net: Network, sec_index: dict):
     c.bridge = np.array([sl[i].bridge for i in c.sec_idx])
     c.roundabout = bool(any(s.roundabout for s in secs))
     # width transitions: PTB2022 §17 ust.6 asks for smooth changes -> 15 m smoothing (WORKING_VALUE)
-    c.hw = smooth_1d(hw, 7.5 / DENSE) if len(hw) > 3 else hw
+    width_sigma_m = 7.5
+    c.hw = smooth_1d(hw, width_sigma_m / DENSE) if len(hw) > 3 else hw
+    if not c.closed:
+        for end, node in ((0, c.node_a), (-1, c.node_b)):
+            nd = net.nodes[node]
+            if not nd["boundary"] or nd["deg"] != 1:
+                continue
+            if not sl[c.sec_idx[end]].width_src.startswith("authored_override:"):
+                continue
+            # A cut through an authored section shares the section's endpoint width.
+            # Gaussian smoothing must not pull a different way's width onto that cut.
+            delta = hw[end] - c.hw[end]
+            if abs(delta) < 1e-9:
+                continue
+            d = np.abs(c.line.s - c.line.s[end])
+            t = np.clip(d / min(2 * width_sigma_m, c.length / 2), 0.0, 1.0)
+            c.hw += delta * (1.0 - t * t * (3.0 - 2.0 * t))
     c.meta["rev"] = rev
     curve_widen(c, net)                  # D94 / ADR 0306: two-way lanes wider on tight bends (semitrailer off-tracking)
     m = max(2, int(math.ceil(2 * float(c.hw.max()) / 1.75)))

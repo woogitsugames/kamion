@@ -40,11 +40,13 @@ import argparse
 import json
 import subprocess
 import sys
+from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
 import yaml
+from scipy.optimize import linear_sum_assignment
 
 ROOT = Path(__file__).resolve().parents[3]
 REG = ROOT / "Data" / "Regions"
@@ -289,16 +291,20 @@ def crossings(t: Tile, se, net=None) -> list[Crossing]:
     net = net or build_net(t)
     o = np.array(t.origin)
     nab = np.array(se["normal_ab"])
+    axis = 0 if se["axis"] == "x" else 1
     out = []
     qa = {c["id"]: c for c in (t.roads_qa or {}).get("chains", [])}
     for c in net.chains:
         for end in (0, -1):
             pg = c.line.p[end] + o
             # D94 can shift an oblique carriageway end off the tile plane by centimetres.
-            # Membership belongs to the boundary node; keep the generated position below
-            # so real placement / cross-section differences still fail their own rows.
+            # The short cut's inner node can be inside the seam tolerance too.
+            # Count only the actual cut there; keep generated positions for
+            # the cross-section comparison below.
             node = net.nodes.get(c.node_a if end == 0 else c.node_b, {})
             boundary_xy = np.asarray(node.get("xy", c.line.p[end])) + o
+            if node.get("inside_seam_stub") and abs(boundary_xy[axis] - se["at"]) > 0.0005:
+                continue
             if not (_on_seam(pg, se) or (node.get("boundary") and _on_seam(boundary_xy, se))):
                 continue
             s = float(c.line.s[end])
@@ -318,7 +324,8 @@ def crossings(t: Tile, se, net=None) -> list[Crossing]:
             P["pasy × szer. pasa [m]"] = (f"{sec.lanes} × {lw_loc:.2f}", src_lw)
             P["opaska (edge_strip) [m]"] = (round(float(sec.edge_strip), 3), src_n)
             # edge lines (markings.edge_lines of this checkout, + ADR 0220 edge_line_spacing when an override has it)
-            lines = MK.edge_lines(sec, hw, int(c.dirn[end]) or 1) if sec.highway in MK.MARKED else []
+            lines = MK.edge_lines(sec, hw, int(c.dirn[end]) or 1, c.edge_line_spacing_delta_at(c.line.s[end])) \
+                if sec.highway in MK.MARKED else []
             lats = sorted(float(np.asarray(lat)) for lat, _k in lines)
             sp, sp_id = _ov_for(t, int(sec.edge_id.split(":")[0].lstrip("w")), "edge_line_spacing")
             src_l = src_n
@@ -362,6 +369,8 @@ def crossings(t: Tile, se, net=None) -> list[Crossing]:
                 kind = SIDE_KIND.get(int(sd["kind"][end]), str(int(sd["kind"][end])))
                 sh = ST.shoulder_at(c, side_c, end)            # ADR 0272 widths of the station (after ADR 0275)
                 paved = S.PAVED_SHOULDER if int(sd["kind"][end]) == Nw.RURAL else 0.0
+                if int(sd["kind"][end]) == Nw.MEDIAN_RURAL:
+                    paved = S.PAVED_SHOULDER_MEDIAN
                 if sh is not None:
                     paved = sh[0]
                     kind = "wiejski: utw. %s + grunt %s + rów" % (f"{sh[0]:.2f}".replace(".", ","),
@@ -414,25 +423,46 @@ POSITION = ("oś jezdni E [m]", "oś jezdni N [m]")
 
 
 def match(ca: list[Crossing], cb: list[Crossing]):
-    """Match same-way ends first across the entire seam, then use proximity for remaining ends."""
+    """Maximize same-way pairs, then minimize their total distance; match remaining ends by proximity."""
     ca = sorted(ca, key=lambda c: (c.osm_way, c.xy, c.chain))
     cb = sorted(cb, key=lambda c: (c.osm_way, c.xy, c.chain))
-    matched, used = {}, set()
-    # A nearby branch without its own mate must leave the continuation of another way available.
-    for same_way_only in (True, False):
-        for i, a in enumerate(ca):
-            if i in matched:
+    ways_a, ways_b = defaultdict(list), defaultdict(list)
+    for i, a in enumerate(ca):
+        ways_a[a.osm_way].append(i)
+    for j, b in enumerate(cb):
+        ways_b[b.osm_way].append(j)
+
+    matched = {}
+    for way, left in ways_a.items():
+        right = ways_b.get(way)
+        if not right:
+            continue
+        xy_a = np.array([ca[i].xy for i in left])
+        xy_b = np.array([cb[j].xy for j in right])
+        delta = xy_a[:, None] - xy_b
+        distances = np.hypot(delta[..., 0], delta[..., 1])
+        # One dummy column per left end allows any end to go unmatched. Losing a pair costs
+        # more than the largest possible total distance of all valid pairs in this group.
+        penalty = (1 + min(len(left), len(right))) * MATCH_M
+        costs = np.concatenate((np.where(distances <= MATCH_M, distances, np.inf),
+                                np.full((len(left), len(left)), penalty)), axis=1)
+        rows, cols = linear_sum_assignment(costs)
+        matched.update((left[i], right[j]) for i, j in zip(rows, cols) if j < len(right))
+
+    used = set(matched.values())
+    for i, a in enumerate(ca):
+        if i in matched:
+            continue
+        best = None
+        for j, b in enumerate(cb):
+            if j in used:
                 continue
-            best = None
-            for j, b in enumerate(cb):
-                if j in used or (same_way_only and a.osm_way != b.osm_way):
-                    continue
-                d = float(np.hypot(a.xy[0] - b.xy[0], a.xy[1] - b.xy[1]))
-                if d <= MATCH_M and (best is None or (d, j) < best):
-                    best = (d, j)
-            if best is not None:
-                matched[i] = best[1]
-                used.add(best[1])
+            d = float(np.hypot(a.xy[0] - b.xy[0], a.xy[1] - b.xy[1]))
+            if d <= MATCH_M and (best is None or (d, j) < best):
+                best = (d, j)
+        if best is not None:
+            matched[i] = best[1]
+            used.add(best[1])
     pairs = [(a, cb[matched[i]] if i in matched else None) for i, a in enumerate(ca)]
     pairs += [(None, b) for j, b in enumerate(cb) if j not in used]
     return pairs
@@ -526,8 +556,12 @@ def _compare_rows(a: Crossing, b: Crossing, tol: float):
             if not x:
                 return None
             s = f"jezdnia {x['width_own']:.2f} → {x['width_seam']:.2f} m na {x['in_tile_m']:.1f} m"
-            if x.get("axis_offset_m"):
+            if x.get("d94_shared_clearance"):
+                s += "; przekrój i oś wg wspólnego limitu D94"
+            elif x.get("axis_offset_m"):
                 s += f"; oś do środka między osiami nominalnymi (odsunięcie {x['axis_offset_m']:.3f} m, np. D94)"   # seams-w10
+            if "edge_line_spacing_seam_m" in x:
+                s += f"; rozstaw P-7b na szwie {x['edge_line_spacing_seam_m']:.3f} m"
             for side, v in (x.get("shoulder_cm") or {}).items():
                 s += (f"; pobocze {side} utw./grunt {v['own'][0]}/{v['own'][1]} → {v['seam'][0]}/{v['seam'][1]} cm")
             return s + (f" [bez przejścia jezdni: {x['skipped']}]" if x.get("skipped") else "")

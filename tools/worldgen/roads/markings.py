@@ -152,7 +152,7 @@ def arrow_glyph(turns: list, long: bool):
 def lane_layout(sec, hw, dirn):
     """Return (centre_line_lat or None, [lane boundary lats], lane centres by travel dir)."""
     lw, e = lane_w_of(sec, hw), sec.edge_strip        # ADR 0233: local lane width on `lanes_follow_width` sections
-    le = getattr(sec, "lane_edges", None)
+    le = sec.lane_edges_at(hw) if getattr(sec, "lane_edges_follow_width", False) else getattr(sec, "lane_edges", None)
     if le and sec.oneway:
         # ADR 0095: measured lane edges, distances from the left edge in the direction of travel
         d = int(dirn) or 1
@@ -174,10 +174,15 @@ def follow_edge(sec, lat, hw_mid, hw_s, dirn):
     """A lane line of a one-way carriageway keeps its distance from the gutter it was laid out from where the
     half-width changes (hw_mid at the layout station, hw_s where it is painted)."""
     sg = (int(dirn) or 1) if getattr(sec, "lane_edges", None) else 1
-    return sg * (hw_s - (hw_mid - sg * lat))
+    from_left = hw_mid - sg * lat
+    if getattr(sec, "lane_edges_follow_width", False):
+        edges = sec.lane_edges_at(hw_mid)
+        lane = np.interp(from_left, edges, np.arange(len(edges)))
+        from_left += lane * (sec.lane_w_at(hw_s) - sec.lane_w_at(hw_mid))
+    return sg * (hw_s - from_left)
 
 
-def edge_lines(sec, hw, dirn):
+def edge_lines(sec, hw, dirn, spacing_delta=0.0):
     """[(lat, kind)] of the painted edge lines of a section at half-width hw (scalar or array). Default rule:
     P-7b on both sides of class A / S / GP roads, inset inside asphalt when there is no edge strip.
     `edge_lines` (override, direction of travel)
@@ -190,11 +195,14 @@ def edge_lines(sec, hw, dirn):
     half = S.LINE_W_WIDE / 2
     out = []
     if le and sec.oneway:
+        nominal_left, nominal_right = le[0], le[-1]
+        if getattr(sec, "lane_edges_follow_width", False):
+            le = sec.lane_edges_at(hw)
         el = el or "none"
         if el in ("left", "both"):
-            out.append((d * (hw - (le[0] - half if le[0] >= S.LINE_W_WIDE else le[0] + half)), "P-7b"))
+            out.append((d * (hw - (le[0] - half if nominal_left >= S.LINE_W_WIDE else le[0] + half)), "P-7b"))
         if el in ("right", "both"):       # on the right edge strip where there is one, else just inside the edge
-            strip_r = float(sec.width) - le[-1] >= S.LINE_W_WIDE
+            strip_r = float(sec.width) - nominal_right >= S.LINE_W_WIDE
             out.append((d * (hw - (le[-1] + half if strip_r else le[-1] - half)), "P-7b"))
         return out
     if sec.cls in ("A", "S", "GP") and el != "none":
@@ -212,6 +220,7 @@ def edge_lines(sec, hw, dirn):
         if sp:
             # ADR 0220: measured line-to-line distance; the line stays on the carriageway (EDGE_LINE_MIN_INSET)
             off = np.minimum(0.5 * float(sp), hw - EDGE_LINE_MIN_INSET)
+        off = np.minimum(off + 0.5 * spacing_delta, hw - EDGE_LINE_MIN_INSET)
         for sg, name in ((1, "left"), (-1, "right")):
             if el in ("both", name):
                 out.append(((d if sec.oneway else 1) * sg * off, "P-7b"))
@@ -655,8 +664,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                         if sb > cur:
                             _segmented(buf, c, cur, sb, lat_c, S.LINE_W_NARROW, dash, gap, cont, "centre")
                         cnt("P-1 centre line")
-                for k_e, (lat_e, _) in enumerate(edge_lines(sec, hw, dirn)):
-                    lat_fn = (lambda ss_, k_e=k_e, sec=sec, dirn=dirn: edge_lines(sec, c.hw_at(ss_), dirn)[k_e][0])
+                for k_e, (lat_e, _) in enumerate(edge_lines(sec, hw, dirn, c.edge_line_spacing_delta_at(0.5 * (sa + sb)))):
+                    lat_fn = (lambda ss_, k_e=k_e, sec=sec, dirn=dirn:
+                              edge_lines(sec, c.hw_at(ss_), dirn, c.edge_line_spacing_delta_at(ss_))[k_e][0])
                     spans = dashed_spans.get(c.id)
                     if spans:       # ADR 0220: authored broken spans of the edge line on this side
                         n_iv = _solid_with_dashes(buf, c, sa, sb, lat_fn, edge_line_width(sec), spans,

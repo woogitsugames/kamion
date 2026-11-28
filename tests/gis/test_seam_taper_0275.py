@@ -6,6 +6,7 @@ half-width on both sides after the transitions.
 
 Shoulders: paved / ground widths of a kerbless edge from roads.xsec (ADR 0272), e.g. dk65-opaska-k1 against the class rule.
 """
+from copy import deepcopy
 import sys
 from pathlib import Path
 
@@ -64,7 +65,7 @@ def _nets(ts, taper=True):
 
 def _seam_view(net, x_seam=100.0):
     """(chain, distance of every station from the seam, index of the seam station)."""
-    c = net.chains[0]
+    c, = [chain for chain in net.chains if np.min(np.abs(chain.line.p[:, 0] + net.origin[0] - x_seam)) < 1e-6]
     xw = c.line.p[:, 0] + net.origin[0]
     i = int(np.argmin(np.abs(xw - x_seam)))
     assert abs(xw[i] - x_seam) < 1e-6 and i in (0, len(xw) - 1)
@@ -177,6 +178,111 @@ def test_measured_lane_edges_are_not_blended():
         assert np.array_equal(nets[k].chains[0].hw, plain[k].chains[0].hw)
         (t,) = nets[k].seam_tapers
         assert t.skipped and "skipped" in t.report()
+
+
+def test_smoothing_keeps_authored_width_at_a_short_boundary_section():
+    prof = {"width": [[0, 14.5], [1, 14.5]]}
+    ts = _pair(a_kw={"set_": prof}, b_kw={
+        "set_": {"width": 14.5}, "ways": 2,
+        "extra": [{"id": "wider-approach", "target": {"osm_way": [8]}, "set": {"width": 15.0}}],
+    })
+    graph = ts[1].graph
+    graph["nodes"][1]["x"] = 101.35
+    for edge, ends in zip(graph["edges"], ((100, 101.35), (101.35, 200))):
+        a, b = ends
+        edge["length_m"] = b - a
+        edge["geometry"] = [[a, 50.0], [b, 50.0]]
+    nets = _nets(ts)
+    for tile in ts:
+        chain, _, end = _seam_view(nets[tile.id])
+        assert 2 * chain.hw[end] == pytest.approx(14.5)
+        assert not nets[tile.id].seam_tapers
+    chain, _, end = _seam_view(nets[ts[1].id])
+    assert 2 * chain.hw[-1 if end == 0 else 0] == pytest.approx(15.0)
+
+
+@pytest.mark.parametrize("width_b", [8.0, 8.2])
+def test_edge_line_spacing_blends_an_override_against_the_default(width_b):
+    ts = _pair(a_kw={"set_": {"width": 8.0, "edge_lines": "both", "edge_line_spacing": 7.3}},
+               b_kw={"set_": {"width": width_b, "edge_lines": "both"}, "flip_way": True})
+    nets = _nets(ts)
+    nominal = (7.3, width_b - 2 * Nw.S.EDGE_LINE_INSET_MINOR)
+    for tile, own in zip(ts, nominal):
+        net = nets[tile.id]
+        chain, distance, end = _seam_view(net)
+        sec = net.sec_list[int(chain.sec_idx[end])]
+        far = int(np.argmax(distance))
+        for i, want in ((end, np.mean(nominal)), (far, own)):
+            s = chain.line.s[i]
+            lines = MK.edge_lines(sec, chain.hw_at(s), chain.dirn[i], chain.edge_line_spacing_delta_at(s))
+            assert abs(lines[1][0] - lines[0][0]) == pytest.approx(want)
+        (taper,) = net.seam_tapers
+        assert taper.report()["edge_line_spacing_seam_m"] == pytest.approx(np.mean(nominal))
+
+
+@pytest.mark.parametrize("reversed_chain", [False, True])
+def test_d94_measured_lanes_share_the_tighter_clearance_at_the_seam(monkeypatch, reversed_chain):
+    monkeypatch.setattr(Nw.S, "GAMEPLAY_LANE_WIDEN_M", Nw.S.GAMEPLAY_LANE_WIDEN_DEFAULT_M)
+    measured = {"width": 9.95, "lane_edges": [0.2, 3.7, 7.2], "edge_lines": "both"}
+    ts = _pair(a_kw={"set_": measured, "flip_way": True},
+               b_kw={"set_": measured, "seam_last": reversed_chain})
+    for tile, neighbours in zip(ts, ((40.0, 60.0), (60.0,))):
+        main = tile.graph["edges"][0]
+        main["attrs"]["highway"]["v"] = "motorway"
+        main["attrs"]["oneway"]["v"] = "yes"
+        for way, y in enumerate(neighbours, start=8):
+            x1, x2 = [p[0] for p in main["geometry"]][::2]
+            first, last = f"n{way}:first", f"n{way}:last"
+            x1, x2 = x2 - 3, x1 + 3  # opposite carriageway, wholly inside its tile
+            tile.graph["nodes"] += [{"id": node, "x": x, "y": y, "boundary": False}
+                                    for node, x in ((first, x1), (last, x2))]
+            edge = deepcopy(main)
+            edge.update(id=f"w{way}:{first}-{last}", osm_way=way, geometry=[[x1, y], [x2, y]])
+            edge.update({"from": first, "to": last})
+            tile.graph["edges"].append(edge)
+            tile.overrides.append({"id": f"separator-{way}", "target": {"osm_way": [way]}, "set": measured})
+    plain, nets = _nets(ts, taper=False), _nets(ts)
+    points = []
+    for tile, nominal in zip(ts, (9.95, 10.45)):
+        chain, distance, end = _seam_view(nets[tile.id])
+        sec = nets[tile.id].sec_list[int(chain.sec_idx[end])]
+        plain_chain, _, plain_end = _seam_view(plain[tile.id])
+        assert 2 * plain_chain.hw[plain_end] == pytest.approx(nominal)
+        assert 2 * chain.hw[end] == pytest.approx(9.95)
+        assert 2 * chain.hw[np.argmax(distance)] == pytest.approx(nominal)
+        dirn = int(chain.dirn[end])
+        coords = np.asarray(sec.lane_edges_at(chain.hw[end]))
+        assert coords == pytest.approx(measured["lane_edges"])
+        assert sec.lane_w_at(chain.hw[end]) == pytest.approx(3.5)
+        far_hw = chain.hw[np.argmax(distance)]
+        _, far_bounds, _ = MK.lane_layout(sec, far_hw, dirn)
+        _, bounds, _ = MK.lane_layout(sec, chain.hw[end], dirn)
+        assert MK.follow_edge(sec, far_bounds[0], far_hw, chain.hw[end], dirn) == pytest.approx(bounds[0])
+        assert sec.lane_coord(np.array(bounds), chain.hw[end], dirn) == pytest.approx([1.0])
+        lines = MK.edge_lines(sec, chain.hw[end], dirn)
+        assert abs(lines[1][0] - lines[0][0]) == pytest.approx(7.0)
+        widths = np.array([chain.hw[end], far_hw])
+        left, right = MK.edge_lines(sec, widths, dirn)
+        assert np.abs(left[0] - right[0]) == pytest.approx([7.0, 7.0 + nominal - 9.95])
+        points.append(chain.line.p[end] + nets[tile.id].origin)
+    assert points[0] == pytest.approx(points[1])
+
+
+def test_open_shoulder_uses_the_neighbours_median_at_the_seam():
+    ts = _pair()
+    nets = _nets(ts)
+    a, b = (_seam_view(nets[tile.id]) for tile in ts)
+    for chain, _, end in (a, b):
+        chain.side["L"]["kind"][:] = Nw.RURAL
+        chain.side["L"]["mat"][:] = 0
+    a[0].side["L"]["kind"][a[2]] = Nw.MEDIAN_RURAL
+    median, rural = (ST.side_val(chain, "L", end) for chain, _, end in (a, b))
+    assert ST.agree(median, rural) == ST.agree(rural, median) == median
+    chain, distance, end = b
+    ST.apply_sides(nets[ts[1].id], [ST.SideFix(chain.id, end, "L", median, rural, median)])
+    assert ST.side_cat(chain.side["L"], end) == "median"
+    assert chain.side["L"]["median"][end]
+    assert ST.side_cat(chain.side["L"], int(np.argmax(distance))) == "rural"
 
 
 # ------------------------------------------------------------------------------------------------ shoulders (ADR 0272)
