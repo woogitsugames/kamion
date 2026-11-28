@@ -194,3 +194,6 @@
 ### codex-seam-steps-s25 — integracja
 - Scalono bazę Sadowej na gałęzi zadania. Zachowano oba zestawy wpisów STATUS.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-seam-steps-s25/audit.py before`.
+### codex-seam-steps-s25 — szerokość na cięciu
+- Wygładzanie zachowuje zadany przekrój na końcu autorskiej sekcji brzegowej. Dodano syntetyczne cięcie 1,35 m przed szerszym odcinkiem.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_seam_taper_0275.py -k smoothing_keeps`.

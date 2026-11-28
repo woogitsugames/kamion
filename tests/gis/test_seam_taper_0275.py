@@ -179,6 +179,27 @@ def test_measured_lane_edges_are_not_blended():
         assert t.skipped and "skipped" in t.report()
 
 
+def test_smoothing_keeps_authored_width_at_a_short_boundary_section():
+    prof = {"width": [[0, 14.5], [1, 14.5]]}
+    ts = _pair(a_kw={"set_": prof}, b_kw={
+        "set_": {"width": 14.5}, "ways": 2,
+        "extra": [{"id": "wider-approach", "target": {"osm_way": [8]}, "set": {"width": 15.0}}],
+    })
+    graph = ts[1].graph
+    graph["nodes"][1]["x"] = 101.35
+    for edge, ends in zip(graph["edges"], ((100, 101.35), (101.35, 200))):
+        a, b = ends
+        edge["length_m"] = b - a
+        edge["geometry"] = [[a, 50.0], [b, 50.0]]
+    nets = _nets(ts)
+    for tile in ts:
+        chain, _, end = _seam_view(nets[tile.id])
+        assert 2 * chain.hw[end] == pytest.approx(14.5)
+        assert not nets[tile.id].seam_tapers
+    chain, _, end = _seam_view(nets[ts[1].id])
+    assert 2 * chain.hw[-1 if end == 0 else 0] == pytest.approx(15.0)
+
+
 # ------------------------------------------------------------------------------------------------ shoulders (ADR 0272)
 SH_A = {"lanes": 2, "lane_width": 3.1, "edge_strip": 0.2, "edge_lines": "both",
         "shoulder": {"kind": "ground", "paved_m": 0.35, "ground_m": 0.75}}          # dk65-opaska-k1: 6.6 + 2 x 0.35 = 7.3

@@ -846,7 +846,23 @@ def prepare_chain(c: Chain, net: Network, sec_index: dict):
     c.bridge = np.array([sl[i].bridge for i in c.sec_idx])
     c.roundabout = bool(any(s.roundabout for s in secs))
     # width transitions: PTB2022 §17 ust.6 asks for smooth changes -> 15 m smoothing (WORKING_VALUE)
-    c.hw = smooth_1d(hw, 7.5 / DENSE) if len(hw) > 3 else hw
+    width_sigma_m = 7.5
+    c.hw = smooth_1d(hw, width_sigma_m / DENSE) if len(hw) > 3 else hw
+    if not c.closed:
+        for end, node in ((0, c.node_a), (-1, c.node_b)):
+            nd = net.nodes[node]
+            if not nd["boundary"] or nd["deg"] != 1:
+                continue
+            if not sl[c.sec_idx[end]].width_src.startswith("authored_override:"):
+                continue
+            # A cut through an authored section shares the section's endpoint width.
+            # Gaussian smoothing must not pull a different way's width onto that cut.
+            delta = hw[end] - c.hw[end]
+            if abs(delta) < 1e-9:
+                continue
+            d = np.abs(c.line.s - c.line.s[end])
+            t = np.clip(d / min(2 * width_sigma_m, c.length / 2), 0.0, 1.0)
+            c.hw += delta * (1.0 - t * t * (3.0 - 2.0 * t))
     c.meta["rev"] = rev
     curve_widen(c, net)                  # D94 / ADR 0306: two-way lanes wider on tight bends (semitrailer off-tracking)
     m = max(2, int(math.ceil(2 * float(c.hw.max()) / 1.75)))
