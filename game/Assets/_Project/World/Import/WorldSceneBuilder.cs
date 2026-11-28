@@ -266,7 +266,7 @@ namespace Game.World.Import
         }
 
         /// <summary>Box colliders of street props (lamps, poles, signal masts, gates...) in the start-route corridor.</summary>
-        static int BuildPropColliders(RegionImporter.Result r, Transform parent)
+        public static int BuildPropColliders(RegionImporter.Result r, Transform parent)
         {
             if (r.PropColliders == null || r.PropColliders.Count == 0) return 0;
             var root = new GameObject("PropColliders").transform;
@@ -276,9 +276,9 @@ namespace Game.World.Import
             var report = new System.Text.StringBuilder();
             foreach (var (proto, m, local) in r.PropColliders.Items)
             {
-                // A prop whose foot stands on a carriageway (asphalt road collision) is a generator placement error
-                // (seen: lamp_12m at E 326.6 N -579.6 inside the Rondo Biezenstwa approach lane, which stopped the route
-                // autopilot). It keeps its visual but gets no collider; listed for world-builder.
+                // A prop whose foot stands on a carriageway (col_asphalt from road, not col_yard_asphalt from paved) is
+                // a generator placement error (seen: lamp_12m inside Rondo Biezenstwa approach lane, which stopped the
+                // route autopilot). It keeps its visual but gets no collider; listed for world-builder.
                 Vector3 foot = parent.TransformPoint(m.GetColumn(3));
                 if (Physics.Raycast(foot + Vector3.up * 1.0f, Vector3.down, out var hit, 1.6f) &&
                     hit.collider.GetComponent<GroundSurface>() is GroundSurface gs && gs.kind == SurfaceKind.DryAsphalt &&
@@ -401,9 +401,16 @@ namespace Game.World.Import
             lg.localReferencePoint = new Vector3((ch.Min.x + ch.Max.x) * 0.5f, 140f, (ch.Min.y + ch.Max.y) * 0.5f);
             lg.fadeMode = LODFadeMode.None;
 
+            colliders += BuildChunkCollision(ch, go.transform);
+        }
+
+        /// <summary>Creates the chunk's <c>Collision</c> child with one <c>MeshCollider</c> + <see cref="GroundSurface"/> per surface.</summary>
+        public static int BuildChunkCollision(RegionImporter.Chunk ch, Transform chunkTransform)
+        {
+            int colliders = 0;
             // Collision (same in every tier): one MeshCollider per surface + terrain fallback.
             var col = new GameObject("Collision");
-            col.transform.SetParent(go.transform, false);
+            col.transform.SetParent(chunkTransform, false);
             foreach (var (mesh, surface) in ch.Collision)
             {
                 var c = new GameObject("col_" + surface);
@@ -431,6 +438,7 @@ namespace Game.World.Import
                 t.AddComponent<GroundSurface>().kind = SurfaceKind.Grass;
                 colliders++;
             }
+            return colliders;
         }
 
         static void AddEdgeCameras(Transform qa)

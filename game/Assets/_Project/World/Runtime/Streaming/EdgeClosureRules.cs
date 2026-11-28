@@ -66,7 +66,7 @@ namespace Game.World.Streaming
             if (!belongsToRegion || normalY < 0.5f) return 0;
             switch (colliderName)
             {
-                case "col_asphalt": case "col_paving_stones": case "col_sett": case "col_gravel": return 2;
+                case "col_asphalt": case "col_yard_asphalt": case "col_paving_stones": case "col_sett": case "col_gravel": return 2;
                 case "col_terrain": return 1;
                 default: return 0;
             }

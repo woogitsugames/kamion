@@ -137,6 +137,7 @@ namespace Game.Tests
         [TestCase("col_asphalt", true, 0.1f, 0)]
         [TestCase("col_terrain", true, 1f, 1)]
         [TestCase("col_asphalt", true, 1f, 2)]
+        [TestCase("col_yard_asphalt", true, 1f, 2)]
         [TestCase("col_paving_stones", true, 1f, 2)]
         public void HeightSources_RejectRoofsObstaclesAndOtherTiles(string name, bool own, float normalY, int rank)
         {
