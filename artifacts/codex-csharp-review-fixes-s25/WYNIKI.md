@@ -20,3 +20,28 @@ finally { pwsh scripts/unity-slot.ps1 -Release -Pool heavy -Owner codex-csharp-r
 ```
 
 Po EditMode porównać PNG przed i po dla High clear i overcast oraz maskę koloru i głębi na Low/High z A2C w obu stanach.
+
+## R2 — punkty 4 i 8 recenzji s25
+
+Gałąź `codex-csharp-review-fixes-s25`, kod w commitach `ea3d2a943` (shader) i `2bdb2ef41` (streamer).
+
+| Punkt | Zmiana | Wynik przed → po |
+| --- | --- | --- |
+| 4 | `DepthOnly` ma twarde odcięcie i wspólny próg kamery z `ForwardLit` oraz `VegetationDepth`. Lokalny URP ustawia `_AlphaToMaskAvailable` z deskryptora kamery podczas rysowania obiektów nieprzezroczystych. Flaga warunkuje A2C w dwóch przebiegach współdzielących ten cel. Osobny prepass może dostać teksturę 1×, więc `DepthOnly` zawsze używa twardego progu. [Shader](../../game/Assets/_Project/Rendering/Shaders/Vegetation.shader) · [Test źródła](../../game/Assets/_Project/Tests/EditMode/VegetationCrownLodTests.cs) | Dla alfy 0,48, progu 0,50 i `fwidth=0,08`, `DepthOnly` przechodził programowe odcięcie z pokryciem 0,25 → odrzuca fragment. Wspólny próg bez A2C pozostaje 0,2/0,2 w przykładzie r1. Asercje NUnit na źródle odrzucają r1 i akceptują r2 dla 4 przebiegów. GPU **UNVERIFIED**. |
+| 8 | `OnDestroy` osobno sprząta klony i próbuje zwolnić dzierżawę każdego kafla. Log zawiera nazwę kafla i wyjątek dostawcy. Test obejmuje trzy kafle, `Clear(t0)` i wyjątek w `Release(t1)`. [Streamer](../../game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs) · [Test EditMode](../../game/Assets/_Project/Tests/EditMode/WorldStreamerHook0273Tests.cs) | Próba .NET z wydzielonymi metodami produkcyjnymi i atrapami Unity dała 3 → 2 → 1 żywy klon w r1 i 3 → 2 → 0 w r2. Próby zwolnienia objęły t0 i t1 → t0, t1 i t2. Dostawca po sprzątaniu trzymał t1 i t2 → tylko t1, dla którego zgłosił błąd. W r2 wyjątek został zalogowany raz, a pętla dobiegła końca. EditMode **UNVERIFIED**. |
+
+GIS **62/62 w 57,06 s**. Roslyn potwierdził składnię **3/3** zmienionych plików C#. Pełna kompilacja C#, kompilacja HLSL, EditMode oraz rendery i inspekcja PNG przed/po High clear i overcast pozostają **UNVERIFIED** podczas fali 14. [Log GIS](gis-tests-r2.txt) · [Weryfikacja statyczna i próba .NET](static-checks-r2.txt).
+
+Po fali 14 lider może uruchomić z katalogu worktree poniższe polecenia, po sprawdzeniu blokady `PHONE_RUN`. Następnie porównać PNG przed i po w High clear i overcast oraz kolor i głębię z wymuszonym prepasem 1× przy obu stanach A2C, także z kolorem MSAA.
+
+```powershell
+pwsh scripts/unity-slot.ps1 -Acquire -Pool heavy -Owner codex-csharp-review-fixes-s25
+if ($LASTEXITCODE -ne 0) { throw 'Nie udało się zająć slotu Unity' }
+try {
+    pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 -Filter 'Game\.Tests\.(Vegetation.*Tests|WorldStreamer.*|TileSceneSourceContractTests)'
+    if ($LASTEXITCODE -ne 0) { throw 'EditMode zakończył się błędem' }
+}
+finally {
+    pwsh scripts/unity-slot.ps1 -Release -Pool heavy -Owner codex-csharp-review-fixes-s25
+}
+```

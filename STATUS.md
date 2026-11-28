@@ -4,6 +4,8 @@
 - Następny krok: `git diff -- game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs game/Assets/_Project/Tests/EditMode/WorldStreamerHook0273Tests.cs`
 - R2 krok 2. `OnDestroy` oddzielnie chroni zwalnianie klonów i dzierżaw każdego kafla oraz loguje wyjątek z nazwą kafla. Test EditMode obejmuje 3 kafle, wcześniejsze `Clear(t0)` i wyjątek z `Release(t1)`.
 - Następny krok: `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd -B -m pytest -p no:cacheprovider -q tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py`
+- R2 krok 3. GIS 62/62 w 57,06 s, składnia Roslyn 3/3, test źródła shadera r1 FAIL i r2 PASS. Próba .NET z atrapami Unity wykazała 1 → 0 pozostawionych klonów i zwolnienie obu dzierżaw bez błędu. Dowody i polecenia w `artifacts/codex-csharp-review-fixes-s25/WYNIKI.md`.
+- Następny krok po fali 14 i zajęciu slotu: `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 -Filter 'Game\.Tests\.(Vegetation.*Tests|WorldStreamer.*|TileSceneSourceContractTests)'` i porównanie PNG High clear/overcast.
 
 - Krok 1. Przeczytano recenzję day27 i ADR 0013, 0023, 0308, 0352, 0354. Potwierdzono rozbieżność progu i brak zwalniania klonów w `OnDestroy`. W `win-build/game` brak wygenerowanych `.csproj`.
 - Następny krok: `git diff -- game/Assets/_Project/Rendering/Shaders/Vegetation.shader game/Assets/_Project/Tests/EditMode/VegetationCrownLodTests.cs`
