@@ -133,3 +133,7 @@
 ### codex-review-s25 — reprodukcje i przegląd statyczny
 - Odtworzono dublowanie 3 przewodów na wspólnym przęśle OSM/BDOT, rozjazd audytu WN i eksportu oraz przyjęcie linii z niepełnego PBF. Na grafie Sadowej gałąź przywraca odcinek 0,04884 m. Obejrzano archiwalne PNG clear/overcast.
 - Następny krok: Get-Content artifacts/codex-review-s25/probe.txt i zakończenie przebiegu pytest przed zapisem REVIEW.md.
+
+### codex-review-s25 — zakończone
+- Raport zawiera 4 ważne i 5 drobnych znalezisk z 9 scaleń i 3 gałęzi oczekujących. GIS 231/231, w tym budżety 62/62. Przypadki gałęzi 7/7 w pamięci. Dowody i archiwalne PNG w artifacts/codex-review-s25. Bez Unity i zmian kodu.
+- Następny krok lidera: `git show codex-review-s25:artifacts/codex-review-s25/REVIEW.md`.
