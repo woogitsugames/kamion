@@ -223,6 +223,19 @@ def test_nearby_unpaired_branch_leaves_same_way_continuation_available():
     assert SM.match([through_b], [through_a, branch]) == [(through_b, through_a), (None, branch)]
 
 
+@pytest.mark.parametrize(("left_y", "right_y"), [
+    ((1.0, 4.0), (-4.0, 2.0)),  # The nearest pair would leave both other ends unmatched.
+    ((1.0, 4.0), (-1.0, 2.0)),  # Both complete assignments fit, but one costs 4 m and the other 6 m.
+])
+def test_same_way_pairs_maximize_count_then_minimize_distance(left_y, right_y):
+    left = [SM.Crossing("a", f"a{i}", 7, "residential", (100.0, y), False, {})
+            for i, y in enumerate(left_y)]
+    right = [SM.Crossing("b", f"b{i}", 7, "residential", (100.0, y), False, {})
+             for i, y in enumerate(right_y)]
+    assert SM.match(left[::-1], right[::-1]) == list(zip(left, right))
+    assert SM.match(right, left) == list(zip(right, left))
+
+
 def test_synthetic_edge_line_spacing_rule_adr0220():
     st = {"width": 7.6, "edge_lines": "both"}
     a, b = _tile("a", 0.0, set_=st), _tile("b", 100.0, set_=st)

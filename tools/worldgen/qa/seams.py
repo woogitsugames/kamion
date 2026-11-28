@@ -40,11 +40,13 @@ import argparse
 import json
 import subprocess
 import sys
+from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import numpy as np
 import yaml
+from scipy.optimize import linear_sum_assignment
 
 ROOT = Path(__file__).resolve().parents[3]
 REG = ROOT / "Data" / "Regions"
@@ -418,25 +420,46 @@ POSITION = ("oś jezdni E [m]", "oś jezdni N [m]")
 
 
 def match(ca: list[Crossing], cb: list[Crossing]):
-    """Match same-way ends first across the entire seam, then use proximity for remaining ends."""
+    """Maximize same-way pairs, then minimize their total distance; match remaining ends by proximity."""
     ca = sorted(ca, key=lambda c: (c.osm_way, c.xy, c.chain))
     cb = sorted(cb, key=lambda c: (c.osm_way, c.xy, c.chain))
-    matched, used = {}, set()
-    # A nearby branch without its own mate must leave the continuation of another way available.
-    for same_way_only in (True, False):
-        for i, a in enumerate(ca):
-            if i in matched:
+    ways_a, ways_b = defaultdict(list), defaultdict(list)
+    for i, a in enumerate(ca):
+        ways_a[a.osm_way].append(i)
+    for j, b in enumerate(cb):
+        ways_b[b.osm_way].append(j)
+
+    matched = {}
+    for way, left in ways_a.items():
+        right = ways_b.get(way)
+        if not right:
+            continue
+        xy_a = np.array([ca[i].xy for i in left])
+        xy_b = np.array([cb[j].xy for j in right])
+        delta = xy_a[:, None] - xy_b
+        distances = np.hypot(delta[..., 0], delta[..., 1])
+        # One dummy column per left end allows any end to go unmatched. Losing a pair costs
+        # more than the largest possible total distance of all valid pairs in this group.
+        penalty = (1 + min(len(left), len(right))) * MATCH_M
+        costs = np.concatenate((np.where(distances <= MATCH_M, distances, np.inf),
+                                np.full((len(left), len(left)), penalty)), axis=1)
+        rows, cols = linear_sum_assignment(costs)
+        matched.update((left[i], right[j]) for i, j in zip(rows, cols) if j < len(right))
+
+    used = set(matched.values())
+    for i, a in enumerate(ca):
+        if i in matched:
+            continue
+        best = None
+        for j, b in enumerate(cb):
+            if j in used:
                 continue
-            best = None
-            for j, b in enumerate(cb):
-                if j in used or (same_way_only and a.osm_way != b.osm_way):
-                    continue
-                d = float(np.hypot(a.xy[0] - b.xy[0], a.xy[1] - b.xy[1]))
-                if d <= MATCH_M and (best is None or (d, j) < best):
-                    best = (d, j)
-            if best is not None:
-                matched[i] = best[1]
-                used.add(best[1])
+            d = float(np.hypot(a.xy[0] - b.xy[0], a.xy[1] - b.xy[1]))
+            if d <= MATCH_M and (best is None or (d, j) < best):
+                best = (d, j)
+        if best is not None:
+            matched[i] = best[1]
+            used.add(best[1])
     pairs = [(a, cb[matched[i]] if i in matched else None) for i, a in enumerate(ca)]
     pairs += [(None, b) for j, b in enumerate(cb) if j not in used]
     return pairs
