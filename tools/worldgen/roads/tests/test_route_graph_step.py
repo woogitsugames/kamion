@@ -45,3 +45,16 @@ def test_main_plumbs_no_route_graph_flag(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["build_world.py", "--region", "r1", "--no-route-graph"])
     bw.main()
     assert b.call_args.kwargs.get("route_graph") is False
+    assert b.call_args.kwargs.get("refresh_restrictions") is False
+    b.reset_mock()
+    monkeypatch.setattr(sys, "argv", ["build_world.py", "--region", "r1", "--refresh-restrictions"])
+    bw.main()
+    assert b.call_args.kwargs.get("route_graph") is True
+    assert b.call_args.kwargs.get("refresh_restrictions") is True
+
+
+def test_build_refreshes_restrictions_when_enabled():
+    src = inspect.getsource(bw.build)
+    assert '"--refresh-restrictions"' in src and '"--restrictions-only"' in src
+    sig = inspect.signature(bw.build)
+    assert sig.parameters["refresh_restrictions"].default is False
