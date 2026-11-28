@@ -6,6 +6,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import yaml
@@ -34,31 +35,35 @@ def digest(values):
     return hashlib.sha256(rounded.tobytes()).hexdigest()[:20]
 
 
-def power(out):
-    sys.path.insert(0, str(ROOT / "tools/worldgen"))
+def power(args):
+    sys.path.insert(0, str(args.code.resolve()))
     from roads.meshing import MeshBuf
-    from streetscape import furniture, sources
+    from streetscape import furniture
 
     with (HERE / "queue-full.csv").open(encoding="utf-8") as queue:
         tiles = sorted(row["tile"] for row in csv.DictReader(queue))
     stored = {tile: json.loads(git_file(WAVE14, tile, "generated/streetscape_sources.json")) for tile in tiles}
     pbf = ROOT / "Data/raw/osm/podlaskie-261108.osm.pbf"
-    extracted = sources.extract_osm_power_ways_by_bboxes({t: tuple(s["bbox"]) for t, s in stored.items()}, pbf)
+    if not args.baseline:
+        from streetscape import sources
+
+        extracted = sources.extract_osm_power_ways_by_bboxes({t: tuple(s["bbox"]) for t, s in stored.items()}, pbf)
 
     def wire_mesh(src, origin):
         def flat(east, north):
             return np.zeros_like(east, dtype=float)
 
         placer = furniture.Placer(flat)
-        furniture.place_mapped_power_supports(placer, src, origin)
+        furniture.misc_points(placer, SimpleNamespace(chains=[]), src, origin, {}, {})
         buf = MeshBuf()
         furniture.power_lines(furniture.Lin(buf, flat), src, origin, {}, pl=placer)
-        return (len(buf.parts), sum(len(part.T) for part in buf.parts),
-                sorted((digest(part.V), digest(part.T)) for part in buf.parts))
+        parts = sorted((digest(part.V), digest(part.T)) for part in buf.parts)
+        fingerprint = hashlib.sha256(json.dumps(parts).encode("ascii")).hexdigest()
+        return len(buf.parts), sum(len(part.T) for part in buf.parts), fingerprint
 
     fields = ("tile", "osm_before", "osm_after", "osm_changed", "parts_before", "parts_after",
-              "tris_before", "tris_after", "wire_mesh_changed")
-    with out.open("w", newline="", encoding="utf-8") as output:
+              "tris_before", "tris_after", "wire_mesh_changed", "fingerprint_before", "fingerprint_after")
+    with args.out.open("w", newline="", encoding="utf-8") as output:
         writer = csv.writer(output, lineterminator="\n")
         writer.writerow(fields)
         for tile, src in stored.items():
@@ -69,10 +74,12 @@ def power(out):
                 target = old if way.get("tags", {}).get("power") in {"line", "minor_line"} else other
                 target.append(way)
             before = wire_mesh(src, origin)
-            after = wire_mesh({**src, "osm": {**src["osm"], "ways": other + extracted[tile]}}, origin)
-            writer.writerow((tile, len(old), len(extracted[tile]), old != extracted[tile],
-                             before[0], after[0], before[1], after[1], before[2] != after[2]))
-    print(f"{len(tiles)} tiles from {pbf.name} ({pbf.stat().st_size} bytes)", flush=True)
+            new = old if args.baseline else extracted[tile]
+            after = before if args.baseline else wire_mesh({**src, "osm": {**src["osm"], "ways": other + new}}, origin)
+            writer.writerow((tile, len(old), len(new), old != new,
+                             before[0], after[0], before[1], after[1], before[2] != after[2], before[2], after[2]))
+    evidence = WAVE14 if args.baseline else f"{pbf.name} ({pbf.stat().st_size} bytes)"
+    print(f"{len(tiles)} tiles from {evidence}", flush=True)
 
 
 def replay(args):
@@ -177,6 +184,6 @@ if __name__ == "__main__":
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     if args.power:
-        power(args.out)
+        power(args)
     else:
         replay(args)

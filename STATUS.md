@@ -160,3 +160,7 @@
 ### codex-wave15-scope-s25 — bramki GIS
 - Testy GIS 164/164 oraz osobny przebieg budżetów 62/62. Potwierdzono zmianę wypieku Tykocina i zmierzono historyczne czasy VQA.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd artifacts/codex-wave15-scope-s25/plan.py` po drugim przebiegu poboczy.
+
+### codex-wave15-scope-s25 — sprawdzenie bazy fali 14
+- 8 811/8 811 nominalnych przekrojów zgodnych z roads QA po trymach. Stary generator przewodów i nowy na źródłach BDOT-only dają zgodne siatki we wszystkich 54 kaflach. Z OSM zmieniają się dwa kafle.
+- Następny krok: `Get-Content artifacts/codex-wave15-scope-s25/sides-after.log -Tail 10`, potem ponownie plan.py.
