@@ -261,7 +261,7 @@ def side_surface_offset(c, side, s):
 
 
 # ------------------------------------------------------------------------------------------- carriageway check
-GROUND_PROPS = ("lamp_", "sign_post", "signal_pole", "signal_mast", "bollard", "waste_bin", "bench", "power_pole",
+GROUND_PROPS = ("lamp_", "sign_post", "signal_pole", "signal_mast", "signal_rail", "bollard", "waste_bin", "bench", "power_pole",
                 "street_cabinet", "bus_shelter", "pylon")
 
 
@@ -273,7 +273,7 @@ def clear_carriageway(pl, carriage, zsurf, report):
     import shapely
     from shapely.geometry import Point
     from shapely.ops import nearest_points
-    inner = carriage.buffer(-0.05)
+    inner = carriage
     shapely.prepare(inner)
     groups = {}
     for it in pl.items:
@@ -281,28 +281,32 @@ def clear_carriageway(pl, carriage, zsurf, report):
     moved, left, drop = 0, [], set()
     for (e, n), items in groups.items():
         base = [it for it in items if it["p"].startswith(GROUND_PROPS)]
-        if not base or not inner.contains(Point(e, n)):
+        if not base:
             continue
-        if (e, n) in getattr(pl, "on_authored_island", ()):
+        b0 = min(base, key=lambda it: it["z"])
+        e0, n0 = b0["e"], b0["n"]
+        if not inner.contains(Point(e0, n0)):
+            continue
+        if (e, n) in getattr(pl, "on_authored_island", ()) or (e0, n0) in getattr(pl, "on_authored_island", ()):
             continue        # ADR 0161: a pole authored onto a kerbed island (the island lies ON the carriageway footprint)
-        q = nearest_points(carriage.boundary, Point(e, n))[0]
-        v = np.array([q.x - e, q.y - n])
+        q = nearest_points(carriage.boundary, Point(e0, n0))[0]
+        v = np.array([q.x - e0, q.y - n0])
         L = float(np.hypot(*v))
         new = np.array([q.x, q.y]) + (v / L if L > 1e-6 else np.array([1.0, 0.0])) * 0.8
         if inner.contains(Point(*new)):
-            left.append({"p": base[0]["p"], "at": [round(e, 1), round(n, 1)], "src": base[0].get("src", "")})
+            left.append({"p": b0["p"], "at": [round(e0, 1), round(n0, 1)], "src": b0.get("src", "")})
             drop.update(id(it) for it in items)      # a pole in the middle of a lane is worse than a missing one
             continue
-        if base[0]["p"].startswith(SEATED_POLES):
+        if b0["p"].startswith(SEATED_POLES):
             if pl.surf is not None:
-                z0 = pl.seat(base[0]["p"], new)[0]
-            elif base[0]["p"].startswith(LOW_SURFACE_PROPS):
+                z0 = pl.seat(b0["p"], new)[0]
+            elif b0["p"].startswith(LOW_SURFACE_PROPS):
                 z0 = float(pl._low_z(np.array([new[0]]), np.array([new[1]]))[0])
             else:
                 z0 = pl.ground_min(new)
         else:
             z0 = float(zsurf(np.array([new[0]]), np.array([new[1]]))[0])
-        dz = z0 - base[0]["z"]
+        dz = z0 - b0["z"]
         for it in items:
             it["e"], it["n"] = round(float(new[0]), 3), round(float(new[1]), 3)
             it["z"] = round(it["z"] + dz, 3)
