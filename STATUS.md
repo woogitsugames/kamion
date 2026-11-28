@@ -143,3 +143,7 @@
 ### codex-horn-button-s25 — przegląd punktu 9
 - Potwierdzono brak filtra w klaksonie, kierownicy i pedale oraz alternatywną ścieżkę skrętu przez `WheelDragRelay`. Standardowe przyciski jazdy używają `Button.onClick`. `LookPadWidget` steruje kamerą.
 - Następny krok: `rg -n 'OnPointerDown|OnPointerUp|OnDrag|BeginRelayed' game/Assets/_Project/UI/Driving/TouchWidgets.cs` i wdrożenie filtra dla akcji jazdy.
+
+### codex-horn-button-s25 — filtr wejścia HUD
+- `TouchWidgets.cs` przepuszcza `Left` (także dotyk) na klaksonie, kierownicy, pedałach i przekaźniku gestu skrętu. Puszczenie klaksonu wymaga nadal tego samego identyfikatora wskaźnika.
+- Następny krok: `Get-Content game/Assets/_Project/Tests/EditMode/HornRattleTests.cs` i dodanie testu zdarzeń wskaźnika.
