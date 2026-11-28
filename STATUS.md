@@ -209,3 +209,7 @@
 ### codex-seam-steps-s25 — pokrycie regresji i ADR 0275
 - Udokumentowano reguły na granicy kafli. Dodano sprawdzanie P-7b dla wektora stacji i pokrycia override na wszystkich ośmiu przekrojach wiejskiej DK65 aż do Moniek.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -p no:cacheprovider tests/gis/test_seam_taper_0275.py tests/gis/test_seams_p3_0304.py tests/gis/test_road_widen_0306.py tests/gis/test_seams_0224.py`.
+
+### codex-seam-steps-s25 — audyt szwów objętych zadaniem
+- Drugi przebieg poboczy na 8 kaflach i 4 szwach objął 44 drogi. Wynik 0 FAIL, 0 UWAGA, 19 PRZEJŚCIE. W opisie audytu oznaczono wspólny limit D94 oraz uzgodniony rozstaw P-7b.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-seam-steps-s25/audit.py after`.
