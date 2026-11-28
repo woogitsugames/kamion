@@ -118,15 +118,26 @@ def _match(t, spec) -> bool:
     return False
 
 
-def _clip_osm_way(way_id: int, tags: dict, pts: list[tuple[float, float]], lo, hi, proj, tile) -> list[dict]:
-    if len(pts) < 2:
-        return []
-    ll = shapely.LineString(pts)
-    if not ll.intersects(shapely.box(lo[0], lo[1], hi[0], hi[1])):
+def _osm_way_points(way):
+    pts = []
+    for node in way.nodes:
+        try:
+            loc = node.location
+            if not loc.valid():
+                return []
+            pts.append((loc.lon, loc.lat))
+        except Exception as exc:
+            if type(exc).__name__ == "InvalidLocationError":
+                return []
+            raise
+    return pts
+
+
+def _clip_osm_way(way_id: int, tags: dict, line, tile) -> list[dict]:
+    if not line.intersects(tile):
         return []
     out = []
-    g = proj(ll).intersection(tile)
-    for k, part in enumerate(_parts(g)):
+    for k, part in enumerate(_parts(line.intersection(tile))):
         if part.geom_type == "LineString" and part.length >= 0.5:
             out.append({"osm_way": way_id, "part": k, "tags": tags, "geometry": _round_geom(part.simplify(0.1))})
     return out
@@ -139,6 +150,7 @@ def extract_osm(bbox, pbf: Path) -> dict:
     inv = Transformer.from_crs("EPSG:2180", "EPSG:4326", always_xy=True)
     lo = inv.transform(bbox[0] - 50, bbox[1] - 50)
     hi = inv.transform(bbox[2] + 50, bbox[3] + 50)
+    ll_box = shapely.box(*lo, *hi)
     tile = shapely.box(*bbox)
 
     def proj(g):
@@ -164,11 +176,12 @@ def extract_osm(bbox, pbf: Path) -> dict:
         elif obj.is_way():
             if not _match(t, OSM_WAY_KEYS):
                 continue
-            try:
-                pts = [(n.location.lon, n.location.lat) for n in obj.nodes]
-            except osmium.InvalidLocationError:
+            pts = _osm_way_points(obj)
+            if len(pts) < 2:
                 continue
-            ways.extend(_clip_osm_way(obj.id, _tags(t), pts, lo, hi, proj, tile))
+            line = shapely.LineString(pts)
+            if line.intersects(ll_box):
+                ways.extend(_clip_osm_way(obj.id, _tags(t), proj(line), tile))
         elif obj.is_area():
             if not _match(t, OSM_AREA_KEYS):
                 continue
@@ -176,7 +189,7 @@ def extract_osm(bbox, pbf: Path) -> dict:
                 g = wkb.loads(wkbf.create_multipolygon(obj), hex=True)
             except Exception:
                 continue
-            if not g.intersects(shapely.box(lo[0], lo[1], hi[0], hi[1])):
+            if not g.intersects(ll_box):
                 continue
             g = shapely.make_valid(proj(g)).intersection(tile)
             for k, part in enumerate(_parts(g)):
@@ -282,10 +295,7 @@ def extract_osm_power_ways_by_bboxes(bboxes: dict[str, tuple[float, float, float
             pw = w.tags.get("power")
             if pw not in ("line", "minor_line"):
                 return
-            try:
-                pts = [(nd.lon, nd.lat) for nd in w.nodes if nd.location.valid()]
-            except Exception:
-                return
+            pts = _osm_way_points(w)
             if len(pts) < 2:
                 return
             lons, lats = zip(*pts)
@@ -293,12 +303,7 @@ def extract_osm_power_ways_by_bboxes(bboxes: dict[str, tuple[float, float, float
             ls = shapely.LineString(np.column_stack([xs, ys]))
             tags = _tags(w.tags)
             for rid, tile in boxes.items():
-                if not tile.intersects(ls):
-                    continue
-                for k, part in enumerate(_parts(ls.intersection(tile))):
-                    if part.geom_type == "LineString" and part.length >= 0.5:
-                        out[rid].append({"osm_way": w.id, "part": k, "tags": tags,
-                                         "geometry": _round_geom(part.simplify(0.1))})
+                out[rid].extend(_clip_osm_way(w.id, tags, ls, tile))
 
     _PowerHandler().apply_file(str(pbf), locations=True)
     key = lambda d: (d["osm_way"], d["part"])

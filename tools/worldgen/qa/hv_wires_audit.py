@@ -86,56 +86,19 @@ def in_tile(region_id: str | None = None, *, src: dict | None = None, origin=Non
     origin = np.asarray(_origin(region_id) if origin is None else origin, float)
     zero = lambda e, n: np.zeros_like(np.asarray(e, float))
     pl = FU.Placer(zero)
-    # mapped supports exactly as furniture.points() adds them (dedupe radii included)
-    for nd in src.get("osm", {}).get("nodes", []):
-        t = nd["tags"]
-        proto = {"tower": "pylon", "pole": "power_pole"}.get(t.get("power"))
-        if not proto:
-            continue
-        q = np.asarray(nd["geometry"]["coordinates"], float) - origin
-        if pl.near(proto, q, 3.0):
-            continue
-        pl.add(proto, q, 0.0, src=f"osm:node/{nd['osm_node']}", group=proto)
-    from shapely.geometry import LineString, Point
-    bdot_lines = src.get("bdot10k", {}).get("OT_SULN_L", [])
-    hv_lines_geom = [LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
-                     for f in bdot_lines
-                     if "wysokiego" in (f.get("props", {}).get("rodzaj") or "") and len(f["geometry"]["coordinates"]) > 1]
-    all_lines_geom = [LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
-                      for f in bdot_lines if len(f["geometry"]["coordinates"]) > 1]
-    osm_way_geoms = []
-    for w in src.get("osm", {}).get("ways", []):
-        tags = w.get("tags") or {}
-        if not FU.is_osm_power_line(tags) or len(w["geometry"]["coordinates"]) < 2:
-            continue
-        ls = LineString(np.asarray(w["geometry"]["coordinates"], float) - origin)
-        if ls.length >= 1e-6:
-            osm_way_geoms.append((tags, ls))
-            all_lines_geom.append(ls)
-            if FU._osm_way_is_hv(tags, ls, pl):
-                hv_lines_geom.append(ls)
-    for f in src.get("bdot10k", {}).get("OT_BUWT_P", []):
-        if f.get("props", {}).get("rodzaj") != "słup energetyczny":
-            continue
-        q = np.asarray(f["geometry"]["coordinates"], float) - origin
-        if pl.near("power_pole", q, 4.0) or pl.near("pylon", q, 8.0):
-            continue
-        proto = "power_pole"
-        if ADR0351 and any(ln.distance(Point(*q)) <= FU.SUPPORT_SNAP_M["pylon"] for ln in hv_lines_geom):
-            proto = "pylon"
-        pl.add(proto, q, 0.0, src=f"bdot:{f['id']}", group=proto)
-    mapped = [dict(it) for it in pl.items]
-    wired = set()
-    hv_lines = sum(1 for f in bdot_lines if "wysokiego" in (f.get("props", {}).get("rodzaj") or ""))
-    mv_lines = len(bdot_lines) - hv_lines
     plan_src = src if osm_lines else {**src, "osm": {**src.get("osm", {}), "ways": []}}
+    FU.place_mapped_power_supports(pl, plan_src, origin)
+    mapped = [dict(it) for it in pl.items]
+    from shapely.geometry import Point
+    hv_lines_geom, all_lines_geom, line_counts = FU.power_line_geoms(src, origin, pl)
+    wired = set()
     for S, _hv, _sid in FU.plan_power_lines(plan_src, origin, pl):
         for a, b in zip(S, S[1:]):
             if float(np.hypot(*(b - a))) < 5:
                 continue
             for q in (a, b):
                 wired.add((round(float(q[0]), 2), round(float(q[1]), 2)))
-    out = {"hv_lines": hv_lines, "mv_lines": mv_lines, "osm_lines": len(osm_way_geoms)}
+    out = {**line_counts, "carriageway_mask": False}
     for proto in ("pylon", "power_pole"):
         items = [it for it in mapped if it["p"] == proto]
         bare = [it for it in items if (round(it["e"], 2), round(it["n"], 2)) not in wired]
