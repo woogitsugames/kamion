@@ -10,12 +10,15 @@ from pathlib import Path
 import numpy as np
 import pytest
 import yaml
+from shapely import box, contains_xy, union_all
+from shapely.geometry import Polygon
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "tools" / "worldgen"))
 
 DOJ = REPO / "Data" / "Regions" / "bialystok-dojlidy"
 C = REPO / "Data" / "Regions" / "bialystok-industrial-c"
+SHRUB_STRIP = "mickiewicza-kuronia-shrub-strip-no-rule-trees"
 
 
 def _ov(d):
@@ -113,7 +116,8 @@ def test_dojlidy_data_and_report():
     assert sum(1 for p in trees["points_en"] if p[2] <= 5.5) >= 3                                     # low/mid shrubs on left
     skyline = ov["kuronia-north-park-skyline-trees"]
     assert skyline["form"] == "kit" and len(skyline["points_en"]) >= 2
-    assert ov["mickiewicza-kuronia-shrub-strip-no-rule-trees"]["kind"] == "open_ground"
+    strip = ov[SHRUB_STRIP]
+    assert strip["kind"] == "open_ground"
     assert ov["mickiewicza-u-turn-not-signalised"]["set"] == {"signalized": False}
     for o in ov.values():
         assert o.get("reason") and o.get("confidence"), o["id"]
@@ -123,10 +127,33 @@ def test_dojlidy_data_and_report():
     assert at["trees"] == kit_n and not at["skipped"]
     assert at["tris_low"] <= 40 * at["trees"] and at["tris_high"] <= 400 * at["trees"]
     assert rep["plantings"]["hedges"] == len(band["beds"]) and not rep["plantings"]["stale"]
-    assert any(g["id"] == "mickiewicza-kuronia-shrub-strip-no-rule-trees" and g["trees_removed"] >= 1
-               for g in rep["vegetation"]["open_ground"])
+    # ADR 0352 moves the row candidates, so the planting keepout can reject them before open_ground runs.
+    footprint = union_all([Polygon(ring) for ring in strip["polygons_en"]])
+    (strip_report,) = [g for g in rep["vegetation"]["open_ground"] if g["id"] == strip["id"]]
+    assert strip_report["area_m2"] == round(footprint.area, 1)
+    assert strip_report["trees_removed"] >= 0
     man = json.loads((DOJ / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
     assert not man.get("overrides_stale")
+
+
+def test_dojlidy_shrub_strip_has_no_rule_tree_instances():
+    world = REPO / "Data" / "raw" / "derived" / DOJ.name / "world"
+    if not any(world.glob("instances_*.json")):
+        pytest.skip("Dojlidy world instances are not built")
+    strip = next(o for o in _ov(DOJ) if o["id"] == SHRUB_STRIP)
+    footprint = union_all([Polygon(ring) for ring in strip["polygons_en"]])
+    man = json.loads((DOJ / "generated" / "world_manifest.json").read_text(encoding="utf-8"))
+    chunks = []
+    for chunk in man["chunks"]:
+        b = chunk["bounds_local_m"]
+        if footprint.intersects(box(b["e_min"], b["n_min"], b["e_max"], b["n_max"])):
+            chunks.append(world / f"instances_{chunk['id']}.json")
+    assert chunks
+    for path in chunks:
+        instances = json.loads(path.read_text(encoding="utf-8"))["instances"]
+        offenders = [t for t in instances if t["p"].startswith("tree_") and not t.get("src", "").startswith("override:")
+                     and contains_xy(footprint, t["e"], t["n"])]
+        assert not offenders, (path.name, offenders)
 
 
 def test_camera_063_looks_at_the_frame():

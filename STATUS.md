@@ -211,3 +211,22 @@
 - Zweryfikowano oficjalne wzory z Dz.U. 2019 poz. 2310 (str. 41, 42, 45) i rysunki konstrukcyjne z Dz.U. 2019 poz. 2311 (rys. 9.1.11, 9.1.12, 9.2.29, 9.4.77, 9.4.78) oraz poprawiono `b21`, `a11`, `a11a`, `d51`, `d52` w `tools/worldgen/streetscape/signs.py`: `D-51` zachowuje urzędowe napisy „Kontrola prędkości” / „Fotoradar” (wyrównane `6/5 a`, prostokątny korpus z przyciskiem po lewej, obiektyw z pierścieniem, 6 fal w zakresie `4a`); `D-52` ma zwymiarowaną tablicę `0,90 × 0,42 m` (SOURCED), zwarty piktogram auta z okrągłymi reflektorami i napis wys. `102 mm`; `B-21` ma odwrócony właściwy pas `/` (z prawej góry do lewego dołu, szer. `3/4 a`) i łukową strzałkę (`R = 0.5a/1.5a`); `A-11` (`R = 3/4 a`, 2 garby) i `A-11a` (`R1 = a, R2 = 5/2 a`, 1 szeroki próg) oddzielone geometrycznie.
 - Dodano `test_verified_sign_face_geometry_dz_u_2019_2310` w `tests/gis/test_signs_wave14_codes.py`. Testy: `test_signs_wave14_codes.py` **18 passed**, wszystkie 10 zestawów znaków łącznie **140 passed, 1 skipped**, `test_streetscape.py -k sign` **3 passed**, budżetowe `test_budget_0221` (**7 passed**), `test_hero_bridge` (**7 passed**), `test_world_v31` (**21 passed**), `test_typology_0238 -k "not bialystok"` (**17 passed**, 10 ciężkich testów kafli pominięto ze względu na zakaz zadań w tle). Dowody w `artifacts/agy-sign-d51-s25/WYNIKI.md` i `C:\Users\matma\Documents\Claude\kamion\artifacts\agy-sign-d51-s25\`.
 - Następny krok lidera: obejrzeć `C:\Users\matma\Documents\Claude\kamion\artifacts\agy-sign-d51-s25\before_vs_after_960.jpg`, uruchomić pełne `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd -m pytest -q tests/gis/test_typology_0238.py tests/gis/test_streetscape.py` i scalić `agy-sign-d51-s25` przed falą 15.
+
+### codex-gis-3fail-s25 — Rynek w Tykocinie
+- ADR 0320 (`3d7806f6c`) klasyfikuje cztery z dziesięciu punktów jako skrzynie z kwiatami. Test ADR 0337 sprawdza teraz sześć ławek, cztery udokumentowane skrzynie i komplet dziesięciu kotwic.
+- Następny krok: `rg -n -A14 'tykocin-pavement-rules-s24' Data/Regions/tykocin/overrides.yaml`.
+
+- Uzupełniono `confidence`, `sources` i `verify` we wpisie `tykocin-pavement-rules-s24` zgodnie z ADR 0237 i 0231. `medium` dotyczy reguły, a wariant zastępczy pozostaje `WORKING_VALUE`.
+- Następny krok: `rg -n 'trees_removed|avenue_row_candidates' tools/worldgen/streetscape/vegetation.py`.
+
+- Dojlidy: lokalne odtworzenie rzeczywistego wiersza BDOT i nasadzeń daje `trees_removed` 1 → 0 po ADR 0352, przy pustym pasie w obu wariantach. Test sprawdza wpis w raporcie i brak drzew regułowych w wyeksportowanym poligonie.
+- Następny krok: `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd -m pytest -q tests/gis/test_dojgreen_0186.py tests/gis/test_props_grounding_0337.py tests/gis/test_ring_0231.py tests/gis/test_budget_0221.py`.
+
+- Kontrola pierścienia po uzupełnieniu reguły kafla objęła też dwa sąsiednie wpisy `sidewalk_surface`. Test uwzględnia rzeczywisty schemat ADR 0237, a prototyp Bernardyńskiej dostał `verify`.
+- Następny krok: `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd -m pytest -q tests/gis/test_ring_0231.py tests/gis/test_pavements_0237.py`.
+
+- Kontrola instancji pasa w Dojlidach jest osobnym testem i pomija tylko środowiska bez eksportu `instances_*.json`. Walidacja YAML i raportu działa także w samym checkoucie.
+- Następny krok: `cmd /c C:\Users\matma\Documents\Claude\kamion\scripts\cli-jobs\wgpy.cmd -m pytest -q tests/gis/test_dojgreen_0186.py`.
+
+- Weryfikacja: 167 testów rozszerzonych z czterema zestawami budżetowymi, potem 65 na końcowej wersji dotkniętych plików i `test_budget_0221.py`. Obejrzano archiwalne PNG Tykocina High clear i overcast. Raport `artifacts/codex-gis-3fail-s25/WYNIKI.md` skopiowano do głównego katalogu dowodów.
+- Następny krok lidera z jego worktree: `git merge --no-ff codex-gis-3fail-s25`. Następnie fala 15 dla `tykocin` już wpisanego do kolejki. Dojlidy nie wymagają dodatkowej regeneracji.
