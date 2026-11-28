@@ -112,6 +112,8 @@ class End:
     shoulder: dict            # {"L" / "R": (paved_cm, ground_cm) | None}: ADR 0272 rule / override of the end section
     blendable: bool = True    # False: the lanes of the end section cannot follow a changing width (ADR 0095 data)
     boundary_xy: tuple | None = None  # graph boundary before lateral placement (D94)
+    edge_line_spacing: float | None = None
+    authored_spacing: bool = False
 
     def on_seam(self, se) -> bool:
         """Tile membership uses the graph cut, even if lateral placement moved the axis off its plane."""
@@ -139,6 +141,8 @@ def nominal_shoulder(sec, rev: bool) -> dict:
 
 def ends(net: Nw.Network) -> list[End]:
     """Chain ends on the tile boundary (graph node flag `boundary`, degree 1), in a stable order."""
+    from . import markings as MK
+
     o = np.asarray(net.origin, float)
     out = []
     for c in net.chains:
@@ -152,11 +156,17 @@ def ends(net: Nw.Network) -> list[End]:
             rev = bool(c.meta["rev"][e]) if "rev" in c.meta else False
             pg = c.line.p[e] + o
             n = c.line.n[e]
+            spacing = None
+            if sec.cls not in ("A", "S", "GP") and not sec.lane_edges and sec.highway in MK.MARKED:
+                lines = MK.edge_lines(sec, float(c.hw[e]), c.dirn[e])
+                if len(lines) == 2:
+                    spacing = abs(float(lines[1][0] - lines[0][0]))
             out.append(End(chain=c.id, end=e, osm_way=_osm_way(sec.edge_id), xy=(float(pg[0]), float(pg[1])),
                            left=(float(n[0]), float(n[1])), hw=float(c.hw[e]), length=float(c.line.s[-1]),
                            shoulder=nominal_shoulder(sec, rev),
                            blendable=not (sec.lane_edges or (sec.width_profile and not sec.lane_follow)),
-                           boundary_xy=tuple(np.asarray(nd["xy"]) + o)))
+                           boundary_xy=tuple(np.asarray(nd["xy"]) + o), edge_line_spacing=spacing,
+                           authored_spacing=sec.edge_line_spacing is not None))
     return out
 
 
@@ -177,6 +187,7 @@ class Taper:
     shift_seam: tuple = (0.0, 0.0)    # seams-w10: move of the axis end on the seam (world frame, m) = half of the vector
     #                                   between the two nominal axis ends: both tiles meet in the middle
     axis_offset: float = 0.0          # seams-w10: distance of the two nominal axis ends (the same in both tiles)
+    edge_line_spacing: float | None = None
 
     def report(self) -> dict:
         r = {"chain": self.chain, "end": "a" if self.end == 0 else "b", "neighbour": self.neighbour,
@@ -185,6 +196,8 @@ class Taper:
              "width_seam": round(2 * self.hw_seam, 3)}
         if self.axis_offset:
             r["axis_offset_m"] = round(self.axis_offset, 3)
+        if self.edge_line_spacing is not None:
+            r["edge_line_spacing_seam_m"] = round(self.edge_line_spacing, 3)
         if self.shoulder:
             r["shoulder_cm"] = {k: {a: list(b) for a, b in v.items()} for k, v in sorted(self.shoulder.items())}
         if self.skipped:
@@ -227,6 +240,15 @@ def plan_pair(e: End, x: End, neighbour: str | None = None) -> Taper | None:
     same = (e.left[0] * x.left[0] + e.left[1] * x.left[1]) > 0      # the neighbour's chain runs the same way
     dhw = x.hw - e.hw
     steps = [abs(dhw)] if (e.blendable and x.blendable) else []
+    spacing = None
+    if (e.authored_spacing or x.authored_spacing) and e.edge_line_spacing is not None and x.edge_line_spacing is not None:
+        from .markings import EDGE_LINE_MIN_INSET
+
+        spacing_step = abs(e.edge_line_spacing - x.edge_line_spacing) / 2
+        if spacing_step >= MIN_STEP_M or abs(dhw) >= MIN_STEP_M:
+            capacity = e.hw + x.hw if e.blendable and x.blendable else 2 * min(e.hw, x.hw)
+            spacing = min((e.edge_line_spacing + x.edge_line_spacing) / 2, capacity - 2 * EDGE_LINE_MIN_INSET)
+            steps.append(spacing_step)
     sh = {}
     for side in ("L", "R"):
         a, b = e.shoulder.get(side), x.shoulder.get(side if same else ("R" if side == "L" else "L"))
@@ -264,7 +286,8 @@ def plan_pair(e: End, x: End, neighbour: str | None = None) -> Taper | None:
     length = min(max(RATIO * step, MIN_LEN_M), MAX_LEN_M, 2.0 * e.length, 2.0 * x.length)
     return Taper(chain=e.chain, end=e.end, length=float(length), hw_own=e.hw, hw_other=x.hw,
                  hw_seam=0.5 * (e.hw + x.hw) if blend_hw else e.hw, shoulder=sh, neighbour=neighbour,
-                 other_chain=x.chain, step_m=float(step), skipped=skipped, shift_seam=shift, axis_offset=float(offset))
+                 other_chain=x.chain, step_m=float(step), skipped=skipped, shift_seam=shift, axis_offset=float(offset),
+                 edge_line_spacing=spacing)
 
 
 def plan(own: list[End], others: dict) -> list[Taper]:
@@ -354,6 +377,8 @@ def _chains(net):
 def apply_widths(net: Nw.Network, tapers: list[Taper]) -> list[dict]:
     """Blend the carriageway half-width and the axis position (seams-w10) of the planned chain ends; returns the report
     rows."""
+    from . import markings as MK
+
     by = _chains(net)
     for t in tapers:
         c = by[t.chain]
@@ -379,6 +404,16 @@ def apply_widths(net: Nw.Network, tapers: list[Taper]) -> list[dict]:
                 sec.provenance["lanes_follow_width"] = "derived:seam_taper (ADR 0275)"
         m = max(2, int(math.ceil(2 * float(c.hw.max()) / 1.75)))
         c.m_lat = m + (m % 2)
+    for t in tapers:
+        if t.edge_line_spacing is None:
+            continue
+        c = by[t.chain]
+        sec = net.sec_list[int(c.sec_idx[t.end])]
+        lines = MK.edge_lines(sec, float(c.hw[t.end]), c.dirn[t.end])
+        own = abs(float(lines[1][0] - lines[0][0]))
+        d = np.abs(c.line.s - c.line.s[t.end])
+        delta = c.meta.setdefault("edge_line_spacing_delta", np.zeros_like(c.hw))
+        delta += (t.edge_line_spacing - own) * weight(d, t.length)
     return [t.report() for t in tapers]
 
 

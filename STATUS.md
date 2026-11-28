@@ -197,3 +197,7 @@
 ### codex-seam-steps-s25 — szerokość na cięciu
 - Wygładzanie zachowuje zadany przekrój na końcu autorskiej sekcji brzegowej. Dodano syntetyczne cięcie 1,35 m przed szerszym odcinkiem.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_seam_taper_0275.py -k smoothing_keeps`.
+
+### codex-seam-steps-s25 — linie DK65
+- Uzupełniono ADR 0304 na tych samych przekrojach DK65 w dk65-monki-02…07 i monki (WORKING_VALUE). Taper interpoluje odstęp dwóch linii P-7b w stacjach, z limitem wcięcia od krawędzi asfaltu.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_seam_taper_0275.py tests/gis/test_seams_p3_0304.py`.

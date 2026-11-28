@@ -200,6 +200,25 @@ def test_smoothing_keeps_authored_width_at_a_short_boundary_section():
     assert 2 * chain.hw[-1 if end == 0 else 0] == pytest.approx(15.0)
 
 
+@pytest.mark.parametrize("width_b", [8.0, 8.2])
+def test_edge_line_spacing_blends_an_override_against_the_default(width_b):
+    ts = _pair(a_kw={"set_": {"width": 8.0, "edge_lines": "both", "edge_line_spacing": 7.3}},
+               b_kw={"set_": {"width": width_b, "edge_lines": "both"}, "flip_way": True})
+    nets = _nets(ts)
+    nominal = (7.3, width_b - 2 * Nw.S.EDGE_LINE_INSET_MINOR)
+    for tile, own in zip(ts, nominal):
+        net = nets[tile.id]
+        chain, distance, end = _seam_view(net)
+        sec = net.sec_list[int(chain.sec_idx[end])]
+        far = int(np.argmax(distance))
+        for i, want in ((end, np.mean(nominal)), (far, own)):
+            s = chain.line.s[i]
+            lines = MK.edge_lines(sec, chain.hw_at(s), chain.dirn[i], chain.edge_line_spacing_delta_at(s))
+            assert abs(lines[1][0] - lines[0][0]) == pytest.approx(want)
+        (taper,) = net.seam_tapers
+        assert taper.report()["edge_line_spacing_seam_m"] == pytest.approx(np.mean(nominal))
+
+
 # ------------------------------------------------------------------------------------------------ shoulders (ADR 0272)
 SH_A = {"lanes": 2, "lane_width": 3.1, "edge_strip": 0.2, "edge_lines": "both",
         "shoulder": {"kind": "ground", "paved_m": 0.35, "ground_m": 0.75}}          # dk65-opaska-k1: 6.6 + 2 x 0.35 = 7.3

@@ -14,6 +14,14 @@ overrides:
     confidence: low
     verify: "orthophoto 0.1 m cross profiles after the ingest (tool of ADR 0212 - artifacts/knyszyn-edges-0212/tools/linew.py); owner drive"
     set: {lanes: 2, lane_width: 3.4, edge_strip: 0.35, edge_lines: both}
+  - id: dk65-edge-line-spacing-0304
+    target: {osm_way: [286989049]}
+    reason: >-
+      WORKING_VALUE: continue the rural DK65 P-7b spacing of dk65-monki-01 (ADR 0304)
+      on the same authored carriageway cross-section. Local orthophoto measurement pending.
+    confidence: low
+    verify: orthophoto 0.1 m and owner drive
+    set: {edge_line_spacing: 6.8}
   - id: dk65-fields-unlit
     target: {osm_way: [286989049]}
     reason: >-

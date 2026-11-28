@@ -252,6 +252,10 @@ class Chain:
     def hw_at(self, s):
         return self.interp(self.hw, s)
 
+    def edge_line_spacing_delta_at(self, s):
+        delta = self.meta.get("edge_line_spacing_delta")
+        return self.interp(delta, s) if delta is not None else 0.0
+
     def zc(self, s):
         return self.interp(self.z, s)
 

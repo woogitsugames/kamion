@@ -177,7 +177,7 @@ def follow_edge(sec, lat, hw_mid, hw_s, dirn):
     return sg * (hw_s - (hw_mid - sg * lat))
 
 
-def edge_lines(sec, hw, dirn):
+def edge_lines(sec, hw, dirn, spacing_delta=0.0):
     """[(lat, kind)] of the painted edge lines of a section at half-width hw (scalar or array). Default rule:
     P-7b on both sides of class A / S / GP roads, inset inside asphalt when there is no edge strip.
     `edge_lines` (override, direction of travel)
@@ -212,6 +212,7 @@ def edge_lines(sec, hw, dirn):
         if sp:
             # ADR 0220: measured line-to-line distance; the line stays on the carriageway (EDGE_LINE_MIN_INSET)
             off = np.minimum(0.5 * float(sp), hw - EDGE_LINE_MIN_INSET)
+        off = np.minimum(off + 0.5 * spacing_delta, hw - EDGE_LINE_MIN_INSET)
         for sg, name in ((1, "left"), (-1, "right")):
             if el in ("both", name):
                 out.append(((d if sec.oneway else 1) * sg * off, "P-7b"))
@@ -655,8 +656,9 @@ def _build_markings(buf: MeshBuf, net, juncs, ctx_points, report: dict):
                         if sb > cur:
                             _segmented(buf, c, cur, sb, lat_c, S.LINE_W_NARROW, dash, gap, cont, "centre")
                         cnt("P-1 centre line")
-                for k_e, (lat_e, _) in enumerate(edge_lines(sec, hw, dirn)):
-                    lat_fn = (lambda ss_, k_e=k_e, sec=sec, dirn=dirn: edge_lines(sec, c.hw_at(ss_), dirn)[k_e][0])
+                for k_e, (lat_e, _) in enumerate(edge_lines(sec, hw, dirn, c.edge_line_spacing_delta_at(0.5 * (sa + sb)))):
+                    lat_fn = (lambda ss_, k_e=k_e, sec=sec, dirn=dirn:
+                              edge_lines(sec, c.hw_at(ss_), dirn, c.edge_line_spacing_delta_at(ss_))[k_e][0])
                     spans = dashed_spans.get(c.id)
                     if spans:       # ADR 0220: authored broken spans of the edge line on this side
                         n_iv = _solid_with_dashes(buf, c, sa, sb, lat_fn, edge_line_width(sec), spans,

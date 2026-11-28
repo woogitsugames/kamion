@@ -76,7 +76,7 @@ def chain_lines_at(c, s, secs, s0, s1, marked_hw, lane_layout):
             out.append((float(MKf.follow_edge(sec, float(lat), hw_mid, hw, dirn)) if sec.oneway else float(lat), "lane"))
         if lat_c is not None and sec.width >= S.SEGREGATION_MIN_CARRIAGEWAY:
             out.append((float(lat_c), "P-4" if sec.lanes >= 4 else "centre"))
-        painted = [(float(lat), kind) for lat, kind in MKf.edge_lines(sec, hw, dirn)]
+        painted = [(float(lat), kind) for lat, kind in MKf.edge_lines(sec, hw, dirn, c.edge_line_spacing_delta_at(s))]
         out += painted
     # the bare carriageway edge (inside the edge strip) on every side without a painted edge line
     le = getattr(sec, "lane_edges", None)

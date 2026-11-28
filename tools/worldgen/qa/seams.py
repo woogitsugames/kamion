@@ -324,7 +324,8 @@ def crossings(t: Tile, se, net=None) -> list[Crossing]:
             P["pasy × szer. pasa [m]"] = (f"{sec.lanes} × {lw_loc:.2f}", src_lw)
             P["opaska (edge_strip) [m]"] = (round(float(sec.edge_strip), 3), src_n)
             # edge lines (markings.edge_lines of this checkout, + ADR 0220 edge_line_spacing when an override has it)
-            lines = MK.edge_lines(sec, hw, int(c.dirn[end]) or 1) if sec.highway in MK.MARKED else []
+            lines = MK.edge_lines(sec, hw, int(c.dirn[end]) or 1, c.edge_line_spacing_delta_at(c.line.s[end])) \
+                if sec.highway in MK.MARKED else []
             lats = sorted(float(np.asarray(lat)) for lat, _k in lines)
             sp, sp_id = _ov_for(t, int(sec.edge_id.split(":")[0].lstrip("w")), "edge_line_spacing")
             src_l = src_n
