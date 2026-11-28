@@ -84,7 +84,7 @@ Migawka `main` to `590851327e4e1cf9cede799614ee398c68e395a0`. Zakres `ec226c4ef.
 
 - Scalenia objęte zakresem: `0ed19d1a0` (raport s24), `4b124879e` (audio/HUD), `e8b5d5e8f` (testy ADR 0349/0351), `113984a9c` (WN, maska kukurydzy, szpalery, impostory), `36767c08e` (szwy), `48afddd3b` (audyt dalekiego planu), `38463f676` i `2df09cefd` (pomnik r3/r4), `8c8831b3a` (fala 15). Robocze zmiany generatorów i testów gałęzi wczytałem przez `git show` w pamięci.
 - Po rozgałęzieniu zmiany z main i z trzech gałęzi dotykają wspólnie tylko STATUS.md w dwóch porównaniach. Ścieżki kodu nie nakładają się.
-- GIS na migawce main: **231/231 PASS**, w tym **62/62** w czterech obowiązkowych zestawach budżetowych. [Polecenie i wynik](gis-tests.txt)
+- GIS na bazie worktree `ec66c2df9`, identycznej kodowo z recenzowanym `main` (różnica w bazie obejmuje `HANDOVER.md` i `STATUS.md`): **231/231 PASS**, w tym **62/62** w czterech obowiązkowych zestawach budżetowych. [Polecenie i wynik](gis-tests.txt)
 - Wykonałem też 7 istniejących przypadków gałęzi w pamięci: 6 dla przewodów, w tym Mickiewicza, Dojlidy i dk65-03, oraz 1 dla siatki i kolizji czterocentymetrowego cięcia. **7/7 PASS**. Reprodukcje błędów używają osobnych wejść. [Log](probe-branches.txt)
 - Audyt Git dalekiego planu odtworzył wynik na 54 kaflach. Fala 12 → 13 High: **+3,48% do +20,91%**, mediana **+12,51%**. Low bez zmiany. [Log](far-audit-git.txt)
 - Wrapper `wgpy.cmd` obsłużył uruchomione próby. Podstawiony blok Unity wykonał się raz po korekcie zasięgu `$unityWork`. Względna ścieżka `--art` przenosi fidelity pod katalog worktree wymagany przez `relative_to(REPO)`.

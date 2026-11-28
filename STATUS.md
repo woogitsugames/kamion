@@ -137,3 +137,5 @@
 ### codex-review-s25 — zakończone
 - Raport zawiera 4 ważne i 5 drobnych znalezisk z 9 scaleń i 3 gałęzi oczekujących. GIS 231/231, w tym budżety 62/62. Przypadki gałęzi 7/7 w pamięci. Dowody i archiwalne PNG w artifacts/codex-review-s25. Bez Unity i zmian kodu.
 - Następny krok lidera: `git show codex-review-s25:artifacts/codex-review-s25/REVIEW.md`.
+- Potwierdzono bazę testów `ec66c2df9` i brak różnic kodu względem recenzowanego `main` `590851327`.
+- Następny krok lidera: `git show codex-review-s25:artifacts/codex-review-s25/REVIEW.md`.
