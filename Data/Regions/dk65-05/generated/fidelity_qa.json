@@ -138,26 +138,26 @@
   "osm_drivable_ways_in_tile": 92
  },
  "inputs_sha256": {
-  "overrides.yaml": "0c72a3e8318b736513417548888ed87220b15e016829e0f23b9f7281e8432058",
+  "overrides.yaml": "eae5b865fc8a0fea60dcdfe54c49c10e207074fa6a4cc0b829659993ebf9569f",
   "roads.graph.json": "7bc9243e31ed16d9012c6ffa1712f58617ecee2ff58a08dd5ca869599589451e",
   "route_start.json": "de80ccf90923737440961d9ecdd53731091fc008f82f789dfd68cc5b32b30524",
   "tools/worldgen/roads/__init__.py": "0c26fa3038394a956286b47576ce1d6a0725f8dc0a2e7682901a055d264a6e40",
   "tools/worldgen/roads/aprons.py": "c56504b4c5d673419f802d357511e1495a3292027811e4b27cb72c4a3a813f03",
   "tools/worldgen/roads/authored_paint.py": "cfa394a6e9c34275a8e07176ac76336a035d50acd959c11a530b55ab1508451e",
   "tools/worldgen/roads/barrier_audit.py": "786d6dfd30de7dd51f60c793136839d43fcd9d214e103f392d613b68f1b18103",
-  "tools/worldgen/roads/build_world.py": "c1ecb45817c137aa82b1008f9b8f6cfcdcd4beb59b3d7f6be582dfa4d3b9a24a",
+  "tools/worldgen/roads/build_world.py": "3ed772d503d7da0db6f1bb2e287a4f9018ff8c0c88bbf9f745c2eaa3be6d8db6",
   "tools/worldgen/roads/carriageway_split.py": "c79e82ddcf05d4363e231b4546f25dc37ada97e8d9cfe2f3974a91f2fe1b603d",
   "tools/worldgen/roads/closures.py": "96fdbd2a3556d2bfc031a32107925f93efca27e94adfe15f8effbb5215d52617",
   "tools/worldgen/roads/compact_roundabout.py": "b57e8ea73574bb272763ae5c4e7584118e6326fb0035beda7e4656aae4bf15ac",
   "tools/worldgen/roads/consistency.py": "327a7581a128084a95b27e1292e7e13a0d26c3a44d716885a463480f15d49603",
   "tools/worldgen/roads/context.py": "90f3a943cc21d0be5c46f4346c01c02dfa52ef7abb3d850c0fbe20f31fe37aa2",
-  "tools/worldgen/roads/decals.py": "c8914175a48ebc354767a74f9edef0a485ec35f3eeec43ef9922a0cc6beb39f5",
+  "tools/worldgen/roads/decals.py": "255861e53b5610ac13caa94de30d0011d24d608ce96e48052f1ed0075c266644",
   "tools/worldgen/roads/geom.py": "8f9f732d90273b92cf23f00f65c6a2c7eed6d1f9a0b3cc211679a908f2788e21",
   "tools/worldgen/roads/gores.py": "1ccf6b59bbedef843e9237e56985b660e326e6056d1c70c53a0972c2bd273b1b",
   "tools/worldgen/roads/junctions.py": "ee3ea6a082078637ffad54dfaefc195d19bf7ccaa45e23ce2eed58a8bc8dfd29",
   "tools/worldgen/roads/markings.py": "1af172e7857c638fbc074e484731574393793a07b4c2fd0617559c796db305a8",
-  "tools/worldgen/roads/meshing.py": "1620c06c4d90bbb50f3a237469450c6893593c84b3659c7d24541b3c87f72609",
-  "tools/worldgen/roads/network.py": "b64189fec43c23fd15805a9d903e235d117201888f3381c2c8ec00096f4040ab",
+  "tools/worldgen/roads/meshing.py": "33a51276c0fac2db9085402079779fd46100eaa183bfdf9c070d21070b1896e1",
+  "tools/worldgen/roads/network.py": "e05504d287b5de2893d1b4fff9ebbfe4d23b5f6b9b47ec916a57fe911037dcf0",
   "tools/worldgen/roads/p21_hatch.py": "f6d6fedc2efd1ae6bb8acb390ac44e8a50ccff02b6c6b7dba5d30029d2e2bddb",
   "tools/worldgen/roads/pipeline.py": "cb56af456115111e75dbc5ab446b5bf01082e674daac2aca34759084f5b183e5",
   "tools/worldgen/roads/profile.py": "a4b2ab8d5eeb3eb902300e332b5d4e4b087a6d2557cef450032530da675ba3a4",
@@ -1049,7 +1049,7 @@
    "name": "Brama Kwadrat Park (start)",
    "ortho_islands_missing_in_gen": [],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/01_gate.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/01_gate.jpg",
    "stop_lines": []
   },
   {
@@ -1071,7 +1071,7 @@
    "name": "Dojazd do Ronda Bieżeństwa (s 230-300)",
    "ortho_islands_missing_in_gen": [],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/02_s230_approach.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/02_s230_approach.jpg",
    "stop_lines": []
   },
   {
@@ -1211,7 +1211,7 @@
     }
    ],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/03_rondo_biezenstwa.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/03_rondo_biezenstwa.jpg",
    "stop_lines": [
     {
      "chain": "c:w305318441:2295268360-11243685406",
@@ -1244,7 +1244,7 @@
    "name": "Andersa: łącznice przy s 610",
    "ortho_islands_missing_in_gen": [],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/04_s610_ramps.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/04_s610_ramps.jpg",
    "stop_lines": []
   },
   {
@@ -1266,7 +1266,7 @@
    "name": "Andersa s 900 (n1881569071)",
    "ortho_islands_missing_in_gen": [],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/05_s900.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/05_s900.jpg",
    "stop_lines": []
   },
   {
@@ -1416,7 +1416,7 @@
     }
    ],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/06_s1060_merge.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/06_s1060_merge.jpg",
    "stop_lines": []
   },
   {
@@ -1438,7 +1438,7 @@
    "name": "Andersa s 1270 (n10015785253)",
    "ortho_islands_missing_in_gen": [],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/07_s1270.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/07_s1270.jpg",
    "stop_lines": []
   },
   {
@@ -1460,7 +1460,7 @@
    "name": "Skrzyżowanie z sygnalizacją s 1355-1415",
    "ortho_islands_missing_in_gen": [],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/08_signals.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/08_signals.jpg",
    "stop_lines": []
   },
   {
@@ -1482,7 +1482,7 @@
    "name": "Andersa s 1600 (przed Rondem Putry)",
    "ortho_islands_missing_in_gen": [],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/09_s1600.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/09_s1600.jpg",
    "stop_lines": []
   },
   {
@@ -1614,7 +1614,7 @@
    "name": "Rondo Putry (dwupoziomowe)",
    "ortho_islands_missing_in_gen": [],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/10_rondo_putry.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/10_rondo_putry.jpg",
    "stop_lines": []
   },
   {
@@ -1693,7 +1693,7 @@
    "name": "DK8/DK19 za Rondem Putry (s 1780-1950)",
    "ortho_islands_missing_in_gen": [],
    "ortho_src": "sheet_0.25_2024-05-27",
-   "overlay": "artifacts/fidelity-r9/overlays/11_dk8.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/11_dk8.jpg",
    "stop_lines": []
   }
  ],
@@ -1811,7 +1811,7 @@
    },
    "junction": "j:n10712325609",
    "ortho_islands_missing": 0,
-   "overlay": "artifacts/fidelity-r9/overlays/tile_01_j_n10712325609.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/tile_01_j_n10712325609.jpg",
    "roundabout": false,
    "signalized": false
   },
@@ -1828,7 +1828,7 @@
    },
    "junction": "j:n2559220777",
    "ortho_islands_missing": 2,
-   "overlay": "artifacts/fidelity-r9/overlays/tile_02_j_n2559220777.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/tile_02_j_n2559220777.jpg",
    "roundabout": false,
    "signalized": false
   },
@@ -1845,7 +1845,7 @@
    },
    "junction": "j:n6677686743",
    "ortho_islands_missing": 0,
-   "overlay": "artifacts/fidelity-r9/overlays/tile_03_j_n6677686743.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/tile_03_j_n6677686743.jpg",
    "roundabout": false,
    "signalized": false
   },
@@ -1862,7 +1862,7 @@
    },
    "junction": "j:n2123682037",
    "ortho_islands_missing": 1,
-   "overlay": "artifacts/fidelity-r9/overlays/tile_04_j_n2123682037.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/tile_04_j_n2123682037.jpg",
    "roundabout": false,
    "signalized": false
   },
@@ -1879,7 +1879,7 @@
    },
    "junction": "j:n6677675742",
    "ortho_islands_missing": 0,
-   "overlay": "artifacts/fidelity-r9/overlays/tile_05_j_n6677675742.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/tile_05_j_n6677675742.jpg",
    "roundabout": false,
    "signalized": false
   },
@@ -1896,7 +1896,7 @@
    },
    "junction": "j:n6677587740",
    "ortho_islands_missing": 0,
-   "overlay": "artifacts/fidelity-r9/overlays/tile_06_j_n6677587740.jpg",
+   "overlay": "artifacts/regen-wave-14-s24/fidelity/dk65-05/overlays/tile_06_j_n6677587740.jpg",
    "roundabout": false,
    "signalized": false
   },
