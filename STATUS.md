@@ -151,3 +151,7 @@
 ### codex-csharp-review-fixes-s25 — r3, format wyjątku w Unity
 - Przebieg 52/53 dotarł do `OnDestroy` i `Release(t1)`. XML pokazał wewnętrzny wyjątek jako komunikat, a kontekst streamera w stosie wywołań. `LogAssert` sprawdza teraz dokładny komunikat Unity.
 - Następny krok pod slotem heavy: `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 -Filter 'Game\.Tests\.(Vegetation.*Tests|WorldStreamer.*|TileSceneSourceContractTests)'`.
+
+### codex-csharp-review-fixes-s25 — r3, EditMode zaliczony
+- EditMode Win64 53/53, Unity exit 0, slot heavy zwolniony. Test potwierdza 3 → 2 → 0 klonów, próby zwolnienia t0/t1/t2 i zachowanie materiału bazowego.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py`.
