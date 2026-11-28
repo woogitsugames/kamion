@@ -58,6 +58,7 @@ except U-turns (a 16.5 m combination) - UNVERIFIED against the street.
 Usage:
   python tools/worldgen/navgraph/build_route_graph.py --region bialystok-industrial-c
   uv run --project tools/worldgen python tools/worldgen/navgraph/build_route_graph.py --region <id> --refresh-restrictions
+  uv run --project tools/worldgen python tools/worldgen/navgraph/build_route_graph.py --all --restrictions-only
 """
 from __future__ import annotations
 
@@ -523,13 +524,17 @@ def build(graph: dict, origin: tuple[float, float], restrictions: list[dict], ax
     restr = []
     unmapped = []
     for r in restrictions:
+        if r.get("hgv_exempt"):
+            continue
         via = osm_node_to_idx.get(r.get("via_node"))
         kind = r.get("restriction", "")
         if via is None or not (kind.startswith("no_") or kind.startswith("only_")):
             unmapped.append(r.get("id"))
             continue
-        fe = [i for i, e in enumerate(edges) if e["osm_way"] == r["from_way"] and via in (e["from"], e["to"])]
-        te = [i for i, e in enumerate(edges) if e["osm_way"] == r["to_way"] and via in (e["from"], e["to"])]
+        from_ways = r.get("from_ways") or ([r["from_way"]] if r.get("from_way") is not None else [])
+        to_ways = r.get("to_ways") or ([r["to_way"]] if r.get("to_way") is not None else [])
+        fe = [i for i, e in enumerate(edges) if e["osm_way"] in from_ways and via in (e["from"], e["to"])]
+        te = [i for i, e in enumerate(edges) if e["osm_way"] in to_ways and via in (e["from"], e["to"])]
         if not fe or not te:
             unmapped.append(r.get("id"))
             continue
@@ -749,75 +754,174 @@ def parse(data: bytes) -> dict:
     return {"names": names, "nodes": nodes, "edges": edges, "restrictions": restr, "lanes": lanes, "version": ver}
 
 
-def refresh_restrictions(region_dir: str, graph: dict, pbf: str | None = None) -> list[dict]:
-    """Reads type=restriction relations touching the region's ways from the cached Geofabrik extract (pyosmium)."""
-    import osmium  # noqa: PLC0415  (only for the refresh)
-
+def _find_pbf(pbf: str | None = None) -> str:
     pbf_dir = os.path.join(REPO, "Data", "raw", "osm")
     if pbf:
-        pbf_dir, pbfs = os.path.dirname(pbf), [os.path.basename(pbf)]
-    else:
-        pbfs = sorted(p for p in os.listdir(pbf_dir) if p.endswith(".osm.pbf")) if os.path.isdir(pbf_dir) else []
+        if not os.path.exists(pbf):
+            raise SystemExit(f"missing .osm.pbf: {pbf}")
+        return pbf
+    pbfs = sorted(p for p in os.listdir(pbf_dir) if p.endswith(".osm.pbf")) if os.path.isdir(pbf_dir) else []
     if not pbfs:
         raise SystemExit(f"no .osm.pbf in {pbf_dir}: run tools/worldgen/fetch_osm.py first")
-    pbf = os.path.join(pbf_dir, pbfs[-1])
-    ways = {e.get("osm_way") for e in graph["edges"]}
+    return os.path.join(pbf_dir, pbfs[-1])
+
+
+def _file_sha256(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def parse_osm_restriction_relation(rel_id: int, tags: dict[str, str], members: list[tuple[str, int, str]]) -> dict | None:
+    """Normalize an OSM type=restriction / type=restriction:hgv relation for truck routing."""
+    rtype = tags.get("type")
+    if rtype not in ("restriction", "restriction:hgv"):
+        return None
+    kind_hgv = tags.get("restriction:hgv")
+    kind_gen = tags.get("restriction")
+    kind = kind_hgv or kind_gen or ""
+    exc_raw = tags.get("except") or ""
+    exc_tokens = {tok.strip().lower() for tok in exc_raw.split(";") if tok.strip()}
+    hgv_exempt = ("hgv" in exc_tokens) and not kind_hgv
+    hgv_only = (rtype == "restriction:hgv") or (bool(kind_hgv) and not kind_gen)
+    fw = [r for t, r, role in members if t == "w" and role == "from"]
+    tw = [r for t, r, role in members if t == "w" and role == "to"]
+    vw = [r for t, r, role in members if t == "w" and role == "via"]
+    vn = [r for t, r, role in members if t == "n" and role == "via"]
+    row = {
+        "id": int(rel_id),
+        "restriction": "" if hgv_exempt else kind,
+        "hgv_only": hgv_only,
+        "from_way": fw[0] if fw else None,
+        "to_way": tw[0] if tw else None,
+        "via_node": vn[0] if len(vn) == 1 else None,
+        "via_is_way": bool(vw),
+    }
+    if len(fw) > 1:
+        row["from_ways"] = fw
+    if len(tw) > 1:
+        row["to_ways"] = tw
+    if vw:
+        row["via_ways"] = vw
+    if kind_hgv and kind_gen and kind_hgv != kind_gen:
+        row["restriction_general"] = kind_gen
+    if hgv_exempt and kind:
+        row["restriction_general"] = kind
+        row["hgv_exempt"] = True
+    if exc_raw:
+        row["except"] = exc_raw
+    if tags.get("restriction:conditional"):
+        row["restriction_conditional"] = tags["restriction:conditional"]
+    return row
+
+
+def _relation_ways(row: dict) -> list[int]:
+    out = []
+    for k in ("from_ways", "to_ways", "via_ways"):
+        if row.get(k):
+            out.extend(row[k])
+    for k in ("from_way", "to_way"):
+        if row.get(k) is not None and row[k] not in out:
+            out.append(row[k])
+    return out
+
+
+def read_pbf_restrictions(pbf: str) -> list[dict]:
+    """Single-pass read of all type=restriction / restriction:hgv relations in a .osm.pbf file."""
+    import osmium  # noqa: PLC0415  (only for the refresh)
+
     rows = []
     for rel in osmium.FileProcessor(pbf, osmium.osm.RELATION):
-        tags = dict(rel.tags)
-        if tags.get("type") != "restriction":
-            continue
-        kind = tags.get("restriction") or tags.get("restriction:hgv") or ""
-        mem = [(m.type, m.ref, m.role) for m in rel.members]
-        fw = [r for t, r, role in mem if t == "w" and role == "from"]
-        tw = [r for t, r, role in mem if t == "w" and role == "to"]
-        vn = [r for t, r, role in mem if t == "n" and role == "via"]
-        if not any(w in ways for w in fw + tw):
-            continue
-        rows.append({"id": rel.id, "restriction": kind, "hgv_only": "restriction:hgv" in tags and "restriction" not in tags,
-                     "from_way": fw[0] if fw else None, "to_way": tw[0] if tw else None,
-                     "via_node": vn[0] if len(vn) == 1 else None, "via_is_way": any(t == "w" and role == "via" for t, _, role in mem)})
+        row = parse_osm_restriction_relation(
+            rel.id, dict(rel.tags), [(m.type, m.ref, m.role) for m in rel.members]
+        )
+        if row is not None:
+            rows.append(row)
     rows.sort(key=lambda r: r["id"])
-    sha = hashlib.sha256(open(pbf, "rb").read()).hexdigest()
-    doc = {"schema": "truck-sim-pl/turn-restrictions/1", "source": os.path.basename(pbf), "source_sha256": sha,
-           "license": "ODbL 1.0, © OpenStreetMap contributors",
-           "note": "OSM type=restriction relations touching the region's ways. Turns without a relation are NOT verified "
-                   "(UNVERIFIED): absence in OSM does not mean the turn is legal.",
-           "restrictions": rows}
-    with open(os.path.join(region_dir, "turn_restrictions.json"), "w", encoding="utf-8", newline="\n") as f:
-        json.dump(doc, f, ensure_ascii=False, indent=1)
-        f.write("\n")
     return rows
 
 
-def main(argv=None) -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--region", required=True)
-    ap.add_argument("--refresh-restrictions", action="store_true")
-    ap.add_argument("--out-dir", default=OUT_DIR)
-    ap.add_argument("--pbf", help="extract to read restrictions from (default: newest Data/raw/osm/*.osm.pbf)")
-    ap.add_argument("--no-carriageway-axis", action="store_true",
-                    help="keep the raw OSM axes as edge geometry (debug / comparison)")
-    args = ap.parse_args(argv)
-    rdir = os.path.join(REPO, "Data", "Regions", args.region)
-    graph = load_graph(args.region)                 # ADR 0274: effective graph (authored carriageway splits)
-    rpath = os.path.join(rdir, "turn_restrictions.json")
-    if args.refresh_restrictions:
-        rows = refresh_restrictions(rdir, graph, args.pbf)
+def filter_restrictions_for_graph(all_rels: list[dict], graph: dict) -> list[dict]:
+    """Filter normalized restriction relations to those touching any osm_way in `graph`."""
+    ways = {e.get("osm_way") for e in graph["edges"] if e.get("osm_way") is not None}
+    rows = [r for r in all_rels if any(w in ways for w in _relation_ways(r))]
+    rows.sort(key=lambda r: r["id"])
+    return rows
+
+
+def build_restrictions_doc(pbf_name: str, pbf_sha256: str, rows: list[dict]) -> dict:
+    return {
+        "schema": "truck-sim-pl/turn-restrictions/1",
+        "source": pbf_name,
+        "source_sha256": pbf_sha256,
+        "license": "ODbL 1.0, © OpenStreetMap contributors",
+        "note": "OSM type=restriction relations touching the region's ways. Turns without a relation are NOT verified "
+                "(UNVERIFIED): absence in OSM does not mean the turn is legal.",
+        "restrictions": rows,
+    }
+
+
+def refresh_restrictions(region_dir: str, graph: dict, pbf: str | None = None, *,
+                         out_path: str | None = None,
+                         preloaded: tuple[str, str, list[dict]] | None = None) -> list[dict]:
+    """Reads type=restriction relations touching the region's ways from the cached Geofabrik extract (pyosmium)."""
+    if preloaded is not None:
+        pbf_name, sha, all_rels = preloaded
+    else:
+        pbf_path = _find_pbf(pbf)
+        pbf_name = os.path.basename(pbf_path)
+        sha = _file_sha256(pbf_path)
+        all_rels = read_pbf_restrictions(pbf_path)
+    rows = filter_restrictions_for_graph(all_rels, graph)
+    doc = build_restrictions_doc(pbf_name, sha, rows)
+    dest = out_path or os.path.join(region_dir, "turn_restrictions.json")
+    os.makedirs(os.path.dirname(dest), exist_ok=True)
+    text = json.dumps(doc, ensure_ascii=False, indent=1) + "\n"
+    if not os.path.exists(dest) or open(dest, encoding="utf-8").read() != text:
+        with open(dest, "w", encoding="utf-8", newline="\n") as f:
+            f.write(text)
+    return rows
+
+
+def discover_regions() -> list[str]:
+    """All region directories under Data/Regions that have roads.graph.json."""
+    reg_root = os.path.join(REPO, "Data", "Regions")
+    return sorted(
+        d for d in os.listdir(reg_root)
+        if os.path.isfile(os.path.join(reg_root, d, "roads.graph.json"))
+    )
+
+
+def _run_region(region: str, args, preloaded: tuple[str, str, list[dict]] | None) -> int:
+    rdir = os.path.join(REPO, "Data", "Regions", region)
+    do_refresh = args.refresh_restrictions or args.restrictions_only
+    rpath = (os.path.join(args.restrictions_out_dir, region, "turn_restrictions.json")
+             if args.restrictions_out_dir else os.path.join(rdir, "turn_restrictions.json"))
+    if args.restrictions_only:
+        with open(os.path.join(rdir, "roads.graph.json"), encoding="utf-8") as f:
+            raw_graph = json.load(f)
+        rows = refresh_restrictions(rdir, raw_graph, args.pbf, out_path=rpath, preloaded=preloaded)
+        print(f"turn_restrictions {region}: {len(rows)} OSM relations -> {rpath}")
+        return 0
+    graph = load_graph(region)                 # ADR 0274: effective graph (authored carriageway splits)
+    if do_refresh:
+        rows = refresh_restrictions(rdir, graph, args.pbf, out_path=rpath, preloaded=preloaded)
     elif os.path.exists(rpath):
         rows = json.load(open(rpath, encoding="utf-8"))["restrictions"]
     else:
         rows = []
         print("WARNING: no turn_restrictions.json - all turns treated as allowed (UNVERIFIED)")
     origin = read_origin(rdir)
-    axes = {} if args.no_carriageway_axis else load_carriageway_axes(args.region, graph)
-    t = build(graph, origin, rows, axes, load_closed_edges(args.region, graph))
+    axes = {} if args.no_carriageway_axis else load_carriageway_axes(region, graph)
+    t = build(graph, origin, rows, axes, load_closed_edges(region, graph))
     if t["closed_edges"]:
         print(f"closed (construction, ADR 0215): {len(t['closed_edges'])} edges left out of the routing graph: "
               + ", ".join(t["closed_edges"]))
     data = serialize(t)
     os.makedirs(args.out_dir, exist_ok=True)
-    path = os.path.join(args.out_dir, args.region + "_route.bytes")
+    path = os.path.join(args.out_dir, region + "_route.bytes")
     with open(path, "wb") as f:
         f.write(data)
     oneway = sum(1 for e in t["edges"] if e["flags"] & F_ONEWAY)
@@ -843,6 +947,34 @@ def main(argv=None) -> int:
           f"(sizes: {', '.join(str(s) for s in r['component_sizes'][:8])}{'...' if len(r['component_sizes']) > 8 else ''})")
     if r["off_streets"]:
         print("off-reach streets: " + ", ".join(r["off_streets"]))
+    return 0
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--region")
+    ap.add_argument("--all", action="store_true", help="process all regions with Data/Regions/*/roads.graph.json")
+    ap.add_argument("--refresh-restrictions", action="store_true")
+    ap.add_argument("--restrictions-only", action="store_true",
+                    help="only extract/write turn_restrictions.json (implies --refresh-restrictions; skips *_route.bytes)")
+    ap.add_argument("--restrictions-out-dir",
+                    help="write turn_restrictions.json under <dir>/<region>/turn_restrictions.json instead of Data/Regions")
+    ap.add_argument("--out-dir", default=OUT_DIR)
+    ap.add_argument("--pbf", help="extract to read restrictions from (default: newest Data/raw/osm/*.osm.pbf)")
+    ap.add_argument("--no-carriageway-axis", action="store_true",
+                    help="keep the raw OSM axes as edge geometry (debug / comparison)")
+    args = ap.parse_args(argv)
+    if bool(args.region) == bool(args.all):
+        ap.error("specify exactly one of --region or --all")
+    regions = discover_regions() if args.all else [args.region]
+    preloaded = None
+    if args.refresh_restrictions or args.restrictions_only:
+        pbf_path = _find_pbf(args.pbf)
+        preloaded = (os.path.basename(pbf_path), _file_sha256(pbf_path), read_pbf_restrictions(pbf_path))
+    for reg in regions:
+        rc = _run_region(reg, args, preloaded)
+        if rc != 0:
+            return rc
     return 0
 
 

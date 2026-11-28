@@ -947,7 +947,8 @@ def _rail_plan(w, region_id):
                    overrides=pipeline.load_overrides(region_id))
 
 
-def build(region_id: str, out_root: Path | None = None, verbose=True, route_graph: bool = True):
+def build(region_id: str, out_root: Path | None = None, verbose=True, route_graph: bool = True,
+          refresh_restrictions: bool = False):
     t0 = time.time()
     log = (lambda *a: print(f"[world {time.time() - t0:6.1f}s]", *a)) if verbose else (lambda *a: None)
     # pass 1: geometry with the raw NMT -> bridge decks -> remove deck-contaminated NMT under them
@@ -1268,6 +1269,10 @@ def build(region_id: str, out_root: Path | None = None, verbose=True, route_grap
         })
     log("exported", len(chunks_meta), "GLB,", sum(c["bytes"] for c in chunks_meta) // 2**20, "MiB (High), ",
         sum(c["low"]["bytes"] for c in chunks_meta) // 2**20, "MiB (Low)")
+    if route_graph and refresh_restrictions:
+        from navgraph import build_route_graph as BRG
+        BRG.main(["--region", region_id, "--refresh-restrictions", "--restrictions-only"])
+        log("turn restrictions: refreshed from OSM PBF -> Data/Regions/<region>/turn_restrictions.json")
     _route_graph_step(region_id, route_graph, log)   # ADR 0150 / M27: after the road export
 
     gen = pipeline.REGIONS / region_id / "generated"
@@ -1716,6 +1721,8 @@ def main():
                     help="recompute mesh_budget in streetscape_qa.json from the exported files (no rebuild)")
     ap.add_argument("--no-route-graph", action="store_true",
                     help="skip the GPS routing-graph rebuild (KRTG, ADR 0150) after the road export")
+    ap.add_argument("--refresh-restrictions", action="store_true",
+                    help="refresh Data/Regions/<id>/turn_restrictions.json from OSM PBF before building KRTG")
     a = ap.parse_args()
     if a.budget_only:
         gen = pipeline.REGIONS / a.region / "generated"
@@ -1741,7 +1748,7 @@ def main():
             SSRC.write(a.region, SSRC.extract(reg))
         from streetscape import cycleways as CY          # ADR 0188: generated/osm_cycleways.json
         CY.write(a.region, CY.extract(reg))
-    build(a.region, route_graph=not a.no_route_graph)
+    build(a.region, route_graph=not a.no_route_graph, refresh_restrictions=a.refresh_restrictions)
 
 
 if __name__ == "__main__":
