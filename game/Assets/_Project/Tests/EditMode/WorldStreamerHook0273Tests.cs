@@ -166,9 +166,12 @@ namespace Game.Tests
                 Assert.That(source.ReleaseAttempts, Is.Empty);
 
                 LogAssert.Expect(LogType.Exception, new Regex(@"\[STREAM\].*failed to release tile lease"));
-                UnityEngine.Object.DestroyImmediate(streamer.gameObject);
+                // The streamer is initialized by hand in EditMode, so invoke its runtime callback explicitly.
+                typeof(WorldStreamer).GetMethod("OnDestroy", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(streamer, null);
 
-                Assert.That(Array.FindAll(clones, m => m != null).Length, Is.Zero);
+                for (int i = 0; i < clones.Length; i++)
+                    Assert.That(clones[i] == null, Is.True, $"Far-ring clone for {graph.Tiles[i].id} survived cleanup");
                 CollectionAssert.AreEqual(new[] { "t0", "t1", "t2" }, source.ReleaseAttempts);
                 CollectionAssert.AreEquivalent(new[] { "t1" }, source.HeldLeases);
                 Assert.That(original != null, Is.True);
