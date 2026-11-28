@@ -39,7 +39,7 @@ OBSTACLE = {"curb_concrete": "kerb", "sidewalk_paving": "sidewalk", "verge_grass
             "shoulder_gravel": "shoulder", "bridge_concrete": "bridge_kerb", "bridge_cap_red": "bridge_kerb"}
 DRIVABLE = ["carriageway", "yard", "apron"]     # a lane may run onto a flush yard or a roundabout apron
 PAINT = ("lane", "centre", "P-4", "P-7b", "P-8", "P-10", "P-13", "P-14")
-GROUND_PROPS = ("lamp_", "sign_post", "signal_pole", "signal_mast", "power_pole", "pylon", "bollard", "bus_shelter",
+GROUND_PROPS = ("lamp_", "sign_post", "signal_pole", "signal_mast", "signal_rail", "power_pole", "pylon", "bollard", "bus_shelter",
                 "bench", "waste_bin", "gantry_footing")
 LANE_INSET_M = 0.45        # lane band = centre +- (lane_w / 2 - inset): a 2.55 m truck in a 3.5 m lane has 0.47 m
 STATION_M = 2.0            # lane band sampling along chains
