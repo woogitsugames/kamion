@@ -137,5 +137,10 @@
 ### codex-review-s25 — zakończone
 - Raport zawiera 4 ważne i 5 drobnych znalezisk z 9 scaleń i 3 gałęzi oczekujących. GIS 231/231, w tym budżety 62/62. Przypadki gałęzi 7/7 w pamięci. Dowody i archiwalne PNG w artifacts/codex-review-s25. Bez Unity i zmian kodu.
 - Następny krok lidera: `git show codex-review-s25:artifacts/codex-review-s25/REVIEW.md`.
-- Potwierdzono bazę testów `ec66c2df9` i brak różnic kodu względem recenzowanego `main` `590851327`.
+- 2026-11-28 codex-review-s25 — potwierdzono bazę testów `ec66c2df9` i brak różnic kodu względem recenzowanego `main` `590851327`.
 - Następny krok lidera: `git show codex-review-s25:artifacts/codex-review-s25/REVIEW.md`.
+
+### agy-seams-9fail-s25 — analiza 9 FAIL w audycie szwów (tylko odczyt)
+- Ustalono dokładny powód rozbieżności między `seams_wave13.md` (0 FAIL / 4 UWAGA na 20 szwach z 21 domyślnych `seams.TILES`) a pełnym audytem `r2` (9 FAIL / 9 UWAGA / 96 PRZEJŚCIE na 57 szwach z 54 kafli): to nie kwestia 2. przebiegu `assign_sides` ani `Data/raw/derived`, lecz zakresu `--tiles` — wszystkie 9 FAIL i 9 UWAGA leżą na 37 szwach spoza `seams.TILES` (po zawężeniu `r2-after.json` do 21 `TILES`: 0 FAIL / 0 UWAGA / 31 PRZEJŚCIE).
+- Wszystkie 9 FAIL są realnymi problemami na 3 szwach: (1) `bialystok-bojary / bialystok-mickiewicza` `w1329465432` (3 FAIL, trasa: `14.5` vs `14.717 m`, D94 +0.5/+1.0 m rozlane przez `smooth_1d` na `1.35 m` odcinku + `seam_taper` pominięty przez `width_profile`), (2) `dk65-monki-01 / dk65-monki-02` `w98070954` (1 FAIL, trasa: `7.3` vs `7.6 m`, brak `dk65-edge-line-spacing-0304` w `dk65-monki-02`), (3) `s8-04 / s8-05` `w251431118` (5 FAIL: `9.95` vs `10.45 m`, w `s8-04` D94 zablokowane przez `w623772956` o `gap=11.927 < 12.0 m` vs pełne `+0.5 m` w `s8-05`, `seam_taper` pominięty przez `lane_edges` z ADR 0288; ten sam błąd widnieje jako UWAGA na `dk65-01 / dk8-s8-jeroniki` `w305447699`). Raport zapisany w `artifacts/agy-seams-9fail-s25/WYNIKI.md`.
+- Następny krok lidera: przeczytać `artifacts/agy-seams-9fail-s25/WYNIKI.md` i zaplanować poprawki do fali 15 (`dk65-monki-02/overrides.yaml`, `w1329465432`, `seam_taper` dla `lane_edges`/S8).
