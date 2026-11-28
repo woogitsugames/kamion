@@ -1,0 +1,8 @@
+Roslyn syntax PASS  game/Assets/_Project/Tests/EditMode/VegetationCrownLodTests.cs
+Roslyn syntax PASS  game/Assets/_Project/Tests/EditMode/WorldStreamerHook0273Tests.cs
+Roslyn syntax PASS  game/Assets/_Project/World/Runtime/Streaming/WorldStreamer.cs
+NUnit shader source test: r1 FAIL as expected; r2 PASS (4 passes)
+Review 1x depth example (CPU calculation): alpha=0.48 cutoff=0.50 fwidth=0.08; r1 coverage=0.25 survives; r2 hard clip discards
+Shared hard cutoff (r1 review example): color/depth 0.2/0.2, alpha=0.4 accepted in both
+StreamerR1 PASS (extracted production methods, .NET stubs): alive=3->2->1; attempts=t0,t1; held=t1,t2; logged=0; escaped=True
+StreamerR2 PASS (extracted production methods, .NET stubs): alive=3->2->0; attempts=t0,t1,t2; held=t1; logged=1; escaped=False

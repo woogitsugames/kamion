@@ -138,7 +138,7 @@ namespace Game.World.Streaming
             public GameObject[] groups; public Vector4[] groupBounds;   // (minE, minN, maxE, maxN)
             public GameObject[] farSectors; public TileSide[] farSide;
             public Vector4[] farLocal;            // far-sector mesh bounds, region-local (minE, minN, maxE, maxN) (ADR 0354)
-            public List<Material> farClones;      // Kamion/World Surface clones with the far-ring clip (ADR 0354), destroyed on unload
+            public List<Material> farClones;      // Kamion/World Surface clones with the far-ring clip (ADR 0354)
             public GameObject apronWhole; public GameObject[] apronPieces; public TileSide[] apronSide;
             public bool warnedApron;
             public bool acquiring, leased;   // pack lease taken through ITileSceneSource (ADR 0273)
@@ -1030,13 +1030,20 @@ namespace Game.World.Streaming
             t.closures = System.Array.Empty<GameObject>(); t.groups = System.Array.Empty<GameObject>();
             t.farSectors = System.Array.Empty<GameObject>(); t.apronPieces = System.Array.Empty<GameObject>(); t.apronWhole = null;
             t.farLocal = System.Array.Empty<Vector4>();
-            if (t.farClones != null)
-            {
-                foreach (var m in t.farClones)
-                    if (m != null) { if (Application.isPlaying) Destroy(m); else DestroyImmediate(m); }
-                t.farClones.Clear();
-            }
+            ReleaseFarClones(t);
             t.openSides = TileSide.None; t.readyCorners = 0; t.coveredSides = TileSide.None;
+        }
+
+        static void ReleaseFarClones(Tile t)
+        {
+            if (t.farClones == null) return;
+            foreach (var material in t.farClones)
+            {
+                if (material == null) continue;
+                if (Application.isPlaying) Destroy(material);
+                else DestroyImmediate(material);
+            }
+            t.farClones.Clear();
         }
 
         void RefreshEdgesAround(int tile)
@@ -1274,8 +1281,30 @@ namespace Game.World.Streaming
             if (Active == this) Active = null;
             Shader.SetGlobalFloat(k_FarRectCount, 0f);   // ADR 0354: no stale clip in the next scene
             RemoveOriginListener();
-            // Scene change (menu, other region): the tile scenes go with it; give back every pack lease still held.
-            if (m_Tiles != null) for (int i = 0; i < m_Tiles.Length; i++) ReleaseLease(m_Tiles[i]);
+            // Scene change (menu, other region): release resources of every tile, including the pinned start tile.
+            if (m_Tiles == null) return;
+            foreach (var tile in m_Tiles)
+            {
+                try
+                {
+                    ReleaseFarClones(tile);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogException(new System.InvalidOperationException(
+                        $"[STREAM] {tile.sceneName}: failed to release far-ring materials", ex), this);
+                }
+
+                try
+                {
+                    ReleaseLease(tile);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogException(new System.InvalidOperationException(
+                        $"[STREAM] {tile.sceneName}: failed to release tile lease", ex), this);
+                }
+            }
         }
     }
 }

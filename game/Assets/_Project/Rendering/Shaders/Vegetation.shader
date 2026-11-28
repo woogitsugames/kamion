@@ -7,7 +7,7 @@
 //
 // How:
 // 1. Depth pass (LightMode SRPDefaultUnlit, drawn before UniversalForward for the same draw): alpha test or
-//    alpha-to-coverage, depth only. The only pass with discard; its fragment is one (impostor: two) texture fetch.
+//    alpha-to-coverage, depth only. Its fragment is one (impostor: two) texture fetch.
 // 2. Colour pass (UniversalForward): ZWrite Off, ZTest LEqual with a small depth offset - hidden card layers fail the
 //    early depth test against pass 1 before shading (a shader that clips but does not write depth keeps early-Z on a
 //    tiled GPU), so the lighting runs about once per visible pixel instead of once per overlapping card. Same clip /
@@ -246,6 +246,20 @@ Shader "Kamion/Vegetation"
         #endif
         }
 
+        half VegClipCoverage(float2 uv, half alpha, half cutoff, bool cameraPass, bool allowAlphaToCoverage)
+        {
+            // Shadow maps keep their hard cutoff in light space.
+            if (cameraPass) cutoff = VegCutoffFill(uv, cutoff);
+            if (allowAlphaToCoverage && _AlphaToMask > 0.5 && _AlphaToMaskAvailable != 0.0)
+            {
+                half coverage = CoverageAlpha(alpha, cutoff);
+                clip(coverage - 0.0001);
+                return coverage;
+            }
+            clip(alpha - cutoff);
+            return 1.0;
+        }
+
         // far-forest-look-s24 (ADR 0330 addendum 3): far-field curtains carry the column height H [m] in TEXCOORD1.y
         // (same on the bottom and top vertex of a column). v * H and H are affine across both triangles of a quad whose
         // columns differ in height, so v = (v * H) / H follows each column linearly: no diagonal crease or sheared crowns
@@ -311,13 +325,9 @@ Shader "Kamion/Vegetation"
                 if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
                 i.uv = EdgeUV(i.uv);
             #endif
-                half a = VegAlpha(i.uv, i.t.x);
-                i.t.y = VegCutoffFill(i.uv.xy, i.t.y);
-                // Alpha-to-coverage path still discards the fully uncovered texels (as URP Lit): the coverage mask alone
-                // is not applied on every target (A16 Vulkan: cards rendered as opaque quads without this clip).
-                if (_AlphaToMask > 0.5) { half c = CoverageAlpha(a, i.t.y); clip(c - 0.0001); return half4(0, 0, 0, c); }
-                clip(a - i.t.y);
-                return 0;
+                // SRPDefaultUnlit shares the opaque draw target and its A2C flag with ForwardLit.
+                half alpha = VegClipCoverage(i.uv.xy, VegAlpha(i.uv, i.t.x), i.t.y, true, true);
+                return half4(0, 0, 0, alpha);
             }
             ENDHLSL
         }
@@ -490,10 +500,7 @@ Shader "Kamion/Vegetation"
             #endif
                 // Same coverage as the depth pass: fragments outside the leaf would otherwise paint over samples whose
                 // depth is still the background's.
-                half alpha = 1.0;
-                i.fogFactor.y = VegCutoffFill(i.uv.xy, i.fogFactor.y);
-                if (_AlphaToMask > 0.5) { alpha = CoverageAlpha(tex.a, i.fogFactor.y); clip(alpha - 0.0001); }
-                else clip(tex.a - i.fogFactor.y);
+                half alpha = VegClipCoverage(i.uv.xy, tex.a, i.fogFactor.y, true, true);
             #if !defined(_HLOD_EDGE)
                 half3 albedo = tex.rgb * i.treeVar.rgb;
             #else
@@ -612,7 +619,7 @@ Shader "Kamion/Vegetation"
             #if defined(_HLOD_EDGE)
                 i.uv = EdgeUV(i.uv);
             #endif
-                clip(VegAlpha(i.uv, i.t.x) - i.t.y);
+                VegClipCoverage(i.uv.xy, VegAlpha(i.uv, i.t.x), i.t.y, false, false);
                 return 0;
             }
             ENDHLSL
@@ -663,7 +670,8 @@ Shader "Kamion/Vegetation"
                 if (KamionFarRingHidden(i.positionWSxz, i.farOwner)) discard;
                 i.uv = EdgeUV(i.uv);
             #endif
-                clip(VegAlpha(i.uv, i.t.x) - VegCardEdge(i.uv.xy, i.t.y));   // impostor-rebake-s24: as the colour pass
+                // URP can bind a single-sample depth texture even when the opaque target uses MSAA.
+                VegClipCoverage(i.uv.xy, VegAlpha(i.uv, i.t.x), i.t.y, true, false);
                 return 0;
             }
             ENDHLSL
