@@ -195,12 +195,12 @@ def edge_lines(sec, hw, dirn, spacing_delta=0.0):
     half = S.LINE_W_WIDE / 2
     out = []
     if le and sec.oneway:
-        nominal_right = le[-1]
+        nominal_left, nominal_right = le[0], le[-1]
         if getattr(sec, "lane_edges_follow_width", False):
             le = sec.lane_edges_at(hw)
         el = el or "none"
         if el in ("left", "both"):
-            out.append((d * (hw - (le[0] - half if le[0] >= S.LINE_W_WIDE else le[0] + half)), "P-7b"))
+            out.append((d * (hw - (le[0] - half if nominal_left >= S.LINE_W_WIDE else le[0] + half)), "P-7b"))
         if el in ("right", "both"):       # on the right edge strip where there is one, else just inside the edge
             strip_r = float(sec.width) - nominal_right >= S.LINE_W_WIDE
             out.append((d * (hw - (le[-1] + half if strip_r else le[-1] - half)), "P-7b"))

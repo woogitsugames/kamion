@@ -146,6 +146,20 @@ go nie widział) — właściwa poprawka to `osm_context` / `streetscape_sources
 ingest (wtedy oba nominały się zgodzą i uzgodnienie nic nie zmieni). `qa.seams` czyta tylko `overrides.yaml`
 (bez `overrides.*.json` generatora) — rozbieżność sprzed tej zmiany.
 
+## Uzgodnienie przekroju i linii po D94 (sesja 25)
+
+- Szerokość na końcu autorskiej sekcji brzegowej pochodzi z jej przekroju po D94. Wygładzanie szerokości łańcucha
+  dochodzi do tej wartości od środka kafla, również gdy następny way zaczyna się tuż za cięciem. Różne autorskie
+  przekroje z nieruchomymi pasami zachowują dotychczasową regułę pomijania taperu.
+- Na szwie tej samej jezdni z takim samym pomiarowym `lane_edges` każdy brzeg dostaje mniejszy z dwóch przyrostów D94.
+  Oś i szerokość przechodzą płynnie do wspólnego przekroju wewnątrz sekcji brzegowej. Linie, środki pasów i UV czytają
+  z niego tylko zmianę przyrostu D94. Zachowuje to zmierzone opaski i różnice między szerokościami pasów.
+- Jeżeli obie strony malują po dwie linie P-7b poniżej klasy GP i co najmniej jedna ma `edge_line_spacing`, odstęp
+  dochodzi w obu kaflach do średniej z ich nominalnych odstępów, ograniczonej przez wcięcie od krawędzi asfaltu.
+  Na DK65 odziedziczony rozstaw 6,8 m przed D94 ma status WORKING_VALUE na przedłużeniu do Moniek (ADR 0304).
+- Na styku wykrytego pasa dzielącego z otwartym poboczem obowiązuje profil pasa dzielącego. Audyt liczy asfalt
+  pasa dzielącego z tego samego `PAVED_SHOULDER_MEDIAN` co siatka drogi.
+
 ## Odtworzenie
 ```
 uv run --project tools/worldgen python -m pytest tests/gis -k "seam or taper or 0275 or 0224" -q

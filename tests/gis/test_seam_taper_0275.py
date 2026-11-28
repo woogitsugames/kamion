@@ -261,6 +261,9 @@ def test_d94_measured_lanes_share_the_tighter_clearance_at_the_seam(monkeypatch,
         assert sec.lane_coord(np.array(bounds), chain.hw[end], dirn) == pytest.approx([1.0])
         lines = MK.edge_lines(sec, chain.hw[end], dirn)
         assert abs(lines[1][0] - lines[0][0]) == pytest.approx(7.0)
+        widths = np.array([chain.hw[end], far_hw])
+        left, right = MK.edge_lines(sec, widths, dirn)
+        assert np.abs(left[0] - right[0]) == pytest.approx([7.0, 7.0 + nominal - 9.95])
         points.append(chain.line.p[end] + nets[tile.id].origin)
     assert points[0] == pytest.approx(points[1])
 

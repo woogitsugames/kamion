@@ -205,3 +205,7 @@
 ### codex-seam-steps-s25 — S8 i profil pobocza
 - D94 uzgadnia na szwie wzrost lewej i prawej krawędzi według ciaśniejszego przekroju. Zwężenie prowadzi asfalt, oś, pasy, P-7b, trasę i UV. Profil pasa dzielącego przechodzi na stronę szwu, gdzie przycięty kontekst wykrywał pobocze otwarte.
 - Sześć nowych przypadków syntetycznych PASS. Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-seam-steps-s25/audit.py targets --tiles bialystok-bojary bialystok-mickiewicza dk65-monki-01 dk65-monki-02 dk65-01 dk8-s8-jeroniki s8-04 s8-05`.
+
+### codex-seam-steps-s25 — pokrycie regresji i ADR 0275
+- Udokumentowano reguły na granicy kafli. Dodano sprawdzanie P-7b dla wektora stacji i pokrycia override na wszystkich ośmiu przekrojach wiejskiej DK65 aż do Moniek.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -p no:cacheprovider tests/gis/test_seam_taper_0275.py tests/gis/test_seams_p3_0304.py tests/gis/test_road_widen_0306.py tests/gis/test_seams_0224.py`.

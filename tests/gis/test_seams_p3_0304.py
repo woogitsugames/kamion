@@ -71,6 +71,16 @@ def test_same_spacing_entry_in_the_four_knyszyn_tiles():
     assert all(s == {"edge_line_spacing": 6.8} for s in sets.values())
 
 
+@pytest.mark.parametrize("tile", [*(f"dk65-monki-{i:02d}" for i in range(1, 8)), "monki"])
+def test_rural_dk65_to_monki_continues_the_same_edge_line_spacing(tile):
+    overrides = {o["id"]: o for o in yaml.safe_load(
+        (REG / tile / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]}
+    width = overrides["dk65-carriageway-width"]
+    spacing = overrides["dk65-edge-line-spacing-0304"]
+    assert spacing["target"] == width["target"]
+    assert spacing["set"] == {"edge_line_spacing": 6.8}
+
+
 def test_szosa_knyszynska_same_width_in_both_tiles():
     def _set(t, oid):
         ov = yaml.safe_load((REG / t / "overrides.yaml").read_text(encoding="utf-8"))["overrides"]
