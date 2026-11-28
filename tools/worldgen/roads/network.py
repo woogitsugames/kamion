@@ -89,6 +89,8 @@ class EdgeSection:
     # left edge strip / gutter; lanes need not be equal. In the override a last interval narrower than 2 m is the
     # right edge strip (shoulder beyond the right edge line): it sets `width`, not a lane.
     lane_edges: list | None = None
+    lane_edges_follow_width: bool = False  # taper the D94 increment at a measured tile cut
+    gameplay_lane_base: tuple | None = None
     center_offset_end: float | None = None   # authored: offset at the END of the edge (linear from center_offset)
     center_offset_profile: list | None = None  # authored: [[t, offset], ...], t = 0..1 along the edge (ADR 0095)
     width_profile: list | None = None          # authored: [[t, width], ...] along the edge (ADR 0095); `width` = max
@@ -123,9 +125,21 @@ class EdgeSection:
     def lane_w_at(self, hw):
         """Lane width at half-width hw (scalar or array): `lane_w`, or the local share of the carriageway where the
         section is authored with `lanes_follow_width` (ADR 0233)."""
+        if self.lane_edges_follow_width:
+            return self.lane_w + self._lane_edge_delta(hw)
         if not self.lane_follow or self.lanes < 1 or self.lane_edges:
             return self.lane_w
         return np.maximum((2.0 * np.asarray(hw, float) - 2.0 * self.edge_strip) / self.lanes, 2.0)
+
+    def _lane_edge_delta(self, hw):
+        # Remove only the gameplay growth. The measured opaski and unequal lane widths are preserved.
+        return np.clip(2.0 * np.asarray(hw, float) - self.width, -self.provenance["gameplay_widen_m"], 0.0) / self.lanes
+
+    def lane_edges_at(self, hw):
+        if not self.lane_edges_follow_width:
+            return self.lane_edges
+        delta = self._lane_edge_delta(hw)
+        return [edge + i * delta for i, edge in enumerate(self.lane_edges)]
 
     def lane_coord(self, lat, hw, dirn=1):
         """Lane coordinate across the carriageway (0 = first lane boundary, +1 per lane) for wheel-path weathering
@@ -133,6 +147,9 @@ class EdgeSection:
         lat = np.asarray(lat, float)
         if self.lane_edges and self.oneway:
             x = np.asarray(hw, float) - (float(dirn) or 1.0) * lat
+            if self.lane_edges_follow_width:
+                edges = self.lane_edges_at(hw)
+                return sum(np.clip((x - a) / (b - a), 0.0, 1.0) for a, b in zip(edges, edges[1:]))
             le = np.asarray(self.lane_edges, float)
             return np.interp(x, le, np.arange(len(le), dtype=float))
         return (lat + np.asarray(hw, float) - self.edge_strip) / np.maximum(self.lane_w_at(hw), 2.0)
@@ -532,6 +549,7 @@ def gameplay_widen(net: Network, d: float, edges: dict | None = None) -> None:
             sec.provenance["gameplay_widen_limited_m"] = round(n * d - add, 3)
         if sec.lane_edges:
             le = [float(v) for v in sec.lane_edges]
+            sec.gameplay_lane_base = (sec.width, *le)
             sec.lane_edges = [round(le[0] + (v - le[0]) + i * dl, 3) for i, v in enumerate(le)]
             sec.lane_w = round((sec.lane_edges[-1] - sec.lane_edges[0]) / n, 3)
         else:

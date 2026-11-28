@@ -79,7 +79,7 @@ def chain_lines_at(c, s, secs, s0, s1, marked_hw, lane_layout):
         painted = [(float(lat), kind) for lat, kind in MKf.edge_lines(sec, hw, dirn, c.edge_line_spacing_delta_at(s))]
         out += painted
     # the bare carriageway edge (inside the edge strip) on every side without a painted edge line
-    le = getattr(sec, "lane_edges", None)
+    le = sec.lane_edges_at(hw) if getattr(sec, "lane_edges_follow_width", False) else getattr(sec, "lane_edges", None)
     for sg in (-1, 1):
         if any(lat * sg > 0 and abs(lat) > hw - 1.5 for lat, _ in painted):
             continue

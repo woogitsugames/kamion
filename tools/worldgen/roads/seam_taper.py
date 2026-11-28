@@ -16,6 +16,9 @@ What is blended:
   * the carriageway half-width `Chain.hw` (apply_widths, right after the fork passes of pipeline.build_network);
     lanes of the touched sections share the local width (`lane_follow`, ADR 0233), otherwise the centre line would
     leave the axis inside the transition;
+  * matching measured one-way cross-sections (ADR 0095): each edge gets the lesser D94 growth of the two ends;
+    a more generous tile eases down to that width and axis at the cut, and the lane and paint positions follow;
+  * the spacing of two P-7b lines where at least one has an authored spacing below GP class (ADR 0220);
   * the axis position (seams-w10): the lateral placement of D94 (network.gameplay_widen, shift towards the greater
     clearance) is decided per tile on that tile's piece of the edge, so the two halves of one road could meet with an
     axis step of lanes x GAMEPLAY_LANE_WIDEN_M / 2; both tiles move their axis half of the offset along the same
@@ -100,6 +103,14 @@ def _bbox(region: dict):
 
 # --------------------------------------------------------------------------------------------- chain ends
 @dataclass(frozen=True)
+class MeasuredLanes:
+    base: tuple                  # width and lane edges before D94
+    growth: tuple                # increase of the travel-left and travel-right edges
+    dirn: int                    # direction of travel relative to the chain
+    length: float                # distance from the cut to the next section (or the end of the chain)
+
+
+@dataclass(frozen=True)
 class End:
     """Nominal cross-section of a chain end on the tile boundary (before any seam transition)."""
     chain: str
@@ -114,6 +125,7 @@ class End:
     boundary_xy: tuple | None = None  # graph boundary before lateral placement (D94)
     edge_line_spacing: float | None = None
     authored_spacing: bool = False
+    measured_lanes: MeasuredLanes | None = None
 
     def on_seam(self, se) -> bool:
         """Tile membership uses the graph cut, even if lateral placement moved the axis off its plane."""
@@ -161,12 +173,23 @@ def ends(net: Nw.Network) -> list[End]:
                 lines = MK.edge_lines(sec, float(c.hw[e]), c.dirn[e])
                 if len(lines) == 2:
                     spacing = abs(float(lines[1][0] - lines[0][0]))
+            measured = None
+            if sec.lane_edges and sec.oneway and abs(2 * c.hw[e] - sec.width) < 0.001:
+                add = sec.provenance.get("gameplay_widen_m", 0.0)
+                shift = sec.provenance.get("gameplay_shift_left_m", 0.0)
+                base = sec.gameplay_lane_base or (sec.width, *sec.lane_edges)
+                order = slice(None, None, 1 if e == 0 else -1)
+                next_sec = np.flatnonzero(c.sec_idx[order] != c.sec_idx[e])
+                stop = int(next_sec[0]) if len(next_sec) else len(c.line.s) - 1
+                length = abs(float(c.line.s[order][stop] - c.line.s[e]))
+                growth = (round(add / 2 + shift, 4), round(add / 2 - shift, 4))
+                measured = MeasuredLanes(base, growth, int(c.dirn[e]), length)
             out.append(End(chain=c.id, end=e, osm_way=_osm_way(sec.edge_id), xy=(float(pg[0]), float(pg[1])),
                            left=(float(n[0]), float(n[1])), hw=float(c.hw[e]), length=float(c.line.s[-1]),
                            shoulder=nominal_shoulder(sec, rev),
                            blendable=not (sec.lane_edges or (sec.width_profile and not sec.lane_follow)),
                            boundary_xy=tuple(np.asarray(nd["xy"]) + o), edge_line_spacing=spacing,
-                           authored_spacing=sec.edge_line_spacing is not None))
+                           authored_spacing=sec.edge_line_spacing is not None, measured_lanes=measured))
     return out
 
 
@@ -188,6 +211,7 @@ class Taper:
     #                                   between the two nominal axis ends: both tiles meet in the middle
     axis_offset: float = 0.0          # seams-w10: distance of the two nominal axis ends (the same in both tiles)
     edge_line_spacing: float | None = None
+    d94: bool = False
 
     def report(self) -> dict:
         r = {"chain": self.chain, "end": "a" if self.end == 0 else "b", "neighbour": self.neighbour,
@@ -198,6 +222,8 @@ class Taper:
             r["axis_offset_m"] = round(self.axis_offset, 3)
         if self.edge_line_spacing is not None:
             r["edge_line_spacing_seam_m"] = round(self.edge_line_spacing, 3)
+        if self.d94:
+            r["d94_shared_clearance"] = True
         if self.shoulder:
             r["shoulder_cm"] = {k: {a: list(b) for a, b in v.items()} for k, v in sorted(self.shoulder.items())}
         if self.skipped:
@@ -233,6 +259,27 @@ def match(own: list[End], other: list[End]) -> list[tuple[End, End]]:
         if x is not None and near(x, own) is e:
             out.append((e, x))
     return out
+
+
+def _d94_target(e: End, x: End, same: bool):
+    """Common growth of matching measured lanes. Neither tile spends clearance unavailable on the other side."""
+    a, b = e.measured_lanes, x.measured_lanes
+    if a is None or b is None or a.base != b.base or a.growth == b.growth or (a.dirn == b.dirn) != same:
+        return None
+    growth = tuple(min(va, vb) for va, vb in zip(a.growth, b.growth))
+    hw = (a.base[0] + sum(growth)) / 2
+    if growth == a.growth:
+        xy = e.xy
+    elif growth == b.growth:
+        xy = x.xy
+    else:
+        # On opposing allocations both tiles give up growth on one side. Reconstruct the
+        # base axes, then add the same permitted imbalance in the travel frame.
+        shift_a = ((growth[0] - growth[1]) - (a.growth[0] - a.growth[1])) / 2
+        shift_b = ((growth[0] - growth[1]) - (b.growth[0] - b.growth[1])) / 2
+        xy = tuple((pa + na * a.dirn * shift_a + pb + nb * b.dirn * shift_b) / 2
+                   for pa, pb, na, nb in zip(e.xy, x.xy, e.left, x.left))
+    return hw, xy, min(a.length, b.length)
 
 
 def plan_pair(e: End, x: End, neighbour: str | None = None) -> Taper | None:
@@ -281,13 +328,22 @@ def plan_pair(e: End, x: End, neighbour: str | None = None) -> Taper | None:
         offset = math.hypot(vx, vy)
         shift = (0.5 * vx, 0.5 * vy)
         step += offset               # both carriageway edges move with the axis: upper bound of the edge step
+    d94 = _d94_target(e, x, same)
+    hw_seam = 0.5 * (e.hw + x.hw) if blend_hw else e.hw
+    limit = min(e.length, x.length)
+    if d94 is not None:
+        hw_seam, xy, limit = d94
+        shift = tuple(p - q for p, q in zip(xy, e.xy))
+        offset = math.hypot(vx, vy)
+        step = max(step, e.hw - hw_seam, x.hw - hw_seam, offset)
+        skipped = None
     if step < MIN_STEP_M and not skipped:
         return None
-    length = min(max(RATIO * step, MIN_LEN_M), MAX_LEN_M, 2.0 * e.length, 2.0 * x.length)
+    length = min(max(RATIO * step, MIN_LEN_M), MAX_LEN_M, 2.0 * limit)
     return Taper(chain=e.chain, end=e.end, length=float(length), hw_own=e.hw, hw_other=x.hw,
-                 hw_seam=0.5 * (e.hw + x.hw) if blend_hw else e.hw, shoulder=sh, neighbour=neighbour,
+                 hw_seam=hw_seam, shoulder=sh, neighbour=neighbour,
                  other_chain=x.chain, step_m=float(step), skipped=skipped, shift_seam=shift, axis_offset=float(offset),
-                 edge_line_spacing=spacing)
+                 edge_line_spacing=spacing, d94=d94 is not None)
 
 
 def plan(own: list[End], others: dict) -> list[Taper]:
@@ -383,8 +439,10 @@ def apply_widths(net: Nw.Network, tapers: list[Taper]) -> list[dict]:
     for t in tapers:
         c = by[t.chain]
         d = c.line.s if t.end == 0 else c.line.s[-1] - c.line.s
-        k = weight(d, t.length)
-        if t.axis_offset:
+        # The capped D94 width has a flat derivative at the cut, where the constrained tile
+        # may already have its final width throughout the section.
+        k = _smoothstep(1.0 - 2.0 * d / t.length) if t.d94 else weight(d, t.length)
+        if any(t.shift_seam):
             # seams-w10: the axis follows the same S-curve to the middle of the two nominal axis ends (lateral
             # placement like ADR 0077: its share across the axis goes to meta center_offset, so fidelity does not read
             # it as a deviation from the OSM way)
@@ -399,7 +457,9 @@ def apply_widths(net: Nw.Network, tapers: list[Taper]) -> list[dict]:
         c.hw = c.hw + dhw * k
         for i in np.unique(c.sec_idx[k > 0]):
             sec = net.sec_list[int(i)]
-            if not sec.lane_follow and not sec.lane_edges:
+            if t.d94:
+                sec.lane_edges_follow_width = True
+            elif not sec.lane_follow and not sec.lane_edges:
                 sec.lane_follow = True                    # lanes share the local width inside the transition
                 sec.provenance["lanes_follow_width"] = "derived:seam_taper (ADR 0275)"
         m = max(2, int(math.ceil(2 * float(c.hw.max()) / 1.75)))
@@ -514,7 +574,8 @@ def shoulder_at(c, side: str, i: int):
 # generated/streetscape_sources.json; plain network + junctions + the second assign_sides pass on the seam chains),
 # agree on one value per side with a symmetric rule and impose it on their own end:
 #
-#   rank: constrained (another carriageway at the edge: tight kerb / flush strip, never changed) > kerb + sidewalk >
+#   the median profile takes precedence over an open rural shoulder if the opposing carriageway is visible on one tile;
+#   otherwise: constrained (another carriageway at the edge: tight kerb / flush strip, never changed) > kerb + sidewalk >
 #         flat edge (yard, h = 0) > kerb > kerbless rural shoulder; equal kinds: the wider sidewalk.
 #
 # Clipping only ever REMOVES evidence (a footway or a yard that one tile still sees near the seam is real data), and a
@@ -528,7 +589,7 @@ CAT_RANK = {"rural": 1, "kerb": 2, "flat": 3, "sidewalk": 4, "constrained": 5}
 @dataclass(frozen=True)
 class SideVal:
     """Side profile of one station, frame-free (kind / h / w / mat / walk / verge / depth as network.assign_sides)."""
-    cat: str                  # constrained | sidewalk | flat | kerb | rural | other
+    cat: str                  # constrained | sidewalk | flat | kerb | rural | median | other
     kind: int
     h: float
     w: float
@@ -540,6 +601,8 @@ class SideVal:
 
 def side_cat(d: dict, i: int) -> str:
     kind = int(d["kind"][i])
+    if kind == Nw.MEDIAN_RURAL:
+        return "median"
     if kind not in (Nw.URBAN, Nw.RURAL):
         return "other"
     tight = d.get("tight")
@@ -651,6 +714,10 @@ def agree(a: SideVal | None, b: SideVal | None) -> SideVal | None:
     """The seam profile of two nominal ends (symmetric: agree(a, b) == agree(b, a)); None = leave both as they are."""
     if a is None or b is None or "other" in (a.cat, b.cat):
         return None
+    if "median" in (a.cat, b.cat):
+        # A tile that sees the opposing carriageway retains the narrower median profile
+        # when its neighbour sees only an open shoulder in the clipped context.
+        return (a if a.cat == "median" else b) if "rural" in (a.cat, b.cat) else None
     if a.cat == b.cat:
         if a.cat == "constrained":
             return None
@@ -743,6 +810,10 @@ def apply_sides(net: Nw.Network, fixes: list[SideFix]) -> list[dict]:
         walk = np.asarray(d["walk"]).copy()
         walk[sel] = w.walk
         d["walk"] = walk
+        if w.cat == "median":
+            median = np.asarray(d["median"]).copy()
+            median[sel] = True
+            d["median"] = median
         if d.get("verge") is not None:
             vg = np.asarray(d["verge"], float).copy()
             vg[sel] = w.verge

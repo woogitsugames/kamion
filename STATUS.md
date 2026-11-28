@@ -201,3 +201,7 @@
 ### codex-seam-steps-s25 — linie DK65
 - Uzupełniono ADR 0304 na tych samych przekrojach DK65 w dk65-monki-02…07 i monki (WORKING_VALUE). Taper interpoluje odstęp dwóch linii P-7b w stacjach, z limitem wcięcia od krawędzi asfaltu.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q tests/gis/test_seam_taper_0275.py tests/gis/test_seams_p3_0304.py`.
+
+### codex-seam-steps-s25 — S8 i profil pobocza
+- D94 uzgadnia na szwie wzrost lewej i prawej krawędzi według ciaśniejszego przekroju. Zwężenie prowadzi asfalt, oś, pasy, P-7b, trasę i UV. Profil pasa dzielącego przechodzi na stronę szwu, gdzie przycięty kontekst wykrywał pobocze otwarte.
+- Sześć nowych przypadków syntetycznych PASS. Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-seam-steps-s25/audit.py targets --tiles bialystok-bojary bialystok-mickiewicza dk65-monki-01 dk65-monki-02 dk65-01 dk8-s8-jeroniki s8-04 s8-05`.

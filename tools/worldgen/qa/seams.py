@@ -369,6 +369,8 @@ def crossings(t: Tile, se, net=None) -> list[Crossing]:
                 kind = SIDE_KIND.get(int(sd["kind"][end]), str(int(sd["kind"][end])))
                 sh = ST.shoulder_at(c, side_c, end)            # ADR 0272 widths of the station (after ADR 0275)
                 paved = S.PAVED_SHOULDER if int(sd["kind"][end]) == Nw.RURAL else 0.0
+                if int(sd["kind"][end]) == Nw.MEDIAN_RURAL:
+                    paved = S.PAVED_SHOULDER_MEDIAN
                 if sh is not None:
                     paved = sh[0]
                     kind = "wiejski: utw. %s + grunt %s + rów" % (f"{sh[0]:.2f}".replace(".", ","),
