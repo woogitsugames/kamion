@@ -502,6 +502,8 @@ def retype_sidewalks(parts: list, zones: Zones | None) -> dict:
         rep["kerb_tris_with_detail"] = 0
     new, hits_all = [], {}
     for p in parts:
+        if p.T is None or len(p.T) == 0:
+            continue  # s25: empty part (e.g. kerb strip fully trimmed in knyszyn) - nothing to retype, np.min would fail
         if mixed and p.layer == "road" and p.mat == "curb_concrete" and p.UV1 is not None:
             # UV1 from the side strip: metres along the edge and distance from its gutter.
             # Flanges at the back of the sidewalk and unparameterized meshes retain their old finish.
