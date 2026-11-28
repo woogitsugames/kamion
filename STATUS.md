@@ -221,3 +221,7 @@
 ### codex-seam-steps-s25 — budżety i oczekiwanie ADR 0220
 - Cztery moduły budżetowe 62/62 PASS. Zaktualizowano oczekiwanie historycznego testu audytu P-7b: bez taperu rozjazd nadal jest FAIL, z taperem obowiązuje wspólny rozstaw.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -ra -p no:cacheprovider tests/gis/test_seams_0224.py`.
+
+### codex-seam-steps-s25 — wyniki testów GIS
+- Powtórzony moduł 0224 przeszedł 36/36. W przekrojowym przebiegu 360 przypadków dwa miały FAIL, pierwszy już potwierdzony po poprawieniu testu P-7b, drugi dotyczy snapshotu fidelity C, nieaktualnego już w bazie. Były też 2 SKIP dla starszych GLB i 1 XFAIL dla docelowego p95 krawędzi.
+- Następny krok po audycie: `uv run --no-project python artifacts/codex-seam-steps-s25/compare.py`.
