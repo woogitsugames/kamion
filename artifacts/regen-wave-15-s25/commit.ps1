@@ -44,9 +44,10 @@ try {
     if ((git diff --name-only -- STATUS.md)) { throw 'STATUS.md ma lokalne zmiany.' }
     Add-Content -LiteralPath 'STATUS.md' -Value ('- {0} {1} — {2}. Następny krok: `{3}`' -f
         (Get-Date -Format s), $waveName, $label, $next)
-    git add -- @changed STATUS.md
+    # s25: inne łańcuchy też używają indeksu (git status/restore) → ponów przy zajętym index.lock
+    foreach ($try in 1..6) { git add -- @changed STATUS.md; if (-not $LASTEXITCODE) { break }; Start-Sleep -Seconds 10 }
     if ($LASTEXITCODE) { throw 'git add nie powiódł się.' }
-    git commit -m "wip(${waveName}): $label"
+    foreach ($try in 1..6) { git commit -m "wip(${waveName}): $label"; if (-not $LASTEXITCODE) { break }; Start-Sleep -Seconds 10 }
     if ($LASTEXITCODE) { throw 'git commit nie powiódł się.' }
 }
 finally { $lock.Dispose() }
