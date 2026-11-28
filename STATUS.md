@@ -141,3 +141,7 @@
 ### codex-sadowa-seam-s25 — weryfikacja i przekazanie
 - GIS: 177 PASS, w tym 31 testów audytu i 62 testy budżetowe. Niezależne przypadki `test_world_roads.py`: 4 PASS, 10 pominiętych z powodu zakazu pełnego builda, determinizm wyłączony zgodnie ze zleceniem. Raport i dowody w `artifacts/codex-sadowa-seam-s25/WYNIKI.md`.
 - Następny krok lidera po fali 14: `git diff --stat 2df09cefd..codex-sadowa-seam-s25`. Po zajęciu slotu heavy użyć `pwsh scripts/visual-qa.ps1 -Scene World_dk65-04_High -Tier High -Pc -BuildTarget Win64 -Neighbours dk65-05 -Cameras top_szkolna -Lighting clear -OutputDir artifacts/codex-sadowa-seam-s25/vqa/before/clear`, powtórzyć w overcast oraz po imporcie obu kafli fali 15.
+
+### codex-sadowa-seam-s25 — r2, diagnoza
+- Punkty 6 i 7 recenzji opisują dwie niezależne przyczyny: filtr krótkiego cięcia zależy od kierunku ścinania, a zachłanne parowanie może zająć jedyny dostępny koniec.
+- Następny krok po zmianie filtra: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -p no:cacheprovider tests/gis/test_seam_shear_knw.py tests/gis/test_seams_0224.py -k "cut or seam_dir"`.
