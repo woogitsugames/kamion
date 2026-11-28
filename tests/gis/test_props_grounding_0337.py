@@ -310,5 +310,13 @@ def test_tykocin_rynek_authored_benches_qa():
     rynek = qa["tykocin_rynek_0320"]
     assert rynek["status"] == "applied"
     assert rynek["refused"] == []
-    assert len(rynek["benches"]) == 10
+    # ADR 0320 (tykocin-plaza-s24): six benches and four edge planters share the ten orthophoto marks.
+    assert len(rynek["benches"]) == 6
+    edge_planters = [p for p in rynek["planters"] if p["kind"] == "edge planter"]
+    assert {tuple(p["at_en"]) for p in edge_planters} == {
+        (431.6, -99.25), (452.9, -96.75), (466.6, -95.25), (485.4, -93.0),
+    }
+    assert len(edge_planters) == 4
+    assert len({tuple(b["at_en"]) for b in rynek["benches"]} |
+               {tuple(p["at_en"]) for p in edge_planters}) == 10
     assert rynek["tris"]["buildings_low"] < rynek["tris"]["buildings"]
