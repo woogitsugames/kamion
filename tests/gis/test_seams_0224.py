@@ -240,9 +240,12 @@ def test_synthetic_edge_line_spacing_rule_adr0220():
     st = {"width": 7.6, "edge_lines": "both"}
     a, b = _tile("a", 0.0, set_=st), _tile("b", 100.0, set_=st)
     b.overrides = copy.deepcopy(b.overrides) + [{"id": "k1", "target": {"osm_way": [7]}, "set": {"edge_line_spacing": 6.2}}]
-    _, r = _rows(SM.run(loaded=[a, b]))
+    _, r = _rows(SM.run(loaded=[a, b], taper=False))
     sp = r["rozstaw linii krawędziowych [m]"]
     assert sp["left"] == pytest.approx(7.2) and sp["right"] == pytest.approx(6.2) and sp["status"] == "FAIL"
+    _, r = _rows(SM.run(loaded=[a, b]))
+    sp = r["rozstaw linii krawędziowych [m]"]
+    assert sp["left"] == sp["right"] == pytest.approx(6.7) and sp["status"] == "OK"
 
 
 def test_synthetic_deterministic():

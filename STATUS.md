@@ -217,3 +217,7 @@
 ### codex-seam-steps-s25 — zamknięty pomiar bazowy
 - Audyt przed zakończył się na 54 kaflach, 57 szwach i 363 drogach. 9 FAIL, 9 UWAGA, 96 PRZEJŚCIE. JSON ma ten sam SHA-256 co r2-after.json Sadowej. Obejrzano wykres z audytu miejscowego oraz trzy archiwalne kadry High.
 - Następny krok po pełnym after: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd artifacts/codex-seam-steps-s25/plot.py`.
+
+### codex-seam-steps-s25 — budżety i oczekiwanie ADR 0220
+- Cztery moduły budżetowe 62/62 PASS. Zaktualizowano oczekiwanie historycznego testu audytu P-7b: bez taperu rozjazd nadal jest FAIL, z taperem obowiązuje wspólny rozstaw.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -ra -p no:cacheprovider tests/gis/test_seams_0224.py`.
