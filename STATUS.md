@@ -153,3 +153,7 @@
 ### codex-sadowa-seam-s25 — r2, optymalne parowanie
 - Audyt priorytetowo znajduje maksymalną liczbę par tego samego osm_way i minimalizuje ich łączną odległość. Trzy testy priorytetu, liczby par i kosztu przeszły. Dopisano reguły do ADR 0224.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -u artifacts/codex-sadowa-seam-s25/audit_r2.py`.
+
+### codex-sadowa-seam-s25 — r2, audyt 54 kafli
+- Dwa pełne przebiegi na tych samych wczytanych danych dały identyczny raport: 57 szwów, 363 drogi, 9 FAIL, 9 UWAGA i 96 PRZEJŚCIE. Brak nowych FAIL. Para Sadowej i cięcie 0,04883646 m zachowane.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -ra -p no:cacheprovider tests/gis/test_seams_0224.py tests/gis/test_unit_crs_geom.py tests/gis/test_unit_junctions.py tests/gis/test_seam_shear_knw.py tests/gis/test_seam_sides_s24.py tests/gis/test_seam_taper_0275.py tests/gis/test_seams_fix_s23.py tests/gis/test_seam_axis_w10.py tests/gis/test_dk8_seam_cli.py tests/gis/test_effective_graph_readers.py tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py` oraz cztery niezależne przypadki test_world_roads.py.
