@@ -151,3 +151,7 @@
 ### codex-horn-button-s25 — test regresji EditMode
 - `HornRattleTests.HudHorn_PointerButtonControlsHold` obejmuje lewy, dotyk, prawy i środkowy oraz puszczenie innym przyciskiem przy tym samym ID. Test korzysta z refleksji bez zmiany `.asmdef`.
 - Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -p no:cacheprovider tests/gis/test_budget_0221.py tests/gis/test_typology_0238.py tests/gis/test_world_v31.py tests/gis/test_hero_bridge.py` i parsowanie plików C# w Roslynie.
+
+### codex-horn-button-s25 — weryfikacja i przekazanie
+- Budżety GIS 62/62 PASS, Roslyn 0 diagnostyk w 3 plikach. Obejrzano cztery archiwalne kadry PC High. Raport i dowody w `artifacts/codex-horn-button-s25/`. Unity, EditMode i nowe rendery UNVERIFIED.
+- Następny krok lidera po fali 14 i zajęciu slotu heavy: `pwsh scripts/test.ps1 -Platform EditMode -BuildTarget Win64 -Filter 'HornRattleTests;HudRedesign0283Tests'`.
