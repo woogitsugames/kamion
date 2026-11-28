@@ -139,3 +139,7 @@
 - Następny krok lidera: `git show codex-review-s25:artifacts/codex-review-s25/REVIEW.md`.
 - Potwierdzono bazę testów `ec66c2df9` i brak różnic kodu względem recenzowanego `main` `590851327`.
 - Następny krok lidera: `git show codex-review-s25:artifacts/codex-review-s25/REVIEW.md`.
+
+### codex-horn-button-s25 — przegląd punktu 9
+- Potwierdzono brak filtra w klaksonie, kierownicy i pedale oraz alternatywną ścieżkę skrętu przez `WheelDragRelay`. Standardowe przyciski jazdy używają `Button.onClick`. `LookPadWidget` steruje kamerą.
+- Następny krok: `rg -n 'OnPointerDown|OnPointerUp|OnDrag|BeginRelayed' game/Assets/_Project/UI/Driving/TouchWidgets.cs` i wdrożenie filtra dla akcji jazdy.
