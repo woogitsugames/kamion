@@ -66,7 +66,7 @@ KEEP_TAGS = ("amenity", "area:highway", "landuse", "natural", "leisure", "highwa
              "genus", "species", "leaf_cycle", "denotation", "layer", "location", "advertising", "wall", "bus",
              # ADR 0279 P1 (D25): value of B-18 (node maxweight, e.g. Knyszyn osm:node/3047681870 maxweight=10 in the
              # OSM API 2026-11-16) and the direction key signs_route.osm_signs already reads
-             "maxweight", "traffic_sign:direction")
+             "maxweight", "maxheight", "traffic_sign:direction")
 
 BDOT_LAYERS = {
     "OT_PTPL_A": ("MATERIALNAWIERZCHNI",), "OT_KUKO_A": ("RODZAJ",), "OT_PTKM_A": (),

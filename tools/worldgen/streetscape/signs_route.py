@@ -48,12 +48,12 @@ MIN_RING_R_DIAGRAM = 18.0
 DIAGRAM_MIN_M = 40.0            # shorter approach chains (split by nodes) carry the board at L - 10 m, >= 40 m
 
 
-VALUE_CODES = {"B-33": "maxspeed", "B-18": "maxweight"}   # code -> OSM tag of the node that carries its value
+VALUE_CODES = {"B-33": "maxspeed", "B-18": "maxweight", "B-16": "maxheight"}   # code -> OSM tag of the node that carries its value
 
 
 def _num(v):
-    """'10' / '7.5' / '10 t' -> float, else None (OSM values with units other than t / km/h are not converted)."""
-    m = re.fullmatch(r"\s*(\d+(?:[.,]\d+)?)\s*(t|km/h)?\s*", str(v or ""))
+    """'10' / '7.5' / '10 t' / '3.7 m' -> float, else None (OSM values with other units are not converted)."""
+    m = re.fullmatch(r"\s*(\d+(?:[.,]\d+)?)\s*(t|m|km/h)?\s*", str(v or ""))
     return float(m.group(1).replace(",", ".")) if m else None
 
 
