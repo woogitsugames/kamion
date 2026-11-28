@@ -225,3 +225,8 @@
 ### codex-seam-steps-s25 — wyniki testów GIS
 - Powtórzony moduł 0224 przeszedł 36/36. W przekrojowym przebiegu 360 przypadków dwa miały FAIL, pierwszy już potwierdzony po poprawieniu testu P-7b, drugi dotyczy snapshotu fidelity C, nieaktualnego już w bazie. Były też 2 SKIP dla starszych GLB i 1 XFAIL dla docelowego p95 krawędzi.
 - Następny krok po audycie: `uv run --no-project python artifacts/codex-seam-steps-s25/compare.py`.
+
+### codex-seam-steps-s25 — pełny audyt i przekazanie
+- 54 kafle, 57 szwów, 363 drogi: 9 → 0 FAIL, 9 → 1 UWAGA, 96 → 96 PRZEJŚCIE. Brak nowych FAIL i UWAGA. Na czterech wskazanych szwach 0 FAIL i 0 UWAGA. 62/62 testy budżetowe i 36/36 testy audytu.
+- Raport i porównanie: artifacts/codex-seam-steps-s25/WYNIKI.md. Lista 15 kafli fali 15 zawiera także s8-02 (pomiar 0,918 mm). Świeże Unity High clear/overcast i snapshot fidelity C pozostają do sprawdzenia po fali 14.
+- Następny krok lidera: `git diff --stat c28c6a8b0..codex-seam-steps-s25`, następnie przebudowa i visual QA według WYNIKI.md.
