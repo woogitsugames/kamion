@@ -33,20 +33,20 @@ namespace Game.UI.Driving
 
         public void OnPointerDown(PointerEventData e)
         {
-            if (wheel == null || m_Pointer != int.MinValue) return;
+            if (e.button != PointerEventData.InputButton.Left || wheel == null || m_Pointer != int.MinValue) return;
             m_Pointer = e.pointerId;
             wheel.PointerDown(FromCentre(e), Mm(e));
         }
 
         public void OnDrag(PointerEventData e)
         {
-            if (wheel == null || e.pointerId != m_Pointer) return;
+            if (e.button != PointerEventData.InputButton.Left || wheel == null || e.pointerId != m_Pointer) return;
             wheel.PointerDrag(FromCentre(e), Mm(e));
         }
 
         public void OnPointerUp(PointerEventData e)
         {
-            if (wheel == null || e.pointerId != m_Pointer) return;
+            if (e.button != PointerEventData.InputButton.Left || wheel == null || e.pointerId != m_Pointer) return;
             m_Pointer = int.MinValue;
             wheel.PointerUp();
         }
@@ -93,6 +93,7 @@ namespace Game.UI.Driving
 
         public void OnBeginDrag(PointerEventData e)
         {
+            if (e.button != PointerEventData.InputButton.Left) return;
             Vector2 d = e.position - e.pressPosition;
             if (target == null || Mathf.Abs(d.x) < Mathf.Abs(d.y)) return;   // vertical = not a steering slide
             m_Active = target.BeginRelayed(e);
@@ -103,7 +104,7 @@ namespace Game.UI.Driving
 
         public void OnEndDrag(PointerEventData e)
         {
-            if (!m_Active) return;
+            if (e.button != PointerEventData.InputButton.Left || !m_Active) return;
             m_Active = false;
             target.OnPointerUp(e);
         }
@@ -139,16 +140,19 @@ namespace Game.UI.Driving
 
         public void OnPointerDown(PointerEventData e)
         {
-            if (m_Pointer != int.MinValue) return;
+            if (e.button != PointerEventData.InputButton.Left || m_Pointer != int.MinValue) return;
             m_Pointer = e.pointerId;
             Set(e);
         }
 
-        public void OnDrag(PointerEventData e) { if (e.pointerId == m_Pointer) Set(e); }
+        public void OnDrag(PointerEventData e)
+        {
+            if (e.button == PointerEventData.InputButton.Left && e.pointerId == m_Pointer) Set(e);
+        }
 
         public void OnPointerUp(PointerEventData e)
         {
-            if (e.pointerId != m_Pointer) return;
+            if (e.button != PointerEventData.InputButton.Left || e.pointerId != m_Pointer) return;
             m_Pointer = int.MinValue;
             Value = 0f;
             onValue?.Invoke(0f);
@@ -184,14 +188,15 @@ namespace Game.UI.Driving
 
         public void OnPointerDown(PointerEventData e)
         {
-            if (m_Pointer != int.MinValue) return;
+            // uGUI reports touch presses as Left too.
+            if (e.button != PointerEventData.InputButton.Left || m_Pointer != int.MinValue) return;
             m_Pointer = e.pointerId;
             onHeldChanged?.Invoke(true);
         }
 
         public void OnPointerUp(PointerEventData e)
         {
-            if (e.pointerId != m_Pointer) return;
+            if (e.button != PointerEventData.InputButton.Left || e.pointerId != m_Pointer) return;
             m_Pointer = int.MinValue;
             onHeldChanged?.Invoke(false);
         }
