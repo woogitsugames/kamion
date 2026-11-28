@@ -1,0 +1,114 @@
+{
+ "schema": "truck-sim-pl/turn-restrictions/1",
+ "source": "podlaskie-261108.osm.pbf",
+ "source_sha256": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d",
+ "license": "ODbL 1.0, © OpenStreetMap contributors",
+ "note": "OSM type=restriction relations touching the region's ways. Turns without a relation are NOT verified (UNVERIFIED): absence in OSM does not mean the turn is legal.",
+ "restrictions": [
+  {
+   "id": 12093940,
+   "restriction": "only_straight_on",
+   "hgv_only": false,
+   "from_way": 183639800,
+   "to_way": 223394827,
+   "via_node": 1908957200,
+   "via_is_way": false
+  },
+  {
+   "id": 12093941,
+   "restriction": "only_straight_on",
+   "hgv_only": false,
+   "from_way": 180455831,
+   "to_way": 223394827,
+   "via_node": 1908957185,
+   "via_is_way": false
+  },
+  {
+   "id": 12093942,
+   "restriction": "only_straight_on",
+   "hgv_only": false,
+   "from_way": 550896616,
+   "to_way": 297345998,
+   "via_node": 2248465427,
+   "via_is_way": false
+  },
+  {
+   "id": 12093943,
+   "restriction": "only_straight_on",
+   "hgv_only": false,
+   "from_way": 630345231,
+   "to_way": 196784110,
+   "via_node": 2070873669,
+   "via_is_way": false
+  },
+  {
+   "id": 12093944,
+   "restriction": "only_straight_on",
+   "hgv_only": false,
+   "from_way": 630345232,
+   "to_way": 496463261,
+   "via_node": 2070873265,
+   "via_is_way": false
+  },
+  {
+   "id": 12093945,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 215414832,
+   "to_way": 630345232,
+   "via_node": null,
+   "via_is_way": true,
+   "via_ways": [
+    888490249
+   ]
+  },
+  {
+   "id": 12093946,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 215414833,
+   "to_way": 630345231,
+   "via_node": null,
+   "via_is_way": true,
+   "via_ways": [
+    888490249
+   ]
+  },
+  {
+   "id": 12093947,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 297345994,
+   "to_way": 297345993,
+   "via_node": 1940503820,
+   "via_is_way": false
+  },
+  {
+   "id": 12093948,
+   "restriction": "only_straight_on",
+   "hgv_only": false,
+   "from_way": 297345996,
+   "to_way": 297345998,
+   "via_node": 1908957190,
+   "via_is_way": false
+  },
+  {
+   "id": 12093949,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 297345995,
+   "to_way": 183639785,
+   "via_node": 3012190416,
+   "via_is_way": false
+  },
+  {
+   "id": 19021705,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": null,
+   "to_way": 1379858309,
+   "via_node": 2009183219,
+   "via_is_way": false
+  }
+ ]
+}

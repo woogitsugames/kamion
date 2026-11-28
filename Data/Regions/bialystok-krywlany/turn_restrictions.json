@@ -1,0 +1,180 @@
+{
+ "schema": "truck-sim-pl/turn-restrictions/1",
+ "source": "podlaskie-261108.osm.pbf",
+ "source_sha256": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d",
+ "license": "ODbL 1.0, © OpenStreetMap contributors",
+ "note": "OSM type=restriction relations touching the region's ways. Turns without a relation are NOT verified (UNVERIFIED): absence in OSM does not mean the turn is legal.",
+ "restrictions": [
+  {
+   "id": 3151057,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 296880605,
+   "to_way": 217354741,
+   "via_node": 2266268805,
+   "via_is_way": false
+  },
+  {
+   "id": 3988514,
+   "restriction": "only_straight_on",
+   "hgv_only": false,
+   "from_way": 299926263,
+   "to_way": 299926260,
+   "via_node": 3040140864,
+   "via_is_way": false
+  },
+  {
+   "id": 4638480,
+   "restriction": "only_right_turn",
+   "hgv_only": false,
+   "from_way": 299926260,
+   "to_way": 299926233,
+   "via_node": 3040140864,
+   "via_is_way": false
+  },
+  {
+   "id": 5740019,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 585224127,
+   "to_way": 602250582,
+   "via_node": 3890970141,
+   "via_is_way": false
+  },
+  {
+   "id": 7791569,
+   "restriction": "only_straight_on",
+   "hgv_only": false,
+   "from_way": 450635829,
+   "to_way": 445161028,
+   "via_node": 4426331792,
+   "via_is_way": false
+  },
+  {
+   "id": 8024683,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 271890047,
+   "to_way": 257258194,
+   "via_node": 2286418394,
+   "via_is_way": false
+  },
+  {
+   "id": 8024684,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 300997715,
+   "to_way": 251388401,
+   "via_node": 2286418394,
+   "via_is_way": false
+  },
+  {
+   "id": 8631417,
+   "restriction": "no_right_turn",
+   "hgv_only": false,
+   "from_way": 588069202,
+   "to_way": 585224128,
+   "via_node": 2813038926,
+   "via_is_way": false
+  },
+  {
+   "id": 9788567,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 548967903,
+   "to_way": 631662839,
+   "via_node": 4407398834,
+   "via_is_way": false
+  },
+  {
+   "id": 9788568,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 631662842,
+   "to_way": 548967903,
+   "via_node": 5752361969,
+   "via_is_way": false
+  },
+  {
+   "id": 15028037,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 1123736757,
+   "to_way": 229332867,
+   "via_node": 2794285912,
+   "via_is_way": false
+  },
+  {
+   "id": 15028038,
+   "restriction": "only_right_turn",
+   "hgv_only": false,
+   "from_way": 229332867,
+   "to_way": 1123736757,
+   "via_node": 2794285912,
+   "via_is_way": false
+  },
+  {
+   "id": 18756797,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 257258194,
+   "to_way": 307343610,
+   "via_node": 6587364053,
+   "via_is_way": false
+  },
+  {
+   "id": 18756799,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 233357255,
+   "to_way": 304586072,
+   "via_node": 6587364039,
+   "via_is_way": false
+  },
+  {
+   "id": 18761797,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 215033390,
+   "to_way": 215033389,
+   "via_node": 2244569173,
+   "via_is_way": false
+  },
+  {
+   "id": 18761798,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 215033389,
+   "to_way": 215033390,
+   "via_node": 2204388812,
+   "via_is_way": false
+  },
+  {
+   "id": 20286458,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 552173741,
+   "to_way": 831370550,
+   "via_node": 2085125707,
+   "via_is_way": false
+  },
+  {
+   "id": 21452039,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 548967901,
+   "to_way": 671082746,
+   "via_node": 6284342124,
+   "via_is_way": false
+  },
+  {
+   "id": 21452040,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 691820495,
+   "to_way": 691820494,
+   "via_node": 6284342118,
+   "via_is_way": false
+  }
+ ]
+}

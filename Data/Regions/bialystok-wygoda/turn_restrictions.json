@@ -1,0 +1,180 @@
+{
+ "schema": "truck-sim-pl/turn-restrictions/1",
+ "source": "podlaskie-261108.osm.pbf",
+ "source_sha256": "0ff26cd42f175a5711c69b6d3087a9dcd3bb93367eda16809c75a11ce6c3869d",
+ "license": "ODbL 1.0, © OpenStreetMap contributors",
+ "note": "OSM type=restriction relations touching the region's ways. Turns without a relation are NOT verified (UNVERIFIED): absence in OSM does not mean the turn is legal.",
+ "restrictions": [
+  {
+   "id": 3549824,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 216250475,
+   "to_way": 672184936,
+   "via_node": 1681714496,
+   "via_is_way": false
+  },
+  {
+   "id": 3549841,
+   "restriction": "only_straight_on",
+   "hgv_only": false,
+   "from_way": 690706069,
+   "to_way": 690706066,
+   "via_node": 6480661799,
+   "via_is_way": false
+  },
+  {
+   "id": 3549842,
+   "restriction": "only_straight_on",
+   "hgv_only": false,
+   "from_way": 188440103,
+   "to_way": 188440102,
+   "via_node": 1990673911,
+   "via_is_way": false
+  },
+  {
+   "id": 3549844,
+   "restriction": "no_u_turn",
+   "hgv_only": false,
+   "from_way": 249819594,
+   "to_way": 188375218,
+   "via_node": 1990673929,
+   "via_is_way": false
+  },
+  {
+   "id": 3549845,
+   "restriction": "only_straight_on",
+   "hgv_only": false,
+   "from_way": 665624723,
+   "to_way": 1362938377,
+   "via_node": 257899857,
+   "via_is_way": false
+  },
+  {
+   "id": 6595445,
+   "restriction": "only_right_turn",
+   "hgv_only": false,
+   "from_way": 264219619,
+   "to_way": 264218023,
+   "via_node": 2698863571,
+   "via_is_way": false
+  },
+  {
+   "id": 7327496,
+   "restriction": "only_right_turn",
+   "hgv_only": false,
+   "from_way": 299684386,
+   "to_way": 499880828,
+   "via_node": 3037267077,
+   "via_is_way": false
+  },
+  {
+   "id": 7327497,
+   "restriction": "only_right_turn",
+   "hgv_only": false,
+   "from_way": 499880826,
+   "to_way": 305632069,
+   "via_node": 3037267056,
+   "via_is_way": false
+  },
+  {
+   "id": 7327498,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 305632069,
+   "to_way": 499880826,
+   "via_node": 3037267056,
+   "via_is_way": false
+  },
+  {
+   "id": 7327499,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 499880828,
+   "to_way": 209995938,
+   "via_node": 498072264,
+   "via_is_way": false
+  },
+  {
+   "id": 7327500,
+   "restriction": "only_right_turn",
+   "hgv_only": false,
+   "from_way": 209995938,
+   "to_way": 499880828,
+   "via_node": 498072264,
+   "via_is_way": false
+  },
+  {
+   "id": 7327501,
+   "restriction": "only_right_turn",
+   "hgv_only": false,
+   "from_way": 499880829,
+   "to_way": 249819592,
+   "via_node": 295548254,
+   "via_is_way": false
+  },
+  {
+   "id": 12899616,
+   "restriction": "only_left_turn",
+   "hgv_only": false,
+   "from_way": 207582978,
+   "to_way": 298662495,
+   "via_node": 2178409276,
+   "via_is_way": false
+  },
+  {
+   "id": 12939565,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 299979740,
+   "to_way": 249688952,
+   "via_node": 1944794668,
+   "via_is_way": false
+  },
+  {
+   "id": 17494302,
+   "restriction": "no_right_turn",
+   "hgv_only": false,
+   "from_way": 264219607,
+   "to_way": 283748509,
+   "via_node": 1965040667,
+   "via_is_way": false
+  },
+  {
+   "id": 18753538,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 249687300,
+   "to_way": 1362938379,
+   "via_node": 12619029909,
+   "via_is_way": false
+  },
+  {
+   "id": 18753539,
+   "restriction": "no_left_turn",
+   "hgv_only": false,
+   "from_way": 1362938378,
+   "to_way": 249687300,
+   "via_node": 12619029909,
+   "via_is_way": false
+  },
+  {
+   "id": 19187526,
+   "restriction": "only_right_turn",
+   "hgv_only": false,
+   "from_way": 1390550999,
+   "to_way": 1467980489,
+   "via_node": 972361869,
+   "via_is_way": false
+  },
+  {
+   "id": 19187527,
+   "restriction": "only_right_turn",
+   "hgv_only": false,
+   "from_way": 207654821,
+   "to_way": 1390550993,
+   "via_node": 2179091397,
+   "via_is_way": false
+  }
+ ]
+}
