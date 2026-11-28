@@ -14,10 +14,12 @@ $scope = if (Test-Path -LiteralPath $scopeFile) { (Get-Content -LiteralPath $sco
 if ($scope -notin 'full','targeted') { throw "Nieznany zakres fali: $scope" }
 $fullQueue = @(Import-Csv "$waveDir/queue-full.csv")
 $targetedQueue = @(Import-Csv "$waveDir/queue.csv")
-foreach ($plan in @(@{ Rows = $fullQueue; Count = 54 }, @{ Rows = $targetedQueue; Count = 5 })) {
-    if ($plan.Rows.Count -ne $plan.Count -or @($plan.Rows.tile | Sort-Object -Unique).Count -ne $plan.Count) {
-        throw "Kolejka musi zawierać $($plan.Count) unikalnych regionów."
-    }
+if ($fullQueue.Count -ne 54 -or @($fullQueue.tile | Sort-Object -Unique).Count -ne 54) {
+    throw 'Kolejka pełna musi zawierać 54 unikalne regiony.'
+}
+if (-not $targetedQueue.Count -or @($targetedQueue.tile | Sort-Object -Unique).Count -ne $targetedQueue.Count -or
+    @($targetedQueue.tile | Where-Object { $_ -cnotin $fullQueue.tile }).Count) {
+    throw 'Kolejka podstawowa musi zawierać unikalne regiony z kolejki pełnej.'
 }
 foreach ($entry in ($fullQueue + $targetedQueue)) {
     if ($entry.chain -cnotmatch '^[A-E]$' -or $entry.tile -cnotmatch '^[a-z0-9-]+$' -or

@@ -144,3 +144,27 @@
 - Ustalono dokładny powód rozbieżności między `seams_wave13.md` (0 FAIL / 4 UWAGA na 20 szwach z 21 domyślnych `seams.TILES`) a pełnym audytem `r2` (9 FAIL / 9 UWAGA / 96 PRZEJŚCIE na 57 szwach z 54 kafli): to nie kwestia 2. przebiegu `assign_sides` ani `Data/raw/derived`, lecz zakresu `--tiles` — wszystkie 9 FAIL i 9 UWAGA leżą na 37 szwach spoza `seams.TILES` (po zawężeniu `r2-after.json` do 21 `TILES`: 0 FAIL / 0 UWAGA / 31 PRZEJŚCIE).
 - Wszystkie 9 FAIL są realnymi problemami na 3 szwach: (1) `bialystok-bojary / bialystok-mickiewicza` `w1329465432` (3 FAIL, trasa: `14.5` vs `14.717 m`, D94 +0.5/+1.0 m rozlane przez `smooth_1d` na `1.35 m` odcinku + `seam_taper` pominięty przez `width_profile`), (2) `dk65-monki-01 / dk65-monki-02` `w98070954` (1 FAIL, trasa: `7.3` vs `7.6 m`, brak `dk65-edge-line-spacing-0304` w `dk65-monki-02`), (3) `s8-04 / s8-05` `w251431118` (5 FAIL: `9.95` vs `10.45 m`, w `s8-04` D94 zablokowane przez `w623772956` o `gap=11.927 < 12.0 m` vs pełne `+0.5 m` w `s8-05`, `seam_taper` pominięty przez `lane_edges` z ADR 0288; ten sam błąd widnieje jako UWAGA na `dk65-01 / dk8-s8-jeroniki` `w305447699`). Raport zapisany w `artifacts/agy-seams-9fail-s25/WYNIKI.md`.
 - Następny krok lidera: przeczytać `artifacts/agy-seams-9fail-s25/WYNIKI.md` i zaplanować poprawki do fali 15 (`dk65-monki-02/overrides.yaml`, `w1329465432`, `seam_taper` dla `lane_edges`/S8).
+
+### codex-wave15-scope-s25 — lokalna integracja
+- Nałożono seam-steps i poles-wires bez commitów scalających. Jedyny konflikt STATUS.md rozstrzygnięto ours.
+- Następny krok: `git show regen-wave-14-s25:Data/Regions/dk65-04/generated/roads_qa.json` oraz porównanie profili i oznakowania 54 kafli.
+
+### codex-wave15-scope-s25 — pomiary i kamery
+- Porównano 54 grafy i siatki przewodów. Geometria przewodów zmienia się w dwóch kaflach. Dodano istniejące kamery na czterech szwach do planu High clear i overcast.
+- Następny krok: `Get-Content artifacts/codex-wave15-scope-s25/sides-after.log -Tail 10` i weryfikacja kolejki.
+
+### codex-wave15-scope-s25 — kolejki i plan uruchomienia
+- Zapisano czasy historyczne i pochodzenie raportów. Kolejka podstawowa obejmuje 19 kafli, pełna wszystkie 54. Sprawdzono składnię dziewięciu skryptów PowerShell, kamery i plan WhatIf.
+- Następny krok: `Get-Content artifacts/codex-wave15-scope-s25/pytest.log -Tail 12` oraz kontrola różnic drugiego przebiegu poboczy.
+
+### codex-wave15-scope-s25 — bramki GIS
+- Testy GIS 164/164 oraz osobny przebieg budżetów 62/62. Potwierdzono zmianę wypieku Tykocina i zmierzono historyczne czasy VQA.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd artifacts/codex-wave15-scope-s25/plan.py` po drugim przebiegu poboczy.
+
+### codex-wave15-scope-s25 — sprawdzenie bazy fali 14
+- 8 811/8 811 nominalnych przekrojów zgodnych z roads QA po trymach. Stary generator przewodów i nowy na źródłach BDOT-only dają zgodne siatki we wszystkich 54 kaflach. Z OSM zmieniają się dwa kafle.
+- Następny krok: `Get-Content artifacts/codex-wave15-scope-s25/sides-after.log -Tail 10`, potem ponownie plan.py.
+
+### codex-wave15-scope-s25 — gotowe
+- Potwierdzono 17 kafli ze zmianą i 2 kafle kontrolne w kolejce minimum. Pełna kolejka zawiera 54. Zachowano wyłącznie pliki planu i raport; GIS 164/164, budżety 62/62.
+- Następny krok lidera po fali 14: `git show codex-wave15-scope-s25:artifacts/regen-wave-15-s25/README.md`.

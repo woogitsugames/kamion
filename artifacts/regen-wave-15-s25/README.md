@@ -2,36 +2,44 @@
 
 ## Zakres
 
-[Kolejka podstawowa](queue.csv) obejmuje pięć pełnych przebiegów po fali 14. `prepare.ps1` migruje `streetscape_sources.json` do schematu 2 we wszystkich 54 gotowych regionach w jednym odczycie PBF. Pomiar na stanie z początku zadania wykazał **100 nowych fragmentów linii OSM w 27 kaflach**, w tym 7 w Mickiewicza. W pozostałych 27 zmienia się wersja schematu. Listę i liczniki per kafel zawiera [odczyt źródeł](../codex-wave15-prep-s25/osm-power.csv). Raport gałęzi przewodów wykazał zmianę geometrii bliskiego planu tylko w Mickiewicza.
+[Kolejka podstawowa](queue.csv) zawiera 19 pełnych przebiegów. Pomiar wykazał zmianę w 17 kaflach, a `dk65-04` i `dk65-monki-01` ujęto jako drugie strony kontroli szwów. [Inwentarz 54 kafli](scope.csv) wskazuje powód przebudowy, zmianę profili lub oznakowania, pochodzenie roads QA i liczbę nowych części OSM. Porównanie przypięto do `regen-wave-14-s25` `4499ff9de`. Na tym commicie 41 manifestów pochodzi z fali 14, a 13 z fali 13. Ostatnia zmiana treści `roads_qa.json` pochodzi z fali 14 dla 41 kafli, z fali 12 dla 12 kafli oraz z wcześniejszego eksportu prototypu `knyszyn-w`. Fala 13 zmieniła manifesty tych 13 kafli przy identycznej treści `roads_qa.json`.
 
-| Łańcuch | Kafel | Powód | Budowa (s) | Budowa, trasa i fidelity (s) | Fala |
-| --- | --- | --- | ---: | ---: | ---: |
-| A | `bialystok-mickiewicza` | Podpięcie pięciu słupów do linii SN z OSM | 12 038 | 13 168 | 12 |
-| B | `bialystok-industrial-c` | Raport fidelity C i manifest do porównania bajtów GLB | 2 230 | 3 477 | 13 |
-| C | `dk65-04` | Południowa strona szwu Sadowa / Szkolna i scena kontrolna | 1 184 | 1 490 | 13 |
-| D | `dk65-05` | Przywrócony koniec Sadowej w sieci, nawierzchni i kolizji | 917 | 1 226 | 13 |
-| E | `tykocin` | Pomnik Czarnieckiego r3/r4 z main | 908 | 1 171 | 13 |
+- **DK19 i S8** obejmują Bojary, Mickiewicza, `dk65-01`, Jeroniki oraz `s8-02`, `s8-04` i `s8-05`. D94, uzgodnienie osi i wygładzanie zmieniają profile. Na `s8-02` różnica przekroju ma ok. 0,918 mm.
+- **DK65 do Moniek** obejmuje `dk65-monki-02…07` i `monki` po zmianie P‑7b. `dk65-monki-01` jest drugą stroną obowiązkowej kontroli szwu.
+- **Sadowa i Szkolna** obejmują `dk65-05` z przywróconym cięciem 0,04884 m oraz `dk65-04` po drugiej stronie szwu. Porównaj oba kafle w `top_szkolna`.
+- **Przewody** obejmują Mickiewicza (8 170 → 8 518 tris) i Industrial C (18 014 → 18 294 tris) w pomiarze siatki z płaskim podłożem. `prepare.ps1` migruje źródła wszystkich 54 kafli do schematu 2 w jednym odczycie PBF. W 27 kaflach pojawia się 100 części linii OSM. W pozostałych 27 zmienia się wersja schematu.
+- **Tykocin** ma nowszy wypieczony pomnik r4 na main. Fala 14 raportuje LOD0/LOD1 26 670/1 914 tris, metadane r4 podają 26 710/1 964. Sprawdź figurę, cokół i kadr z ulicy.
 
-Pomiar Sadowej znalazł **1 pasujący fragment w 11 380 krawędziach 54 grafów**. Ponowne przeliczenie czterech szwów zależnych od dk65-05 wykazało zmianę wyniku wyłącznie na dk65-04 / dk65-05. Sprawdź przejazd Sadowa → Szkolna po imporcie obu kafli.
+`bialystok-industrial-c` wymaga też odświeżenia raportu fidelity i manifestu używanego przez `test_report_not_stale` i test determinizmu eksportu. Pierwszy sprawdza hashe wejść generatora, a drugi bajty chunków. Kontrola sum samego raportu nie zastępuje przebudowy C, ponieważ zmienia się siatka przewodów.
 
-`test_road_fidelity.py::test_report_not_stale` porównuje wejścia jednego raportu (C) z grafem, trasą, overrides i śledzonymi modułami `roads/*.py`. Zmiany `build_world.py`, `network.py`, `meshing.py` i `junctions.py` unieważniają raport C. `decals.py` również podlega hashowaniu. Jego hash był już inny w raporcie sprzed końca fali 14, a wskazane gałęzie nie zmieniają tego modułu. Sam raport można odtworzyć przez `fidelity/run.py --region bialystok-industrial-c`, które buduje model dróg w pamięci. `test_determinism.py` porównuje siatkę dróg C przy seedach 0, 4 i 9. `test_world_roads.py::test_export_is_deterministic` wykonuje tymczasowy rebuild C i porównuje SHA-256 chunków z wcześniejszym manifestem. Zakres geometrii obejmuje więc cztery wskazane kafle oraz przebudowę C dla pewnego punktu odniesienia pełnego GIS. Sam hash wymaga jedynie nowego raportu C. Jeżeli manifest C z fali 14 nadal odpowiada nowemu generatorowi, przebieg fidelity C wystarczałby jako piąta operacja bez eksportu i importu C. Zgodność tego manifestu po integracji jest **UNVERIFIED**.
-
-[Kolejka pełna](queue-full.csv) obejmuje wszystkie 54 regiony z `region.yaml`. Użyj jej, jeśli potrzebna jest aktualna proweniencja **wszystkich** raportów i GLB albo po integracji pojawią się zmiany wykraczające poza zmierzony zasięg.
+[Kolejka pełna](queue-full.csv) zawiera 54 regiony. Wybierz ją, jeśli po integracji zmienią się wejścia innych kafli albo potrzebna jest aktualna proweniencja wszystkich raportów i GLB. Gałęzie `codex-csharp-review-fixes-s25` i `codex-horn-button-s25` zmieniają kod runtime, shader i testy Unity. Ich zakres GIS wynosi 0 kafli.
 
 ## Czasy
 
-Czasy historyczne pochodzą z kolejki fali 14, sporządzonej z udanych wpisów fali 13 oraz fali 12 dla Mickiewicza i Wygody. Fala 14 trwała podczas przygotowania. Do przydziału sortowano malejąco według `total_s` i dokładano kafel do najkrótszego łańcucha. Mickiewicza sam wyznacza ścieżkę krytyczną małej kolejki. W pełnej kolejce łańcuchy mają **21 989–22 196 s** prac Python każdy, czyli około **6 h 10 min** w równoległym wykonaniu według historycznych wag.
+`build_s` i `total_s` pochodzą z poprawnie zakończonych wpisów fali 14 dla 44 kafli. `total_s` obejmuje budowę, daleki plan, trasę i fidelity. Dla pozostałych 10 kafli zachowano wagi fali 13, bez osobnego czasu dalekiego planu. Przydział do pięciu łańcuchów stosuje malejące wagi i najkrótszy dotąd łańcuch.
 
-| Wariant | Najdłuższy łańcuch Python | Praca Python łącznie | Rezerwa czasu na całość |
+| Wariant | Najdłuższy łańcuch GIS | Praca GIS łącznie | Całość |
 | --- | ---: | ---: | ---: |
-| Podstawowy | 3 h 39 min | 5 h 42 min | 4–6 h `WORKING_VALUE` |
-| Pełny | 6 h 10 min | 30 h 37 min | 8–12 h `WORKING_VALUE` |
+| Podstawowy, 19 kafli | 3 h 25 min | 10 h 14 min | 5–8 h `WORKING_VALUE` |
+| Pełny, 54 kafle | 4 h 35 min | 22 h 44 min | 7–11 h `WORKING_VALUE` |
 
-Czasy historyczne łańcuchów obejmują trasę i fidelity. Rezerwa uwzględnia osobny `far_field.py`, importy, visual QA i finał przy pięciu dostępnych slotach heavy i rozgrzanej `Library` Win64. W buildzie #10 pięć podstawowych importów zajęło łącznie 19 min 03 s, a wszystkie 54 około 3 h 09 min. Nowa `Library`, dostępność slotów i stan cache mogą wydłużyć wykonanie.
+Udane importy fali 14 dają częściowy pomiar kosztu Unity. Import 13 z 19 kafli zajął 1 h 02 min, a 42 z 54 kafli 3 h 28 min. Dziesięć historycznych przebiegów visual QA trwało po 33–88 s. Plan fali 15 ma 32 przebiegi visual QA w obu fazach oraz 12 importów scen do przygotowania bazy. Szacunki całości obejmują przygotowanie i finał. Zakładają pięć dostępnych slotów heavy i rozgrzaną `Library` Win64. Importy i renderowanie są serializowane w worktree. Część importów może zachodzić równolegle z GIS pozostałych łańcuchów.
 
 ## Uruchomienie przez lidera
 
-1. Poczekaj, aż fala 14 zakończy pracę na współdzielonym `Data/raw/derived` i zintegruj jej dane. Zintegruj `agy-poles-wires-s25`, `codex-sadowa-seam-s25` i tę gałąź przygotowawczą na main. Utwórz nowy worktree z tego main, uwzględniając zatwierdzone r3/r4.
+1. Poczekaj, aż fala 14 zakończy pracę na współdzielonym `Data/raw/derived` i zintegruj jej dane. Na main zintegruj `codex-seam-steps-s25` (zawiera Sadową), `agy-poles-wires-s25` oraz czekające poprawki runtime przewidziane do wydania. Przenieś pliki `artifacts/regen-wave-15-s25/` z gałęzi zakresu i sprawdź obecność wypieczonego pomnika r4 (`91ed526b3`). Z tak przygotowanego main utwórz worktree fali 15.
+
+   Na main, po zakończeniu fali 14 i z czystym drzewem roboczym:
+
+   ```powershell
+   git merge regen-wave-14-s25
+   git merge codex-seam-steps-s25
+   git merge agy-poles-wires-s25
+   git restore --source=codex-wave15-scope-s25 --staged --worktree -- artifacts/regen-wave-15-s25
+   git commit -m "docs(wave15): kolejki i odbior fali 15"
+   ```
+
+   Po zintegrowaniu poprawek runtime przewidzianych do tego wydania:
 
    ```powershell
    pwsh -NoProfile -File scripts/new-agent-worktree.ps1 -Name regen-wave-15-s25 -Base main
@@ -69,6 +77,19 @@ Czasy historyczne łańcuchów obejmują trasę i fidelity. Rezerwa uwzględnia 
 
 ## Kontrola obrazu i dowody
 
-`vqa.ps1` pracuje w High PC, w clear i overcast. Przed regeneracją importuje oba kafle szwu. Dla `World_dk65-04_High` wywołuje `-Neighbours dk65-05 -Cameras top_szkolna`. Dla Mickiewicza używa jawnie zapisanej kamery [Gate3](mickiewicza-cameras.json) patrzącej na słupy i przewody SN w chunkach `7_0` i `7_1`. Kadr jest **WORKING_VALUE**, więc podczas przeglądu sprawdź widoczność przęseł i oparcie przewodów na trawersach. Dla Tykocina porównaj widok pomnika, a dla C kamery kontrolne. W razie potrzeby powtórz `vqa.ps1 -Phase after` po zakończonym imporcie.
+`vqa.ps1` pracuje w High PC, w clear i overcast. Przed regeneracją importuje z fali 14 każdy potrzebny kafel raz i ładuje sąsiada podczas renderu szwu.
 
-PNG, `stats.txt`, raporty i logi zapisują się w `C:\Users\matma\Documents\Claude\kamion\artifacts\regen-wave-15-s25\`. Porównaj parami pliki z `vqa/before` i `vqa/after`, sprawdź raport szwu oraz przejazd, a ocenę zapisz w STATUS. `run/` zachowaj do końca fali. Podczas przygotowania skryptów wykonano [plan na dk65-04](dry-run.log), kontrolę składni i cztery zestawy budżetowe. Wykonanie fali i odbiór PNG są krokiem lidera.
+| Scena | Sąsiad | Kamery |
+| --- | --- | --- |
+| `dk65-04` | `dk65-05` | `top_szkolna` |
+| `bialystok-mickiewicza` | — | `wave15-mickiewicza-przewody` |
+| `bialystok-mickiewicza` | `bialystok-bojary` | `dk19_piastowska_seam_n` |
+| `dk65-monki-01` | `dk65-monki-02` | `dk65_west_edge_in` |
+| `s8-04` | `s8-05` | `route_s1980` |
+| `dk65-01` | `dk8-s8-jeroniki` | `s8_corner_eye`, `s8_corner_top` |
+| `tykocin` | — | `look_tykocin_czarniecki`, `czarniecki_figure_0320b`, `czarniecki_pedestal_0320b` |
+| `bialystok-industrial-c` | — | zestaw kamer sceny C |
+
+[Pozycja kamery przewodów](mickiewicza-cameras.json) jest **WORKING_VALUE**. Sprawdź widoczność przęseł w chunkach `7_0` i `7_1` i oparcie przewodów na trawersach. Na kadrach szwów porównaj jezdnię, ciągłość P‑7b oraz pobocza. Po imporcie można powtórzyć `vqa.ps1 -Phase after`.
+
+PNG, `stats.txt`, raporty i logi zapisują się w `C:\Users\matma\Documents\Claude\kamion\artifacts\regen-wave-15-s25\`. Porównaj parami pliki z `vqa/before` i `vqa/after`, sprawdź raport szwu oraz przejazd, a ocenę zapisz w STATUS. `run/` zachowaj do końca fali. W tym zadaniu sprawdzono [plan na dk65-04](dry-run.log), składnię PowerShell oraz obecność wskazanych kamer w danych bazowych. Świeże PNG i przejazd pozostają częścią wykonania fali.
