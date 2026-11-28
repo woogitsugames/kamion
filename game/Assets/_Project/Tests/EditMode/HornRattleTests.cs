@@ -47,6 +47,60 @@ namespace Game.Tests
             }
         }
 
+        [TestCase("Left", -1, true)]
+        [TestCase("Left", 7, true)] // uGUI reports touch as Left with a touch pointer ID.
+        [TestCase("Right", -1, false)]
+        [TestCase("Middle", -1, false)]
+        public void HudHorn_PointerButtonControlsHold(string button, int pointerId, bool accepted)
+        {
+            // Game.Tests.EditMode has no reference to Game.UI. Exercise the real widget via reflection.
+            var widgetType = System.Type.GetType("Game.UI.Driving.HornButtonWidget, Game.UI", throwOnError: true);
+            var down = widgetType.GetMethod("OnPointerDown");
+            var up = widgetType.GetMethod("OnPointerUp");
+            var eventType = down.GetParameters()[0].ParameterType;
+            var eventButton = eventType.GetProperty("button");
+
+            object[] Pointer(string inputButton)
+            {
+                var data = System.Activator.CreateInstance(eventType, new object[] { null });
+                eventType.GetProperty("pointerId").SetValue(data, pointerId);
+                eventButton.SetValue(data, System.Enum.Parse(eventButton.PropertyType, inputButton));
+                return new[] { data };
+            }
+
+            bool savedHud = AudioCues.HornHudHeld;
+            var go = new GameObject("TestHudHorn");
+            try
+            {
+                AudioCues.HornHudHeld = false;
+                var widget = go.AddComponent(widgetType);
+                widgetType.GetField("onHeldChanged").SetValue(widget,
+                    (System.Action<bool>)(held => AudioCues.HornHudHeld = held));
+                var pointer = Pointer(button);
+
+                down.Invoke(widget, pointer);
+                Assert.AreEqual(accepted, AudioCues.HornHudHeld, "press");
+                up.Invoke(widget, pointer);
+                Assert.IsFalse(AudioCues.HornHudHeld, "release");
+
+                if (!accepted)
+                {
+                    var left = Pointer("Left");
+                    down.Invoke(widget, left);
+                    down.Invoke(widget, pointer);
+                    up.Invoke(widget, pointer);
+                    Assert.IsTrue(AudioCues.HornHudHeld, "another button with the same pointer ID cannot release the horn");
+                    up.Invoke(widget, left);
+                    Assert.IsFalse(AudioCues.HornHudHeld, "left release ends the hold");
+                }
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+                AudioCues.HornHudHeld = savedHud;
+            }
+        }
+
         [Test]
         public void TrailerRattle_UncoupledOrSmoothStationary_NeverTriggers()
         {
