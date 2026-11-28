@@ -69,9 +69,9 @@
     "lines_not_hv": 93,
     "masts": 1,
     "mv_lines_near": 3,
-    "mv_poles": 22,
+    "mv_poles": 14,
     "mv_seam_supports": 2,
-    "mv_spans": 21,
+    "mv_spans": 13,
     "osm_hv_duplicates_of_bdot": 3,
     "osm_untagged_dropped": 0,
     "pylons": 45,
@@ -153,35 +153,40 @@
   },
   "tiers": {
     "High": {
-      "bytes": 7039340,
+      "bytes": 5484020,
       "file": "Data/raw/derived/dk8-korycin-01/world/far_field.glb",
+      "power_lod": {
+        "pylons": 12,
+        "spans": 11,
+        "unwired_power_pylons": 0
+      },
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 16424,
+            "far_field_buildings": 2754,
             "forest_edge_mixed_far_atlas": 21648
           },
           "submeshes": 2,
-          "triangles": 38072,
-          "vertices": 63360
+          "triangles": 24402,
+          "vertices": 36020
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 2347,
+            "far_field_buildings": 925,
             "forest_edge_mixed_far_atlas": 18960
           },
           "submeshes": 2,
-          "triangles": 21307,
-          "vertices": 28179
+          "triangles": 19885,
+          "vertices": 25335
         },
         "far_south": {
           "by_material": {
-            "far_field_buildings": 797,
+            "far_field_buildings": 641,
             "forest_edge_mixed_far_atlas": 20264
           },
           "submeshes": 2,
-          "triangles": 21061,
-          "vertices": 29707
+          "triangles": 20905,
+          "vertices": 29395
         },
         "far_west": {
           "by_material": {
@@ -193,7 +198,7 @@
           "vertices": 30415
         }
       },
-      "sha256": "0fed84008e7cf2c9ecd88ac46de64f964090d7fa754a880beed43910e291bf35",
+      "sha256": "35adf8e6d8be2a06d0578f686c4d4f9c611b5b7d32cc5ccde03dac70e113d5cc",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -202,12 +207,17 @@
         "submeshes": 1,
         "triangles": 120
       },
-      "total_triangles": 103233,
-      "total_vertices": 151901
+      "total_triangles": 87985,
+      "total_vertices": 121405
     },
     "Low": {
       "bytes": 590028,
       "file": "Data/raw/derived/dk8-korycin-01/world/far_field.low.glb",
+      "power_lod": {
+        "pylons": 0,
+        "spans": 0,
+        "unwired_power_pylons": 0
+      },
       "sectors": {
         "far_east": {
           "by_material": {

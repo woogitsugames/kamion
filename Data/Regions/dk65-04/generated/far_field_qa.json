@@ -73,10 +73,10 @@
     "lines_hv_osm": 0,
     "lines_not_hv": 123,
     "masts": 7,
-    "mv_lines_near": 9,
-    "mv_poles": 53,
+    "mv_lines_near": 6,
+    "mv_poles": 32,
     "mv_seam_supports": 3,
-    "mv_spans": 51,
+    "mv_spans": 31,
     "osm_hv_duplicates_of_bdot": 1,
     "osm_untagged_dropped": 0,
     "pylons": 59,
@@ -158,47 +158,52 @@
   },
   "tiers": {
     "High": {
-      "bytes": 5673212,
+      "bytes": 3422636,
       "file": "Data/raw/derived/dk65-04/world/far_field.glb",
+      "power_lod": {
+        "pylons": 26,
+        "spans": 24,
+        "unwired_power_pylons": 0
+      },
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 11025,
+            "far_field_buildings": 3289,
             "forest_edge_mixed_far_atlas": 3128
           },
           "submeshes": 2,
-          "triangles": 14153,
-          "vertices": 26629
+          "triangles": 6417,
+          "vertices": 11157
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 8252,
+            "far_field_buildings": 2700,
             "forest_edge_mixed_far_atlas": 20836
           },
           "submeshes": 2,
-          "triangles": 29088,
-          "vertices": 47222
+          "triangles": 23536,
+          "vertices": 36118
         },
         "far_south": {
           "by_material": {
-            "far_field_buildings": 8454,
+            "far_field_buildings": 380,
             "forest_edge_mixed_far_atlas": 7646
           },
           "submeshes": 2,
-          "triangles": 16100,
-          "vertices": 27260
+          "triangles": 8026,
+          "vertices": 11112
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 3154,
+            "far_field_buildings": 2452,
             "forest_edge_mixed_far_atlas": 8956
           },
           "submeshes": 2,
-          "triangles": 12110,
-          "vertices": 17318
+          "triangles": 11408,
+          "vertices": 15914
         }
       },
-      "sha256": "5b6bead93922d042cd412ac573981bc241d678dd02eecbf25094d361fc32fdd8",
+      "sha256": "2b075c4eafc85cc6150ccc2b3398e341602873d689cca75e7ef27a5971fd82ca",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -207,30 +212,35 @@
         "submeshes": 0,
         "triangles": 0
       },
-      "total_triangles": 71451,
-      "total_vertices": 118429
+      "total_triangles": 49387,
+      "total_vertices": 74301
     },
     "Low": {
-      "bytes": 309200,
+      "bytes": 290316,
       "file": "Data/raw/derived/dk65-04/world/far_field.low.glb",
+      "power_lod": {
+        "pylons": 6,
+        "spans": 5,
+        "unwired_power_pylons": 0
+      },
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 259,
+            "far_field_buildings": 197,
             "forest_edge_mixed_far_atlas": 242
           },
           "submeshes": 2,
-          "triangles": 501,
-          "vertices": 861
+          "triangles": 439,
+          "vertices": 737
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 419,
+            "far_field_buildings": 239,
             "forest_edge_mixed_far_atlas": 2092
           },
           "submeshes": 2,
-          "triangles": 2511,
-          "vertices": 3583
+          "triangles": 2331,
+          "vertices": 3223
         },
         "far_south": {
           "by_material": {
@@ -251,7 +261,7 @@
           "vertices": 2207
         }
       },
-      "sha256": "4d25495b6df3c925f85d53c3397f7f424f7a7310546c9f896e5638e880414cad",
+      "sha256": "f77d8aaa7dcabcc71c401b476e2ae8dd5df89feb29e657cfa6fa02722bc9910d",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -260,8 +270,8 @@
         "submeshes": 0,
         "triangles": 0
       },
-      "total_triangles": 5690,
-      "total_vertices": 8012
+      "total_triangles": 5448,
+      "total_vertices": 7528
     }
   }
 }

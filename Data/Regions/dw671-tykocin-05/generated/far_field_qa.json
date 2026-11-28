@@ -78,10 +78,10 @@
     "lines_hv_osm": 0,
     "lines_not_hv": 93,
     "masts": 1,
-    "mv_lines_near": 15,
-    "mv_poles": 96,
+    "mv_lines_near": 9,
+    "mv_poles": 52,
     "mv_seam_supports": 3,
-    "mv_spans": 94,
+    "mv_spans": 50,
     "osm_hv_duplicates_of_bdot": 0,
     "osm_untagged_dropped": 0,
     "pylons": 0,
@@ -163,47 +163,52 @@
   },
   "tiers": {
     "High": {
-      "bytes": 3498840,
+      "bytes": 3259536,
       "file": "Data/raw/derived/dw671-tykocin-05/world/far_field.glb",
+      "power_lod": {
+        "pylons": 0,
+        "spans": 0,
+        "unwired_power_pylons": 0
+      },
       "sectors": {
         "far_east": {
           "by_material": {
-            "far_field_buildings": 1629,
+            "far_field_buildings": 1125,
             "forest_edge_mixed_far_atlas": 11842
           },
           "submeshes": 2,
-          "triangles": 13471,
-          "vertices": 20455
+          "triangles": 12967,
+          "vertices": 19447
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 5466,
+            "far_field_buildings": 5310,
             "forest_edge_mixed_far_atlas": 3078
           },
           "submeshes": 2,
-          "triangles": 8544,
-          "vertices": 15344
+          "triangles": 8388,
+          "vertices": 15032
         },
         "far_south": {
           "by_material": {
-            "far_field_buildings": 1719,
+            "far_field_buildings": 789,
             "forest_edge_mixed_far_atlas": 13968
           },
           "submeshes": 2,
-          "triangles": 15687,
-          "vertices": 24117
+          "triangles": 14757,
+          "vertices": 22257
         },
         "far_west": {
           "by_material": {
-            "far_field_buildings": 2465,
+            "far_field_buildings": 1709,
             "forest_edge_mixed_far_atlas": 7680
           },
           "submeshes": 2,
-          "triangles": 10145,
-          "vertices": 15551
+          "triangles": 9389,
+          "vertices": 14039
         }
       },
-      "sha256": "458fc122a72b9cba5be79f3c3d1c58d8c676eae96c581efb7ff38caabe055174",
+      "sha256": "f1747726773a22dc9e46233ad0ba92c9f67e17c8c1c4c9a62147eed9d76fbfe0",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -212,12 +217,17 @@
         "submeshes": 0,
         "triangles": 0
       },
-      "total_triangles": 47847,
-      "total_vertices": 75467
+      "total_triangles": 45501,
+      "total_vertices": 70775
     },
     "Low": {
-      "bytes": 213500,
+      "bytes": 212880,
       "file": "Data/raw/derived/dw671-tykocin-05/world/far_field.low.glb",
+      "power_lod": {
+        "pylons": 0,
+        "spans": 0,
+        "unwired_power_pylons": 0
+      },
       "sectors": {
         "far_east": {
           "by_material": {
@@ -230,12 +240,12 @@
         },
         "far_north": {
           "by_material": {
-            "far_field_buildings": 85,
+            "far_field_buildings": 77,
             "forest_edge_mixed_far_atlas": 290
           },
           "submeshes": 2,
-          "triangles": 375,
-          "vertices": 557
+          "triangles": 367,
+          "vertices": 541
         },
         "far_south": {
           "by_material": {
@@ -256,7 +266,7 @@
           "vertices": 1425
         }
       },
-      "sha256": "be2bfaaf8618d67c4cb8a34a24ef8beb893253e2963323b5d78d7f1086b2a255",
+      "sha256": "05854e8d18368a3313aad25b0d6e3cab024174e2ea395bf89004f6a898def995",
       "skyline": {
         "landmark_stack_proxies": [],
         "min_building_h_m": 24.0,
@@ -265,8 +275,8 @@
         "submeshes": 0,
         "triangles": 0
       },
-      "total_triangles": 3948,
-      "total_vertices": 5480
+      "total_triangles": 3940,
+      "total_vertices": 5464
     }
   }
 }
