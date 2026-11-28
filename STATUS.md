@@ -178,3 +178,8 @@
 ### codex-city-budget-s25 — źródła
 - Ustalono migawkę fali 14 `9cc09a9a0`, bazę `489fe5fce` oraz cztery pomiary buildu #10. Przeczytano reguły i ADR 0221, 0266, 0282, 0327.
 - Następny krok: `git ls-tree -r --name-only 9cc09a9a0 Data/Regions | Select-String 'streetscape_qa|control_cameras|far_field_qa|chunk'`
+
+### codex-city-budget-s25 — rozbicie tris fali 14 (54/54 kafli)
+- Dodano `tools/worldgen/qa/city_budget_analysis.py` i policzono dokładne rozbicie `frame_estimate` + `far_field` + model runtime (`QualityProfile` i `PcTierTable`) na `regen-wave-14-s25` (`bb3e5eccc`, wszystkie 54 kafle fali 14 przebudowane vs `main`).
+- Wynik: 8 kafli > 2,0 M High (`bialystok-wygoda` 3,45 M, `bialystok-bojary` 3,28 M, `bialystok-maczka` 3,25 M, `bialystok-mickiewicza` 3,19 M, `bialystok-kleeberga` 2,64 M, `knyszyn` 2,30 M, `bialystok-krywlany` 2,30 M, `monki` 2,11 M) i 14 kafli > 600 k Low (max `bialystok-bojary` 1,46 M); zapis w `artifacts/codex-city-budget-s25/city_budget_w14.json`.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd tools/worldgen/qa/city_budget_analysis.py --ref regen-wave-14-s25` i kalibracja z `stats.txt` oraz `artifacts/full-build-10-s24/`.
