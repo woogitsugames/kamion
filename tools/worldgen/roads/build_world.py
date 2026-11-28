@@ -1735,10 +1735,15 @@ def main():
         p.write_text(json.dumps(ctx, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n",
                      encoding="utf-8", newline="\n")
         # ADR 0166: a new region has no streetscape_sources.json yet (the C file was written once by hand);
-        # extract it only when missing, so an existing committed file is never rewritten here.
+        # extract it only when missing, or refresh OSM power ways in-place when schema bumps.
         from streetscape import sources as SSRC
-        if not (pipeline.REGIONS / a.region / "generated" / "streetscape_sources.json").exists():
+        ss_path = pipeline.REGIONS / a.region / "generated" / "streetscape_sources.json"
+        if not ss_path.exists():
             SSRC.write(a.region, SSRC.extract(reg))
+        else:
+            ss_data = SSRC.load(a.region)
+            if ss_data.get("schema") != SSRC.SCHEMA:
+                SSRC.write(a.region, SSRC.refresh_power_ways(reg, ss_data))
         from streetscape import cycleways as CY          # ADR 0188: generated/osm_cycleways.json
         CY.write(a.region, CY.extract(reg))
     build(a.region, route_graph=not a.no_route_graph)

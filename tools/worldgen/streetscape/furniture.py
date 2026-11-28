@@ -1191,10 +1191,6 @@ def misc_points(pl, net, src, origin, report, codes, overrides=None):
             proto = "waste_bin"
         elif t.get("man_made") == "street_cabinet":
             proto = "street_cabinet"
-        elif t.get("power") == "tower":
-            proto = "pylon"
-        elif t.get("power") == "pole":
-            proto = "power_pole"
         if not proto:
             continue
         yaw = 0.0
@@ -1209,21 +1205,7 @@ def misc_points(pl, net, src, origin, report, codes, overrides=None):
             continue
         pl.add(proto, p, yaw, src=f"osm:node/{nd['osm_node']}", group=proto)
         cnt[proto] = cnt.get(proto, 0) + 1
-    # ADR 0351: BDOT10k records HV lattice towers as "słup energetyczny" too; one standing on a HV line (OT_SULN_L
-    # "... wysokiego napięcia", within the pylon snap radius) is a pylon, not a concrete MV pole under 110 kV wires
-    hv_lines = [LineString(np.asarray(f["geometry"]["coordinates"], float) - origin)
-                for f in src["bdot10k"].get("OT_SULN_L", [])
-                if "wysokiego" in (f["props"].get("rodzaj") or "") and len(f["geometry"]["coordinates"]) > 1]
-    for f in src["bdot10k"]["OT_BUWT_P"]:
-        if f["props"].get("rodzaj") != "słup energetyczny":
-            continue
-        q = np.asarray(f["geometry"]["coordinates"]) - origin
-        if pl.near("power_pole", q, 4.0) or pl.near("pylon", q, 8.0):
-            continue
-        proto = "pylon" if any(ln.distance(Point(float(q[0]), float(q[1]))) <= SUPPORT_SNAP_M["pylon"]
-                               for ln in hv_lines) else "power_pole"
-        pl.add(proto, q, (_h(f["id"]) % 360) * math.pi / 180, src=f"bdot:{f['id']}", group=proto)
-        cnt[proto] = cnt.get(proto, 0) + 1
+    place_mapped_power_supports(pl, src, origin, cnt=cnt)
     report["points"] = cnt
 
 
@@ -3367,22 +3349,14 @@ def _nearest_support(pl, q, r):
     return best
 
 
-def power_supports(pl, P, hv, key, roads_poly, report):
-    """Support points of one line (E, N), in order along it: mapped supports of the line's class standing on it,
-    angle points / ends (snapped to a mapped support within SUPPORT_SNAP_M) and intermediate supports wherever two
-    neighbours are more than SPAN_MAX_M apart; adds the missing supports as instances. Returns the support polyline.
-
-    ADR 0351: a mapped tower between two BDOT10k vertices used to be ignored - the intermediate supports were equal
-    subdivisions of each BDOT segment, so the conductors passed beside a real OSM power=tower (31 of 298 mapped
-    pylons over all tiles stood with no span ending on them) while a rule pylon stood tens of metres from it. Now
-    every mapped support of the class within SUPPORT_SNAP_M of the line is a support at its projection on the line
-    and only the gaps between supports are subdivided."""
+def _plan_supports(pl, P, hv, roads_poly, skip_covered_spans=None):
+    """Compute ordered support entries (point, mapped, tangent_dir) along polyline P without mutating pl."""
     proto = "pylon" if hv else "power_pole"
     span, snap_r = SPAN_MAX_M[proto], SUPPORT_SNAP_M[proto]
     P = np.asarray(P, float)
     line = LineString(P)
     if line.length < 1e-6:
-        return P[:1]
+        return []
     cand = []                                          # (s along the line, point, mapped)
     for p in pl.pts.get(proto, []):
         q = Point(float(p[0]), float(p[1]))
@@ -3393,7 +3367,13 @@ def power_supports(pl, P, hv, key, roads_poly, report):
         if snap is not None:
             cand.append((float(line.project(Point(float(snap[0]), float(snap[1])))), snap, True))
         else:
-            cand.append((float(line.project(Point(float(v[0]), float(v[1])))), v.copy(), False))
+            vp = Point(float(v[0]), float(v[1]))
+            if skip_covered_spans and any(
+                sl.distance(vp) <= snap_r and 1.0 < sl.project(vp) < sl.length - 1.0
+                for sl in skip_covered_spans
+            ):
+                continue
+            cand.append((float(line.project(vp)), v.copy(), False))
     cand.sort(key=lambda c: (c[0], not c[2]))
     seq = []
     for c in cand:
@@ -3412,24 +3392,52 @@ def power_supports(pl, P, hv, key, roads_poly, report):
             g = line.interpolate(a[0] + gap * i / k)
             full.append((a[0] + gap * i / k, np.array([g.x, g.y], float), False))
         full.append(b)
-    out = []
+    entries = []
     pts = [c[1] for c in full]
-    for i, (s, q, mapped) in enumerate(full):
+    for i, (_s, q, mapped) in enumerate(full):
+        if not mapped and roads_poly is not None and roads_poly.contains(Point(float(q[0]), float(q[1]))):
+            continue                                   # never on a carriageway: the span runs on to the next support
         d = (pts[min(i + 1, len(pts) - 1)] - pts[max(i - 1, 0)])
         d = d / max(np.linalg.norm(d), 1e-9)
+        entries.append((q, mapped, d))
+    return entries
+
+
+def _commit_supports(pl, entries, hv, key, report, wired=None):
+    """Materialize planned support entries into pl (updating yaws and adding missing rule supports)."""
+    proto = "pylon" if hv else "power_pole"
+    out = []
+    for q, mapped, d in entries:
         if mapped:
             out.append(q)
             report["mapped_supports"] = report.get("mapped_supports", 0) + 1
-            for it in pl.items:                        # mapped pole: turn its cross-arm across the line
-                if it["p"] in ("power_pole", "pylon") and abs(it["e"] - q[0]) < 2e-3 and abs(it["n"] - q[1]) < 2e-3:
-                    it["yaw"] = round(float(yaw_of(d)), 4)
+            if wired is None or (round(float(q[0]), 2), round(float(q[1]), 2)) not in wired:
+                for it in pl.items:                    # mapped pole: turn its cross-arm across the line
+                    if it["p"] in ("power_pole", "pylon") and abs(it["e"] - q[0]) < 2e-3 and abs(it["n"] - q[1]) < 2e-3:
+                        it["yaw"] = round(float(yaw_of(d)), 4)
             continue
-        if roads_poly is not None and roads_poly.contains(Point(float(q[0]), float(q[1]))):
-            continue                                   # never on a carriageway: the span runs on to the next support
-        pl.add(proto, q, yaw_of(d), src=f"rule:power_support:{key}", group=proto)   # arms (local x) across the line
-        report["supports_added"] = report.get("supports_added", 0) + 1
+        if not pl.near(proto, q, 1.0):
+            pl.add(proto, q, yaw_of(d), src=f"rule:power_support:{key}", group=proto)  # arms (local x) across the line
+            report["supports_added"] = report.get("supports_added", 0) + 1
         out.append(np.asarray(q, float))
-    return np.array(out)
+    return np.array(out) if out else np.zeros((0, 2), float)
+
+
+def power_supports(pl, P, hv, key, roads_poly, report):
+    """Support points of one line (E, N), in order along it: mapped supports of the line's class standing on it,
+    angle points / ends (snapped to a mapped support within SUPPORT_SNAP_M) and intermediate supports wherever two
+    neighbours are more than SPAN_MAX_M apart; adds the missing supports as instances. Returns the support polyline.
+
+    ADR 0351: a mapped tower between two BDOT10k vertices used to be ignored - the intermediate supports were equal
+    subdivisions of each BDOT segment, so the conductors passed beside a real OSM power=tower (31 of 298 mapped
+    pylons over all tiles stood with no span ending on them) while a rule pylon stood tens of metres from it. Now
+    every mapped support of the class within SUPPORT_SNAP_M of the line is a support at its projection on the line
+    and only the gaps between supports are subdivided."""
+    P = np.asarray(P, float)
+    entries = _plan_supports(pl, P, hv, roads_poly)
+    if not entries:
+        return P[:1]
+    return _commit_supports(pl, entries, hv, key, report)
 
 
 WIRE_SAG_RATIO = 0.015       # mid-span sag / span of a level span (WORKING_VALUE: MV / HV lines at ~15-20 C, no source)
@@ -3463,21 +3471,198 @@ def _max_turn_deg(xz):
     return float(np.degrees(np.arccos(np.clip((d[1:] * d[:-1]).sum(1), -1.0, 1.0))).max())
 
 
+def is_osm_power_line(tags) -> bool:
+    """True for overhead OSM power=line|minor_line ways (excludes substation busbars/bays and underground lines)."""
+    return (tags.get("power") in ("line", "minor_line")
+            and tags.get("line") not in ("busbar", "bay")
+            and tags.get("location") not in ("underground", "underwater"))
+
+
+def _osm_way_is_hv(tags: dict, line: LineString, pl: Placer | None) -> bool:
+    volts = []
+    for v in str(tags.get("voltage", "")).replace(",", ";").split(";"):
+        try:
+            volts.append(float(v.strip()))
+        except ValueError:
+            pass
+    if tags.get("power") == "minor_line":
+        return bool(volts and max(volts) >= 60000.0)
+    if volts:
+        return max(volts) >= 60000.0
+    if pl is None:
+        return False
+    return sum(1 for p in pl.pts.get("pylon", [])
+               if line.distance(Point(float(p[0]), float(p[1]))) <= SUPPORT_SNAP_M["pylon"]) >= 2
+
+
+def power_line_geoms(src, origin, pl=None):
+    """Return (hv_lines, all_lines, counts) in local coordinates for BDOT10k OT_SULN_L and OSM power=line|minor_line."""
+    origin = np.asarray(origin, float)
+    bdot_lines = src.get("bdot10k", {}).get("OT_SULN_L", [])
+    hv_lines, all_lines = [], []
+    bdot_hv = 0
+    for f in bdot_lines:
+        coords = f["geometry"]["coordinates"]
+        if len(coords) < 2:
+            continue
+        ls = LineString(np.asarray(coords, float) - origin)
+        all_lines.append(ls)
+        if "wysokiego" in (f.get("props", {}).get("rodzaj") or ""):
+            hv_lines.append(ls)
+            bdot_hv += 1
+    osm_cnt = 0
+    for w in src.get("osm", {}).get("ways", []):
+        tags = w.get("tags") or {}
+        coords = w["geometry"]["coordinates"]
+        if not is_osm_power_line(tags) or len(coords) < 2:
+            continue
+        ls = LineString(np.asarray(coords, float) - origin)
+        if ls.length >= 1e-6:
+            all_lines.append(ls)
+            osm_cnt += 1
+            if _osm_way_is_hv(tags, ls, pl):
+                hv_lines.append(ls)
+    return hv_lines, all_lines, {"hv_lines": bdot_hv, "mv_lines": len(bdot_lines) - bdot_hv, "osm_lines": osm_cnt}
+
+
+def place_mapped_power_supports(pl, src, origin, cnt=None):
+    """Place mapped OSM power=tower|pole and BDOT10k OT_BUWT_P power supports with shared HV/MV classification.
+
+    ADR 0351: BDOT10k records HV lattice towers as "słup energetyczny" too; one standing within SUPPORT_SNAP_M["pylon"]
+    of a HV line (BDOT10k OT_SULN_L "... wysokiego napięcia" or OSM HV power=line|minor_line) is a pylon.
+    """
+    origin = np.asarray(origin, float)
+    for nd in src.get("osm", {}).get("nodes", []):
+        t = nd["tags"]
+        proto = {"tower": "pylon", "pole": "power_pole"}.get(t.get("power"))
+        if not proto:
+            continue
+        q = np.asarray(nd["geometry"]["coordinates"], float) - origin
+        if pl.near(proto, q, 3.0):
+            continue
+        pl.add(proto, q, 0.0, src=f"osm:node/{nd['osm_node']}", group=proto)
+        if cnt is not None:
+            cnt[proto] = cnt.get(proto, 0) + 1
+    hv_lines, _, _ = power_line_geoms(src, origin, pl)
+    for f in src.get("bdot10k", {}).get("OT_BUWT_P", []):
+        if f.get("props", {}).get("rodzaj") != "słup energetyczny":
+            continue
+        q = np.asarray(f["geometry"]["coordinates"], float) - origin
+        if pl.near("power_pole", q, 4.0) or pl.near("pylon", q, 8.0):
+            continue
+        proto = "pylon" if any(ln.distance(Point(float(q[0]), float(q[1]))) <= SUPPORT_SNAP_M["pylon"]
+                               for ln in hv_lines) else "power_pole"
+        pl.add(proto, q, (_h(f["id"]) % 360) * math.pi / 180, src=f"bdot:{f['id']}", group=proto)
+        if cnt is not None:
+            cnt[proto] = cnt.get(proto, 0) + 1
+
+
+def _span_matches(a, b, spans, tol=1.0) -> bool:
+    ax, ay = float(a[0]), float(a[1])
+    bx, by = float(b[0]), float(b[1])
+    for ea, eb in spans:
+        if (math.hypot(ax - ea[0], ay - ea[1]) <= tol and math.hypot(bx - eb[0], by - eb[1]) <= tol) or (
+            math.hypot(ax - eb[0], ay - eb[1]) <= tol and math.hypot(bx - ea[0], by - ea[1]) <= tol
+        ):
+            return True
+    return False
+
+
+def plan_power_lines(src, origin, pl, roads_poly=None, report=None):
+    """Plan supports and spans for BDOT10k OT_SULN_L lines plus OSM power=line|minor_line spans not already wired
+    by BDOT10k of the same voltage class. Shared by power_lines() and qa/hv_wires_audit.py."""
+    sup_rep = {} if report is None else report
+    origin = np.asarray(origin, float)
+    wired_by_hv = {False: set(), True: set()}
+    spans_by_hv = {False: [], True: []}
+    span_lines_by_hv = {False: [], True: []}
+    mapped_pts = {g: [np.asarray(p, float) for p in pl.pts.get(g, [])] for g in ("power_pole", "pylon")}
+    planned = []
+
+    def _record_line(S, hv):
+        wset = wired_by_hv[hv]
+        slist = spans_by_hv[hv]
+        llist = span_lines_by_hv[hv]
+        for a, b in zip(S, S[1:]):
+            if float(np.hypot(*(b - a))) < 5.0:
+                continue
+            slist.append((a, b))
+            llist.append(LineString([a, b]))
+            for q in (a, b):
+                wset.add((round(float(q[0]), 2), round(float(q[1]), 2)))
+
+    for f in src.get("bdot10k", {}).get("OT_SULN_L", []):
+        hv = "wysokiego" in (f.get("props", {}).get("rodzaj") or "")
+        P = np.asarray(f["geometry"]["coordinates"], float) - origin
+        if len(P) < 2:
+            continue
+        S = power_supports(pl, P, hv, f["id"], roads_poly, sup_rep)
+        if len(S) < 2:
+            continue
+        _record_line(S, hv)
+        planned.append((S, hv, f"bdot:{f['id']}"))
+
+    for w in src.get("osm", {}).get("ways", []):
+        tags = w.get("tags") or {}
+        if not is_osm_power_line(tags):
+            continue
+        P = np.asarray(w["geometry"]["coordinates"], float) - origin
+        if len(P) < 2:
+            continue
+        line = LineString(P)
+        if line.length < 1e-6:
+            continue
+        hv = _osm_way_is_hv(tags, line, pl)
+        proto = "pylon" if hv else "power_pole"
+        snap_r = SUPPORT_SNAP_M[proto]
+        if not any(line.distance(Point(float(p[0]), float(p[1]))) <= snap_r for p in mapped_pts[proto]):
+            continue
+        entries = _plan_supports(pl, P, hv, roads_poly, skip_covered_spans=span_lines_by_hv[hv])
+        if len(entries) < 2:
+            continue
+        # Compare snapped spans per voltage class so an OSM line overlapping BDOT keeps only non-duplicate spans
+        keep_span = [not _span_matches(entries[k][0], entries[k + 1][0], spans_by_hv[hv])
+                     for k in range(len(entries) - 1)]
+        i = 0
+        part_idx = 0
+        while i < len(keep_span):
+            if not keep_span[i]:
+                i += 1
+                continue
+            j = i
+            while j < len(keep_span) and keep_span[j]:
+                j += 1
+            sub_entries = entries[i:j + 1]
+            i = j
+            if not any(float(np.hypot(*(sub_entries[k + 1][0] - sub_entries[k][0]))) >= 5.0
+                       for k in range(len(sub_entries) - 1)):
+                continue
+            key = f"osm_w{w['osm_way']}_{w.get('part', 0)}_{part_idx}"
+            part_idx += 1
+            S = _commit_supports(pl, sub_entries, hv, key, sup_rep, wired=wired_by_hv[hv])
+            if len(S) < 2:
+                continue
+            _record_line(S, hv)
+            planned.append((S, hv, f"osm:way/{w['osm_way']}"))
+    return planned
+
+
 def power_lines(lin, src, origin, report, pl=None, roads_poly=None):
     n = 0
     sup_rep = {}
     if roads_poly is not None:
         from shapely.prepared import prep
         roads_poly = prep(roads_poly.buffer(1.0))
-    for f in src["bdot10k"]["OT_SULN_L"]:
-        hv = "wysokiego" in (f["props"].get("rodzaj") or "")
-        P = np.asarray(f["geometry"]["coordinates"], float) - origin
-        if len(P) < 2:
-            continue
-        if pl is not None:
-            P = power_supports(pl, P, hv, f["id"], roads_poly, sup_rep)
-            if len(P) < 2:
-                continue
+    if pl is not None:
+        lines = plan_power_lines(src, origin, pl, roads_poly=roads_poly, report=sup_rep)
+    else:
+        lines = []
+        for f in src["bdot10k"]["OT_SULN_L"]:
+            hv = "wysokiego" in (f["props"].get("rodzaj") or "")
+            P = np.asarray(f["geometry"]["coordinates"], float) - origin
+            if len(P) >= 2:
+                lines.append((P, hv, f"bdot:{f['id']}"))
+    for P, hv, line_src in lines:
         # attachment points (lateral offset, height above ground). HV (ADR 0127): the six phase conductors hang
         # under the arm tips of streetscape.props.pylon (three levels, both sides) + the earth wire on the peak;
         # the old three wires at 23 m, +-5 m met no arm of the tower. MV: three conductors on the pole cross-arm.
@@ -3516,7 +3701,7 @@ def power_lines(lin, src, origin, report, pl=None, roads_poly=None):
                 uv = np.column_stack([np.repeat([-1.0, 1.0], m), np.full(2 * m, WIRE_HALF_W)])
                 col = np.concatenate([tan, tan]) * 0.5 + 0.5
                 col = np.column_stack([col, np.ones(2 * m)])
-                lin.buf.add("wires", "wire", V, uv, T, src=f"bdot:{f['id']}", COL=col)
+                lin.buf.add("wires", "wire", V, uv, T, src=line_src, COL=col)
         n += 1
     report["power_lines"] = n
     report["power_supports_added"] = sup_rep.get("supports_added", 0)

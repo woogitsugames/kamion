@@ -224,3 +224,310 @@ def test_far_span_wire_lod_thinning_and_shader_fade_uv1():
     FF._add_span(sec_far, {"e": half + 1500.0, "n": 0.0, "h": 32.0, "seam": False},
                  {"e": half + 1800.0, "n": 0.0, "h": 32.0, "seam": False}, elev, half, "High")
     assert not sec_far["far_east"].primitives()
+
+
+def _run_tile_wires(src):
+    from roads.meshing import MeshBuf
+    origin = np.zeros(2)
+    zero = lambda e, n: np.zeros_like(np.asarray(e, float))
+    pl = FU.Placer(zero)
+    FU.place_mapped_power_supports(pl, src, origin)
+    lin = FU.Lin(MeshBuf(), zero)
+    rep = {}
+    FU.power_lines(lin, src, origin, rep, pl=pl)
+    return pl, lin.buf, rep
+
+
+def test_in_tile_osm_minor_line_crossing_tile_seam():
+    """Synthetic tile: OSM power=minor_line clipped at east seam x=1024 gets a seam rule pole and full wire span."""
+    src = {
+        "schema": "truck-sim-pl/streetscape-sources/2",
+        "osm": {
+            "nodes": [{"osm_node": 1, "tags": {"power": "pole"}, "geometry": {"type": "Point", "coordinates": [950.0, 200.0]}}],
+            "ways": [{"osm_way": 10, "part": 0, "tags": {"power": "minor_line", "cables": "3"},
+                      "geometry": {"type": "LineString", "coordinates": [[950.0, 200.0], [1024.0, 200.0]]}}],
+        },
+        "bdot10k": {"OT_SULN_L": [], "OT_BUWT_P": []},
+    }
+    pl, buf, rep = _run_tile_wires(src)
+    assert rep["power_lines"] == 1 and rep["power_supports_added"] == 1
+    seam_poles = [it for it in pl.items if it["p"] == "power_pole" and abs(it["e"] - 1024.0) < 1e-3]
+    assert len(seam_poles) == 1
+    wire_parts = [p for p in buf.parts if p.layer == "wires"]
+    assert len(wire_parts) == 3
+    xs = np.concatenate([p.V[:, 0] for p in wire_parts])
+    assert xs.min() == pytest.approx(950.0) and xs.max() == pytest.approx(1024.0)
+    import sys
+    sys.path.insert(0, str(REPO / "tools" / "worldgen" / "qa"))
+    import hv_wires_audit as A
+    res = A.in_tile(src=src, origin=[0.0, 0.0], use_pbf=False)
+    assert res["power_pole"]["mapped"] == 1
+    assert res["power_pole"]["unwired"] == 0 and res["power_pole"]["without_line"] == 0
+
+
+def test_in_tile_osm_terminal_pole_and_bdot_continuation():
+    """Terminal pole on an OSM minor_line extending past a BDOT segment is wired without duplicating the BDOT span."""
+    src = {
+        "schema": "truck-sim-pl/streetscape-sources/2",
+        "osm": {
+            "nodes": [
+                {"osm_node": 1, "tags": {"power": "pole"}, "geometry": {"type": "Point", "coordinates": [70.0, 100.0]}},
+                {"osm_node": 2, "tags": {"power": "pole"}, "geometry": {"type": "Point", "coordinates": [140.0, 100.0]}},
+            ],
+            "ways": [
+                {"osm_way": 20, "part": 0, "tags": {"power": "minor_line", "voltage": "15000", "cables": "3"},
+                 "geometry": {"type": "LineString", "coordinates": [[0.0, 100.0], [70.0, 100.0], [140.0, 100.0]]}},
+            ],
+        },
+        "bdot10k": {
+            "OT_SULN_L": [{"id": "b1", "props": {"rodzaj": "linia elektroenergetyczna średniego napięcia"},
+                           "geometry": {"type": "LineString", "coordinates": [[0.0, 100.0], [70.0, 100.0]]}}],
+            "OT_BUWT_P": [],
+        },
+    }
+    pl, buf, rep = _run_tile_wires(src)
+    assert rep["power_lines"] == 2
+    wire_parts = [p for p in buf.parts if p.layer == "wires"]
+    # 3 conductors for BDOT (0..70) + 3 conductors for OSM continuation (70..140), no duplicate on 0..70
+    assert len(wire_parts) == 6
+    assert sum(1 for it in pl.items if it["p"] == "power_pole") == 3
+    import sys
+    sys.path.insert(0, str(REPO / "tools" / "worldgen" / "qa"))
+    import hv_wires_audit as A
+    res = A.in_tile(src=src, origin=[0.0, 0.0], use_pbf=False)
+    assert res["power_pole"]["mapped"] == 2 and res["power_pole"]["unwired"] == 0 and res["power_pole"]["without_line"] == 0
+
+
+def test_in_tile_pole_without_line_and_audit_distinction():
+    """Audit distinguishes poles without any line in data (stork nest / standalone) from poles with an unwired line."""
+    src = {
+        "schema": "truck-sim-pl/streetscape-sources/2",
+        "osm": {
+            "nodes": [
+                {"osm_node": 1, "tags": {"power": "pole", "natural": "birds_nest"},
+                 "geometry": {"type": "Point", "coordinates": [100.0, 100.0]}},
+                {"osm_node": 2, "tags": {"power": "pole"},
+                 "geometry": {"type": "Point", "coordinates": [300.0, 100.0]}},
+                {"osm_node": 3, "tags": {"power": "pole"},
+                 "geometry": {"type": "Point", "coordinates": [500.0, 100.0]}},
+            ],
+            "ways": [
+                {"osm_way": 30, "part": 0, "tags": {"power": "minor_line"},
+                 "geometry": {"type": "LineString", "coordinates": [[450.0, 100.0], [500.0, 100.0]]}},
+            ],
+        },
+        "bdot10k": {"OT_SULN_L": [], "OT_BUWT_P": []},
+    }
+    import sys
+    sys.path.insert(0, str(REPO / "tools" / "worldgen" / "qa"))
+    import hv_wires_audit as A
+    before = A.in_tile(src=src, origin=[0.0, 0.0], use_pbf=False, osm_lines=False)
+    assert before["power_pole"]["mapped"] == 3
+    assert before["power_pole"]["unwired"] == 1
+    assert before["power_pole"]["without_line"] == 2
+    assert before["power_pole"]["unwired_at"] == [[500.0, 100.0, "osm:node/3"]]
+    after = A.in_tile(src=src, origin=[0.0, 0.0], use_pbf=False, osm_lines=True)
+    assert after["power_pole"]["mapped"] == 3
+    assert after["power_pole"]["unwired"] == 0
+    assert after["power_pole"]["without_line"] == 2
+
+
+def test_in_tile_skips_substation_bay_busbar_and_unmapped_osm_line():
+    """Substation busbar/bay ways and OSM lines without mapped poles never spawn phantom rule poles."""
+    src = {
+        "schema": "truck-sim-pl/streetscape-sources/2",
+        "osm": {
+            "nodes": [],
+            "ways": [
+                {"osm_way": 40, "part": 0, "tags": {"power": "line", "line": "busbar", "voltage": "110000"},
+                 "geometry": {"type": "LineString", "coordinates": [[500.0, 500.0], [560.0, 500.0]]}},
+                {"osm_way": 41, "part": 0, "tags": {"power": "line", "line": "bay", "voltage": "110000"},
+                 "geometry": {"type": "LineString", "coordinates": [[520.0, 500.0], [520.0, 540.0]]}},
+                {"osm_way": 42, "part": 0, "tags": {"power": "minor_line"},
+                 "geometry": {"type": "LineString", "coordinates": [[0.0, 20.0], [200.0, 20.0]]}},
+            ],
+        },
+        "bdot10k": {
+            "OT_SULN_L": [{"id": "b1", "props": {"rodzaj": "linia elektroenergetyczna średniego napięcia"},
+                           "geometry": {"type": "LineString", "coordinates": [[0.0, 0.0], [200.0, 0.0]]}}],
+            "OT_BUWT_P": [],
+        },
+    }
+    pl, _buf, rep = _run_tile_wires(src)
+    assert rep["power_lines"] == 1
+    assert all(it["p"] == "power_pole" and abs(it["n"]) < 1e-6 for it in pl.items)
+
+
+def test_committed_mickiewicza_and_stork_tiles_audit():
+    import sys
+    sys.path.insert(0, str(REPO / "tools" / "worldgen" / "qa"))
+    import hv_wires_audit as A
+    m = A.in_tile("bialystok-mickiewicza")
+    assert m["power_pole"]["mapped"] == 9 and m["power_pole"]["unwired"] == 0 and m["power_pole"]["without_line"] == 0
+    assert m["pylon"]["unwired"] == 0
+    d = A.in_tile("bialystok-dojlidy")
+    assert d["power_pole"]["mapped"] == 1 and d["power_pole"]["unwired"] == 0 and d["power_pole"]["without_line"] == 1
+    k3 = A.in_tile("dk65-03")
+    assert k3["power_pole"]["mapped"] == 3 and k3["power_pole"]["unwired"] == 0 and k3["power_pole"]["without_line"] == 3
+
+
+@pytest.mark.parametrize("bdot_y,has_mid_pole", [(100.0, True), (105.0, True), (105.0, False)])
+def test_in_tile_osm_partial_overlap_with_bdot_does_not_duplicate_span(bdot_y, has_mid_pole):
+    """BDOT 0..60 m + single OSM segment 0..120 m (with/without 5 m BDOT axis shift) emits 6 wire parts, not 9."""
+    nodes = [
+        {"osm_node": 1, "tags": {"power": "pole"}, "geometry": {"type": "Point", "coordinates": [0.0, 100.0]}},
+        {"osm_node": 3, "tags": {"power": "pole"}, "geometry": {"type": "Point", "coordinates": [120.0, 100.0]}},
+    ]
+    if has_mid_pole:
+        nodes.append({"osm_node": 2, "tags": {"power": "pole"}, "geometry": {"type": "Point", "coordinates": [60.0, 100.0]}})
+    src = {
+        "schema": "truck-sim-pl/streetscape-sources/2",
+        "osm": {
+            "nodes": nodes,
+            "ways": [{"osm_way": 10, "part": 0, "tags": {"power": "minor_line", "cables": "3"},
+                      "geometry": {"type": "LineString", "coordinates": [[0.0, 100.0], [120.0, 100.0]]}}],
+        },
+        "bdot10k": {
+            "OT_SULN_L": [{"id": "b1", "props": {"rodzaj": "linia elektroenergetyczna średniego napięcia"},
+                           "geometry": {"type": "LineString", "coordinates": [[0.0, bdot_y], [60.0, bdot_y]]}}],
+            "OT_BUWT_P": [],
+        },
+    }
+    _pl, buf, _rep = _run_tile_wires(src)
+    wire_parts = [p for p in buf.parts if p.layer == "wires"]
+    assert len(wire_parts) == 6
+    spans = sorted({(round(float(p.V[:, 0].min())), round(float(p.V[:, 0].max()))) for p in wire_parts})
+    assert spans == [(0, 60), (60, 120)]
+
+
+def test_in_tile_osm_unmapped_intermediate_vertex_inside_bdot_span_is_skipped():
+    """An unmapped OSM vertex inside an already-wired BDOT span does not split it into duplicate wires."""
+    src = {
+        "schema": "truck-sim-pl/streetscape-sources/2",
+        "osm": {
+            "nodes": [
+                {"osm_node": 1, "tags": {"power": "tower"}, "geometry": {"type": "Point", "coordinates": [0.0, 0.0]}},
+                {"osm_node": 2, "tags": {"power": "tower"}, "geometry": {"type": "Point", "coordinates": [200.0, 0.0]}},
+            ],
+            "ways": [{"osm_way": 12, "part": 0, "tags": {"power": "line", "voltage": "110000"},
+                      "geometry": {"type": "LineString", "coordinates": [[0.0, 0.0], [100.0, 2.0], [200.0, 0.0]]}}],
+        },
+        "bdot10k": {
+            "OT_SULN_L": [{"id": "h1", "props": {"rodzaj": "linia elektroenergetyczna wysokiego napięcia"},
+                           "geometry": {"type": "LineString", "coordinates": [[0.0, 0.0], [200.0, 0.0]]}}],
+            "OT_BUWT_P": [],
+        },
+    }
+    pl, buf, rep = _run_tile_wires(src)
+    assert rep["power_lines"] == 1 and rep["power_supports_added"] == 0
+    assert sum(1 for it in pl.items if it["p"] == "pylon") == 2
+    assert len([p for p in buf.parts if p.layer == "wires"]) == 7
+
+
+def test_in_tile_voltage_class_prevents_hv_bdot_suppressing_mv_osm():
+    """An overlapping BDOT HV line does not suppress an OSM MV line on the same corridor."""
+    src = {
+        "schema": "truck-sim-pl/streetscape-sources/2",
+        "osm": {
+            "nodes": [
+                {"osm_node": 1, "tags": {"power": "pole"}, "geometry": {"type": "Point", "coordinates": [0.0, 100.0]}},
+                {"osm_node": 2, "tags": {"power": "pole"}, "geometry": {"type": "Point", "coordinates": [60.0, 100.0]}},
+                {"osm_node": 3, "tags": {"power": "pole"}, "geometry": {"type": "Point", "coordinates": [120.0, 100.0]}},
+            ],
+            "ways": [{"osm_way": 11, "part": 0, "tags": {"power": "minor_line", "cables": "3"},
+                      "geometry": {"type": "LineString", "coordinates": [[0.0, 100.0], [120.0, 100.0]]}}],
+        },
+        "bdot10k": {
+            "OT_SULN_L": [{"id": "h1", "props": {"rodzaj": "linia elektroenergetyczna wysokiego napięcia"},
+                           "geometry": {"type": "LineString", "coordinates": [[0.0, 100.0], [60.0, 100.0]]}}],
+            "OT_BUWT_P": [],
+        },
+    }
+    _pl, buf, _rep = _run_tile_wires(src)
+    wire_parts = [p for p in buf.parts if p.layer == "wires"]
+    # 7 HV conductors on BDOT (0..60) + 6 MV conductors on OSM (0..60, 60..120)
+    assert len(wire_parts) == 13
+
+
+def test_in_tile_osm_hv_line_with_bdot_only_supports_wires_and_matches_audit():
+    """OSM 110 kV line with BDOT-only supports classifies them as pylons in both export and audit."""
+    src = {
+        "schema": "truck-sim-pl/streetscape-sources/2",
+        "osm": {
+            "nodes": [],
+            "ways": [{"osm_way": 50, "part": 0, "tags": {"power": "line", "voltage": "110000"},
+                      "geometry": {"type": "LineString", "coordinates": [[0.0, 0.0], [60.0, 0.0]]}}],
+        },
+        "bdot10k": {
+            "OT_SULN_L": [],
+            "OT_BUWT_P": [
+                {"id": "p1", "props": {"rodzaj": "słup energetyczny"}, "geometry": {"type": "Point", "coordinates": [0.0, 0.0]}},
+                {"id": "p2", "props": {"rodzaj": "słup energetyczny"}, "geometry": {"type": "Point", "coordinates": [60.0, 0.0]}},
+            ],
+        },
+    }
+    pl, buf, rep = _run_tile_wires(src)
+    assert [it["p"] for it in pl.items] == ["pylon", "pylon"]
+    assert rep["power_lines"] == 1
+    assert len([p for p in buf.parts if p.layer == "wires"]) == 7
+
+    import sys
+    sys.path.insert(0, str(REPO / "tools" / "worldgen" / "qa"))
+    import hv_wires_audit as A
+    res = A.in_tile(src=src, origin=[0.0, 0.0], use_pbf=False)
+    assert res["carriageway_mask"] is False
+    assert res["pylon"]["mapped"] == 2 and res["pylon"]["unwired"] == 0 and res["pylon"]["without_line"] == 0
+    assert res["power_pole"]["mapped"] == 0
+
+    # Short (< 5 m) OSM 110 kV stub leaves the BDOT support unwired in both export and audit
+    stub_src = {
+        "schema": "truck-sim-pl/streetscape-sources/2",
+        "osm": {
+            "nodes": [],
+            "ways": [{"osm_way": 51, "part": 0, "tags": {"power": "line", "voltage": "110000"},
+                      "geometry": {"type": "LineString", "coordinates": [[0.0, 0.0], [3.0, 0.0]]}}],
+        },
+        "bdot10k": {
+            "OT_SULN_L": [],
+            "OT_BUWT_P": [
+                {"id": "p3", "props": {"rodzaj": "słup energetyczny"}, "geometry": {"type": "Point", "coordinates": [0.0, 0.0]}},
+            ],
+        },
+    }
+    pl_stub, buf_stub, _ = _run_tile_wires(stub_src)
+    assert [it["p"] for it in pl_stub.items] == ["pylon"]
+    assert len([p for p in buf_stub.parts if p.layer == "wires"]) == 0
+    res_stub = A.in_tile(src=stub_src, origin=[0.0, 0.0], use_pbf=False)
+    assert res_stub["pylon"]["mapped"] == 1 and res_stub["pylon"]["unwired"] == 1 and res_stub["pylon"]["without_line"] == 0
+
+
+def test_osm_way_with_missing_node_rejected_in_power_refresh(tmp_path):
+    """An OSM power way referencing a missing node location must be rejected, not bridged across valid endpoints."""
+    from pyproj import Transformer
+    from streetscape import sources as SSRC
+
+    inv = Transformer.from_crs("EPSG:2180", "EPSG:4326", always_xy=True)
+    lon1, lat1 = inv.transform(768300.0, 578000.0)
+    lon2, lat2 = inv.transform(768400.0, 578000.0)
+    lon3, lat3 = inv.transform(768970.0, 578030.0)
+    osm_file = tmp_path / "sample.osm"
+    osm_file.write_text(
+        f"""<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6'>
+  <node id='1' lat='{lat1:.7f}' lon='{lon1:.7f}'/>
+  <node id='2' lat='{lat2:.7f}' lon='{lon2:.7f}'/>
+  <node id='3' lat='{lat3:.7f}' lon='{lon3:.7f}'/>
+  <way id='11'>
+    <nd ref='1'/><nd ref='2'/>
+    <tag k='power' v='minor_line'/>
+  </way>
+  <way id='12'>
+    <nd ref='1'/><nd ref='999999'/><nd ref='3'/>
+    <tag k='power' v='minor_line'/>
+  </way>
+</osm>
+""",
+        encoding="utf-8",
+    )
+    res = SSRC.extract_osm_power_ways_by_bboxes({"t": (768000.0, 577500.0, 769500.0, 578500.0)}, pbf=osm_file)["t"]
+    assert [w["osm_way"] for w in res] == [11]
