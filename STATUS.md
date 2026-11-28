@@ -145,3 +145,7 @@
 ### codex-sadowa-seam-s25 — r2, diagnoza
 - Punkty 6 i 7 recenzji opisują dwie niezależne przyczyny: filtr krótkiego cięcia zależy od kierunku ścinania, a zachłanne parowanie może zająć jedyny dostępny koniec.
 - Następny krok po zmianie filtra: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -p no:cacheprovider tests/gis/test_seam_shear_knw.py tests/gis/test_seams_0224.py -k "cut or seam_dir"`.
+
+### codex-sadowa-seam-s25 — r2, cięcie przy narożniku
+- Oddzielono rozpoznanie końca cięcia w granicach błędu zaokrąglenia grafu od wyznaczania kierunku ścinania. Pięć testów cięć i kierunku przeszło, w tym 0,04 m przy narożniku, cięcie w samym narożniku i odcinek wewnętrzny.
+- Następny krok po zmianie parowania: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd -m pytest -q -p no:cacheprovider tests/gis/test_seams_0224.py -k "same_way"`.

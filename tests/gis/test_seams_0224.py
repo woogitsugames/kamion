@@ -124,6 +124,33 @@ def test_cut_four_centimetres_from_junction_keeps_seam_ribbon():
         assert np.unique(asphalt.V[:, 0] + b.origin[0]) == pytest.approx([100.0, 100.04])
 
 
+@pytest.mark.parametrize(("start", "boundary", "expected_u"), [
+    ((100.0, 0.01), True, (0.0, 1.0)),
+    ((100.0, 0.0), True, None),
+    ((100.01, 0.01), False, None),
+])
+def test_short_cut_near_bbox_corner(start, boundary, expected_u):
+    tile = _tile("b", 100.0)
+    tile.graph["bbox"] = tile.bbox
+    end = (start[0] + 0.04, start[1] if start[1] else 0.01)
+    a, b = tile.graph["nodes"]
+    a.update(x=start[0], y=start[1], boundary=boundary)
+    b.update(x=end[0], y=end[1], boundary=False)
+    edge = tile.graph["edges"][0]
+    edge.update(geometry=[start, end], length_m=round(float(np.hypot(*np.subtract(end, start))), 3),
+                clipped=boundary)
+
+    net = SM.build_plain(tile)
+    assert len(net.chains) == int(boundary)
+    if boundary:
+        assert net.chains[0].meta["seam_stub"]
+    seam_u = net.nodes[a["id"]]["seam_u"]
+    if expected_u is None:
+        assert seam_u is None
+    else:
+        assert tuple(seam_u) == expected_u
+
+
 def _pair_0p2():
     return [_tile("a", 0.0), _tile("b", 100.0, set_={"lanes": 2, "lane_width": 3.2, "edge_strip": 0.2,
                                                      "edge_lines": "both"})]

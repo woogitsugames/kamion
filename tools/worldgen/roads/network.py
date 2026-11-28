@@ -306,20 +306,25 @@ class Network:
 
 
 SEAM_DIR_EPS_M = 0.05      # seam-knw-s24: a boundary node lies on a bbox edge within this distance
+BBOX_CUT_EPS_M = 0.0005 + 1e-9  # half of the graph's 1 mm coordinate step, plus float noise
 MIN_EDGE_M = 0.05          # ordinary graph fragments shorter than this are discarded
 MIN_SEAM_EDGE_M = 1e-6     # exclude coincident cut points (graph coordinates are stored to 1 mm)
 
 
-def _seam_dir(n: dict, bbox) -> np.ndarray | None:
-    """seam-knw-s24: unit vector along the tile edge a boundary node lies on (graph bbox [xmin, ymin, xmax, ymax],
-    EPSG:2180; same direction in local coordinates), None for an inner node / no bbox / a bbox corner. The mesher
-    lays the end cross-section of a chain cut at the seam along this line instead of square to the axis, so both
-    tiles end their asphalt / kerb / footway exactly on the shared edge (meshing.seam_shear)."""
+def _bbox_edge_distances(n: dict, bbox) -> tuple[float, float]:
     if not n.get("boundary") or not bbox:
-        return None
+        return math.inf, math.inf
     x, y = float(n["x"]), float(n["y"])
-    on_v = min(abs(x - bbox[0]), abs(x - bbox[2])) <= SEAM_DIR_EPS_M
-    on_h = min(abs(y - bbox[1]), abs(y - bbox[3])) <= SEAM_DIR_EPS_M
+    return min(abs(x - bbox[0]), abs(x - bbox[2])), min(abs(y - bbox[1]), abs(y - bbox[3]))
+
+
+def _seam_dir(n: dict, bbox) -> np.ndarray | None:
+    """Direction of an unambiguous bbox edge for the mesher's end cross-section."""
+    d_v, d_h = _bbox_edge_distances(n, bbox)
+    on_v, on_h = d_v <= SEAM_DIR_EPS_M, d_h <= SEAM_DIR_EPS_M
+    if on_v and on_h:
+        # Close to a corner, only trust an edge within the graph's rounding error.
+        on_v, on_h = d_v <= BBOX_CUT_EPS_M, d_h <= BBOX_CUT_EPS_M
     if on_v == on_h:
         return None
     return np.array([0.0, 1.0]) if on_v else np.array([1.0, 0.0])
@@ -330,12 +335,16 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
     from . import carriageway_split as CS            # ADR 0274: authored split of a two-way road before a node
     cs_applied, cs_stale = [], []
     graph = CS.apply(graph, overrides, cs_applied, cs_stale)
+    bbox = graph.get("bbox")
     nodes = {}
+    cut_nodes = set()
     for n in graph["nodes"]:
+        if min(_bbox_edge_distances(n, bbox)) <= BBOX_CUT_EPS_M:
+            cut_nodes.add(n["id"])
         nodes[n["id"]] = {"id": n["id"], "xy": np.array([n["x"] - ox, n["y"] - oy]), "deg": 0,
                           "feature": n.get("feature"), "signals": bool(n.get("signals_nearby")),
                           "boundary": bool(n.get("boundary")), "z_terrain": n.get("z_terrain"),
-                          "seam_u": _seam_dir(n, graph.get("bbox"))}
+                          "seam_u": _seam_dir(n, bbox)}
     edges = {}
     seam_stubs = set()
     for e in sorted(graph["edges"], key=lambda e: e["id"]):
@@ -350,7 +359,7 @@ def load(graph: dict, origin, overrides: list | None = None) -> Network:
             continue
         length = cumlen(g)[-1]
         seam_stub = (e.get("clipped") and length <= MIN_EDGE_M
-                     and any(nodes[n]["seam_u"] is not None for n in (a, b)))
+                     and (a in cut_nodes or b in cut_nodes))
         if length < (MIN_SEAM_EDGE_M if seam_stub else MIN_EDGE_M):
             continue
         if seam_stub:
