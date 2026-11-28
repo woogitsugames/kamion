@@ -12,7 +12,7 @@
 
 `bialystok-industrial-c` wymaga też odświeżenia raportu fidelity i manifestu używanego przez `test_report_not_stale` i test determinizmu eksportu. Pierwszy sprawdza hashe wejść generatora, a drugi bajty chunków. Kontrola sum samego raportu nie zastępuje przebudowy C, ponieważ zmienia się siatka przewodów.
 
-[Kolejka pełna](queue-full.csv) zawiera 54 regiony. Wybierz ją, jeśli po integracji zmienią się wejścia innych kafli albo potrzebna jest aktualna proweniencja wszystkich raportów i GLB. Gałęzie `codex-csharp-review-fixes-s25` i `codex-horn-button-s25` zmieniają kod runtime, shader i testy Unity. Nie dodają kafli do kolejki GIS.
+[Kolejka pełna](queue-full.csv) zawiera 54 regiony. Wybierz ją, jeśli po integracji zmienią się wejścia innych kafli albo potrzebna jest aktualna proweniencja wszystkich raportów i GLB. Gałęzie `codex-csharp-review-fixes-s25` i `codex-horn-button-s25` zmieniają kod runtime, shader i testy Unity. Ich zakres GIS wynosi 0 kafli.
 
 ## Czasy
 
@@ -23,11 +23,23 @@
 | Podstawowy, 19 kafli | 3 h 25 min | 10 h 14 min | 5–8 h `WORKING_VALUE` |
 | Pełny, 54 kafle | 4 h 35 min | 22 h 44 min | 7–11 h `WORKING_VALUE` |
 
-Udane importy fali 14 dają częściowy pomiar kosztu Unity. Import 13 z 19 kafli zajął 1 h 02 min, a 42 z 54 kafli 3 h 28 min. Przedziały całości uwzględniają pozostałe importy, przygotowanie i finał z renderami. Zakładają pięć dostępnych slotów heavy i rozgrzaną `Library` Win64. Importy i renderowanie są serializowane w worktree. Część importów może zachodzić równolegle z GIS pozostałych łańcuchów.
+Udane importy fali 14 dają częściowy pomiar kosztu Unity. Import 13 z 19 kafli zajął 1 h 02 min, a 42 z 54 kafli 3 h 28 min. Dziesięć historycznych przebiegów visual QA trwało po 33–88 s. Plan fali 15 ma 32 przebiegi visual QA w obu fazach oraz 12 importów scen do przygotowania bazy. Szacunki całości obejmują przygotowanie i finał. Zakładają pięć dostępnych slotów heavy i rozgrzaną `Library` Win64. Importy i renderowanie są serializowane w worktree. Część importów może zachodzić równolegle z GIS pozostałych łańcuchów.
 
 ## Uruchomienie przez lidera
 
 1. Poczekaj, aż fala 14 zakończy pracę na współdzielonym `Data/raw/derived` i zintegruj jej dane. Na main zintegruj `codex-seam-steps-s25` (zawiera Sadową), `agy-poles-wires-s25` oraz czekające poprawki runtime przewidziane do wydania. Przenieś pliki `artifacts/regen-wave-15-s25/` z gałęzi zakresu i sprawdź obecność wypieczonego pomnika r4 (`91ed526b3`). Z tak przygotowanego main utwórz worktree fali 15.
+
+   Na main, po zakończeniu fali 14 i z czystym drzewem roboczym:
+
+   ```powershell
+   git merge regen-wave-14-s25
+   git merge codex-seam-steps-s25
+   git merge agy-poles-wires-s25
+   git restore --source=codex-wave15-scope-s25 --staged --worktree -- artifacts/regen-wave-15-s25
+   git commit -m "docs(wave15): kolejki i odbior fali 15"
+   ```
+
+   Po zintegrowaniu poprawek runtime przewidzianych do tego wydania:
 
    ```powershell
    pwsh -NoProfile -File scripts/new-agent-worktree.ps1 -Name regen-wave-15-s25 -Base main

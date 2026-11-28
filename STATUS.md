@@ -156,3 +156,7 @@
 ### codex-wave15-scope-s25 — kolejki i plan uruchomienia
 - Zapisano czasy historyczne i pochodzenie raportów. Kolejka podstawowa obejmuje 19 kafli, pełna wszystkie 54. Sprawdzono składnię dziewięciu skryptów PowerShell, kamery i plan WhatIf.
 - Następny krok: `Get-Content artifacts/codex-wave15-scope-s25/pytest.log -Tail 12` oraz kontrola różnic drugiego przebiegu poboczy.
+
+### codex-wave15-scope-s25 — bramki GIS
+- Testy GIS 164/164 oraz osobny przebieg budżetów 62/62. Potwierdzono zmianę wypieku Tykocina i zmierzono historyczne czasy VQA.
+- Następny krok: `cmd /c C:/Users/matma/Documents/Claude/kamion/scripts/cli-jobs/wgpy.cmd artifacts/codex-wave15-scope-s25/plan.py` po drugim przebiegu poboczy.
