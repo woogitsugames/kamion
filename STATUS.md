@@ -168,3 +168,9 @@
 ### codex-wave15-scope-s25 — gotowe
 - Potwierdzono 17 kafli ze zmianą i 2 kafle kontrolne w kolejce minimum. Pełna kolejka zawiera 54. Zachowano wyłącznie pliki planu i raport; GIS 164/164, budżety 62/62.
 - Następny krok lidera po fali 14: `git show codex-wave15-scope-s25:artifacts/regen-wave-15-s25/README.md`.
+
+### agy-wave14-logs-s25 — przegląd logów i QA fali 14 (tylko odczyt)
+- Przeanalizowano 242 logi fali 14 (`artifacts/regen-wave-14-s24/logs/`, `chain-*.log`) oraz porównano `Data/Regions/*/generated/*_qa.json` na `regen-wave-14-s25` (`9cc09a9a0`, 50/54 kafli ukończonych; łańcuch C na `dk65-monki-06`, bez `final.ps1`) z `main` (`489fe5fce`) i `queue.csv`.
+- Czasy: 50 ukończonych kafli `build_world` = 65 554 s (−25,9% vs 88 430 s w `queue.csv`; 29 kafli szybszych o > 30 %, do −48,6 %, brak wolniejszych > 30 %), `Σ Python` = 78 647 s (−27,5% vs 108 435 s), `import Win64 High` = 15 100 s (mediana 308,5 s). Błędy krytyczne (`fidelity relative_to` 5×, `knyszyn` `np.min` 1×, `index.lock` 1×) naprawione; w Unity 0 `Shader error` / `error CS` / `NaN`.
+- QA i budżety: `bialystok-industrial-c` `stretch_04` = 1 972 103 tris High (`<= 2 000 000`), `dk8_dk19_exit` = 1 471 083 High / 309 128 Low (`<= 600 000`); 8 innych kafli > 2 M High (jak na `main`), 14 > 600 k Low. `far_field High` −29,16% (−1 512 224 tris, wyłącznie `far_field_buildings`), `mv_poles` 5 814 → 3 445, `rd_seal_tris` −15,71%, `fidelity` 0 zmian geometrycznych. Raport zapisano w `artifacts/agy-wave14-logs-s25/WYNIKI.md`.
+- Następny krok lidera po końcu łańcucha C i `final.ps1`: przejrzeć `C:\Users\matma\Documents\Claude\kamion\artifacts\agy-wave14-logs-s25\WYNIKI.md` oraz sprawdzić końcowe raporty fali 14 (`Get-Content artifacts/regen-wave-14-s24/seams_after.md -Head 40`).
