@@ -215,3 +215,6 @@
 ### codex-gis-3fail-s25 — Rynek w Tykocinie
 - ADR 0320 (`3d7806f6c`) klasyfikuje cztery z dziesięciu punktów jako skrzynie z kwiatami. Test ADR 0337 sprawdza teraz sześć ławek, cztery udokumentowane skrzynie i komplet dziesięciu kotwic.
 - Następny krok: `rg -n -A14 'tykocin-pavement-rules-s24' Data/Regions/tykocin/overrides.yaml`.
+
+- Uzupełniono `confidence`, `sources` i `verify` we wpisie `tykocin-pavement-rules-s24` zgodnie z ADR 0237 i 0231. `medium` dotyczy reguły, a wariant zastępczy pozostaje `WORKING_VALUE`.
+- Następny krok: `rg -n 'trees_removed|avenue_row_candidates' tools/worldgen/streetscape/vegetation.py`.
